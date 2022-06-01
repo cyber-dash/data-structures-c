@@ -2,17 +2,17 @@
 // Created by cyberdash@163.com on 2021/12/26.
 //
 
-#ifndef CYBER_DASH_SQ_LIST_TEST_H
-#define CYBER_DASH_SQ_LIST_TEST_H
+#ifndef CYBER_DASH_SEQ_LIST_TEST_H
+#define CYBER_DASH_SEQ_LIST_TEST_H
 
-#include "./SqList.h"
+#include "./seq_list.h"
 
 
-int compare(ElemType a, ElemType b);
+int compare(ELEM_TYPE a, ELEM_TYPE b);
 
 void test_ListInsert_Sq();
 void test_ListDelete_Sq();
 void test_LocateElem_Sq();
 
 
-#endif // CYBER_DASH_SQ_LIST_TEST_H
+#endif // CYBER_DASH_SEQ_LIST_TEST_H

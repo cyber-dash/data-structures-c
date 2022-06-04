@@ -6,17 +6,17 @@
 #include <stdio.h>
 #include "test.h"
 
+
 int compare(ELEM_TYPE a, ELEM_TYPE b) {
     if (a > b) {
         return 1;
-    }
-    else if (a == b) {
+    } else if (a == b) {
         return 0;
-    }
-    else {
+    } else {
         return -1;
     }
 }
+
 
 void TestSeqListInsert() {
     printf("\n");

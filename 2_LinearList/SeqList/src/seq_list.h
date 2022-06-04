@@ -10,7 +10,7 @@
 #define LIST_INCREMENT  10
 #define ELEM_TYPE       int
 
-typedef enum Status { OK, ERROR, NON_ALLOCATED } Status;
+typedef enum { OK, ERROR, NON_ALLOCATED } Status;
 
 typedef struct {
     ELEM_TYPE* elements;

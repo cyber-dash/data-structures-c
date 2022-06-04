@@ -18,19 +18,19 @@ Status SeqListInit(seq_list_t* seq_list) {
         return NON_ALLOCATED;
     }
 
-    seq_list->length = 0;                  // 空表长度为0
-    seq_list->size = LIST_INIT_SIZE;   // 初始存储容量
+    seq_list->length = 0;               // 空表长度为0
+    seq_list->size = LIST_INIT_SIZE;    // 初始存储容量
 
     return OK;
 }
 
 
 /*!
- *
- * @param seq_list
- * @param pos
- * @param elem
- * @return
+ * 顺序表插入
+ * @param seq_list 顺序表(指针)
+ * @param pos 插入位置
+ * @param elem 元素
+ * @return 是否成功
  */
 Status SeqListInsert(seq_list_t* seq_list, int pos, ELEM_TYPE elem) {
     if (pos < 1 || pos > seq_list->length + 1) {
@@ -39,8 +39,8 @@ Status SeqListInsert(seq_list_t* seq_list, int pos, ELEM_TYPE elem) {
 
     // 当前存储空间已满, 增加分配
     if (seq_list->length >= seq_list->size) {
-        ELEM_TYPE* new_base = (ELEM_TYPE*)realloc(seq_list->elements,
-                                                (seq_list->size + LIST_INCREMENT) * sizeof(ELEM_TYPE));
+        unsigned int new_size = (seq_list->size + LIST_INCREMENT) * sizeof(ELEM_TYPE);
+        ELEM_TYPE* new_base = (ELEM_TYPE*)realloc(seq_list->elements, new_size);
         if (!new_base) {
             return NON_ALLOCATED; // 存储分配失败
         }
@@ -49,61 +49,127 @@ Status SeqListInsert(seq_list_t* seq_list, int pos, ELEM_TYPE elem) {
         seq_list->size += LIST_INCREMENT;      // 增加存储容量
     }
 
-    ELEM_TYPE* insert_elem = &(seq_list->elements[pos - 1]);    // q为插入位置
-    for (ELEM_TYPE* p = &(seq_list->elements[seq_list->length - 1]); p >= insert_elem; p--) {
-        *(p + 1) = *p; // 插入位置及之后的元素右移
+    ELEM_TYPE* insert_pos_elem = &(seq_list->elements[pos - 1]);    // q为插入位置
+    for (ELEM_TYPE* cur = &(seq_list->elements[seq_list->length - 1]); cur >= insert_pos_elem; cur--) {
+        *(cur + 1) = *cur; // 插入位置及之后的元素, 依次右移
     }
 
-    *insert_elem = elem;      // 插入elem
+    *insert_pos_elem = elem;  // 插入elem
     seq_list->length++;       // 表长增1
+
     return OK;
 }
 
 
-Status SeqListDelete(seq_list_t* seq_list, int i, ELEM_TYPE* elem) {
-    // 在顺序线性表L中删除第i个元素, 并用e返回其值
-    // i的合法值为1<=i<=ListLength_Sq(seq_list_t)
-    if (i < 1 || i > seq_list->length) {
+/*!
+ * 顺序表删除元素
+ * @param seq_list 顺序表(指针)
+ * @param pos 待删除元素所在位置
+ * @param elem 保存删除元素值的变量
+ * @return 是否删除成功
+ * @note
+ * 删除位置pos的元素, 将其值赋给elem
+ */
+Status SeqListDelete(seq_list_t* seq_list, int pos, ELEM_TYPE* elem) {
+    if (pos < 1 || pos > seq_list->length) {
         return ERROR;
     }
 
-    ELEM_TYPE* p = &(seq_list->elements[i - 1]);          // p为被删除元素的位置
-    *elem = *p;                                  // 被删除元素的值赋给e
-    ELEM_TYPE* q = seq_list->elements + seq_list->length - 1;    // 表尾元素的位置
-    for(++p;p<=q;++p) *(p-1)=*p;              // 被删除元素之后的元素左移
-    --seq_list->length;                              // 表长减1
+    ELEM_TYPE* delete_pos_elem = &(seq_list->elements[pos - 1]);
+    *elem = *delete_pos_elem;                                           // 被删除元素的值赋给elem
+
+    ELEM_TYPE* last_elem = seq_list->elements + seq_list->length - 1;   // 表尾元素的位置
+    for (ELEM_TYPE* cur = delete_pos_elem + 1; cur <= last_elem; cur++) {
+        *(cur - 1) = *cur;
+    }
+
+    seq_list->length--;                              // 表长减1
+
     return OK;
 }
 
 
 /*!
  * @brief 顺序表查找函数
- * @param L
- * @param e
- * @param compare
- * @return
+ * @param seq_list 顺序表(指针)
+ * @param elem 元素值
+ * @param compare 比较函数
+ * @return 元素位置
+ * @note
+ * 如果没有该元素, 则返回0, 否则返回所在位置(首元素从1开始)
  */
-int SeqListLocate(seq_list_t *L, ELEM_TYPE e,
-                  int (*compare)(ELEM_TYPE, ELEM_TYPE)) {
-    // 在顺序线性表L中查找第1个值与e满足compare()的元素的位序
-    // 若找到, 则返回其在L中的位序, 否则返回0
-    int i = 1;             // i的初值为第1个元素的位序
-    ELEM_TYPE* p = L->elements;   // p的初值为第1个元素的存储位置
-    while (i <= L->length && (*compare)(*p++, e) != 0) ++i;
-    if (i <= L->length) return i;
-    else return 0;
-} // SeqListLocate
+int SeqListLocate(seq_list_t* seq_list, ELEM_TYPE elem, int (*compare)(ELEM_TYPE, ELEM_TYPE)) {
+    int pos = 1;                            // pos为第1个元素的位置
+    ELEM_TYPE* cur = seq_list->elements;    // cur指向第1个元素的存储位置
 
+    while (pos <= seq_list->length && (*compare)(*cur, elem) != 0) {
+        pos++;
+        cur++;
+    }
 
-/*
-void MergeList_Sq(seq_list_t *La, seq_list_t *Lb, seq_list_t *Lc) {
+    if (pos <= seq_list->length) {
+        return pos;
+    }
 
+    return 0;
 }
+
+
+/*!
+ * 顺序表的合并
+ * @param list_a 顺序表a(的指针)
+ * @param list_b 顺序表b(的指针)
+ * @param merged_list 合并后的表(的指针)
+ * @return 是否合并成功
  */
+Status SeqListMerge(seq_list_t* list_a, seq_list_t* list_b, seq_list_t* merged_list) {
+    ELEM_TYPE* list_a_cur = list_a->elements;
+    ELEM_TYPE* list_b_cur = list_b->elements;
+    ELEM_TYPE* list_a_last = list_a->elements + list_a->length - 1;
+    ELEM_TYPE* list_b_last = list_b->elements + list_b->length - 1;
+
+    merged_list->length = list_a->length + list_b->length;  // 长度
+    merged_list->size = list_a->size + list_b->size;        // 容量
+    merged_list->elements = (ELEM_TYPE*)malloc(merged_list->size * sizeof(ELEM_TYPE));
+    if (!merged_list->elements) {
+        return NON_ALLOCATED;   // 分配失败
+    }
+
+    ELEM_TYPE* merged_list_cur = merged_list->elements;
+
+    while (list_a_cur <= list_a_last && list_b_cur <=list_b_last) {
+        if (*list_a_cur <= *list_b_cur) {
+            *merged_list_cur = *list_a_cur;
+            list_a_cur++;
+        } else {
+            *merged_list_cur = *list_b_cur;
+            list_b_cur++;
+        }
+        merged_list_cur++;
+    }
+
+    while (list_a_cur <= list_a_last) {
+        *merged_list_cur = *list_a_cur;
+        merged_list_cur++;
+        list_a_cur++;
+    }
+
+    while (list_b_cur <= list_b_last) {
+        *merged_list_cur = *list_b_cur;
+        merged_list_cur++;
+        list_b_cur++;
+    }
+
+    return OK;
+}
 
 
-void SeqListPrint(seq_list_t *L) {
-    for (int i = 0; i < L->length; i++) {
-        printf("%d ", L->elements[i]);
+/*!
+ * 打印顺序表
+ * @param seq_list 顺序表(指针)
+ */
+void SeqListPrint(seq_list_t* seq_list) {
+    for (int i = 0; i < seq_list->length; i++) {
+        printf("%d ", seq_list->elements[i]);
     }
 }

@@ -23,13 +23,13 @@ Status SeqListInit(seq_list_t* seq_list);
 
 Status SeqListInsert(seq_list_t* seq_list, int pos, ELEM_TYPE elem);
 
-Status SeqListDelete(seq_list_t* seq_list, int i, ELEM_TYPE* elem);
+Status SeqListDelete(seq_list_t* seq_list, int pos, ELEM_TYPE* elem);
 
 int SeqListLocate(seq_list_t* seq_list, ELEM_TYPE elem, int (*compare)(ELEM_TYPE, ELEM_TYPE));
 
-void MergeList_Sq(seq_list_t* list_a, seq_list_t* list_b, seq_list_t* list_c);
+Status SeqListMerge(seq_list_t* list_a, seq_list_t* list_b, seq_list_t* merged_list);
 
-void SeqListPrint(seq_list_t* list);
+void SeqListPrint(seq_list_t* seq_list);
 
 
 #endif // CYBER_DASH_SEQ_LIST_H

@@ -2,17 +2,18 @@
 // Created by cyberdash@163.com(抖音: cyberdash_yuan) on 2021/3/10.
 //
 
-#include <stdio.h>
 #include "./test.h"
 
 
 int main() {
 
-  test_ListInsert_Sq();
+    TestSeqListInsert();
 
-  test_ListDelete_Sq();
+    TestSeqListDelete();
 
-  test_LocateElem_Sq();
+    TestSeqListLocate();
 
-  return 0;
+    TestSeqListMerge();
+
+    return 0;
 }

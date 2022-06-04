@@ -10,7 +10,13 @@
 #include<stdbool.h>
 
 
-int LT(KeyType key1, KeyType key2) {
+/*!
+ * 小于
+ * @param key1
+ * @param key2
+ * @return
+ */
+int LowerThan(KeyType key1, KeyType key2) {
     if (key1 < key2) {
         return 1;
     }
@@ -19,7 +25,7 @@ int LT(KeyType key1, KeyType key2) {
 }
 
 
-int LQ(KeyType key1, KeyType key2) {
+int LowerEqual(KeyType key1, KeyType key2) {
     if (key1 <= key2) {
         return 1;
     }
@@ -37,7 +43,7 @@ void swap(RedType* item1, RedType* item2) {
 
 
 //在L.r[i..L.Length]中选择key最小的记录
-int SelectMinKey(SqList* L, int i) {
+int SelectMinKey(seq_list_t* L, int i) {
     if (i == L->length) {
         return i;
     }
@@ -59,19 +65,19 @@ int SelectMinKey(SqList* L, int i) {
  * @brief 直接插入排序
  * @param L 待排数组
  */
-void InsertSort(SqList* L)
+void InsertSort(seq_list_t* L)
 {
     //对顺序表L作直接插入排序
     for (int i = 2; i <= L->length; ++i)
     {
-        if (LT(L->r[i].key, L->r[i - 1].key)) { // (原书: "<"，需将L.r[i]插入有序子表)
+        if (LowerThan(L->r[i].key, L->r[i - 1].key)) { // (原书: "<"，需将L.r[i]插入有序子表)
 
             // 交换 L->r[i]与L->r[i - 1]
             L->r[0] = L->r[i];                  // (原书: 复制为哨兵)
             L->r[i] = L->r[i - 1];
 
             int j;
-            for (j = i - 1; LT(L->r[0].key, L->r[j].key); --j)
+            for (j = i - 1; LowerThan(L->r[0].key, L->r[j].key); --j)
             {
                 L->r[j + 1] = L->r[j];                //记录后移
             }
@@ -82,36 +88,32 @@ void InsertSort(SqList* L)
 
 
 // @brief 折半插入排序
-// @param L 待排数组
-void BInsertSort(SqList *L)
+// @param list 待排数组
+void BInsertSort(seq_list_t* list)
 {
-  for (int i = 2; i <= L->length; ++i)
-  {
-    L->r[0] = L->r[i];                        //将L->r[i]暂存到L->r[0]
-
-    int low = 1;
-    int high = i - 1;
-
-    while (low <= high)
-    {                                             //在r[low..high]中折半查找有序插入的位置
-      int m = (low + high) / 2;                       //折半
-
-      if (LT(L->r[0].key, L->r[m].key))
-      {
-        high = m - 1;                             //插入点在低半区
-      }
-      else
-      {
-        low = m + 1;                              //插入点在高半区
-      }
-    }// while
-
-    for (int j = i - 1; j >= high + 1; --j)
+    for (int i = 2; i <= list->length; ++i)
     {
-      L->r[j + 1] = L->r[j];                  //记录后移
+        list->r[0] = list->r[i];                        //将L->r[i]暂存到L->r[0]
+
+        int low = 1;
+        int high = i - 1;
+
+        while (low <= high)
+        {                                             //在r[low..high]中折半查找有序插入的位置
+            int m = (low + high) / 2;                       //折半
+
+            if (LowerThan(list->r[0].key, list->r[m].key)) {
+                high = m - 1;                             //插入点在低半区
+            } else {
+                low = m + 1;                              //插入点在高半区
+            }
+        }
+
+        for (int j = i - 1; j >= high + 1; --j) {
+            list->r[j + 1] = list->r[j];                  //记录后移
+        }
+        list->r[high + 1] = list->r[0];                 //插入
     }
-    L->r[high + 1] = L->r[0];                 //插入
-  }// for
 } // BInsertSort
 
 
@@ -136,7 +138,7 @@ void TableInsertSort(SLinkListType *SL)
   for(i=2; i<=SL->length; i++){
     q = 0;
     p = SL->r[q].next;
-    while(LQ(SL->r[p].rc.key, SL->r[i].rc.key)){
+    while(LowerEqual(SL->r[p].rc.key, SL->r[i].rc.key)){
       q = p;
       p = SL->r[q].next;
     }
@@ -173,18 +175,18 @@ void Arrange(SLinkListType *SL)
 // @brief 希尔插入排序
 // @param L 待排数组
 // @param SL 增量
-void ShellInsert(SqList *L, int dk)
+void ShellInsert(seq_list_t *L, int dk)
 {
   //对顺序表L作一趟希尔插入排序，本算法是和一趟直接插入排序相比，作了以下修改：
   //    1，前后记录位置的增量是dk，而不是1；
   //    2，r[0]只是暂存单元，不是哨兵。当j<=0时，插入位置已找到。
   for (int i = dk + 1; i <= L->length; ++i)
   {
-    if (LT(L->r[i].key, L->r[i - dk].key))    //需将L.r[i]插入有序增量子表
+    if (LowerThan(L->r[i].key, L->r[i - dk].key))    //需将L.r[i]插入有序增量子表
     {
       L->r[0] = L->r[i];                      //暂存在L.r[0]
       int j;
-      for (j = i - dk; j > 0 && LT(L->r[0].key, L->r[j].key); j -= dk)
+      for (j = i - dk; j > 0 && LowerThan(L->r[0].key, L->r[j].key); j -= dk)
       {
         L->r[j + dk] = L->r[j];               //记录后移，查找插入位置
       }
@@ -198,7 +200,7 @@ void ShellInsert(SqList *L, int dk)
 // @param L 待排数组
 // @param dlta 排序增量序列
 // @param t 序列长度
-void ShellSort(SqList *L, int dlta[], int t)
+void ShellSort(seq_list_t *L, int dlta[], int t)
 {
   int k;
   // 按增量序列dlta[0..t-1]对顺序表L作希尔排序。
@@ -211,7 +213,7 @@ void ShellSort(SqList *L, int dlta[], int t)
 
  // @brief 起泡排序(冒泡排序)
  // @param L 待排数组
-void BubbleSort(SqList* L)
+void BubbleSort(seq_list_t* L)
 {
     int i;
     int j;
@@ -222,7 +224,7 @@ void BubbleSort(SqList* L)
         status = true;
         for (j = 0; j < L->length - i - 1; j++)
         {
-            if (LT(L->r[j + 1].key, L->r[j].key))
+            if (LowerThan(L->r[j + 1].key, L->r[j].key))
             {
                 swap(&(L->r[j + 1]), &(L->r[j]));
                 status = false;
@@ -241,7 +243,7 @@ void BubbleSort(SqList* L)
 // @param low 表左端
 // @param high 表右端
 // @return 新的枢纽位置
-int Partition_a(SqList* L, int low, int high) {
+int Partition_a(seq_list_t* L, int low, int high) {
     int pivotkey;
 
     //变换顺序表L中子表r[low,high]的记录，枢轴记录到位，并返回其所在位置，此时
@@ -272,7 +274,7 @@ int Partition_a(SqList* L, int low, int high) {
 // @param low 表左端
 // @param high 表右端
 // @return 新的枢纽位置
-int Partition(SqList* L, int low, int high)
+int Partition(seq_list_t* L, int low, int high)
 {
     int pivotkey;
 
@@ -307,7 +309,7 @@ int Partition(SqList* L, int low, int high)
 // @param L 待排数组
 // @param low 表左端
 // @param high 表右端
-void QSort(SqList* L, int low, int high)
+void QSort(seq_list_t* L, int low, int high)
 {
     int pivotloc;
 
@@ -322,7 +324,7 @@ void QSort(SqList* L, int low, int high)
 
 // @brief 快速排序入口
 // @param L 待排数组
-void QuickSort(SqList* L)
+void QuickSort(seq_list_t* L)
 {
     QSort(L, 1, (*L).length);
 }// QuickSort
@@ -330,7 +332,7 @@ void QuickSort(SqList* L)
 
 // @brief 简单选择排序
 // @param L 待排数组
-void SelectSort(SqList* L)
+void SelectSort(seq_list_t* L)
 {
     int i;
     int j;
@@ -360,12 +362,12 @@ void HeapAdjust(HeapType* H, int s, int m)
     rc = H->r[s];
 
     for (int i = 2 * s; i <= m; i *= 2) {              //沿key较大的孩子结点向下筛选
-        if (i < m && LT(H->r[i].key, H->r[i + 1].key))
+        if (i < m && LowerThan(H->r[i].key, H->r[i + 1].key))
         {
             i++;                                      // j为key较大的记录的下标
         }
 
-        if (!LT(rc.key, H->r[i].key))
+        if (!LowerThan(rc.key, H->r[i].key))
         {
             break;                                    // rc应插入在位置s上
         }
@@ -407,7 +409,7 @@ void Merge(RedType SR[], RedType TR[], int i, int m, int n)
     int k;
     //将有序的SR[i..m]和SR[m+1..n]归并为有序的TR[i..n]
     for (j = m + 1, k = i; i <= m && j <= n; ++k) {            //将SR中记录由小到大地并入TR
-        if (LQ(SR[i].key, SR[j].key))
+        if (LowerEqual(SR[i].key, SR[j].key))
         {
             TR[k] = SR[i++];
         }
@@ -450,7 +452,7 @@ void MSort(RedType SR[], RedType TR1[], int s, int t)
 
 // @brief 归并排序入口
 // @param L 待排数组
-void MergeSort(SqList* L)
+void MergeSort(seq_list_t* L)
 {
     //对顺序表L作归并排序
     MSort(L->r, L->r, 1, L->length);
@@ -469,10 +471,10 @@ int ord(char* keys, int pos, int keyNum) {
 // @param i 第i趟
 // @param f 队列头
 // @param e 队列尾
-// void Distribute(SLCell r[], int i, ArrType f, ArrType e)
-void Distribute(SLList* slList, int i, ArrType f, ArrType e)
+// void Distribute(static_linked_list_node_t r[], int i, ArrType f, ArrType e)
+void Distribute(static_linked_list_t* slList, int i, ArrType f, ArrType e)
 {
-    SLCell* r = slList->r;
+    static_linked_list_node_t* r = slList->r;
 	//静态链表L的r域中记录已按(keys[0],...,keys[i-1])有序
 	//本算法按第i个关键字keys[i]建立RADIX个子表，使同一子表中记录的keys[i]相同
 	//f[0..RADIX-1]和e[0..RADIX-1]分别指向各子表中第一个和最后一个记录
@@ -484,7 +486,7 @@ void Distribute(SLList* slList, int i, ArrType f, ArrType e)
 
 	for (int p = r[0].next; p; p = r[p].next)
 	{
-		int j = ord(r[p].keys, i, slList->keynum);         // ord将记录中第i个关键字映射到[0..RADIX-1]
+		int j = ord(r[p].keys, i, slList->key_cnt);         // ord将记录中第i个关键字映射到[0..RADIX-1]
 
 		if (!f[j])               // 如果对头元素为空, p入队, 为队头
 		    f[j] = p;                     
@@ -500,7 +502,7 @@ void Distribute(SLList* slList, int i, ArrType f, ArrType e)
 // @param i 第i趟
 // @param f 队列头
 // @param e 队列尾
-void Collect(SLCell r[], int i, ArrType f, ArrType e) {
+void Collect(static_linked_list_node_t r[], int i, ArrType f, ArrType e) {
     int j;
     // 本算法按keys[i]自小至大地将f[0..RADIX-1]所指各子表依次连接成一个链表
     //e[0..RADIX-1]为各子表的尾指针
@@ -532,17 +534,17 @@ int succ(idx) {
 
 // @brief 基数排序
 // @param L 待排数组
-void RadixSort(SLList *L)
+void RadixSort(static_linked_list_t *L)
 {
     ArrType f;
     ArrType e;
     //L是采用静态链表表示的顺序表
     //对L作基数排序，使得L成为按关键字自小到大的有序静态链表，L.r[0]为头结点。
-    for (int i = 0; i < L->recnum; ++i) {
+    for (int i = 0; i < L->length; ++i) {
         L->r[i].next = i + 1;
     }
-    L->r[L->recnum].next = 0;           //将L改造为静态链表
-    for (int i = 0; i < L->keynum; ++i) //按最低位优先依次对各关键字进行分配和收集
+    L->r[L->length].next = 0;           //将L改造为静态链表
+    for (int i = 0; i < L->key_cnt; ++i) //按最低位优先依次对各关键字进行分配和收集
     {
         Distribute(L, i, f, e);      //第i趟分配
         Collect(L->r, i, f, e);      //第i趟收集

@@ -10,9 +10,10 @@
 
 int compare(ELEM_TYPE a, ELEM_TYPE b);
 
-void test_ListInsert_Sq();
-void test_ListDelete_Sq();
-void test_LocateElem_Sq();
+void TestSeqListInsert();
+void TestSeqListDelete();
+void TestSeqListLocate();
+void TestSeqListMerge();
 
 
 #endif // CYBER_DASH_SEQ_LIST_TEST_H

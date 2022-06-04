@@ -16,7 +16,7 @@ void ArrayOutput(RedType* arr, int arr_size) {
 }
 
 
-void RadixArrayOutput(SLCell* arr, int length) {
+void RadixArrayOutput(static_linked_list_node_t* arr, int length) {
     int idx = 0;
     for (int i = 0; i < length; i++) {
         idx = arr[idx].next;
@@ -33,7 +33,7 @@ void TestBubbleSort() {
     printf("                         测试冒泡排序                         \n\n\n");
 
     KeyType array[6] = { 1, 4, 2, 8, 5, 7 };
-    SqList sqList;
+    seq_list_t sqList;
     sqList.length = 6;
     for (int i = 1; i <= sqList.length; i++) {
         RedType redType;
@@ -60,7 +60,7 @@ void TestInsertSort() {
     printf("|                          测试插入排序                         |\n\n\n");
 
     KeyType array[6] = { 1, 4, 2, 8, 5, 7 };
-    SqList sqList;
+    seq_list_t sqList;
     sqList.length = 6;
     for (int i = 1; i <= sqList.length; i++) {
         RedType redType;
@@ -88,7 +88,7 @@ void TestBInsertSort() {
     printf("|                        测试折半插入排序                         |\n\n\n");
 
     KeyType array[6] = { 1, 4, 2, 8, 5, 7 };
-    SqList sqList;
+    seq_list_t sqList;
     sqList.length = 6;
     for (int i = 1; i <= sqList.length; i++) {
         RedType redType;
@@ -117,7 +117,7 @@ void TestSelectSort() {
     printf("|                          测试选择排序                         |\n\n\n");
 
     KeyType array[6] = { 1, 4, 2, 8, 5, 7 };
-    SqList sqList;
+    seq_list_t sqList;
     sqList.length = 6;
     for (int i = 1; i <= sqList.length; i++) {
         RedType redType;
@@ -145,7 +145,7 @@ void TestShellSort() {
   printf("|                          测试希尔排序                         |\n\n\n");
 
   KeyType array[6] = { 1, 4, 2, 8, 5, 7 };
-  SqList sqList;
+  seq_list_t sqList;
   sqList.length = 6;
   for (int i = 1; i <= sqList.length; i++) {
     RedType redType;
@@ -174,7 +174,7 @@ void TestQuickSort() {
     printf("                          测试快速排序                         \n\n\n");
     KeyType array[6] = { 1, 4, 2, 8, 5, 7 };
 
-    SqList sqList;
+    seq_list_t sqList;
     sqList.length = 6;
     for (int i = 1; i <= sqList.length; i++) {
         RedType redType;
@@ -202,7 +202,7 @@ void TestHeapSort() {
     printf("                          测试堆排序                         \n\n\n");
     KeyType array[6] = { 1, 4, 2, 8, 5, 7 };
 
-    SqList sqList;
+    seq_list_t sqList;
     sqList.length = 6;
     for (int i = 1; i <= sqList.length; i++) {
         RedType redType;
@@ -232,7 +232,7 @@ void TestMergeSort() {
     printf("                          测试归并排序                         \n\n\n");
     KeyType array[6] = { 1, 4, 2, 8, 5, 7 };
 
-    SqList sqList;
+    seq_list_t sqList;
     sqList.length = 6;
     for (int i = 1; i <= sqList.length; i++) {
         RedType redType;
@@ -259,13 +259,13 @@ void TestRadixSort() {
     printf("                       Test Radix Sort                       \n");
     printf("                         测试基数排序                          \n\n\n");
 
-    SLList slList;
+    static_linked_list_t slList;
 
     // keynum和recnum可以自由调整(非0)
-    slList.keynum = 5;    // 几位
-    slList.recnum = 10;   // 几个数
+    slList.key_cnt = 5;    // 几位
+    slList.length = 10;   // 几个数
 
-    SLCell zeroSlCell;
+    static_linked_list_node_t zeroSlCell;
     zeroSlCell.keys[0] = 0;
     zeroSlCell.keys[1] = 0;
     zeroSlCell.keys[2] = 0;
@@ -275,19 +275,19 @@ void TestRadixSort() {
 
     srand((unsigned)time(NULL));
 
-    for (int i = 1; i <= slList.recnum; i++) {
-      SLCell slCell;
-      for (int j = 0; j <= slList.keynum; j++) {
+    for (int i = 1; i <= slList.length; i++) {
+      static_linked_list_node_t slCell;
+      for (int j = 0; j <= slList.key_cnt; j++) {
         if (j == 0) {
           slCell.keys[j] = 49 + (rand() % 9);       // 第一位, '1' - '9'
-        } else if (j == slList.keynum) {
+        } else if (j == slList.key_cnt) {
           slCell.keys[j] = 0;                       // 置零位, '\0'
         } else {
           slCell.keys[j] = 49 + (rand() % 10) - 1;  // 其他位, '0' - '9'
         }
       }
 
-      if (i != slList.recnum) {
+      if (i != slList.length) {
           slCell.next = i + 1;
       } else {
           slCell.next = 0;
@@ -297,12 +297,12 @@ void TestRadixSort() {
     }
 
     printf("排序前:\n");
-    RadixArrayOutput(&slList.r, slList.recnum);
+    RadixArrayOutput(&slList.r, slList.length);
 
     RadixSort(&slList);
 
     printf("排序后:\n");
-    RadixArrayOutput(&slList.r, slList.recnum);
+    RadixArrayOutput(&slList.r, slList.length);
 
     printf("-------------------------------------------------------------\n");
 }

@@ -123,21 +123,24 @@ int SeqListLocate(seq_list_t* seq_list, ELEM_TYPE elem, int (*compare)(ELEM_TYPE
  * @return 是否合并成功
  */
 Status SeqListMerge(seq_list_t* list_a, seq_list_t* list_b, seq_list_t* merged_list) {
-    ELEM_TYPE* list_a_cur = list_a->elements;
-    ELEM_TYPE* list_b_cur = list_b->elements;
-    ELEM_TYPE* list_a_last = list_a->elements + list_a->length - 1;
-    ELEM_TYPE* list_b_last = list_b->elements + list_b->length - 1;
+    ELEM_TYPE* list_a_cur = list_a->elements;   // list_a_cur指针 -> 顺序表a的elements数组首地址
+    ELEM_TYPE* list_b_cur = list_b->elements;   // list_b_cur指针 -> 顺序表b的elements数组首地址
+    ELEM_TYPE* list_a_last = list_a->elements + list_a->length - 1; // last_a_last指针 -> 顺序表a的elements数组尾地址
+    ELEM_TYPE* list_b_last = list_b->elements + list_b->length - 1; // last_b_last指针 -> 顺序表b的elements数组尾地址
 
+    // 合并后的表
     merged_list->length = list_a->length + list_b->length;  // 长度
     merged_list->size = list_a->size + list_b->size;        // 容量
-    merged_list->elements = (ELEM_TYPE*)malloc(merged_list->size * sizeof(ELEM_TYPE));
+    merged_list->elements = (ELEM_TYPE*)malloc(merged_list->size * sizeof(ELEM_TYPE));  // elements数组分配内存
     if (!merged_list->elements) {
         return NON_ALLOCATED;   // 分配失败
     }
 
-    ELEM_TYPE* merged_list_cur = merged_list->elements;
+    ELEM_TYPE* merged_list_cur = merged_list->elements; // merged_list_cur指针 -> 合并后的顺序表的elements数组首地址
 
+    // 执行合并
     while (list_a_cur <= list_a_last && list_b_cur <=list_b_last) {
+        // list_a_cur和list_b_cur指向的两个元素, 选择较小的进入merged_list, 对应的cur指针向后移一位, merged_list_cur向后移一位
         if (*list_a_cur <= *list_b_cur) {
             *merged_list_cur = *list_a_cur;
             list_a_cur++;
@@ -148,12 +151,14 @@ Status SeqListMerge(seq_list_t* list_a, seq_list_t* list_b, seq_list_t* merged_l
         merged_list_cur++;
     }
 
+    // list_a剩余元素加到merged_list尾部(如果list_a有剩余)
     while (list_a_cur <= list_a_last) {
         *merged_list_cur = *list_a_cur;
         merged_list_cur++;
         list_a_cur++;
     }
 
+    // list_b剩余元素加到merged_list尾部(如果list_b有剩余)
     while (list_b_cur <= list_b_last) {
         *merged_list_cur = *list_b_cur;
         merged_list_cur++;

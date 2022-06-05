@@ -11,5 +11,11 @@
 
 void TestLinkedListCreate();
 
+void TestLinkedListGetElem();
+
+void TestLinkedListDelete();
+
+void TestLinkedListInsert();
+
 
 #endif // CYBER_DASH_LINKED_LIST_TEST_H

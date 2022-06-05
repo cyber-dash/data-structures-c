@@ -9,5 +9,11 @@ int main() {
 
     TestLinkedListCreate();
 
+    TestLinkedListGetElem();
+
+    TestLinkedListDelete();
+
+    TestLinkedListInsert();
+
     return 0;
 }

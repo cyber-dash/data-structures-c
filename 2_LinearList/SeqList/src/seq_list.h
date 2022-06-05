@@ -10,7 +10,12 @@
 #define LIST_INCREMENT  10
 #define ELEM_TYPE       int
 
-typedef enum { OK, ERROR, NON_ALLOCATED } Status;
+typedef enum {
+    OK,             //!< 成功/正确
+    NON_ALLOCATED,  //!< 内存分配失败
+    NON_EXISTENT,   //!< 不存在
+    ERROR           //!< 错误
+} Status;
 
 typedef struct {
     ELEM_TYPE* elements;

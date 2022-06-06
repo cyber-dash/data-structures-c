@@ -70,10 +70,10 @@ void InsertSort(seq_list_t* L)
     //对顺序表L作直接插入排序
     for (int i = 2; i <= L->length; ++i)
     {
-        if (LowerThan(L->r[i].key, L->r[i - 1].key)) { // (原书: "<"，需将L.r[i]插入有序子表)
+        if (LowerThan(L->r[i].key, L->r[i - 1].key)) { // ("<"，需将L.r[i]插入有序子表)
 
             // 交换 L->r[i]与L->r[i - 1]
-            L->r[0] = L->r[i];                  // (原书: 复制为哨兵)
+            L->r[0] = L->r[i];                  // (复制为哨兵)
             L->r[i] = L->r[i - 1];
 
             int j;

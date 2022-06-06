@@ -5,41 +5,41 @@
 #include "graph.h"
 
 
-// Status CreateGraph(MGraph *G, VertexType *V, ArcCell *VR);
-Status CreateGraph(MGraph *G);
+// Status CreateGraph(matrix_graph_t *G, VERTEX_TYPE *V, edge_t *VR);
+Status CreateGraph(matrix_graph_t *G);
 
 // 使用弧信息数组构造图
-Status CreateGraphByArcCellArr(MGraph *G, ArcCell *arcCellArr, int vertexNum, int arcNum);
+Status CreateGraphByArcCellArr(matrix_graph_t *G, edge_t *arcCellArr, int vertexNum, int arcNum);
 
 // 构造有向图
-Status CreateDG(MGraph *G);
+Status CreateDG(matrix_graph_t *G);
 
 // 构造有向网
-Status CreateDN(MGraph *G);
+Status CreateDN(matrix_graph_t *G);
 
 // 构造无向图
-Status CreateUDG(MGraph *G);
+Status CreateUDG(matrix_graph_t *G);
 
 // 结点(索引)v在图G中的第一个(索引)邻接节点
-int FirstAdjVex(MGraph *G, int v);
+int FirstAdjVertex(matrix_graph_t *graph, int vertex_idx);
 
 // 结点(索引)v在图G中的, 结点(索引)w之外第一个(索引)邻接节点
-int NextAdjVex(MGraph *G, int v, int w);
+int NextAdjVex(matrix_graph_t *G, int v, int w);
 
 // 构造无向网
-Status CreateUDNByArcCellArr(MGraph *G, ArcCell *arcCellArr, int arcCount, VertexType *vertexArr, int vertexCount);
+Status CreateUDNByArcCellArr(matrix_graph_t *graph, edge_t *edge_arr, int edge_cnt, VERTEX_TYPE *vertex_arr, int vertex_cnt);
 
-Status DestroyGraph(MGraph *G);
+Status DestroyGraph(matrix_graph_t *G);
 
-Status LocateVex(MGraph G, VertexType u, int *idx);
+Status LocateVertex(matrix_graph_t G, VERTEX_TYPE u, int *idx);
 
 // 获取结点的第一条弧(边)
-ArcCell* GetFirstArc(MGraph *G, int vertexIdx);
+edge_t* GetFirstArc(matrix_graph_t *G, int vertexIdx);
 
 // 获取结点的基于某条弧(边)的下一条弧(边)
-ArcCell* GetNextArc(MGraph *G, int vertexIdx, ArcCell* arc);
+edge_t* GetNextArc(matrix_graph_t *G, int vertexIdx, edge_t* arc);
 
 // 打印图的邻接矩阵
-Status PrintGraphMatrix(MGraph* G, VRType valueType);
+Status PrintGraphMatrix(matrix_graph_t* G, WEIGHT_TYPE valueType);
 
-// Status PutVex(MGraph *G, VertexType v, );
+// Status PutVex(matrix_graph_t *G, VERTEX_TYPE v, );

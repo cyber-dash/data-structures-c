@@ -4,7 +4,7 @@
 
 #include "heap.h"
 
-int LowerThan(MinSpanNode* node1, MinSpanNode* node2) {
+int LowerThan(min_span_node_t* node1, min_span_node_t* node2) {
     if (node1->weight_type == DOUBLE && node2->weight_type == DOUBLE) {
         if (node1->weight.double_value < node2->weight.double_value) {
             return 1;
@@ -23,7 +23,7 @@ int LowerThan(MinSpanNode* node1, MinSpanNode* node2) {
 }
 
 
-int LargerThan(MinSpanNode* node1, MinSpanNode* node2) {
+int LargerThan(min_span_node_t* node1, min_span_node_t* node2) {
     if (node1->weight_type == DOUBLE && node2->weight_type == DOUBLE) {
         if (node1->weight.double_value > node2->weight.double_value) {
             return 1;
@@ -46,9 +46,9 @@ int LargerThan(MinSpanNode* node1, MinSpanNode* node2) {
 // @param H 堆数据
 // @param s 结点值
 // @param m 堆最大长度
-void HeapAdjust(MinSpanNodeArr minSpanNodeArr, int index, int heapSize)
+void HeapAdjust(min_span_node_arr_t minSpanNodeArr, int index, int heapSize)
 {
-    MinSpanNode node = minSpanNodeArr[index];
+    min_span_node_t node = minSpanNodeArr[index];
 
     for (int curChildIdx = 2 * index; curChildIdx <= heapSize; curChildIdx *= 2)
         // 沿key较大的孩子结点向下筛选, 从1开始, 因此是乘以2
@@ -71,7 +71,7 @@ void HeapAdjust(MinSpanNodeArr minSpanNodeArr, int index, int heapSize)
 } // HeapAdjust
 
 
-void BuildHeap(MinSpanNodeArr minSpanNodeArr, int heapSize) {
+void BuildHeap(min_span_node_arr_t minSpanNodeArr, int heapSize) {
 
     for (int i = heapSize / 2; i > 0; i--) {
         HeapAdjust(minSpanNodeArr, i, heapSize);

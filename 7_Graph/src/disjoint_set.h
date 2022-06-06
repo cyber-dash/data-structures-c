@@ -15,15 +15,16 @@ typedef struct {
 
 
 // 构造函数
-Status InitDisjointSet(DisjointSet* disjointSet, int size);
+Status InitDisjointSet(DisjointSet* disjoint_set, int size);
 
-Status DeleteDisjointSet(DisjointSet* disjointSet);
+// 销毁并查集
+Status DisjointSetDestroy(DisjointSet** disjoint_set);
 
 // 合并两个集合
-Status DisjointSetUnion(DisjointSet* disjointSet, int root1, int root2);
+Status DisjointSetUnion(DisjointSet* disjoint_set, int root1, int root2);
 
 // 查找
-int Find(DisjointSet* disjointSet, int value);
+int DisjointSetFindRecursive(DisjointSet* disjoint_set, int index);
 
 /*
 // 合并集合(Weighted)

@@ -44,16 +44,16 @@ void TestCreateUDNByArcCellArr() {
     printf("         \\/\n");
     printf("       结点3\n");
 
-    VertexType vertices[4] = { 0, 1, 2, 3};
+    VERTEX_TYPE vertices[4] = {0, 1, 2, 3};
 
-    MGraph G;
-    G.vexnum = 4;   // 结点数量
-    G.arcnum = 5;   // 弧(边)数量
+    matrix_graph_t G;
+    G.vertex_count = 4;   // 结点数量
+    G.edge_count = 5;   // 弧(边)数量
     G.kind = UDN;   // 类型:无向网
 
     // 结点信息写到G.vexs数组
-    for (int i = 0; i < sizeof(vertices) / sizeof(VertexType); i++) {
-        G.vexs[i] = vertices[i];
+    for (int i = 0; i < sizeof(vertices) / sizeof(VERTEX_TYPE); i++) {
+        G.vertices[i] = vertices[i];
     }
 
     // 弧(边)信息, 注意没有方向
@@ -67,13 +67,13 @@ void TestCreateUDNByArcCellArr() {
     double weightArr[5] = { 0.1, 0.12, 0.2, 0.14, 0.05 }; // 权重
 
     // 使用起点(索引)数组, 终点(索引)数组, 权重数组, 构造弧(边)数组
-    ArcCell arcCellArr[5];
-    for (int i = 0; i < sizeof(arcCellArr) / sizeof(ArcCell); i++) {
-        arcCellArr[i].adj = DOUBLE;
-        arcCellArr[i].info = (InfoType*)malloc(sizeof(InfoType));
-        arcCellArr[i].info->startingVertexIndex = startingVertexIndexArr[i];
-        arcCellArr[i].info->endingVertexIndex = endingVertexIndexArr[i];
-        arcCellArr[i].info->value.double_value = weightArr[i];
+    edge_t arcCellArr[5];
+    for (int i = 0; i < sizeof(arcCellArr) / sizeof(edge_t); i++) {
+        arcCellArr[i].weight_type = DOUBLE;
+        arcCellArr[i].edge_info = (edge_info_t*)malloc(sizeof(edge_info_t));
+        arcCellArr[i].edge_info->starting_vertex_idx = startingVertexIndexArr[i];
+        arcCellArr[i].edge_info->ending_vertex_idx = endingVertexIndexArr[i];
+        arcCellArr[i].edge_info->value.double_value = weightArr[i];
     }
 
     // 建图, 如果成功则打印
@@ -130,16 +130,17 @@ void TestDFSTraverse() {
     printf("         \\/\n");
     printf("       结点3\n");
 
-    VertexType vertices[4] = { 0, 1, 2, 3};
+    VERTEX_TYPE vertices[4] = {0, 1, 2, 3};
 
-    MGraph G;
-    G.vexnum = 4;   // 结点数量
-    G.arcnum = 5;   // 弧(边)数量
+    matrix_graph_t G;
+    G.weight_type = DOUBLE;
+    G.vertex_count = 4;   // 结点数量
+    G.edge_count = 5;   // 弧(边)数量
     G.kind = UDN;   // 类型:无向网
 
     // 结点信息写到G.vexs数组
-    for (int i = 0; i < sizeof(vertices) / sizeof(VertexType); i++) {
-        G.vexs[i] = vertices[i];
+    for (int i = 0; i < sizeof(vertices) / sizeof(VERTEX_TYPE); i++) {
+        G.vertices[i] = vertices[i];
     }
 
     // 弧(边)信息, 注意没有方向
@@ -153,13 +154,13 @@ void TestDFSTraverse() {
     double weightArr[5] = { 0.1, 0.12, 0.2, 0.14, 0.05 }; // 权重
 
     // 使用起点(索引)数组, 终点(索引)数组, 权重数组, 构造弧(边)数组
-    ArcCell arcCellArr[5];
-    for (int i = 0; i < sizeof(arcCellArr) / sizeof(ArcCell); i++) {
-        arcCellArr[i].adj = DOUBLE;
-        arcCellArr[i].info = (InfoType*)malloc(sizeof(InfoType));
-        arcCellArr[i].info->startingVertexIndex = startingVertexIndexArr[i];
-        arcCellArr[i].info->endingVertexIndex = endingVertexIndexArr[i];
-        arcCellArr[i].info->value.double_value = weightArr[i];
+    edge_t arcCellArr[5];
+    for (int i = 0; i < sizeof(arcCellArr) / sizeof(edge_t); i++) {
+        arcCellArr[i].weight_type = DOUBLE;
+        arcCellArr[i].edge_info = (edge_info_t*)malloc(sizeof(edge_info_t));
+        arcCellArr[i].edge_info->starting_vertex_idx = startingVertexIndexArr[i];
+        arcCellArr[i].edge_info->ending_vertex_idx = endingVertexIndexArr[i];
+        arcCellArr[i].edge_info->value.double_value = weightArr[i];
     }
 
     printf("深度优先遍历:\n");
@@ -208,16 +209,16 @@ void TestBFSTraverse() {
     printf("         \\/\n");
     printf("       结点3\n");
 
-    VertexType vertices[4] = { 0, 1, 2, 3};
+    VERTEX_TYPE vertices[4] = {0, 1, 2, 3};
 
-    MGraph G;
-    G.vexnum = 4;   // 结点数量
-    G.arcnum = 5;   // 弧(边)数量
+    matrix_graph_t G;
+    G.vertex_count = 4;   // 结点数量
+    G.edge_count = 5;   // 弧(边)数量
     G.kind = UDN;   // 类型:无向网
 
     // 结点信息写到G.vexs数组
-    for (int i = 0; i < sizeof(vertices) / sizeof(VertexType); i++) {
-        G.vexs[i] = vertices[i];
+    for (int i = 0; i < sizeof(vertices) / sizeof(VERTEX_TYPE); i++) {
+        G.vertices[i] = vertices[i];
     }
 
     // 弧(边)信息, 注意没有方向
@@ -231,13 +232,13 @@ void TestBFSTraverse() {
     double weightArr[5] = { 0.1, 0.12, 0.2, 0.14, 0.05 }; // 权重
 
     // 使用起点(索引)数组, 终点(索引)数组, 权重数组, 构造弧(边)数组
-    ArcCell arcCellArr[5];
-    for (int i = 0; i < sizeof(arcCellArr) / sizeof(ArcCell); i++) {
-        arcCellArr[i].adj = DOUBLE;
-        arcCellArr[i].info = (InfoType*)malloc(sizeof(InfoType));
-        arcCellArr[i].info->startingVertexIndex = startingVertexIndexArr[i];
-        arcCellArr[i].info->endingVertexIndex = endingVertexIndexArr[i];
-        arcCellArr[i].info->value.double_value = weightArr[i];
+    edge_t arcCellArr[5];
+    for (int i = 0; i < sizeof(arcCellArr) / sizeof(edge_t); i++) {
+        arcCellArr[i].weight_type = DOUBLE;
+        arcCellArr[i].edge_info = (edge_info_t*)malloc(sizeof(edge_info_t));
+        arcCellArr[i].edge_info->starting_vertex_idx = startingVertexIndexArr[i];
+        arcCellArr[i].edge_info->ending_vertex_idx = endingVertexIndexArr[i];
+        arcCellArr[i].edge_info->value.double_value = weightArr[i];
     }
 
     printf("广度优先遍历:\n");
@@ -254,33 +255,33 @@ void TestBuildHeap() {
     printf("                        Test BuildHeap                       \n");
     printf("                           测试建堆                           \n\n\n");
 
-    MinSpanNodeArr minSpanNodeArr;
+    min_span_node_arr_t minSpanNodeArr;
 
-    MinSpanNode minSpanNode1;
+    min_span_node_t minSpanNode1;
     minSpanNode1.weight_type = DOUBLE;
     minSpanNode1.weight.double_value = 0.4;
     minSpanNode1.starting_vertex_idx = 0;
     minSpanNode1.ending_vertex_idx = 1;
 
-    MinSpanNode minSpanNode2;
+    min_span_node_t minSpanNode2;
     minSpanNode2.weight_type = DOUBLE;
     minSpanNode2.weight.double_value = 0.2;
     minSpanNode2.starting_vertex_idx = 0;
     minSpanNode2.ending_vertex_idx = 2;
 
-    MinSpanNode minSpanNode3;
+    min_span_node_t minSpanNode3;
     minSpanNode3.weight_type = DOUBLE;
     minSpanNode3.weight.double_value = 0.5;
     minSpanNode3.starting_vertex_idx = 1;
     minSpanNode3.ending_vertex_idx = 2;
 
-    MinSpanNode minSpanNode4;
+    min_span_node_t minSpanNode4;
     minSpanNode4.weight_type = DOUBLE;
     minSpanNode4.weight.double_value = 0.3;
     minSpanNode4.starting_vertex_idx = 0;
     minSpanNode4.ending_vertex_idx = 3;
 
-    MinSpanNode minSpanNode5;
+    min_span_node_t minSpanNode5;
     minSpanNode5.weight_type = DOUBLE;
     minSpanNode5.weight.double_value = 0.1;
     minSpanNode5.starting_vertex_idx = 1;
@@ -319,22 +320,22 @@ void TestPrim() {
     printf("                          Test Prim                          \n");
     printf("                      测试(Prim)最小生成树                     \n\n\n");
 
-    VertexType vertices[4] = { 0, 1, 2, 3 };
+    VERTEX_TYPE vertices[4] = {0, 1, 2, 3 };
 
-    MGraph G;
-    G.vexnum = 4;   // 结点数量
-    G.arcnum = 5;   // 弧(边)数量
+    matrix_graph_t G;
+    G.vertex_count = 4;   // 结点数量
+    G.edge_count = 5;   // 弧(边)数量
     G.kind = DN;
     G.weight_type = DOUBLE;
 
     // 结点信息写到G.vexs数组
-    for (int i = 0; i < G.vexnum; i++) {
-        G.vexs[i] = vertices[i];
+    for (int i = 0; i < G.vertex_count; i++) {
+        G.vertices[i] = vertices[i];
 
-        for (int j = 0; j < G.vexnum; j++) {
-            G.arcs[i][j].adj = DOUBLE;
-            G.arcs[i][j].info = (InfoType*)malloc(sizeof(InfoType));
-            G.arcs[i][j].info->value.double_value = DBL_MAX;
+        for (int j = 0; j < G.vertex_count; j++) {
+            G.adj_matrix[i][j].weight_type = DOUBLE;
+            G.adj_matrix[i][j].edge_info = (edge_info_t*)malloc(sizeof(edge_info_t));
+            G.adj_matrix[i][j].edge_info->value.double_value = DBL_MAX;
         }
     }
 
@@ -348,21 +349,21 @@ void TestPrim() {
     double weightArr[5] = { 0.1, 0.12, 0.01, 0.14, 0.05 }; // 权重
 
     // 使用起点(索引)数组, 终点(索引)数组, 权重数组, 构造弧(边)数组
-    for (int i = 0; i < G.arcnum; i++) {
+    for (int i = 0; i < G.edge_count; i++) {
         int curRowIdx = startingVertexIndexArr[i];
         int curColIdx = endingVertexIndexArr[i];
-        G.arcs[curRowIdx][curColIdx].adj = DOUBLE;
-        G.arcs[curRowIdx][curColIdx].info = (InfoType*)malloc(sizeof(InfoType));
-        G.arcs[curRowIdx][curColIdx].info->startingVertexIndex = startingVertexIndexArr[i];
-        G.arcs[curRowIdx][curColIdx].info->endingVertexIndex = endingVertexIndexArr[i];
-        G.arcs[curRowIdx][curColIdx].info->value.double_value = weightArr[i];
+        G.adj_matrix[curRowIdx][curColIdx].weight_type = DOUBLE;
+        G.adj_matrix[curRowIdx][curColIdx].edge_info = (edge_info_t*)malloc(sizeof(edge_info_t));
+        G.adj_matrix[curRowIdx][curColIdx].edge_info->starting_vertex_idx = startingVertexIndexArr[i];
+        G.adj_matrix[curRowIdx][curColIdx].edge_info->ending_vertex_idx = endingVertexIndexArr[i];
+        G.adj_matrix[curRowIdx][curColIdx].edge_info->value.double_value = weightArr[i];
     }
 
-    MinSpanNodeArr minSpanNodeArr;
+    min_span_node_arr_t minSpanNodeArr;
     Prim(&G, 0, minSpanNodeArr);
 
     printf("最小生成树: \n");
-    PrintMinSpanTree(minSpanNodeArr, G.vexnum - 1);
+    PrintMinSpanTree(minSpanNodeArr, G.vertex_count - 1);
 
     printf("-------------------- 抖音: cyberdash_yuan --------------------\n");
 }
@@ -376,22 +377,22 @@ void TestKruskal() {
     printf("                         Test Kruskal                        \n");
     printf("                  测试克努斯卡尔(Kruskal)最小生成树              \n\n\n");
 
-    VertexType vertices[4] = { 0, 1, 2, 3};
+    VERTEX_TYPE vertices[4] = {0, 1, 2, 3};
 
-    MGraph G;
-    G.vexnum = 4;   // 结点数量
-    G.arcnum = 5;   // 弧(边)数量
+    matrix_graph_t G;
+    G.vertex_count = 4;   // 结点数量
+    G.edge_count = 5;   // 弧(边)数量
     G.kind = UDN;   // 类型:无向网
     G.weight_type = DOUBLE;
 
     // 结点信息写到G.vexs数组
-    for (int i = 0; i < G.vexnum; i++) {
-        G.vexs[i] = vertices[i];
+    for (int i = 0; i < G.vertex_count; i++) {
+        G.vertices[i] = vertices[i];
 
-        for (int j = 0; j < G.vexnum; j++) {
-            G.arcs[i][j].adj = DOUBLE;
-            G.arcs[i][j].info = (InfoType*)malloc(sizeof(InfoType));
-            G.arcs[i][j].info->value.double_value = DBL_MAX;
+        for (int j = 0; j < G.vertex_count; j++) {
+            G.adj_matrix[i][j].weight_type = DOUBLE;
+            G.adj_matrix[i][j].edge_info = (edge_info_t*)malloc(sizeof(edge_info_t));
+            G.adj_matrix[i][j].edge_info->value.double_value = DBL_MAX;
         }
     }
 
@@ -405,21 +406,21 @@ void TestKruskal() {
     double weightArr[5] = { 0.1, 0.12, 0.01, 0.14, 0.05 }; // 权重
 
     // 使用起点(索引)数组, 终点(索引)数组, 权重数组, 构造弧(边)数组
-    for (int i = 0; i < G.arcnum; i++) {
+    for (int i = 0; i < G.edge_count; i++) {
         int curRowIdx = startingVertexIndexArr[i];
         int curColIdx = endingVertexIndexArr[i];
-        G.arcs[curRowIdx][curColIdx].adj = DOUBLE;
-        G.arcs[curRowIdx][curColIdx].info = (InfoType*)malloc(sizeof(InfoType));
-        G.arcs[curRowIdx][curColIdx].info->startingVertexIndex = startingVertexIndexArr[i];
-        G.arcs[curRowIdx][curColIdx].info->endingVertexIndex = endingVertexIndexArr[i];
-        G.arcs[curRowIdx][curColIdx].info->value.double_value = weightArr[i];
+        G.adj_matrix[curRowIdx][curColIdx].weight_type = DOUBLE;
+        G.adj_matrix[curRowIdx][curColIdx].edge_info = (edge_info_t*)malloc(sizeof(edge_info_t));
+        G.adj_matrix[curRowIdx][curColIdx].edge_info->starting_vertex_idx = startingVertexIndexArr[i];
+        G.adj_matrix[curRowIdx][curColIdx].edge_info->ending_vertex_idx = endingVertexIndexArr[i];
+        G.adj_matrix[curRowIdx][curColIdx].edge_info->value.double_value = weightArr[i];
     }
 
-    MinSpanNodeArr minSpanNodeArr;
+    min_span_node_arr_t minSpanNodeArr;
     Kruskal(&G, minSpanNodeArr);
 
     printf("最小生成树: \n");
-    PrintMinSpanTree(minSpanNodeArr, G.vexnum - 1);
+    PrintMinSpanTree(minSpanNodeArr, G.vertex_count - 1);
 
     printf("-------------------- 抖音: cyberdash_yuan --------------------\n");
 }
@@ -450,11 +451,11 @@ void TestDijkstra() {
     printf("                        Test Dijkstra                        \n");
     printf("                 测试迪杰斯特拉(Dijkstra)最短路径               \n\n\n");
 
-    VertexType vertices[6] = { 0, 1, 2, 3, 4, 5};
+    VERTEX_TYPE vertices[6] = {0, 1, 2, 3, 4, 5};
 
-    MGraph G;
-    G.vexnum = 6;           // 结点数量
-    G.arcnum = 9;           // 弧(边)数量
+    matrix_graph_t G;
+    G.vertex_count = 6;           // 结点数量
+    G.edge_count = 9;           // 弧(边)数量
     G.kind = DN;            // 类型:有向网
     G.weight_type = DOUBLE;  // 弧(边)权值类型
 
@@ -467,37 +468,37 @@ void TestDijkstra() {
     double weightArr[9] = { 0.1, 0.12, 0.01, 0.14, 0.13, 0.05, 0.17, 0.09, 0.11}; // 权重
 
     // 对每个[i, j]进行初始化, 默认没有弧(边), 所有的弧(边)长为最大值
-    for (int i = 0; i < G.vexnum; i++) {
-        G.vexs[i] = vertices[i];
-        for (int j = 0; j < G.vexnum; j++) {
-            G.arcs[i][j].adj = DOUBLE;
-            G.arcs[i][j].info = (InfoType*)malloc(sizeof(InfoType));
-            G.arcs[i][j].info->startingVertexIndex = i;
-            G.arcs[i][j].info->endingVertexIndex = j;
-            G.arcs[i][j].info->value.double_value = DBL_MAX;
+    for (int i = 0; i < G.vertex_count; i++) {
+        G.vertices[i] = vertices[i];
+        for (int j = 0; j < G.vertex_count; j++) {
+            G.adj_matrix[i][j].weight_type = DOUBLE;
+            G.adj_matrix[i][j].edge_info = (edge_info_t*)malloc(sizeof(edge_info_t));
+            G.adj_matrix[i][j].edge_info->starting_vertex_idx = i;
+            G.adj_matrix[i][j].edge_info->ending_vertex_idx = j;
+            G.adj_matrix[i][j].edge_info->value.double_value = DBL_MAX;
         }
     }
 
-    for (int i = 0; i < G.arcnum; i++) {
+    for (int i = 0; i < G.edge_count; i++) {
         int curRowIdx = startingVertexIndexArr[i];
         int curColIdx = endingVertexIndexArr[i];
-        G.arcs[curRowIdx][curColIdx].info->startingVertexIndex = startingVertexIndexArr[i];
-        G.arcs[curRowIdx][curColIdx].info->endingVertexIndex = endingVertexIndexArr[i];
-        G.arcs[curRowIdx][curColIdx].info->value.double_value = weightArr[i];
+        G.adj_matrix[curRowIdx][curColIdx].edge_info->starting_vertex_idx = startingVertexIndexArr[i];
+        G.adj_matrix[curRowIdx][curColIdx].edge_info->ending_vertex_idx = endingVertexIndexArr[i];
+        G.adj_matrix[curRowIdx][curColIdx].edge_info->value.double_value = weightArr[i];
     }
 
     int P[MAX_VERTEX_CNT][MAX_VERTEX_CNT];
-    ArcCell D[MAX_VERTEX_CNT];
+    edge_t D[MAX_VERTEX_CNT];
     int v0 = 0; // 从索引0结点开始(到其他结点)
 
     // D初始化
     for (int i = 0; i < MAX_VERTEX_CNT; i++) {
-        D[i].adj = DOUBLE;
-        D[i].info = (InfoType*)malloc(sizeof(InfoType));
+        D[i].weight_type = DOUBLE;
+        D[i].edge_info = (edge_info_t*)malloc(sizeof(edge_info_t));
 
-        D[i].info->startingVertexIndex = 0;
-        D[i].info->endingVertexIndex = i;
-        D[i].info->value.double_value = DBL_MAX;
+        D[i].edge_info->starting_vertex_idx = 0;
+        D[i].edge_info->ending_vertex_idx = i;
+        D[i].edge_info->value.double_value = DBL_MAX;
     }
 
     ShortestPath_Dijkstra(&G, v0, P, D);
@@ -532,11 +533,11 @@ void TestBellmanFord() {
     printf("                       Test BellmanFord                      \n");
     printf("                测试贝尔曼福特(BellmanFord)最短路径              \n\n\n");
 
-    VertexType vertices[6] = { 0, 1, 2, 3, 4, 5};
+    VERTEX_TYPE vertices[6] = {0, 1, 2, 3, 4, 5};
 
-    MGraph G;
-    G.vexnum = 6;           // 结点数量
-    G.arcnum = 9;           // 弧(边)数量
+    matrix_graph_t G;
+    G.vertex_count = 6;           // 结点数量
+    G.edge_count = 9;           // 弧(边)数量
     G.kind = DN;            // 类型:有向网
     G.weight_type = DOUBLE;  // 弧(边)权值类型
 
@@ -549,37 +550,37 @@ void TestBellmanFord() {
     double weightArr[9] = { 0.1, 0.12, 0.01, 0.14, 0.13, 0.05, 0.17, 0.09, 0.11}; // 权重
 
     // 对每个[i, j]进行初始化, 默认没有弧(边), 所有的弧(边)长为最大值
-    for (int i = 0; i < G.vexnum; i++) {
-        G.vexs[i] = vertices[i];
-        for (int j = 0; j < G.vexnum; j++) {
-            G.arcs[i][j].adj = DOUBLE;
-            G.arcs[i][j].info = (InfoType*)malloc(sizeof(InfoType));
-            G.arcs[i][j].info->startingVertexIndex = i;
-            G.arcs[i][j].info->endingVertexIndex = j;
-            G.arcs[i][j].info->value.double_value = DBL_MAX;
+    for (int i = 0; i < G.vertex_count; i++) {
+        G.vertices[i] = vertices[i];
+        for (int j = 0; j < G.vertex_count; j++) {
+            G.adj_matrix[i][j].weight_type = DOUBLE;
+            G.adj_matrix[i][j].edge_info = (edge_info_t*)malloc(sizeof(edge_info_t));
+            G.adj_matrix[i][j].edge_info->starting_vertex_idx = i;
+            G.adj_matrix[i][j].edge_info->ending_vertex_idx = j;
+            G.adj_matrix[i][j].edge_info->value.double_value = DBL_MAX;
         }
     }
 
-    for (int i = 0; i < G.arcnum; i++) {
+    for (int i = 0; i < G.edge_count; i++) {
         int curRowIdx = startingVertexIndexArr[i];
         int curColIdx = endingVertexIndexArr[i];
-        G.arcs[curRowIdx][curColIdx].info->startingVertexIndex = startingVertexIndexArr[i];
-        G.arcs[curRowIdx][curColIdx].info->endingVertexIndex = endingVertexIndexArr[i];
-        G.arcs[curRowIdx][curColIdx].info->value.double_value = weightArr[i];
+        G.adj_matrix[curRowIdx][curColIdx].edge_info->starting_vertex_idx = startingVertexIndexArr[i];
+        G.adj_matrix[curRowIdx][curColIdx].edge_info->ending_vertex_idx = endingVertexIndexArr[i];
+        G.adj_matrix[curRowIdx][curColIdx].edge_info->value.double_value = weightArr[i];
     }
 
     int predecessor[MAX_VERTEX_CNT][MAX_VERTEX_CNT];
-    ArcCell distance[MAX_VERTEX_CNT];
+    edge_t distance[MAX_VERTEX_CNT];
     int v0 = 0; // 从索引0结点开始(到其他结点)
 
     // D初始化
     for (int i = 0; i < MAX_VERTEX_CNT; i++) {
-        distance[i].adj = DOUBLE;
-        distance[i].info = (InfoType*)malloc(sizeof(InfoType));
+        distance[i].weight_type = DOUBLE;
+        distance[i].edge_info = (edge_info_t*)malloc(sizeof(edge_info_t));
 
-        distance[i].info->startingVertexIndex = 0;
-        distance[i].info->endingVertexIndex = i;
-        distance[i].info->value.double_value = DBL_MAX;
+        distance[i].edge_info->starting_vertex_idx = 0;
+        distance[i].edge_info->ending_vertex_idx = i;
+        distance[i].edge_info->value.double_value = DBL_MAX;
     }
 
     ShortestPath_BellmanFord(&G, v0, predecessor, distance);
@@ -613,11 +614,11 @@ void TestFloyd() {
     printf("                      Test Floyd-Warshall                         \n");
     printf("                测试弗洛伊德(Floyd-Warshall)最短路径              \n\n\n");
 
-    VertexType vertices[6] = { 0, 1, 2, 3, 4, 5};
+    VERTEX_TYPE vertices[6] = {0, 1, 2, 3, 4, 5};
 
-    MGraph G;
-    G.vexnum = 6;           // 结点数量
-    G.arcnum = 9;           // 弧(边)数量
+    matrix_graph_t G;
+    G.vertex_count = 6;           // 结点数量
+    G.edge_count = 9;           // 弧(边)数量
     G.kind = DN;            // 类型:有向网
     G.weight_type = DOUBLE;  // 弧(边)权值类型
 
@@ -629,44 +630,44 @@ void TestFloyd() {
     double weight_arr[9] = {0.1, 0.12, 0.01, 0.14, 0.13, 0.05, 0.17, 0.09, 0.11}; // 权重
 
     // 对每个[i, j]进行初始化, 默认没有弧(边), 所有的弧(边)长为最大值
-    for (int i = 0; i < G.vexnum; i++) {
-        G.vexs[i] = vertices[i];
-        for (int j = 0; j < G.vexnum; j++) {
-            G.arcs[i][j].adj = DOUBLE;
-            G.arcs[i][j].info = (InfoType*)malloc(sizeof(InfoType));
-            G.arcs[i][j].info->startingVertexIndex = i;
-            G.arcs[i][j].info->endingVertexIndex = j;
-            G.arcs[i][j].info->value.double_value = DBL_MAX;
+    for (int i = 0; i < G.vertex_count; i++) {
+        G.vertices[i] = vertices[i];
+        for (int j = 0; j < G.vertex_count; j++) {
+            G.adj_matrix[i][j].weight_type = DOUBLE;
+            G.adj_matrix[i][j].edge_info = (edge_info_t*)malloc(sizeof(edge_info_t));
+            G.adj_matrix[i][j].edge_info->starting_vertex_idx = i;
+            G.adj_matrix[i][j].edge_info->ending_vertex_idx = j;
+            G.adj_matrix[i][j].edge_info->value.double_value = DBL_MAX;
 
-            G.arcs[j][i].adj = DOUBLE;
-            G.arcs[j][i].info = (InfoType*)malloc(sizeof(InfoType));
-            G.arcs[j][i].info->startingVertexIndex = j;
-            G.arcs[j][i].info->endingVertexIndex = i;
-            G.arcs[j][i].info->value.double_value = DBL_MAX;
+            G.adj_matrix[j][i].weight_type = DOUBLE;
+            G.adj_matrix[j][i].edge_info = (edge_info_t*)malloc(sizeof(edge_info_t));
+            G.adj_matrix[j][i].edge_info->starting_vertex_idx = j;
+            G.adj_matrix[j][i].edge_info->ending_vertex_idx = i;
+            G.adj_matrix[j][i].edge_info->value.double_value = DBL_MAX;
         }
     }
 
-    for (int i = 0; i < G.arcnum; i++) {
+    for (int i = 0; i < G.edge_count; i++) {
         int row_idx = starting_vertex_index_arr[i];
         int col_idx = ending_vertex_index_arr[i];
 
-        G.arcs[row_idx][col_idx].info->startingVertexIndex = row_idx;
-        G.arcs[row_idx][col_idx].info->endingVertexIndex = col_idx;
-        G.arcs[row_idx][col_idx].info->value.double_value = weight_arr[i];
+        G.adj_matrix[row_idx][col_idx].edge_info->starting_vertex_idx = row_idx;
+        G.adj_matrix[row_idx][col_idx].edge_info->ending_vertex_idx = col_idx;
+        G.adj_matrix[row_idx][col_idx].edge_info->value.double_value = weight_arr[i];
 
-        G.arcs[col_idx][row_idx].info->startingVertexIndex = col_idx;
-        G.arcs[col_idx][row_idx].info->endingVertexIndex = row_idx;
-        G.arcs[col_idx][row_idx].info->value.double_value = weight_arr[i];
+        G.adj_matrix[col_idx][row_idx].edge_info->starting_vertex_idx = col_idx;
+        G.adj_matrix[col_idx][row_idx].edge_info->ending_vertex_idx = row_idx;
+        G.adj_matrix[col_idx][row_idx].edge_info->value.double_value = weight_arr[i];
     }
 
     int predecessor[MAX_VERTEX_CNT][MAX_VERTEX_CNT];
-    ArcCell distance[MAX_VERTEX_CNT][MAX_VERTEX_CNT];
+    edge_t distance[MAX_VERTEX_CNT][MAX_VERTEX_CNT];
 
     // D初始化
     for (int i = 0; i < MAX_VERTEX_CNT; i++) {
         for (int j = 0; j < MAX_VERTEX_CNT; j++) {
-            distance[i][j].adj = DOUBLE;
-            distance[i][j].info = (InfoType *) malloc(sizeof(InfoType));
+            distance[i][j].weight_type = DOUBLE;
+            distance[i][j].edge_info = (edge_info_t *) malloc(sizeof(edge_info_t));
         }
     }
 

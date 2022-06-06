@@ -8,20 +8,20 @@
 #include "graph.h"
 
 
-int LowerThan(MinSpanNode* node1, MinSpanNode* node2);
+int LowerThan(min_span_node_t* node1, min_span_node_t* node2);
 
 
-int LargerThan(MinSpanNode* node1, MinSpanNode* node2);
+int LargerThan(min_span_node_t* node1, min_span_node_t* node2);
 
 
 // @brief 迭代建立小顶堆
 // @param H 堆数据
 // @param s 结点值
 // @param m 堆最大长度
-void HeapAdjust(MinSpanNodeArr minSpanNodeArr, int index, int heapSize);
+void HeapAdjust(min_span_node_arr_t minSpanNodeArr, int index, int heapSize);
 
 
-void BuildHeap(MinSpanNodeArr minSpanNodeArr, int heapSize);
+void BuildHeap(min_span_node_arr_t minSpanNodeArr, int heapSize);
 
 
 #endif // CYBER_DASH_HEAP_H

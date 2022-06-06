@@ -124,7 +124,30 @@ Status LinkedListDelete(linked_list_t linked_list_head, int pos, ELEM_TYPE* elem
 }
 
 
-Status LinkedListMerge(linked_list_t linked_list_a, linked_list_t linked_list_b, linked_list_t merged_list) {
+Status LinkedListMerge(linked_list_t list_a_head, linked_list_t list_b_head, linked_list_t* merged_list_head) {
+
+    linked_node_t* list_a_cur = list_a_head->next;
+    linked_node_t* list_b_cur = list_b_head->next;
+
+    *merged_list_head = list_a_head;
+    linked_node_t* list_c_cur = list_a_head;
+
+    while (list_a_cur && list_b_cur) {
+        if (list_a_cur->data <= list_b_cur->data) {
+            list_c_cur->next = list_a_cur;
+            list_c_cur = list_a_cur;
+            list_a_cur = list_a_cur->next;
+        } else {
+            list_c_cur->next = list_b_cur;
+            list_c_cur = list_b_cur;
+            list_b_cur = list_b_cur->next;
+        }
+    }
+
+    if (list_a_cur) {
+        list_c_cur->next = list_a_cur;
+        free(list_b_head);
+    }
 
     return OK;
 }

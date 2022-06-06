@@ -11,9 +11,9 @@
 #include "disjoint_set.h"
 
 
-Status Visit(MGraph *graph, int vertex) {
+Status Visit(matrix_graph_t *graph, int vertex) {
     int index;
-    Status status = LocateVex(*graph, vertex, &index);
+    Status status = LocateVertex(*graph, vertex, &index);
     if (status == OK) {
         printf("%d ", index);
     }
@@ -24,34 +24,33 @@ Status Visit(MGraph *graph, int vertex) {
 
 /*!
  * DFS遍历
- * @param G 图
+ * @param graph 图
  * @param Visit 结点访问函数
  * @note
- * 严书中的实现方式, 其实并不需要传此参数
  */
-void DFSTraverse(MGraph G, Status (*Visit)(int v)) {
+void DFSTraverse(matrix_graph_t graph, Status (*Visit)(int v)) {
 
     // 构造visited数组
-    int* visited = (int*)malloc(G.vexnum * sizeof(int));
+    int* visited = (int*)malloc(graph.vertex_count * sizeof(int));
     /* error handler */
 
-    for (int i = 0; i < G.vexnum; i++) {
+    for (int i = 0; i < graph.vertex_count; i++) {
         visited[i] = 0;
     }
 
-    for (int v = 0; v < G.vexnum; ++v) {
+    for (int v = 0; v < graph.vertex_count; ++v) {
         if (!visited[v]) {
-            DFS(G, 0, visited);
+            DFS(graph, 0, visited);
         }
     }
 }
 
 
-void DFS(MGraph G, int v, int* visited) {
+void DFS(matrix_graph_t G, int v, int* visited) {
     visited[v] = 1;
     Visit(&G, v);   // 访问第v个顶点
 
-    for (int w = FirstAdjVex(&G, v); w >= 0; w = NextAdjVex(&G, v, w)) {
+    for (int w = FirstAdjVertex(&G, v); w >= 0; w = NextAdjVex(&G, v, w)) {
         if (!visited[w]) {
             DFS(G, w, visited);
         }
@@ -64,20 +63,20 @@ void DFS(MGraph G, int v, int* visited) {
  * @param G
  * @param Visit
  */
-void BFSTraverse(MGraph G, Status (*Visit)(MGraph *G, int v)) {
+void BFSTraverse(matrix_graph_t G, Status (*Visit)(matrix_graph_t *G, int v)) {
 
     // 构造visited数组
-    int* visited = (int*)malloc(G.vexnum * sizeof(int));
+    int* visited = (int*)malloc(G.vertex_count * sizeof(int));
     /* error handler */
 
-    for (int i = 0; i < G.vexnum; i++) {
+    for (int i = 0; i < G.vertex_count; i++) {
         visited[i] = 0;
     }
 
     LinkQueue Q;
     InitQueue(&Q);
 
-    for (int v = 0; v < G.vexnum; ++v) {
+    for (int v = 0; v < G.vertex_count; ++v) {
         if (!visited[v]) {
             visited[v] = 1;
             Visit(&G, v);
@@ -87,7 +86,7 @@ void BFSTraverse(MGraph G, Status (*Visit)(MGraph *G, int v)) {
             while (!QueueEmpty(&Q)) {
                 int u;
                 DeQueue(&Q, &u);
-                for (int w = FirstAdjVex(&G, u); w >= 0; w = NextAdjVex(&G, u, w)) {
+                for (int w = FirstAdjVertex(&G, u); w >= 0; w = NextAdjVex(&G, u, w)) {
                     if (!visited[w]) {
                         visited[w] = 1;
                         Visit(&G, w);
@@ -106,8 +105,8 @@ void BFSTraverse(MGraph G, Status (*Visit)(MGraph *G, int v)) {
  * @param v0
  * @param min_span_tree
  */
-void Prim(MGraph* graph, VRType v0, MinSpanNode* min_span_tree) {
-    int vertex_cnt = graph->vexnum;
+void Prim(matrix_graph_t* graph, WEIGHT_TYPE v0, min_span_node_t* min_span_tree) {
+    int vertex_cnt = graph->vertex_count;
 
     // warning: 此处使用数组, 如果可以, 使用set来实现vertex_set,
     // 如果你觉得用c语言做set比较麻烦, 请移步C++, C++更适合做算法
@@ -116,7 +115,7 @@ void Prim(MGraph* graph, VRType v0, MinSpanNode* min_span_tree) {
     int in_vertex_set_cnt = 1;
 
     do {
-        MinSpanNodeArr minSpanNodeArr;      // 小顶堆
+        min_span_node_arr_t minSpanNodeArr;      // 小顶堆
         int cur_heap_idx = 1;
 
         for (int i = 0; i < vertex_cnt; i++) {
@@ -127,15 +126,15 @@ void Prim(MGraph* graph, VRType v0, MinSpanNode* min_span_tree) {
             }
             for (int j = 0; j < vertex_cnt; j++) {
                 // 如果j在vertex_set 或者 边(i, j)不存在, continue
-                if (vertex_set[j] == TRUE || graph->arcs[i][j].info->value.double_value == DBL_MAX) {
+                if (vertex_set[j] == TRUE || graph->adj_matrix[i][j].edge_info->value.double_value == DBL_MAX) {
                     continue;
                 }
 
-                MinSpanNode cur_min_span_node;
-                cur_min_span_node.starting_vertex_idx = graph->arcs[i][j].info->startingVertexIndex;
-                cur_min_span_node.ending_vertex_idx = graph->arcs[i][j].info->endingVertexIndex;
-                cur_min_span_node.weight_type = graph->arcs[i][j].adj;
-                cur_min_span_node.weight.double_value = graph->arcs[i][j].info->value.double_value;
+                min_span_node_t cur_min_span_node;
+                cur_min_span_node.starting_vertex_idx = graph->adj_matrix[i][j].edge_info->starting_vertex_idx;
+                cur_min_span_node.ending_vertex_idx = graph->adj_matrix[i][j].edge_info->ending_vertex_idx;
+                cur_min_span_node.weight_type = graph->adj_matrix[i][j].weight_type;
+                cur_min_span_node.weight.double_value = graph->adj_matrix[i][j].edge_info->value.double_value;
 
                 minSpanNodeArr[cur_heap_idx] = cur_min_span_node;
 
@@ -155,29 +154,29 @@ void Prim(MGraph* graph, VRType v0, MinSpanNode* min_span_tree) {
 }
 
 
-void Kruskal(MGraph* graph, MinSpanNode* min_span_tree) {
+void Kruskal(matrix_graph_t* graph, min_span_node_t* min_span_tree) {
 
-    int vertex_num = graph->vexnum;     // 结点数量
-    int edge_num = graph->arcnum;       // 边数量
+    int vertex_num = graph->vertex_count;     // 结点数量
+    int edge_num = graph->edge_count;       // 边数量
 
-    MinSpanNodeArr minSpanNodeArr;      // 小顶堆
-    DisjointSet disjointSet;            // 并查集
-    InitDisjointSet(&disjointSet, vertex_num);
+    min_span_node_arr_t minSpanNodeArr;      // 小顶堆
+    DisjointSet disjoint_set;            // 并查集
+    InitDisjointSet(&disjoint_set, vertex_num);
 
     int arcCount = 1;
-    for (int i = 0; i < graph->vexnum; i++) {
-        for (int j = 0; j < graph->vexnum; j++) {
-            if (graph->arcs[i][j].info->value.double_value == DBL_MAX) {
+    for (int i = 0; i < graph->vertex_count; i++) {
+        for (int j = 0; j < graph->vertex_count; j++) {
+            if (graph->adj_matrix[i][j].edge_info->value.double_value == DBL_MAX) {
                 continue;
             }
 
-            ArcCell curArcCell = graph->arcs[i][j];
+            edge_t curArcCell = graph->adj_matrix[i][j];
 
-            MinSpanNode minSpanNode;
-            minSpanNode.starting_vertex_idx = curArcCell.info->startingVertexIndex;
-            minSpanNode.ending_vertex_idx = curArcCell.info->endingVertexIndex;
-            minSpanNode.weight_type = curArcCell.adj;
-            minSpanNode.weight.double_value = curArcCell.info->value.double_value;
+            min_span_node_t minSpanNode;
+            minSpanNode.starting_vertex_idx = curArcCell.edge_info->starting_vertex_idx;
+            minSpanNode.ending_vertex_idx = curArcCell.edge_info->ending_vertex_idx;
+            minSpanNode.weight_type = curArcCell.weight_type;
+            minSpanNode.weight.double_value = curArcCell.edge_info->value.double_value;
 
             minSpanNodeArr[arcCount] = minSpanNode;
 
@@ -192,17 +191,17 @@ void Kruskal(MGraph* graph, MinSpanNode* min_span_tree) {
     int count = 1;
     int idx = 0;
     while (count < vertex_num) {    // 执行n - 1次
-        MinSpanNode cur_min_span_node = minSpanNodeArr[1];  // 取堆顶
+        min_span_node_t cur_min_span_node = minSpanNodeArr[1];  // 取堆顶
 
         minSpanNodeArr[1] = minSpanNodeArr[arcCount];
         arcCount--;
         BuildHeap(minSpanNodeArr, arcCount);    // 重新调整堆
 
-        int curStartingRootIdx = Find(&disjointSet, cur_min_span_node.starting_vertex_idx);
-        int curEndingRootIdx = Find(&disjointSet, cur_min_span_node.ending_vertex_idx);
+        int curStartingRootIdx = DisjointSetFindRecursive(&disjoint_set, cur_min_span_node.starting_vertex_idx);
+        int curEndingRootIdx = DisjointSetFindRecursive(&disjoint_set, cur_min_span_node.ending_vertex_idx);
 
         if (curStartingRootIdx != curEndingRootIdx) {
-            DisjointSetUnion(&disjointSet, curStartingRootIdx, curEndingRootIdx);
+            DisjointSetUnion(&disjoint_set, curStartingRootIdx, curEndingRootIdx);
 
             min_span_tree[idx] = cur_min_span_node;
             idx++;
@@ -214,10 +213,10 @@ void Kruskal(MGraph* graph, MinSpanNode* min_span_tree) {
 
 
 // 打印最小生成树
-void PrintMinSpanTree(MinSpanNodeArr minSpanTree, int size) {
+void PrintMinSpanTree(min_span_node_arr_t minSpanTree, int size) {
 
     for (int i = 0; i < size; i++) {
-        MinSpanNode cur = minSpanTree[i];
+        min_span_node_t cur = minSpanTree[i];
 
         printf("起始点: %d, 终点: %d, 距离: %lf\n",
                cur.starting_vertex_idx,
@@ -236,26 +235,26 @@ void PrintMinSpanTree(MinSpanNodeArr minSpanTree, int size) {
  * @note
  * predecessor目前是二维数组, 用于多源最短路径, 单源可以替换成一维数组
  */
-void ShortestPath_Dijkstra(MGraph* graph, int v0, int (*predecessor)[MAX_VERTEX_CNT], ArcCell* distance ) {
+void ShortestPath_Dijkstra(matrix_graph_t* graph, int v0, int (*predecessor)[MAX_VERTEX_CNT], edge_t* distance ) {
 
     // 用Dijkstra算法求有向网G的v0顶点到其余顶点v的最短路径P[v]及其带权长度D[v]
-    int vertex_cnt = graph->vexnum;
+    int vertex_cnt = graph->vertex_count;
     int* final = (int*)malloc(vertex_cnt * sizeof(int));
-    // VRType type = graph->arcs[0][0].adj;
+    // WEIGHT_TYPE type = graph->adj_matrix_t[0][0].weight_type;
 
-    for (int v = 0; v < graph->vexnum; v++) {
+    for (int v = 0; v < graph->vertex_count; v++) {
         final[v] = FALSE;
 
-        for (int w = 0; w < graph->vexnum; w++) {
+        for (int w = 0; w < graph->vertex_count; w++) {
             predecessor[v][w] = -1;
         }
 
-        distance[v].info->value.double_value = graph->arcs[v0][v].info->value.double_value;
+        distance[v].edge_info->value.double_value = graph->adj_matrix[v0][v].edge_info->value.double_value;
         predecessor[v0][v] = v0;    // v0是从v0到v的最短路径, v的前一结点
     }
 
     // 初始化, v0到v0的距离为0
-    distance[v0].info->value.double_value = 0;
+    distance[v0].edge_info->value.double_value = 0;
 
     // 初始化, v0顶点属于S集
     final[v0] = TRUE;
@@ -267,9 +266,9 @@ void ShortestPath_Dijkstra(MGraph* graph, int v0, int (*predecessor)[MAX_VERTEX_
         int v;
         for (int w = 0; w < vertex_cnt; w++) {
             if (!final[w]) {
-                if (distance[w].info->value.double_value < doubleMin) {
+                if (distance[w].edge_info->value.double_value < doubleMin) {
                     v = w;
-                    doubleMin = distance[w].info->value.double_value;
+                    doubleMin = distance[w].edge_info->value.double_value;
                 }
             }
         }
@@ -278,9 +277,9 @@ void ShortestPath_Dijkstra(MGraph* graph, int v0, int (*predecessor)[MAX_VERTEX_
 
         for (int w = 0; w < vertex_cnt; w++) {
             if (!final[w] &&
-                doubleMin + graph->arcs[v][w].info->value.double_value < distance[w].info->value.double_value)
+                doubleMin + graph->adj_matrix[v][w].edge_info->value.double_value < distance[w].edge_info->value.double_value)
             {
-                distance[w].info->value.double_value = doubleMin + graph->arcs[v][w].info->value.double_value;
+                distance[w].edge_info->value.double_value = doubleMin + graph->adj_matrix[v][w].edge_info->value.double_value;
                 predecessor[v0][w] = v;
             }
         }
@@ -329,12 +328,12 @@ void ShortestPath_Dijkstra(MGraph* graph, int v0, int (*predecessor)[MAX_VERTEX_
  *         如果 distance[u] + 边(u, v)权重 < distance[v]:
  *             error "图包含负回路"
  */
-int ShortestPath_BellmanFord(MGraph* graph, int v0, int (*predecessor)[MAX_VERTEX_CNT], ArcCell* distance) {
+int ShortestPath_BellmanFord(matrix_graph_t* graph, int v0, int (*predecessor)[MAX_VERTEX_CNT], edge_t* distance) {
 
-    int vertex_cnt = graph->vexnum;
+    int vertex_cnt = graph->vertex_count;
     for (int i = 0; i < vertex_cnt; i++) {
-        distance[i].adj = DOUBLE;
-        distance[i].info->value.double_value = graph->arcs[v0][i].info->value.double_value;
+        distance[i].weight_type = DOUBLE;
+        distance[i].edge_info->value.double_value = graph->adj_matrix[v0][i].edge_info->value.double_value;
         predecessor[v0][i] = v0;
     }
 
@@ -342,16 +341,16 @@ int ShortestPath_BellmanFord(MGraph* graph, int v0, int (*predecessor)[MAX_VERTE
         // todo: 此处可以优化
         for (int u = 0; u < vertex_cnt; u++) {
             for (int v = 0; v < vertex_cnt; v++) {
-                if (graph->arcs[u][v].info->value.double_value == DBL_MAX) {
+                if (graph->adj_matrix[u][v].edge_info->value.double_value == DBL_MAX) {
                     continue;
                 }
 
                 // 松弛
-                if (distance[u].info->value.double_value + graph->arcs[u][v].info->value.double_value
-                    < distance[v].info->value.double_value)
+                if (distance[u].edge_info->value.double_value + graph->adj_matrix[u][v].edge_info->value.double_value
+                    < distance[v].edge_info->value.double_value)
                 {
-                    distance[v].info->value.double_value =
-                        distance[u].info->value.double_value + graph->arcs[u][v].info->value.double_value;
+                    distance[v].edge_info->value.double_value =
+                        distance[u].edge_info->value.double_value + graph->adj_matrix[u][v].edge_info->value.double_value;
                     predecessor[v0][v] = u;
                 }
             }
@@ -361,12 +360,12 @@ int ShortestPath_BellmanFord(MGraph* graph, int v0, int (*predecessor)[MAX_VERTE
     int has_negative_weight_cycle = FALSE; // 默认没有负权环
     for (int u = 0; u < vertex_cnt; u++) {
         for (int v = 0; v < vertex_cnt; v++) {
-            if (graph->arcs[u][v].info->value.double_value == DBL_MAX) {
+            if (graph->adj_matrix[u][v].edge_info->value.double_value == DBL_MAX) {
                 continue;
             }
 
-            if (distance[u].info->value.double_value + graph->arcs[u][v].info->value.double_value
-                < distance[v].info->value.double_value)
+            if (distance[u].edge_info->value.double_value + graph->adj_matrix[u][v].edge_info->value.double_value
+                < distance[v].edge_info->value.double_value)
             {
                 has_negative_weight_cycle = TRUE; // 有负权环
                 break;
@@ -398,34 +397,34 @@ int ShortestPath_BellmanFord(MGraph* graph, int v0, int (*predecessor)[MAX_VERTE
  *     distance[i][j] contains the total cost along the shortest path from i to j.
  *     predecessor[i][j] contains the predecessor of j on the shortest path from i to j.
  */
-void Floyd(MGraph* graph, int (*predecessor)[MAX_VERTEX_CNT], ArcCell (*distance)[MAX_VERTEX_CNT]) {
-    int vertex_cnt = graph->vexnum;
+void Floyd(matrix_graph_t* graph, int (*predecessor)[MAX_VERTEX_CNT], edge_t (*distance)[MAX_VERTEX_CNT]) {
+    int vertex_cnt = graph->vertex_count;
 
     for (int i = 0; i < vertex_cnt; i++) {
         for (int j = 0; j < vertex_cnt; j++) {
 
             if (i == j) {
                 if (graph->weight_type == INT) {
-                    distance[i][j].adj = INT;
-                    distance[i][j].info->value.int_value = 0;
+                    distance[i][j].weight_type = INT;
+                    distance[i][j].edge_info->value.int_value = 0;
                 } else if (graph->weight_type == DOUBLE) {
-                    distance[i][j].adj = DOUBLE;
-                    distance[i][j].info->value.double_value = 0;
+                    distance[i][j].weight_type = DOUBLE;
+                    distance[i][j].edge_info->value.double_value = 0;
                 }
             } else {
                 if (graph->weight_type == INT) {
-                    distance[i][j].adj = INT;
-                    if (graph->arcs[i][j].info->value.int_value != INT_MAX) {
-                        distance[i][j].info->value.int_value = graph->arcs[i][j].info->value.int_value;
+                    distance[i][j].weight_type = INT;
+                    if (graph->adj_matrix[i][j].edge_info->value.int_value != INT_MAX) {
+                        distance[i][j].edge_info->value.int_value = graph->adj_matrix[i][j].edge_info->value.int_value;
                     } else {
-                        distance[i][j].info->value.int_value = INT_MAX;
+                        distance[i][j].edge_info->value.int_value = INT_MAX;
                     }
                 } else if (graph->weight_type == DOUBLE) {
-                    distance[i][j].adj = DOUBLE;
-                    if (graph->arcs[i][j].info->value.double_value != DBL_MAX) {
-                        distance[i][j].info->value.double_value = graph->arcs[i][j].info->value.double_value;
+                    distance[i][j].weight_type = DOUBLE;
+                    if (graph->adj_matrix[i][j].edge_info->value.double_value != DBL_MAX) {
+                        distance[i][j].edge_info->value.double_value = graph->adj_matrix[i][j].edge_info->value.double_value;
                     } else {
-                        distance[i][j].info->value.double_value = DBL_MAX;
+                        distance[i][j].edge_info->value.double_value = DBL_MAX;
                     }
                 }
             }
@@ -438,19 +437,19 @@ void Floyd(MGraph* graph, int (*predecessor)[MAX_VERTEX_CNT], ArcCell (*distance
         for (int i = 0; i < vertex_cnt; i++) {
             for (int j = 0; j < vertex_cnt; j++) {
                 if (graph->weight_type == INT) {
-                    if (distance[i][k].info->value.int_value + distance[k][j].info->value.int_value
-                            < distance[i][j].info->value.int_value)
+                    if (distance[i][k].edge_info->value.int_value + distance[k][j].edge_info->value.int_value
+                            < distance[i][j].edge_info->value.int_value)
                     {
-                        distance[i][j].info->value.int_value =
-                            distance[i][k].info->value.int_value + distance[k][j].info->value.int_value;
+                        distance[i][j].edge_info->value.int_value =
+                            distance[i][k].edge_info->value.int_value + distance[k][j].edge_info->value.int_value;
                         predecessor[i][j] = predecessor[k][j];
                     }
                 } else if (graph->weight_type == DOUBLE) {
-                    if (distance[i][k].info->value.double_value + distance[k][j].info->value.double_value
-                        < distance[i][j].info->value.double_value)
+                    if (distance[i][k].edge_info->value.double_value + distance[k][j].edge_info->value.double_value
+                        < distance[i][j].edge_info->value.double_value)
                     {
-                        distance[i][j].info->value.double_value =
-                            distance[i][k].info->value.double_value + distance[k][j].info->value.double_value;
+                        distance[i][j].edge_info->value.double_value =
+                            distance[i][k].edge_info->value.double_value + distance[k][j].edge_info->value.double_value;
                         predecessor[i][j] = predecessor[k][j];
                     }
                 }
@@ -461,12 +460,12 @@ void Floyd(MGraph* graph, int (*predecessor)[MAX_VERTEX_CNT], ArcCell (*distance
 
 
 /*
-void PrintSingleSourceShortestPath(MGraph *graph, int v0, ArcCell* distance, int (*predecessor)[MAX_VERTEX_CNT]) {
+void PrintSingleSourceShortestPath(matrix_graph_t *graph, int v0, edge_t* distance, int (*predecessor)[MAX_VERTEX_CNT]) {
 
-    int vertex_cnt = graph->vexnum;
-    int* cur_predecessor = (int*) malloc(vertex_cnt * sizeof(int));
+    int vertex_count = graph->vertex_count;
+    int* cur_predecessor = (int*) malloc(vertex_count * sizeof(int));
 
-    for (int i = 0; i < vertex_cnt; i++) {
+    for (int i = 0; i < vertex_count; i++) {
 
         // 不处理v0到v0自己本身的最短路径
         if (i == v0) {
@@ -491,19 +490,19 @@ void PrintSingleSourceShortestPath(MGraph *graph, int v0, ArcCell* distance, int
         }
 
         printf(", ");
-        if (distance[i].adj == INT) {
-            printf("最短路径长度为: %d\n", distance[i].info->value.int_value);
-        } else if (distance[i].adj == DOUBLE) {
-            printf("最短路径长度为: %.2lf\n", distance[i].info->value.double_value);
+        if (distance[i].weight_type == INT) {
+            printf("最短路径长度为: %d\n", distance[i].edge_info->value.int_value);
+        } else if (distance[i].weight_type == DOUBLE) {
+            printf("最短路径长度为: %.2lf\n", distance[i].edge_info->value.double_value);
         }
     }
 }
  */
 
 
-void PrintSingleSourceShortestPath(MGraph *graph, int v0, int (*predecessor)[MAX_VERTEX_CNT], ArcCell* distance) {
+void PrintSingleSourceShortestPath(matrix_graph_t *graph, int v0, int (*predecessor)[MAX_VERTEX_CNT], edge_t* distance) {
 
-    int vertex_cnt = graph->vexnum;
+    int vertex_cnt = graph->vertex_count;
     for (int i = 0; i < vertex_cnt; i++) {
         // 不处理v0到v0自己本身的最短路径
         if (i == v0) {
@@ -514,20 +513,20 @@ void PrintSingleSourceShortestPath(MGraph *graph, int v0, int (*predecessor)[MAX
         PrintSingleSourceShortestPathRecursive(graph, v0, i, predecessor);
 
         printf(", ");
-        if (distance[i].adj == INT) {
-            printf("最短路径长度为: %d\n", distance[i].info->value.int_value);
-        } else if (distance[i].adj == DOUBLE) {
-            printf("最短路径长度为: %.2lf\n", distance[i].info->value.double_value);
+        if (distance[i].weight_type == INT) {
+            printf("最短路径长度为: %d\n", distance[i].edge_info->value.int_value);
+        } else if (distance[i].weight_type == DOUBLE) {
+            printf("最短路径长度为: %.2lf\n", distance[i].edge_info->value.double_value);
         }
     }
 }
 
 
-void PrintMultiSourceShortestPath(MGraph *graph,
-                                  ArcCell (*distance)[MAX_VERTEX_CNT],
+void PrintMultiSourceShortestPath(matrix_graph_t *graph,
+                                  edge_t (*distance)[MAX_VERTEX_CNT],
                                   int (*predecessor)[MAX_VERTEX_CNT])
 {
-    int vertex_cnt = graph->vexnum;
+    int vertex_cnt = graph->vertex_count;
     for (int i = 0; i < vertex_cnt; i++) {
         printf("--- 从起始点%d到其他各顶点的最短路径 ---\n", i);
         for (int j = 0; j < vertex_cnt; j++) {
@@ -538,7 +537,7 @@ void PrintMultiSourceShortestPath(MGraph *graph,
 
             PrintSingleSourceShortestPathRecursive(graph, i, j, predecessor);
 
-            printf(", 最短路径长度为: %.2lf\n", distance[i][j].info->value.double_value);
+            printf(", 最短路径长度为: %.2lf\n", distance[i][j].edge_info->value.double_value);
         }
     }
 }
@@ -553,7 +552,7 @@ void PrintMultiSourceShortestPath(MGraph *graph,
  * @note
  * 多源最短路径和单源最短路径问题, 都可以使用此函数
  */
-void PrintSingleSourceShortestPathRecursive(MGraph *graph, int i, int j, int (*predecessor)[MAX_VERTEX_CNT]) {
+void PrintSingleSourceShortestPathRecursive(matrix_graph_t *graph, int i, int j, int (*predecessor)[MAX_VERTEX_CNT]) {
     if (i != j) {
         int predecessor_of_j = predecessor[i][j];
         PrintSingleSourceShortestPathRecursive(graph, i, predecessor_of_j, predecessor);

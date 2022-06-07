@@ -252,7 +252,7 @@ void TestBFSTraverse() {
 void TestBuildHeap() {
     printf("\n");
     printf("------------------------- CyberDash -------------------------\n");
-    printf("                        Test BuildHeap                       \n");
+    printf("                        Test MinHeapBuild                       \n");
     printf("                           测试建堆                           \n\n\n");
 
     min_span_node_arr_t minSpanNodeArr;
@@ -299,7 +299,7 @@ void TestBuildHeap() {
     }
     printf("\n");
 
-    BuildHeap(minSpanNodeArr, 5);
+    MinHeapBuild(minSpanNodeArr, 5);
 
     printf("建堆后的最小生成树结点数组:\n");
     for (int i = 1; i <= 5; i++) {

@@ -16,15 +16,16 @@ typedef struct node_t {
 typedef struct {
     node_t* front;  // 队头指针
     node_t* rear;   // 队尾指针
-} linked_queue_t;
+} linked_queue_node_t, *linked_queue_t;
 
 
-Status InitQueue(linked_queue_t* queue);
+Status InitQueue(linked_queue_node_t* queue);
 
-Status EnQueue(linked_queue_t* queue, int v);
+Status EnQueue(linked_queue_node_t* queue, int v);
 
-Status DeQueue(linked_queue_t* queue, int* v);
+Status DeQueue(linked_queue_node_t* queue, int* v);
 
-int QueueEmpty(linked_queue_t* queue);
+int QueueEmpty(linked_queue_node_t* queue);
+
 
 #endif // CYBER_DASH_GRAPH_QUEUE_H

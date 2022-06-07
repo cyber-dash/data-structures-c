@@ -77,7 +77,7 @@ void BFSTraverse(matrix_graph_t graph, Status (*Visit)(matrix_graph_t*, int)) {
         visited[i] = 0;
     }
 
-    linked_queue_t queue;
+    linked_queue_node_t queue;
     InitQueue(&queue);
 
     for (int v = 0; v < graph.vertex_cnt; ++v) {
@@ -147,7 +147,7 @@ void Prim(matrix_graph_t* graph, min_span_node_t* min_span_tree) {
         }
 
         // todo: 未完全实现的堆优化, 也可以使用loop遍历, 应该将Prim分成两个实现: 堆优化和普通遍历
-        BuildHeap(min_span_node_arr, cur_heap_idx - 1);
+        MinHeapBuild(min_span_node_arr, cur_heap_idx - 1);
         min_span_tree[in_vertex_set_cnt - 1] = min_span_node_arr[1];  // 取堆顶
 
         int idx = min_span_node_arr[1].ending_vertex_idx;
@@ -189,7 +189,7 @@ void Kruskal(matrix_graph_t* graph, min_span_node_t* min_span_tree) {
         }
     }
 
-    BuildHeap(minSpanNodeArr, edge_num);
+    MinHeapBuild(minSpanNodeArr, edge_num);
 
     // 此时, 所有的边都已经进入小顶堆, 执行Kruskal算法核心流程
 
@@ -200,7 +200,7 @@ void Kruskal(matrix_graph_t* graph, min_span_node_t* min_span_tree) {
 
         minSpanNodeArr[1] = minSpanNodeArr[arcCount];
         arcCount--;
-        BuildHeap(minSpanNodeArr, arcCount);    // 重新调整堆
+        MinHeapBuild(minSpanNodeArr, arcCount);    // 重新调整堆
 
         int curStartingRootIdx = DisjointSetFindRecursive(&disjoint_set, cur_min_span_node.starting_vertex_idx);
         int curEndingRootIdx = DisjointSetFindRecursive(&disjoint_set, cur_min_span_node.ending_vertex_idx);

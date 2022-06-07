@@ -8,7 +8,7 @@
 
 
 //----- 基本操作的函数原型说明 -----
-Status InitQueue(linked_queue_t *queue) {
+Status InitQueue(linked_queue_node_t *queue) {
     // 构造一个空队列Q
     queue->rear = (node_t*)malloc(sizeof(node_t));
     if (!queue->front) {
@@ -27,7 +27,7 @@ Status InitQueue(linked_queue_t *queue) {
  * @param v
  * @return
  */
-Status EnQueue(linked_queue_t *queue, int v) {
+Status EnQueue(linked_queue_node_t *queue, int v) {
     // 插入元素e为Q的新的队尾元素
     node_t *cur = (node_t*)malloc(sizeof(node_t));
     if (!cur) {
@@ -50,7 +50,7 @@ Status EnQueue(linked_queue_t *queue, int v) {
  * @param v
  * @return
  */
-Status DeQueue(linked_queue_t *Q, int *v) {
+Status DeQueue(linked_queue_node_t *Q, int *v) {
     // 若队列不空, 则删除Q的队头元素, 用e返回其值, 并返回OK;
     // 否则返回ERROR
     if (Q->front == Q->rear) {
@@ -75,7 +75,7 @@ Status DeQueue(linked_queue_t *Q, int *v) {
  * @param Q
  * @return
  */
-int QueueEmpty(linked_queue_t *Q) {
+int QueueEmpty(linked_queue_node_t *Q) {
     if (Q->front == Q->rear) {
         return 1;
     }

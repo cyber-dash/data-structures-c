@@ -6,6 +6,7 @@
 #define CYBER_DASH_HEAP_H
 
 #include "graph.h"
+#include "queue.h"
 
 
 int LowerThan(min_span_node_t* node1, min_span_node_t* node2);
@@ -14,14 +15,19 @@ int LowerThan(min_span_node_t* node1, min_span_node_t* node2);
 int LargerThan(min_span_node_t* node1, min_span_node_t* node2);
 
 
-// @brief 迭代建立小顶堆
-// @param H 堆数据
-// @param s 结点值
-// @param m 堆最大长度
-void HeapAdjust(min_span_node_arr_t min_span_node_arr, int index, int heap_size);
+void MinHeapSiftDown(min_span_node_t* min_span_node_arr, int index, int heap_size);
+
+void MinHeapSiftUp(min_span_node_t* min_span_node_arr, int index);
 
 
-void BuildHeap(min_span_node_arr_t min_span_node_arr, int heap_size);
+void MinHeapBuild(min_span_node_t *min_span_node_arr, int heap_size);
 
+
+Status PriorityQueueInit(min_span_node_t* min_span_node_arr, int heap_size);
+
+Status PriorityQueueEnqueue(min_span_node_t* min_span_node_arr, int* heap_size, linked_queue_node_t* min_span_node);
+
+Status PriorityQueueDequeue(min_span_node_t* min_span_node_arr, int* heap_size, linked_queue_node_t* min_span_node);
+// Status PriorityQueueDeQueue(linked_queue_node_t* queue, int* v);
 
 #endif // CYBER_DASH_HEAP_H

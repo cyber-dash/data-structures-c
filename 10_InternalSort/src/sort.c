@@ -351,32 +351,49 @@ void SelectSort(seq_list_t* L)
 
 // @brief 迭代建立大顶堆
 // @param H 堆数据
-// @param s 结点值
-// @param m 堆最大长度
-void HeapAdjust(HeapType* H, int s, int m)
+// @param index 结点值
+// @param heap_size 堆最大长度
+void HeapAdjust(HeapType* H, int index, int heap_size)
 {
+
+    /*
     RedType rc;
-    //已知H.r[s..m]中记录的关键字除H.r[s].key之外均满足堆的定义,本函数调整H.r[s]
-    //的关键字，使H.r[s..m]成为一个大顶堆（对其中记录的关键字而言）
+    rc = H->r[index];
 
-    rc = H->r[s];
-
-    for (int i = 2 * s; i <= m; i *= 2) {              //沿key较大的孩子结点向下筛选
-        if (i < m && LowerThan(H->r[i].key, H->r[i + 1].key))
+    for (int child_idx = 2 * index; child_idx <= heap_size; child_idx *= 2) {              //沿key较大的孩子结点向下筛选
+        if (child_idx < heap_size && LowerThan(H->r[child_idx].key, H->r[child_idx + 1].key))
         {
-            i++;                                      // j为key较大的记录的下标
+            child_idx++;                                      // j为key较大的记录的下标
         }
 
-        if (!LowerThan(rc.key, H->r[i].key))
+        if (!LowerThan(rc.key, H->r[child_idx].key))
         {
             break;                                    // rc应插入在位置s上
         }
 
-        H->r[s] = H->r[i];
-        s = i;
+        H->r[index] = H->r[child_idx];
+        index = child_idx;
     }
 
-    H->r[s] = rc;                               //插入
+    H->r[index] = rc;                               //插入
+     */
+
+    for (int child_idx = 2 * index; child_idx <= heap_size; child_idx *= 2) {              //沿key较大的孩子结点向下筛选
+        if (child_idx < heap_size && LowerThan(H->r[child_idx].key, H->r[child_idx + 1].key))
+        {
+            child_idx++;                                      // j为key较大的记录的下标
+        }
+
+        if (!LowerThan(H->r[index].key, H->r[child_idx].key))
+        {
+            break;                                    // rc应插入在位置s上
+        }
+
+        RedType tmp = H->r[index];
+        H->r[index] = H->r[child_idx];
+        H->r[child_idx] = tmp;
+    }
+
 } // HeapAdjust
 
 

@@ -46,34 +46,38 @@ int LargerThan(min_span_node_t* node1, min_span_node_t* node2) {
 // @param H 堆数据
 // @param s 结点值
 // @param m 堆最大长度
-void HeapAdjust(min_span_node_arr_t minSpanNodeArr, int index, int heapSize)
+void HeapAdjust(min_span_node_t* min_span_node_arr, int index, int heap_size)
 {
-    min_span_node_t node = minSpanNodeArr[index];
+    min_span_node_t node = min_span_node_arr[index];
 
-    for (int curChildIdx = 2 * index; curChildIdx <= heapSize; curChildIdx *= 2)
-        // 沿key较大的孩子结点向下筛选, 从1开始, 因此是乘以2
-    {
-        if (curChildIdx < heapSize &&
-            LargerThan(minSpanNodeArr + curChildIdx, minSpanNodeArr + curChildIdx + 1))
+    // 沿key较大的孩子结点向下筛选, 从1开始, 因此是乘以2
+    for (int cur_child_idx = 2 * index; cur_child_idx <= heap_size; cur_child_idx *= 2) {
+        if (cur_child_idx < heap_size &&
+            LargerThan(min_span_node_arr + cur_child_idx, min_span_node_arr + cur_child_idx + 1))
         {
-            curChildIdx++; // 较小的值的下标
+            cur_child_idx++; // 较小的值的下标
         }
 
-        if (!LargerThan(&node, minSpanNodeArr + curChildIdx)) {
+        if (!LargerThan(&node, min_span_node_arr + cur_child_idx)) {
             break;
         }
 
-        minSpanNodeArr[index] = minSpanNodeArr[curChildIdx];
-        index = curChildIdx;
+        min_span_node_arr[index] = min_span_node_arr[cur_child_idx];
+        index = cur_child_idx;
     }
 
-    minSpanNodeArr[index] = node;
-} // HeapAdjust
+    min_span_node_arr[index] = node;
+}
 
 
-void BuildHeap(min_span_node_arr_t minSpanNodeArr, int heapSize) {
+/*!
+ * 建堆
+ * @param min_span_node_arr mst结点数组
+ * @param heap_size
+ */
+void BuildHeap(min_span_node_t* min_span_node_arr, int heap_size) {
 
-    for (int i = heapSize / 2; i > 0; i--) {
-        HeapAdjust(minSpanNodeArr, i, heapSize);
+    for (int i = heap_size / 2; i > 0; i--) {
+        HeapAdjust(min_span_node_arr, i, heap_size);
     }
 }

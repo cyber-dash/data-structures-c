@@ -17,22 +17,22 @@ Status Visit(matrix_graph_t* graph, int vertex);
 void DFSTraverse(matrix_graph_t graph, Status (*Visit)(int v));
 
 // DFS遍历(结点(索引)v为起始点)
-void DFS(matrix_graph_t G, int v, int *visited);
+void DFSRecursive(matrix_graph_t graph, int starting_vertex_idx, int *visited);
 
 // BFS遍历
-void BFSTraverse(matrix_graph_t G, Status (*Visit)(matrix_graph_t *G, int v));
+void BFSTraverse(matrix_graph_t graph, Status (*Visit)(matrix_graph_t *G, int v));
 
 // BFS遍历(结点(索引)v为起始点)
 void BFS(matrix_graph_t G, int v, int *visited);
 
 // Prim最小生成树
-void Prim(matrix_graph_t* graph, WEIGHT_TYPE v0, min_span_node_t* min_span_tree);
+void Prim(matrix_graph_t* graph, min_span_node_t* min_span_tree);
 
 // 克努斯卡尔(Kruskal)最小生成树
 void Kruskal(matrix_graph_t* graph, min_span_node_t* min_span_tree);
 
 // 打印最小生成树
-void PrintMinSpanTree(min_span_node_arr_t minSpanTree, int size);
+void PrintMinSpanTree(min_span_node_arr_t min_span_tree, int size);
 
 // 迪杰斯特拉(Dijkstra)最短路径
 void ShortestPath_Dijkstra(matrix_graph_t* graph, int v0, int (*predecessor)[MAX_VERTEX_CNT], edge_t* distance);

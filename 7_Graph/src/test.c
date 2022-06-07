@@ -44,10 +44,10 @@ void TestCreateUDNByArcCellArr() {
     printf("         \\/\n");
     printf("       结点3\n");
 
-    VERTEX_TYPE vertices[4] = {0, 1, 2, 3};
+    VERTEX_TYPE vertices[4] = { 0, 1, 2, 3 };
 
     matrix_graph_t G;
-    G.vertex_count = 4;   // 结点数量
+    G.vertex_cnt = 4;   // 结点数量
     G.edge_count = 5;   // 弧(边)数量
     G.kind = UDN;   // 类型:无向网
 
@@ -114,7 +114,7 @@ void TestCreateUDNByArcCellArr() {
 void TestDFSTraverse() {
     printf("\n");
     printf("------------------------- CyberDash -------------------------\n");
-    printf("                      Test DFS Traverse                      \n");
+    printf("                      Test DFSRecursive Traverse                      \n");
     printf("                        测试深度优先遍历                       \n\n\n");
     printf("         结点0\n");
     printf("         / \\\n");
@@ -134,7 +134,7 @@ void TestDFSTraverse() {
 
     matrix_graph_t G;
     G.weight_type = DOUBLE;
-    G.vertex_count = 4;   // 结点数量
+    G.vertex_cnt = 4;   // 结点数量
     G.edge_count = 5;   // 弧(边)数量
     G.kind = UDN;   // 类型:无向网
 
@@ -212,7 +212,7 @@ void TestBFSTraverse() {
     VERTEX_TYPE vertices[4] = {0, 1, 2, 3};
 
     matrix_graph_t G;
-    G.vertex_count = 4;   // 结点数量
+    G.vertex_cnt = 4;   // 结点数量
     G.edge_count = 5;   // 弧(边)数量
     G.kind = UDN;   // 类型:无向网
 
@@ -322,48 +322,44 @@ void TestPrim() {
 
     VERTEX_TYPE vertices[4] = {0, 1, 2, 3 };
 
-    matrix_graph_t G;
-    G.vertex_count = 4;   // 结点数量
-    G.edge_count = 5;   // 弧(边)数量
-    G.kind = DN;
-    G.weight_type = DOUBLE;
+    matrix_graph_t graph;
+    graph.vertex_cnt = 4;   // 结点数量
+    graph.edge_count = 5;   // 弧(边)数量
+    graph.kind = DN;
+    graph.weight_type = DOUBLE;
 
-    // 结点信息写到G.vexs数组
-    for (int i = 0; i < G.vertex_count; i++) {
-        G.vertices[i] = vertices[i];
+    // 构造adj_matrix数组,
+    // 每个数组元素的weight_type设置为NO_EDGE
+    for (int i = 0; i < graph.vertex_cnt; i++) {
+        graph.vertices[i] = vertices[i];
 
-        for (int j = 0; j < G.vertex_count; j++) {
-            G.adj_matrix[i][j].weight_type = DOUBLE;
-            G.adj_matrix[i][j].edge_info = (edge_info_t*)malloc(sizeof(edge_info_t));
-            G.adj_matrix[i][j].edge_info->value.double_value = DBL_MAX;
+        for (int j = 0; j < graph.vertex_cnt; j++) {
+            graph.adj_matrix[i][j].weight_type = NO_EDGE;
+            graph.adj_matrix[i][j].edge_info = (edge_info_t*)malloc(sizeof(edge_info_t));
+            graph.adj_matrix[i][j].edge_info->value.double_value = DBL_MAX;
         }
     }
 
-    // 0 - 1: 0.1
-    // 0 - 2: 0.12
-    // 1 - 2: 0.01
-    // 1 - 3: 0.14
-    // 2 - 3: 0.05
-    int startingVertexIndexArr[5] = { 0, 0, 1, 1, 2 }; // 起点
-    int endingVertexIndexArr[5] = { 1, 2, 2, 3, 3 };   // 终点
-    double weightArr[5] = { 0.1, 0.12, 0.01, 0.14, 0.05 }; // 权重
+    // 边(0-->1): 0.1, 边(0-->2): 0.12, 边(1-->2): 0.01, 边(1-->3): 0.14, 边(2-->3): 0.05
+    int starting_vertex_idx_arr[5] = {0, 0, 1, 1, 2 }; // 起点
+    int ending_vertex_idx_arr[5] = {1, 2, 2, 3, 3 };   // 终点
+    double weight_arr[5] = {0.1, 0.12, 0.01, 0.14, 0.05 }; // 权重
 
     // 使用起点(索引)数组, 终点(索引)数组, 权重数组, 构造弧(边)数组
-    for (int i = 0; i < G.edge_count; i++) {
-        int curRowIdx = startingVertexIndexArr[i];
-        int curColIdx = endingVertexIndexArr[i];
-        G.adj_matrix[curRowIdx][curColIdx].weight_type = DOUBLE;
-        G.adj_matrix[curRowIdx][curColIdx].edge_info = (edge_info_t*)malloc(sizeof(edge_info_t));
-        G.adj_matrix[curRowIdx][curColIdx].edge_info->starting_vertex_idx = startingVertexIndexArr[i];
-        G.adj_matrix[curRowIdx][curColIdx].edge_info->ending_vertex_idx = endingVertexIndexArr[i];
-        G.adj_matrix[curRowIdx][curColIdx].edge_info->value.double_value = weightArr[i];
+    for (int i = 0; i < graph.edge_count; i++) {
+        int starting_vertex_idx = starting_vertex_idx_arr[i];
+        int ending_vertex_idx = ending_vertex_idx_arr[i];
+        graph.adj_matrix[starting_vertex_idx][ending_vertex_idx].weight_type = DOUBLE;
+        graph.adj_matrix[starting_vertex_idx][ending_vertex_idx].edge_info->starting_vertex_idx = starting_vertex_idx;
+        graph.adj_matrix[starting_vertex_idx][ending_vertex_idx].edge_info->ending_vertex_idx = ending_vertex_idx;
+        graph.adj_matrix[starting_vertex_idx][ending_vertex_idx].edge_info->value.double_value = weight_arr[i];
     }
 
-    min_span_node_arr_t minSpanNodeArr;
-    Prim(&G, 0, minSpanNodeArr);
+    min_span_node_arr_t min_span_node_arr;
+    Prim(&graph, min_span_node_arr);
 
     printf("最小生成树: \n");
-    PrintMinSpanTree(minSpanNodeArr, G.vertex_count - 1);
+    PrintMinSpanTree(min_span_node_arr, graph.vertex_cnt - 1);
 
     printf("-------------------- 抖音: cyberdash_yuan --------------------\n");
 }
@@ -380,17 +376,16 @@ void TestKruskal() {
     VERTEX_TYPE vertices[4] = {0, 1, 2, 3};
 
     matrix_graph_t G;
-    G.vertex_count = 4;   // 结点数量
+    G.vertex_cnt = 4;   // 结点数量
     G.edge_count = 5;   // 弧(边)数量
     G.kind = UDN;   // 类型:无向网
     G.weight_type = DOUBLE;
 
-    // 结点信息写到G.vexs数组
-    for (int i = 0; i < G.vertex_count; i++) {
+    for (int i = 0; i < G.vertex_cnt; i++) {
         G.vertices[i] = vertices[i];
 
-        for (int j = 0; j < G.vertex_count; j++) {
-            G.adj_matrix[i][j].weight_type = DOUBLE;
+        for (int j = 0; j < G.vertex_cnt; j++) {
+            G.adj_matrix[i][j].weight_type = NO_EDGE;
             G.adj_matrix[i][j].edge_info = (edge_info_t*)malloc(sizeof(edge_info_t));
             G.adj_matrix[i][j].edge_info->value.double_value = DBL_MAX;
         }
@@ -420,7 +415,7 @@ void TestKruskal() {
     Kruskal(&G, minSpanNodeArr);
 
     printf("最小生成树: \n");
-    PrintMinSpanTree(minSpanNodeArr, G.vertex_count - 1);
+    PrintMinSpanTree(minSpanNodeArr, G.vertex_cnt - 1);
 
     printf("-------------------- 抖音: cyberdash_yuan --------------------\n");
 }
@@ -454,7 +449,7 @@ void TestDijkstra() {
     VERTEX_TYPE vertices[6] = {0, 1, 2, 3, 4, 5};
 
     matrix_graph_t G;
-    G.vertex_count = 6;           // 结点数量
+    G.vertex_cnt = 6;           // 结点数量
     G.edge_count = 9;           // 弧(边)数量
     G.kind = DN;            // 类型:有向网
     G.weight_type = DOUBLE;  // 弧(边)权值类型
@@ -468,9 +463,9 @@ void TestDijkstra() {
     double weightArr[9] = { 0.1, 0.12, 0.01, 0.14, 0.13, 0.05, 0.17, 0.09, 0.11}; // 权重
 
     // 对每个[i, j]进行初始化, 默认没有弧(边), 所有的弧(边)长为最大值
-    for (int i = 0; i < G.vertex_count; i++) {
+    for (int i = 0; i < G.vertex_cnt; i++) {
         G.vertices[i] = vertices[i];
-        for (int j = 0; j < G.vertex_count; j++) {
+        for (int j = 0; j < G.vertex_cnt; j++) {
             G.adj_matrix[i][j].weight_type = DOUBLE;
             G.adj_matrix[i][j].edge_info = (edge_info_t*)malloc(sizeof(edge_info_t));
             G.adj_matrix[i][j].edge_info->starting_vertex_idx = i;
@@ -536,7 +531,7 @@ void TestBellmanFord() {
     VERTEX_TYPE vertices[6] = {0, 1, 2, 3, 4, 5};
 
     matrix_graph_t G;
-    G.vertex_count = 6;           // 结点数量
+    G.vertex_cnt = 6;           // 结点数量
     G.edge_count = 9;           // 弧(边)数量
     G.kind = DN;            // 类型:有向网
     G.weight_type = DOUBLE;  // 弧(边)权值类型
@@ -550,9 +545,9 @@ void TestBellmanFord() {
     double weightArr[9] = { 0.1, 0.12, 0.01, 0.14, 0.13, 0.05, 0.17, 0.09, 0.11}; // 权重
 
     // 对每个[i, j]进行初始化, 默认没有弧(边), 所有的弧(边)长为最大值
-    for (int i = 0; i < G.vertex_count; i++) {
+    for (int i = 0; i < G.vertex_cnt; i++) {
         G.vertices[i] = vertices[i];
-        for (int j = 0; j < G.vertex_count; j++) {
+        for (int j = 0; j < G.vertex_cnt; j++) {
             G.adj_matrix[i][j].weight_type = DOUBLE;
             G.adj_matrix[i][j].edge_info = (edge_info_t*)malloc(sizeof(edge_info_t));
             G.adj_matrix[i][j].edge_info->starting_vertex_idx = i;
@@ -617,7 +612,7 @@ void TestFloyd() {
     VERTEX_TYPE vertices[6] = {0, 1, 2, 3, 4, 5};
 
     matrix_graph_t G;
-    G.vertex_count = 6;           // 结点数量
+    G.vertex_cnt = 6;           // 结点数量
     G.edge_count = 9;           // 弧(边)数量
     G.kind = DN;            // 类型:有向网
     G.weight_type = DOUBLE;  // 弧(边)权值类型
@@ -630,9 +625,9 @@ void TestFloyd() {
     double weight_arr[9] = {0.1, 0.12, 0.01, 0.14, 0.13, 0.05, 0.17, 0.09, 0.11}; // 权重
 
     // 对每个[i, j]进行初始化, 默认没有弧(边), 所有的弧(边)长为最大值
-    for (int i = 0; i < G.vertex_count; i++) {
+    for (int i = 0; i < G.vertex_cnt; i++) {
         G.vertices[i] = vertices[i];
-        for (int j = 0; j < G.vertex_count; j++) {
+        for (int j = 0; j < G.vertex_cnt; j++) {
             G.adj_matrix[i][j].weight_type = DOUBLE;
             G.adj_matrix[i][j].edge_info = (edge_info_t*)malloc(sizeof(edge_info_t));
             G.adj_matrix[i][j].edge_info->starting_vertex_idx = i;

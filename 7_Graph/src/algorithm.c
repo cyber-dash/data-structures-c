@@ -31,28 +31,32 @@ Status Visit(matrix_graph_t *graph, int vertex) {
 void DFSTraverse(matrix_graph_t graph, Status (*Visit)(int v)) {
 
     // 构造visited数组
-    int* visited = (int*)malloc(graph.vertex_count * sizeof(int));
+    int* visited = (int*)malloc(graph.vertex_cnt * sizeof(int));
     /* error handler */
 
-    for (int i = 0; i < graph.vertex_count; i++) {
+    for (int i = 0; i < graph.vertex_cnt; i++) {
         visited[i] = 0;
     }
 
-    for (int v = 0; v < graph.vertex_count; ++v) {
+    for (int v = 0; v < graph.vertex_cnt; ++v) {
         if (!visited[v]) {
-            DFS(graph, 0, visited);
+            DFSRecursive(graph, 0, visited);
         }
     }
 }
 
 
-void DFS(matrix_graph_t G, int v, int* visited) {
-    visited[v] = 1;
-    Visit(&G, v);   // 访问第v个顶点
+// todo: Visit函数写到参数
+void DFSRecursive(matrix_graph_t graph, int starting_vertex_idx, int* visited) {
+    visited[starting_vertex_idx] = 1;
+    Visit(&graph, starting_vertex_idx);   // 访问索引starting_vertex_idx的顶点
 
-    for (int w = FirstAdjVertex(&G, v); w >= 0; w = NextAdjVex(&G, v, w)) {
-        if (!visited[w]) {
-            DFS(G, w, visited);
+    for (int vertex_idx = FirstAdjVertex(&graph, starting_vertex_idx);
+         vertex_idx >= 0;
+         vertex_idx = NextAdjVertex(&graph, starting_vertex_idx, vertex_idx))
+    {
+        if (!visited[vertex_idx]) {
+            DFSRecursive(graph, vertex_idx, visited);
         }
     }
 }
@@ -60,37 +64,37 @@ void DFS(matrix_graph_t G, int v, int* visited) {
 
 /*!
  * BFS遍历
- * @param G
+ * @param graph
  * @param Visit
  */
-void BFSTraverse(matrix_graph_t G, Status (*Visit)(matrix_graph_t *G, int v)) {
+void BFSTraverse(matrix_graph_t graph, Status (*Visit)(matrix_graph_t*, int)) {
 
     // 构造visited数组
-    int* visited = (int*)malloc(G.vertex_count * sizeof(int));
+    int* visited = (int*)malloc(graph.vertex_cnt * sizeof(int));
     /* error handler */
 
-    for (int i = 0; i < G.vertex_count; i++) {
+    for (int i = 0; i < graph.vertex_cnt; i++) {
         visited[i] = 0;
     }
 
-    LinkQueue Q;
-    InitQueue(&Q);
+    linked_queue_t queue;
+    InitQueue(&queue);
 
-    for (int v = 0; v < G.vertex_count; ++v) {
+    for (int v = 0; v < graph.vertex_cnt; ++v) {
         if (!visited[v]) {
             visited[v] = 1;
-            Visit(&G, v);
+            Visit(&graph, v);
 
-            EnQueue(&Q, v);
+            EnQueue(&queue, v);
 
-            while (!QueueEmpty(&Q)) {
+            while (!QueueEmpty(&queue)) {
                 int u;
-                DeQueue(&Q, &u);
-                for (int w = FirstAdjVertex(&G, u); w >= 0; w = NextAdjVex(&G, u, w)) {
+                DeQueue(&queue, &u);
+                for (int w = FirstAdjVertex(&graph, u); w >= 0; w = NextAdjVertex(&graph, u, w)) {
                     if (!visited[w]) {
                         visited[w] = 1;
-                        Visit(&G, w);
-                        EnQueue(&Q, w);
+                        Visit(&graph, w);
+                        EnQueue(&queue, w);
                     }
                 }
             }
@@ -105,17 +109,17 @@ void BFSTraverse(matrix_graph_t G, Status (*Visit)(matrix_graph_t *G, int v)) {
  * @param v0
  * @param min_span_tree
  */
-void Prim(matrix_graph_t* graph, WEIGHT_TYPE v0, min_span_node_t* min_span_tree) {
-    int vertex_cnt = graph->vertex_count;
+void Prim(matrix_graph_t* graph, min_span_node_t* min_span_tree) {
+    int vertex_cnt = graph->vertex_cnt;
 
     // warning: 此处使用数组, 如果可以, 使用set来实现vertex_set,
     // 如果你觉得用c语言做set比较麻烦, 请移步C++, C++更适合做算法
     int vertex_set[MAX_VERTEX_CNT];
-    vertex_set[v0] = TRUE;
+    vertex_set[0] = TRUE;   // 从索引0结点开始
     int in_vertex_set_cnt = 1;
 
     do {
-        min_span_node_arr_t minSpanNodeArr;      // 小顶堆
+        min_span_node_arr_t min_span_node_arr;      // 小顶堆
         int cur_heap_idx = 1;
 
         for (int i = 0; i < vertex_cnt; i++) {
@@ -136,16 +140,17 @@ void Prim(matrix_graph_t* graph, WEIGHT_TYPE v0, min_span_node_t* min_span_tree)
                 cur_min_span_node.weight_type = graph->adj_matrix[i][j].weight_type;
                 cur_min_span_node.weight.double_value = graph->adj_matrix[i][j].edge_info->value.double_value;
 
-                minSpanNodeArr[cur_heap_idx] = cur_min_span_node;
+                min_span_node_arr[cur_heap_idx] = cur_min_span_node;
 
                 cur_heap_idx++;
             }
         }
 
-        BuildHeap(minSpanNodeArr, cur_heap_idx - 1);
-        min_span_tree[in_vertex_set_cnt - 1] = minSpanNodeArr[1];  // 取堆顶
+        // todo: 未完全实现的堆优化, 也可以使用loop遍历, 应该将Prim分成两个实现: 堆优化和普通遍历
+        BuildHeap(min_span_node_arr, cur_heap_idx - 1);
+        min_span_tree[in_vertex_set_cnt - 1] = min_span_node_arr[1];  // 取堆顶
 
-        int idx = minSpanNodeArr[1].ending_vertex_idx;
+        int idx = min_span_node_arr[1].ending_vertex_idx;
         vertex_set[idx] = TRUE;
 
         in_vertex_set_cnt++;
@@ -156,7 +161,7 @@ void Prim(matrix_graph_t* graph, WEIGHT_TYPE v0, min_span_node_t* min_span_tree)
 
 void Kruskal(matrix_graph_t* graph, min_span_node_t* min_span_tree) {
 
-    int vertex_num = graph->vertex_count;     // 结点数量
+    int vertex_num = graph->vertex_cnt;     // 结点数量
     int edge_num = graph->edge_count;       // 边数量
 
     min_span_node_arr_t minSpanNodeArr;      // 小顶堆
@@ -164,8 +169,8 @@ void Kruskal(matrix_graph_t* graph, min_span_node_t* min_span_tree) {
     InitDisjointSet(&disjoint_set, vertex_num);
 
     int arcCount = 1;
-    for (int i = 0; i < graph->vertex_count; i++) {
-        for (int j = 0; j < graph->vertex_count; j++) {
+    for (int i = 0; i < graph->vertex_cnt; i++) {
+        for (int j = 0; j < graph->vertex_cnt; j++) {
             if (graph->adj_matrix[i][j].edge_info->value.double_value == DBL_MAX) {
                 continue;
             }
@@ -213,10 +218,10 @@ void Kruskal(matrix_graph_t* graph, min_span_node_t* min_span_tree) {
 
 
 // 打印最小生成树
-void PrintMinSpanTree(min_span_node_arr_t minSpanTree, int size) {
+void PrintMinSpanTree(min_span_node_arr_t min_span_tree, int size) {
 
     for (int i = 0; i < size; i++) {
-        min_span_node_t cur = minSpanTree[i];
+        min_span_node_t cur = min_span_tree[i];
 
         printf("起始点: %d, 终点: %d, 距离: %lf\n",
                cur.starting_vertex_idx,
@@ -238,14 +243,14 @@ void PrintMinSpanTree(min_span_node_arr_t minSpanTree, int size) {
 void ShortestPath_Dijkstra(matrix_graph_t* graph, int v0, int (*predecessor)[MAX_VERTEX_CNT], edge_t* distance ) {
 
     // 用Dijkstra算法求有向网G的v0顶点到其余顶点v的最短路径P[v]及其带权长度D[v]
-    int vertex_cnt = graph->vertex_count;
+    int vertex_cnt = graph->vertex_cnt;
     int* final = (int*)malloc(vertex_cnt * sizeof(int));
     // WEIGHT_TYPE type = graph->adj_matrix_t[0][0].weight_type;
 
-    for (int v = 0; v < graph->vertex_count; v++) {
+    for (int v = 0; v < graph->vertex_cnt; v++) {
         final[v] = FALSE;
 
-        for (int w = 0; w < graph->vertex_count; w++) {
+        for (int w = 0; w < graph->vertex_cnt; w++) {
             predecessor[v][w] = -1;
         }
 
@@ -330,7 +335,7 @@ void ShortestPath_Dijkstra(matrix_graph_t* graph, int v0, int (*predecessor)[MAX
  */
 int ShortestPath_BellmanFord(matrix_graph_t* graph, int v0, int (*predecessor)[MAX_VERTEX_CNT], edge_t* distance) {
 
-    int vertex_cnt = graph->vertex_count;
+    int vertex_cnt = graph->vertex_cnt;
     for (int i = 0; i < vertex_cnt; i++) {
         distance[i].weight_type = DOUBLE;
         distance[i].edge_info->value.double_value = graph->adj_matrix[v0][i].edge_info->value.double_value;
@@ -398,7 +403,7 @@ int ShortestPath_BellmanFord(matrix_graph_t* graph, int v0, int (*predecessor)[M
  *     predecessor[i][j] contains the predecessor of j on the shortest path from i to j.
  */
 void Floyd(matrix_graph_t* graph, int (*predecessor)[MAX_VERTEX_CNT], edge_t (*distance)[MAX_VERTEX_CNT]) {
-    int vertex_cnt = graph->vertex_count;
+    int vertex_cnt = graph->vertex_cnt;
 
     for (int i = 0; i < vertex_cnt; i++) {
         for (int j = 0; j < vertex_cnt; j++) {
@@ -462,10 +467,10 @@ void Floyd(matrix_graph_t* graph, int (*predecessor)[MAX_VERTEX_CNT], edge_t (*d
 /*
 void PrintSingleSourceShortestPath(matrix_graph_t *graph, int v0, edge_t* distance, int (*predecessor)[MAX_VERTEX_CNT]) {
 
-    int vertex_count = graph->vertex_count;
-    int* cur_predecessor = (int*) malloc(vertex_count * sizeof(int));
+    int vertex_cnt = graph->vertex_cnt;
+    int* cur_predecessor = (int*) malloc(vertex_cnt * sizeof(int));
 
-    for (int i = 0; i < vertex_count; i++) {
+    for (int i = 0; i < vertex_cnt; i++) {
 
         // 不处理v0到v0自己本身的最短路径
         if (i == v0) {
@@ -502,7 +507,7 @@ void PrintSingleSourceShortestPath(matrix_graph_t *graph, int v0, edge_t* distan
 
 void PrintSingleSourceShortestPath(matrix_graph_t *graph, int v0, int (*predecessor)[MAX_VERTEX_CNT], edge_t* distance) {
 
-    int vertex_cnt = graph->vertex_count;
+    int vertex_cnt = graph->vertex_cnt;
     for (int i = 0; i < vertex_cnt; i++) {
         // 不处理v0到v0自己本身的最短路径
         if (i == v0) {
@@ -526,7 +531,7 @@ void PrintMultiSourceShortestPath(matrix_graph_t *graph,
                                   edge_t (*distance)[MAX_VERTEX_CNT],
                                   int (*predecessor)[MAX_VERTEX_CNT])
 {
-    int vertex_cnt = graph->vertex_count;
+    int vertex_cnt = graph->vertex_cnt;
     for (int i = 0; i < vertex_cnt; i++) {
         printf("--- 从起始点%d到其他各顶点的最短路径 ---\n", i);
         for (int j = 0; j < vertex_cnt; j++) {

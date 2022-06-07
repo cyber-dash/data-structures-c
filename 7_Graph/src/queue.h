@@ -7,23 +7,24 @@
 
 #include "graph.h"
 
-typedef struct Node {
+
+typedef struct node_t {
     int             vertexIndex;    // 结点索引
-    struct Node*    next;           // 下一结点
-} Node;
+    struct node_t*    next;           // 下一结点
+} node_t;
 
-typedef struct LinkQueue {
-    Node* front;  // 队头指针
-    Node* rear;   // 队尾指针
-}LinkQueue;
+typedef struct {
+    node_t* front;  // 队头指针
+    node_t* rear;   // 队尾指针
+} linked_queue_t;
 
 
-Status InitQueue(LinkQueue *Q);
+Status InitQueue(linked_queue_t* queue);
 
-Status EnQueue(LinkQueue *Q, int v);
+Status EnQueue(linked_queue_t* queue, int v);
 
-Status DeQueue(LinkQueue *Q, int *v);
+Status DeQueue(linked_queue_t* queue, int* v);
 
-int QueueEmpty(LinkQueue *Q);
+int QueueEmpty(linked_queue_t* queue);
 
 #endif // CYBER_DASH_GRAPH_QUEUE_H

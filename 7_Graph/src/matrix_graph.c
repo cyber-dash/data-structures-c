@@ -8,37 +8,18 @@
 #include "matrix_graph.h"
 
 
-/*
-Status CreateGraph(matrix_graph_t *G) {
-    scanf(&G->kind);
-    switch (G->kind) {
-        case DG:
-            return CreateDG(G);
-        case DN:
-            return CreateDN(G);
-        case UDG:
-            return CreateUDG(G);
-        case UDN:
-            return CreateUDNByArcCellArr(G);
-        default:
-            return ERROR;
-    }
-}
- */
-
-
 /*!
  * 获取结点u的索引
- * @param G 图
- * @param u 结点u
+ * @param graph 图
+ * @param vertex 结点u
  * @param idx 索引(指针)
  * @return 是否成功
  * @note
  */
-Status LocateVertex(matrix_graph_t G, VERTEX_TYPE u, int* idx) {
-    for (int i = 0; i < G.vertex_count; i++) {
-        if (G.vertices[i] == u) {
-            *idx = i;
+Status LocateVertex(matrix_graph_t graph, VERTEX_TYPE vertex, int* idx) {
+    for (int vertex_idx = 0; vertex_idx < graph.vertex_cnt; vertex_idx++) {
+        if (graph.vertices[vertex_idx] == vertex) {
+            *idx = vertex_idx;
             return OK;
         }
     }
@@ -46,8 +27,9 @@ Status LocateVertex(matrix_graph_t G, VERTEX_TYPE u, int* idx) {
     return ERROR;
 }
 
+
 /*!
- * 结点(索引)v在图G中的第一个(索引)邻接节点
+ * 获取某结点在图G中的第一个邻接节点的索引
  * @param graph 图(指针)
  * @param vertex_idx 结点索引
  * @return 第一个邻接节点的索引
@@ -56,9 +38,10 @@ Status LocateVertex(matrix_graph_t G, VERTEX_TYPE u, int* idx) {
  *  失败: 返回 -1
  */
 int FirstAdjVertex(matrix_graph_t* graph, int vertex_idx) {
-    for (int i = 0; i < graph->vertex_count; i++) {
-        if (graph->adj_matrix[vertex_idx][i].weight_type != graph->weight_type) {
-            return i;
+    for (int cur_vertex_idx = 0; cur_vertex_idx < graph->vertex_cnt; cur_vertex_idx++) {
+        // todo: 使用NO_WEIGHT
+        if (graph->adj_matrix[vertex_idx][cur_vertex_idx].weight_type != graph->weight_type) {
+            return cur_vertex_idx;
         }
     }
 
@@ -68,22 +51,26 @@ int FirstAdjVertex(matrix_graph_t* graph, int vertex_idx) {
 
 /*!
  * 结点(索引)v在图G中的, 结点(索引)w之外第一个(索引)邻接节点
- * @param G 图指针
- * @param v 节点索引v
- * @param w 节点索引v的一个邻接节点索引w
+ * @param graph 图指针
+ * @param vertex_idx 节点索引v
+ * @param first_adj_vertex_idx 节点索引v的一个邻接节点索引w
  * @return 下一个邻接结点的索引
  * @note
  *  成功: 返回索引值
  *  失败: 返回 -1
  */
-int NextAdjVex(matrix_graph_t *G, int v, int w) {
-    if (w == G->vertex_count - 1) {
+int NextAdjVertex(matrix_graph_t* graph, int vertex_idx, int first_adj_vertex_idx) {
+    if (first_adj_vertex_idx == graph->vertex_cnt - 1) {
         return -1;
     }
 
-    for (int i = w + 1; i < G->vertex_count; i++) {
-        if (G->adj_matrix[v][i].weight_type != G->weight_type) {
-            return i;
+    for (int cur_vertex_idx = first_adj_vertex_idx + 1;
+         cur_vertex_idx < graph->vertex_cnt;
+         cur_vertex_idx++)
+    {
+        // todo: 使用NO_WEIGHT
+        if (graph->adj_matrix[vertex_idx][cur_vertex_idx].weight_type != graph->weight_type) {
+            return cur_vertex_idx;
         }
     }
 
@@ -93,7 +80,7 @@ int NextAdjVex(matrix_graph_t *G, int v, int w) {
 
 // 获取结点的第一条弧(边)
 edge_t* GetFirstArc(matrix_graph_t *G, int vertexIdx) {
-    for (int i = 0; i < G->vertex_count; i++) {
+    for (int i = 0; i < G->vertex_cnt; i++) {
         if (G->weight_type == DOUBLE && G->adj_matrix[vertexIdx][i].edge_info->value.double_value != DBL_MAX) {
             return &G->adj_matrix[vertexIdx][i];
         } else if (G->weight_type == INT && G->adj_matrix[vertexIdx][i].edge_info->value.int_value != INT_MAX) {
@@ -115,7 +102,7 @@ edge_t* GetFirstArc(matrix_graph_t *G, int vertexIdx) {
 edge_t* GetNextArc(matrix_graph_t *G, int vertexIdx, edge_t* arc) {
     int endingVertexIdx = arc->edge_info->ending_vertex_idx;
 
-    for (int i = endingVertexIdx + 1; i < G->vertex_count; i++) {
+    for (int i = endingVertexIdx + 1; i < G->vertex_cnt; i++) {
         if (G->weight_type == DOUBLE && G->adj_matrix[vertexIdx][i].edge_info->value.double_value != DBL_MAX) {
             return &G->adj_matrix[vertexIdx][i];
         } else if (G->weight_type == INT && G->adj_matrix[vertexIdx][i].edge_info->value.int_value != INT_MAX) {
@@ -156,15 +143,15 @@ Status CreateUDNByArcCellArr(matrix_graph_t* graph,
                              int vertex_cnt)
 {
 
-    graph->vertex_count = vertex_cnt;
+    graph->vertex_cnt = vertex_cnt;
     graph->edge_count = edge_cnt;
 
     graph->weight_type = edge_arr->weight_type;  // 读arcCellArr第0项的adj
 
     //! 对G->arcs进行初始化
-    for (int i = 0; i < graph->vertex_count; ++i) {
+    for (int i = 0; i < graph->vertex_cnt; ++i) {
         graph->vertices[i] = vertex_arr[i];
-        for (int j = 0; j < graph->vertex_count; ++j) {
+        for (int j = 0; j < graph->vertex_cnt; ++j) {
 
             graph->adj_matrix[i][j].weight_type = graph->weight_type;    //! 弧(边)权值类型
 
@@ -213,8 +200,8 @@ Status CreateUDNByArcCellArr(matrix_graph_t *G, edge_t *arcCellArr, int vertexNu
 Status PrintGraphMatrix(matrix_graph_t* G, WEIGHT_TYPE valueType) {
     valueType = G->weight_type;
 
-    for (int i = 0; i < G->vertex_count; i++) {
-        for (int j = 0; j < G->vertex_count; j++) {
+    for (int i = 0; i < G->vertex_cnt; i++) {
+        for (int j = 0; j < G->vertex_cnt; j++) {
 
             if (valueType == DOUBLE) {
                 double weight = G->adj_matrix[i][j].edge_info->value.double_value == DBL_MAX ? 0

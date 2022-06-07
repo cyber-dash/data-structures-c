@@ -18,10 +18,10 @@ int LargerThan(min_span_node_t* node1, min_span_node_t* node2);
 // @param H 堆数据
 // @param s 结点值
 // @param m 堆最大长度
-void HeapAdjust(min_span_node_arr_t minSpanNodeArr, int index, int heapSize);
+void HeapAdjust(min_span_node_arr_t min_span_node_arr, int index, int heap_size);
 
 
-void BuildHeap(min_span_node_arr_t minSpanNodeArr, int heapSize);
+void BuildHeap(min_span_node_arr_t min_span_node_arr, int heap_size);
 
 
 #endif // CYBER_DASH_HEAP_H

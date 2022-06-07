@@ -7,6 +7,7 @@
 
 int main() {
 
+    /*
     TestCreateUDNByArcCellArr();
 
     TestDFSTraverse();
@@ -14,16 +15,19 @@ int main() {
     TestBFSTraverse();
 
     TestBuildHeap();
+     */
 
     TestPrim();
 
     TestKruskal();
 
+    /*
     TestDijkstra();
 
     TestBellmanFord();
 
     TestFloyd();
+     */
 
     return 0;
 }

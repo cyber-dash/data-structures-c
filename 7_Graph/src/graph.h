@@ -27,6 +27,7 @@ typedef enum {
 } GRAPH_KIND;	// {有向图, 有向网, 无向图, 无向网}
 
 typedef enum {
+    NO_EDGE,
     UNWEIGHTED,
     INT,
     DOUBLE,
@@ -53,7 +54,7 @@ typedef struct AceCell {
 typedef struct {
     VERTEX_TYPE vertices[MAX_VERTEX_CNT];	//!< 顶点向量
     adj_matrix_t	adj_matrix;					//!< 邻接矩阵
-    int			vertex_count;                 //!< 图结点数
+    int			vertex_cnt;                 //!< 图结点数
     int         edge_count;                 //!< 图弧(边)数
     GRAPH_KIND	kind;					//!< 图的种类标志
     WEIGHT_TYPE weight_type;            //!< 权值类型

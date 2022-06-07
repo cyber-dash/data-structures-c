@@ -8,28 +8,28 @@
 
 
 //----- 基本操作的函数原型说明 -----
-Status InitQueue(LinkQueue *Q) {
+Status InitQueue(linked_queue_t *queue) {
     // 构造一个空队列Q
-    Q->rear = (Node*)malloc(sizeof(Node));
-    if (!Q->front) {
+    queue->rear = (node_t*)malloc(sizeof(node_t));
+    if (!queue->front) {
         exit(OVERFLOW);
     }
 
-    Q->front = Q->rear;
-    Q->front->next = NULL;
+    queue->front = queue->rear;
+    queue->front->next = NULL;
     return OK;
 }
 
 
 /*!
  *
- * @param Q
+ * @param queue
  * @param v
  * @return
  */
-Status EnQueue(LinkQueue *Q, int v) {
+Status EnQueue(linked_queue_t *queue, int v) {
     // 插入元素e为Q的新的队尾元素
-    Node *cur = (Node*)malloc(sizeof(Node));
+    node_t *cur = (node_t*)malloc(sizeof(node_t));
     if (!cur) {
         return OVERFLOW;
     }
@@ -37,8 +37,8 @@ Status EnQueue(LinkQueue *Q, int v) {
     cur->vertexIndex = v;
     cur->next = NULL;
 
-    Q->rear->next = cur;
-    Q->rear = cur;
+    queue->rear->next = cur;
+    queue->rear = cur;
 
     return OK;
 }
@@ -50,14 +50,14 @@ Status EnQueue(LinkQueue *Q, int v) {
  * @param v
  * @return
  */
-Status DeQueue(LinkQueue *Q, int *v) {
+Status DeQueue(linked_queue_t *Q, int *v) {
     // 若队列不空, 则删除Q的队头元素, 用e返回其值, 并返回OK;
     // 否则返回ERROR
     if (Q->front == Q->rear) {
         return ERROR;
     }
 
-    Node* p = Q->front->next;
+    node_t* p = Q->front->next;
     *v = p->vertexIndex;
     Q->front->next = p->next;
 
@@ -75,7 +75,7 @@ Status DeQueue(LinkQueue *Q, int *v) {
  * @param Q
  * @return
  */
-int QueueEmpty(LinkQueue *Q) {
+int QueueEmpty(linked_queue_t *Q) {
     if (Q->front == Q->rear) {
         return 1;
     }

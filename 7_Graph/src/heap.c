@@ -85,7 +85,6 @@ void MinHeapSiftUp(min_span_node_t* min_span_node_arr, int index) {
 }
 
 
-
 /*!
  * 建堆
  * @param min_span_node_arr mst结点数组

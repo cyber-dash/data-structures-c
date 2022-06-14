@@ -8,7 +8,7 @@
 #include "time.h"
 
 
-void ArrayOutput(RedType* arr, int arr_size) {
+void ArrayOutput(seq_list_node_t* arr, int arr_size) {
     for (int i = 1; i <= arr_size; i++) {
         printf("%d ", arr[i].key);
     }
@@ -32,23 +32,23 @@ void TestBubbleSort() {
     printf("                       Test Bubble Sort                      \n");
     printf("                         测试冒泡排序                         \n\n\n");
 
-    KeyType array[6] = { 1, 4, 2, 8, 5, 7 };
-    seq_list_t sqList;
-    sqList.length = 6;
-    for (int i = 1; i <= sqList.length; i++) {
-        RedType redType;
+    key_t array[6] = {1, 4, 2, 8, 5, 7 };
+    seq_list_t seq_list;
+    seq_list.length = 6;
+    for (int i = 1; i <= seq_list.length; i++) {
+        seq_list_node_t redType;
         redType.key = array[i - 1];
-        redType.otherinfo = '\0';
-        sqList.r[i] = redType;
+        redType.info = '\0';
+        seq_list.elements[i] = redType;
     }
 
     printf("排序前:\n");
-    ArrayOutput(sqList.r, 6);
+    ArrayOutput(seq_list.elements, 6);
 
-    BubbleSort(&sqList);
+    BubbleSort(&seq_list);
 
     printf("排序后:\n");
-    ArrayOutput(sqList.r, 6);
+    ArrayOutput(seq_list.elements, 6);
     printf("|-------------------------------------------------------------|\n");
 }
 
@@ -59,23 +59,23 @@ void TestInsertSort() {
     printf("|                       Test Insert Sort                      |\n");
     printf("|                          测试插入排序                         |\n\n\n");
 
-    KeyType array[6] = { 1, 4, 2, 8, 5, 7 };
+    key_t array[6] = {1, 4, 2, 8, 5, 7 };
     seq_list_t sqList;
     sqList.length = 6;
     for (int i = 1; i <= sqList.length; i++) {
-        RedType redType;
+        seq_list_node_t redType;
         redType.key = array[i - 1];
-        redType.otherinfo = '\0';
-        sqList.r[i] = redType;
+        redType.info = '\0';
+        sqList.elements[i] = redType;
     }
 
     printf("排序前:\n");
-    ArrayOutput(sqList.r, 6);
+    ArrayOutput(sqList.elements, 6);
 
     InsertSort(&sqList);
 
     printf("排序后:\n");
-    ArrayOutput(sqList.r, 6);
+    ArrayOutput(sqList.elements, 6);
 
     printf("|-------------------------------------------------------------|\n");
 }
@@ -87,23 +87,23 @@ void TestBInsertSort() {
     printf("|                      Test BInsert Sort                      |\n");
     printf("|                        测试折半插入排序                         |\n\n\n");
 
-    KeyType array[6] = { 1, 4, 2, 8, 5, 7 };
+    key_t array[6] = {1, 4, 2, 8, 5, 7 };
     seq_list_t sqList;
     sqList.length = 6;
     for (int i = 1; i <= sqList.length; i++) {
-        RedType redType;
+        seq_list_node_t redType;
         redType.key = array[i - 1];
-        redType.otherinfo = '\0';
-        sqList.r[i] = redType;
+        redType.info = '\0';
+        sqList.elements[i] = redType;
     }
 
     printf("排序前:\n");
-    ArrayOutput(sqList.r, 6);
+    ArrayOutput(sqList.elements, 6);
 
     BInsertSort(&sqList);
 
     printf("排序后:\n");
-    ArrayOutput(sqList.r, 6);
+    ArrayOutput(sqList.elements, 6);
 
 
     printf("|-------------------------------------------------------------|\n");
@@ -116,23 +116,23 @@ void TestSelectSort() {
     printf("|                       Test Select Sort                      |\n");
     printf("|                          测试选择排序                         |\n\n\n");
 
-    KeyType array[6] = { 1, 4, 2, 8, 5, 7 };
+    key_t array[6] = {1, 4, 2, 8, 5, 7 };
     seq_list_t sqList;
     sqList.length = 6;
     for (int i = 1; i <= sqList.length; i++) {
-        RedType redType;
+        seq_list_node_t redType;
         redType.key = array[i - 1];
-        redType.otherinfo = '\0';
-        sqList.r[i] = redType;
+        redType.info = '\0';
+        sqList.elements[i] = redType;
     }
 
     printf("排序前:\n");
-    ArrayOutput(sqList.r, 6);
+    ArrayOutput(sqList.elements, 6);
 
     SelectSort(&sqList);
 
     printf("排序后:\n");
-    ArrayOutput(sqList.r, 6);
+    ArrayOutput(sqList.elements, 6);
 
     printf("|-------------------------------------------------------------|\n");
 }
@@ -144,24 +144,24 @@ void TestShellSort() {
   printf("|                       Test Select Sort                      |\n");
   printf("|                          测试希尔排序                         |\n\n\n");
 
-  KeyType array[6] = { 1, 4, 2, 8, 5, 7 };
+  key_t array[6] = {1, 4, 2, 8, 5, 7 };
   seq_list_t sqList;
   sqList.length = 6;
   for (int i = 1; i <= sqList.length; i++) {
-    RedType redType;
+    seq_list_node_t redType;
     redType.key = array[i - 1];
-    redType.otherinfo = '\0';
-    sqList.r[i] = redType;
+    redType.info = '\0';
+    sqList.elements[i] = redType;
   }
 
   printf("排序前:\n");
-  ArrayOutput(sqList.r, 6);
+  ArrayOutput(sqList.elements, 6);
 
   int dlta[3] = { 3, 2, 1 };
   ShellSort(&sqList, dlta, 3);
 
   printf("排序后:\n");
-  ArrayOutput(sqList.r, 6);
+  ArrayOutput(sqList.elements, 6);
 
   printf("|-------------------------------------------------------------|\n");
 }
@@ -172,24 +172,24 @@ void TestQuickSort() {
     printf("------------------------- CyberDash -------------------------\n");
     printf("                       Test Quick Sort                       \n");
     printf("                          测试快速排序                         \n\n\n");
-    KeyType array[6] = { 1, 4, 2, 8, 5, 7 };
+    key_t array[6] = {1, 4, 2, 8, 5, 7 };
 
     seq_list_t sqList;
     sqList.length = 6;
     for (int i = 1; i <= sqList.length; i++) {
-        RedType redType;
+        seq_list_node_t redType;
         redType.key = array[i - 1];
-        redType.otherinfo = '\0';
-        sqList.r[i] = redType;
+        redType.info = '\0';
+        sqList.elements[i] = redType;
     }
 
     printf("排序前:\n");
-    ArrayOutput(sqList.r, 6);
+    ArrayOutput(sqList.elements, 6);
 
     QuickSort(&sqList);
 
     printf("排序后:\n");
-    ArrayOutput(sqList.r, 6);
+    ArrayOutput(sqList.elements, 6);
 
     printf("-------------------------------------------------------------\n");
 }
@@ -200,24 +200,24 @@ void TestHeapSort() {
     printf("------------------------- CyberDash -------------------------\n");
     printf("                       Test Heap Sort                       \n");
     printf("                          测试堆排序                         \n\n\n");
-    KeyType array[6] = { 1, 4, 2, 8, 5, 7 };
+    key_t array[6] = {1, 4, 2, 8, 5, 7 };
 
     seq_list_t sqList;
     sqList.length = 6;
     for (int i = 1; i <= sqList.length; i++) {
-        RedType redType;
+        seq_list_node_t redType;
         redType.key = array[i - 1];
-        redType.otherinfo = '\0';
-        sqList.r[i] = redType;
+        redType.info = '\0';
+        sqList.elements[i] = redType;
     }
 
     printf("排序前:\n");
-    ArrayOutput(sqList.r, 6);
+    ArrayOutput(sqList.elements, 6);
 
     HeapSort(&sqList);
 
     printf("排序后:\n");
-    ArrayOutput(sqList.r, 6);
+    ArrayOutput(sqList.elements, 6);
 
     printf("-------------------------------------------------------------\n");
 
@@ -230,24 +230,24 @@ void TestMergeSort() {
     printf("------------------------- CyberDash -------------------------\n");
     printf("                       Test Merge Sort                       \n");
     printf("                          测试归并排序                         \n\n\n");
-    KeyType array[6] = { 1, 4, 2, 8, 5, 7 };
+    key_t array[6] = {1, 4, 2, 8, 5, 7 };
 
     seq_list_t sqList;
     sqList.length = 6;
     for (int i = 1; i <= sqList.length; i++) {
-        RedType redType;
+        seq_list_node_t redType;
         redType.key = array[i - 1];
-        redType.otherinfo = '\0';
-        sqList.r[i] = redType;
+        redType.info = '\0';
+        sqList.elements[i] = redType;
     }
 
     printf("排序前:\n");
-    ArrayOutput(sqList.r, 6);
+    ArrayOutput(sqList.elements, 6);
 
     MergeSort(&sqList);
 
     printf("排序后:\n");
-    ArrayOutput(sqList.r, 6);
+    ArrayOutput(sqList.elements, 6);
 
     printf("-------------------------------------------------------------\n");
 }
@@ -261,8 +261,8 @@ void TestRadixSort() {
 
     static_linked_list_t slList;
 
-    // keynum和recnum可以自由调整(非0)
-    slList.key_cnt = 5;    // 几位
+    // key_cnt和length可以自由调整(非0)
+    slList.key_cnt = 5;   // 几位
     slList.length = 10;   // 几个数
 
     static_linked_list_node_t zeroSlCell;
@@ -271,7 +271,7 @@ void TestRadixSort() {
     zeroSlCell.keys[2] = 0;
     zeroSlCell.keys[3] = 0;
     zeroSlCell.next = 1;
-    slList.r[0] = zeroSlCell;
+    slList.elements[0] = zeroSlCell;
 
     srand((unsigned)time(NULL));
 
@@ -293,16 +293,16 @@ void TestRadixSort() {
           slCell.next = 0;
       }
 
-      slList.r[i] = slCell;
+      slList.elements[i] = slCell;
     }
 
     printf("排序前:\n");
-    RadixArrayOutput(&slList.r, slList.length);
+    RadixArrayOutput(&slList.elements, slList.length);
 
     RadixSort(&slList);
 
     printf("排序后:\n");
-    RadixArrayOutput(&slList.r, slList.length);
+    RadixArrayOutput(&slList.elements, slList.length);
 
     printf("-------------------------------------------------------------\n");
 }

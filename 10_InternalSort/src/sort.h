@@ -10,21 +10,16 @@
 # define MAXSIZE 20     // 顺序表的最大长度
 
 
-typedef int KeyType;    //定义关键字类型为整数类型
-typedef char InfoType;  //其他数据类型
+typedef int key_t;    //定义关键字类型为整数类型
+typedef char info_t;  //其他数据类型
 
 typedef struct {
-    KeyType key;        //关键字项
-    InfoType otherinfo; //其他数据项
-}RedType;// Red or Rcd?
-
-typedef struct {
-    KeyType key;        //关键字项
-    InfoType otherinfo; //其他数据项
+    key_t key;        //关键字项
+    info_t info; //其他数据项
 } seq_list_node_t;
 
 typedef struct {
-    RedType r[MAXSIZE + 1]; // r[0]闲置或用作哨兵单元
+    seq_list_node_t elements[MAXSIZE + 1]; // elements[0]闲置或用作哨兵单元
     int length;         //顺序表长度
 } seq_list_t;
 /*----顺序链表的数据类型----*/
@@ -41,13 +36,13 @@ typedef struct
 
 typedef struct
 {
-    SLNode r[SIZE];     //0号单元为表头结点
+    SLNode elements[SIZE];     //0号单元为表头结点
     int length;         //链表当前长度
 }SLinkListType;         //静态链表类型
 /*----静态链表的数据类型----*/
 
 
-typedef seq_list_t HeapType; // 堆采用顺序表存储表示
+typedef seq_list_t heap_t; // 堆采用顺序表存储表示
 
 /*----基数排序链表的数据类型----*/
 #define MAX_NUM_OF_KEY 8          //关键字项数的最大值 
@@ -59,13 +54,13 @@ typedef char KeysType;
 typedef struct
 {
     KeysType keys[MAX_NUM_OF_KEY];      //关键字 
-    InfoType otherinfo;                 //其他数据项
+    info_t otherinfo;                 //其他数据项
     int next;
 }static_linked_list_node_t;                                // 静态链表的结点类型
 
 typedef struct
 {
-    static_linked_list_node_t r[MAX_SPACE];                //静态链表的可利用空间，r[0]为头结点
+    static_linked_list_node_t elements[MAX_SPACE];                //静态链表的可利用空间，elements[0]为头结点
     int key_cnt;                         //记录的当前关键字个数
     int length;                         //静态链表当前长度
 } static_linked_list_t;                                //静态链表类型
@@ -87,11 +82,11 @@ void ShellSort(seq_list_t* L, int dlta[], int t);
 
 void SelectSort(seq_list_t* L);
 
-void BubbleSort(seq_list_t* L);
+void BubbleSort(seq_list_t* seq_list);
 
 void QuickSort(seq_list_t* L);
 
-void HeapSort(HeapType* H);
+void HeapSort(heap_t* heap);
 
 void MergeSort(seq_list_t* L);
 

@@ -200,10 +200,10 @@ void TestHeapSort() {
     printf("------------------------- CyberDash -------------------------\n");
     printf("                       Test Heap Sort                       \n");
     printf("                          测试堆排序                         \n\n\n");
-    key_t array[6] = {1, 4, 2, 8, 5, 7 };
+    key_t array[8] = {3, 1, 4, 1, 5, 9, 2, 6 };
 
     seq_list_t sqList;
-    sqList.length = 6;
+    sqList.length = 8;
     for (int i = 1; i <= sqList.length; i++) {
         seq_list_node_t redType;
         redType.key = array[i - 1];
@@ -212,12 +212,12 @@ void TestHeapSort() {
     }
 
     printf("排序前:\n");
-    ArrayOutput(sqList.elements, 6);
+    ArrayOutput(sqList.elements, 8);
 
     HeapSort(&sqList);
 
     printf("排序后:\n");
-    ArrayOutput(sqList.elements, 6);
+    ArrayOutput(sqList.elements, 8);
 
     printf("-------------------------------------------------------------\n");
 

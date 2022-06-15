@@ -346,21 +346,21 @@ void SelectSort(seq_list_t* L)
 /*!
  * 大顶堆SiftDown
  * @param heap 顺序表结构(通常可以是数组)
- * @param index 位置索引
+ * @param idx 位置索引
  * @param heap_size 堆size
  */
-void MaxHeapSiftDown(heap_t* heap, int index, int heap_size)
+void MaxHeapSiftDown(heap_t* heap, int idx, int heap_size)
 {
-    for (int child_idx = 2 * index; child_idx <= heap_size; child_idx *= 2) {              //沿key较大的孩子结点向下筛选
+    for (int child_idx = 2 * idx; child_idx <= heap_size; idx = child_idx, child_idx *= 2) {              //沿key较大的孩子结点向下筛选
         if (child_idx < heap_size && LowerThan(heap->elements[child_idx].key, heap->elements[child_idx + 1].key)) {
             child_idx++;                                      // j为key较大的记录的下标
         }
 
-        if (!LowerThan(heap->elements[index].key, heap->elements[child_idx].key)) {
+        if (!LowerThan(heap->elements[idx].key, heap->elements[child_idx].key)) {
             break;
         }
 
-        Swap(heap->elements + index, heap->elements + child_idx);
+        Swap(heap->elements + idx, heap->elements + child_idx);
     }
 }
 
@@ -371,15 +371,14 @@ void MaxHeapSiftDown(heap_t* heap, int index, int heap_size)
  * @note
  * 通常heap可以使用数组
  */
-void HeapSort(heap_t* heap)
+void HeapSort(seq_list_t* heap)
 {
     // 对数组heap->elements[1 ... heap->length]建立大顶堆
     for (int i = heap->length / 2; i > 0; i--) {
         MaxHeapSiftDown(heap, i, heap->length);
     }
 
-    for (int i = heap->length; i > 1; --i)
-    {
+    for (int i = heap->length; i > 1; --i) {
         Swap(&heap->elements[1], &heap->elements[i]);
         MaxHeapSiftDown(heap, 1, i - 1);
     }

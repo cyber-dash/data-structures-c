@@ -139,31 +139,31 @@ void TestSelectSort() {
 
 
 void TestShellSort() {
-  printf("\n");
-  printf("|------------------------- CyberDash -------------------------|\n");
-  printf("|                       Test Select Sort                      |\n");
-  printf("|                          测试希尔排序                         |\n\n\n");
+    printf("\n");
+    printf("|------------------------- CyberDash -------------------------|\n");
+    printf("|                       Test Select Sort                      |\n");
+    printf("|                          测试希尔排序                         |\n\n\n");
 
-  key_t array[6] = {1, 4, 2, 8, 5, 7 };
-  seq_list_t sqList;
-  sqList.length = 6;
-  for (int i = 1; i <= sqList.length; i++) {
-    seq_list_node_t redType;
-    redType.key = array[i - 1];
-    redType.info = '\0';
-    sqList.elements[i] = redType;
-  }
+    key_t array[8] = { 3, 1, 4, 1, 5, 9, 2, 6 };
+    seq_list_t seq_list;
+    seq_list.length = 8;
+    for (int i = 1; i <= seq_list.length; i++) {
+        seq_list_node_t elem;
+        elem.key = array[i - 1];
+        elem.info = '\0';
+        seq_list.elements[i] = elem;
+    }
 
-  printf("排序前:\n");
-  ArrayOutput(sqList.elements, 6);
+    printf("排序前:\n");
+    ArrayOutput(seq_list.elements, 8);
 
-  int dlta[3] = { 3, 2, 1 };
-  ShellSort(&sqList, dlta, 3);
+    int dlta[3] = { 3, 2, 1 };
+    ShellSort(&seq_list, dlta, 3);
 
-  printf("排序后:\n");
-  ArrayOutput(sqList.elements, 6);
+    printf("排序后:\n");
+    ArrayOutput(seq_list.elements, 8);
 
-  printf("|-------------------------------------------------------------|\n");
+    printf("|-------------------------------------------------------------|\n");
 }
 
 
@@ -202,22 +202,22 @@ void TestHeapSort() {
     printf("                          测试堆排序                         \n\n\n");
     key_t array[8] = {3, 1, 4, 1, 5, 9, 2, 6 };
 
-    seq_list_t sqList;
-    sqList.length = 8;
-    for (int i = 1; i <= sqList.length; i++) {
-        seq_list_node_t redType;
-        redType.key = array[i - 1];
-        redType.info = '\0';
-        sqList.elements[i] = redType;
+    seq_list_t seq_list;
+    seq_list.length = 8;
+    for (int i = 1; i <= seq_list.length; i++) {
+        seq_list_node_t elem;
+        elem.key = array[i - 1];
+        elem.info = '\0';
+        seq_list.elements[i] = elem;
     }
 
     printf("排序前:\n");
-    ArrayOutput(sqList.elements, 8);
+    ArrayOutput(seq_list.elements, seq_list.length);
 
-    HeapSort(&sqList);
+    HeapSort(&seq_list);
 
     printf("排序后:\n");
-    ArrayOutput(sqList.elements, 8);
+    ArrayOutput(seq_list.elements, seq_list.length);
 
     printf("-------------------------------------------------------------\n");
 

@@ -351,9 +351,9 @@ void SelectSort(seq_list_t* L)
  */
 void MaxHeapSiftDown(heap_t* heap, int idx, int heap_size)
 {
-    for (int child_idx = 2 * idx; child_idx <= heap_size; idx = child_idx, child_idx *= 2) {              //沿key较大的孩子结点向下筛选
+    for (int child_idx = 2 * idx; child_idx <= heap_size; idx = child_idx, child_idx *= 2) {
         if (child_idx < heap_size && LowerThan(heap->elements[child_idx].key, heap->elements[child_idx + 1].key)) {
-            child_idx++;                                      // j为key较大的记录的下标
+            child_idx++;
         }
 
         if (!LowerThan(heap->elements[idx].key, heap->elements[child_idx].key)) {

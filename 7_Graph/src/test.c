@@ -562,11 +562,16 @@ void TestBellmanFord() {
         G.adj_matrix[curRowIdx][curColIdx].edge_info->starting_vertex_idx = startingVertexIndexArr[i];
         G.adj_matrix[curRowIdx][curColIdx].edge_info->ending_vertex_idx = endingVertexIndexArr[i];
         G.adj_matrix[curRowIdx][curColIdx].edge_info->value.double_value = weightArr[i];
+
+        G.adj_matrix[curColIdx][curRowIdx].edge_info->starting_vertex_idx = startingVertexIndexArr[i];
+        G.adj_matrix[curColIdx][curRowIdx].edge_info->ending_vertex_idx = endingVertexIndexArr[i];
+        G.adj_matrix[curColIdx][curRowIdx].edge_info->value.double_value = weightArr[i];
     }
 
     int predecessor[MAX_VERTEX_CNT][MAX_VERTEX_CNT];
     edge_t distance[MAX_VERTEX_CNT];
-    int v0 = 0; // 从索引0结点开始(到其他结点)
+
+    int v0 = 1; // 从索引0结点开始(到其他结点)
 
     // D初始化
     for (int i = 0; i < MAX_VERTEX_CNT; i++) {

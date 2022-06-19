@@ -336,17 +336,23 @@ void ShortestPath_Dijkstra(matrix_graph_t* graph, int v0, int (*predecessor)[MAX
 int ShortestPath_BellmanFord(matrix_graph_t* graph, int v0, int (*predecessor)[MAX_VERTEX_CNT], edge_t* distance) {
 
     int vertex_cnt = graph->vertex_cnt;
+
+    /*
     for (int i = 0; i < vertex_cnt; i++) {
         distance[i].weight_type = DOUBLE;
         distance[i].edge_info->value.double_value = graph->adj_matrix[v0][i].edge_info->value.double_value;
         predecessor[v0][i] = v0;
     }
+     */
+
+    distance[v0].edge_info->value.double_value = 0;
+    predecessor[v0][v0] = -1;
 
     for (int i = 0; i < vertex_cnt - 1; i++) {
-        // todo: 此处可以优化
+        // todo: 此处可以优化, 在graph结构体增加边存储
         for (int u = 0; u < vertex_cnt; u++) {
             for (int v = 0; v < vertex_cnt; v++) {
-                if (graph->adj_matrix[u][v].edge_info->value.double_value == DBL_MAX) {
+                if (u == v || graph->adj_matrix[u][v].edge_info->value.double_value == DBL_MAX) {
                     continue;
                 }
 

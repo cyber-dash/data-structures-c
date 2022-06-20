@@ -53,7 +53,7 @@ void DFSRecursive(matrix_graph_t graph, int starting_vertex_idx, int* visited) {
 
     for (int vertex_idx = FirstAdjVertexIdx(&graph, starting_vertex_idx);
          vertex_idx >= 0;
-         vertex_idx = NextAdjVertex(&graph, starting_vertex_idx, vertex_idx))
+         vertex_idx = NextAdjVertexIdx(&graph, starting_vertex_idx, vertex_idx))
     {
         if (!visited[vertex_idx]) {
             DFSRecursive(graph, vertex_idx, visited);
@@ -90,7 +90,7 @@ void BFSTraverse(matrix_graph_t graph, Status (*Visit)(matrix_graph_t*, int)) {
             while (!QueueEmpty(&queue)) {
                 int u;
                 DeQueue(&queue, &u);
-                for (int w = FirstAdjVertexIdx(&graph, u); w >= 0; w = NextAdjVertex(&graph, u, w)) {
+                for (int w = FirstAdjVertexIdx(&graph, u); w >= 0; w = NextAdjVertexIdx(&graph, u, w)) {
                     if (!visited[w]) {
                         visited[w] = 1;
                         Visit(&graph, w);

@@ -60,7 +60,7 @@ int FirstAdjVertexIdx(matrix_graph_t* graph, int vertex_idx) {
  *  成功: 返回索引值
  *  失败: 返回 -1
  */
-int NextAdjVertex(matrix_graph_t* graph, int vertex_idx, int first_adj_vertex_idx) {
+int NextAdjVertexIdx(matrix_graph_t* graph, int vertex_idx, int first_adj_vertex_idx) {
     if (first_adj_vertex_idx == graph->vertex_count - 1) {
         return -1;
     }

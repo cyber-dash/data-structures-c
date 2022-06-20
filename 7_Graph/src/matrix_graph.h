@@ -23,7 +23,7 @@ Status CreateUDG(matrix_graph_t *G);
 int FirstAdjVertexIdx(matrix_graph_t *graph, int vertex_idx);
 
 // 结点(索引)v在图G中的, 结点(索引)w之外第一个(索引)邻接节点
-int NextAdjVertex(matrix_graph_t* graph, int vertex_idx, int first_adj_vertex_idx);
+int NextAdjVertexIdx(matrix_graph_t* graph, int vertex_idx, int first_adj_vertex_idx);
 
 // 构造图
 Status CreateGraphByEdgesAndVertices(matrix_graph_t* graph,

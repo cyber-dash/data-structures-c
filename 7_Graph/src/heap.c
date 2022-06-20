@@ -11,13 +11,16 @@ int LowerThan(MST_node_t* node1, MST_node_t* node2) {
         } else {
             return 0;
         }
-    } else if (node1->weight_type == INT && node2->weight_type == INT) {
+    }
+    /*
+    else if (node1->weight_type == INT && node2->weight_type == INT) {
         if (node1->weight.int_value < node2->weight.int_value) {
             return 1;
         } else {
             return 0;
         }
     }
+     */
 
     return -1;
 }
@@ -30,13 +33,16 @@ int LargerThan(MST_node_t* node1, MST_node_t* node2) {
         } else {
             return 0;
         }
-    } else if (node1->weight_type == INT && node2->weight_type == INT) {
+    }
+    /*
+    else if (node1->weight_type == INT && node2->weight_type == INT) {
         if (node1->weight.int_value > node2->weight.int_value) {
             return 1;
         } else {
             return 0;
         }
     }
+     */
 
     return -1;
 }

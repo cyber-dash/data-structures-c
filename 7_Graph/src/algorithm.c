@@ -31,14 +31,14 @@ Status Visit(matrix_graph_t *graph, int vertex) {
 void DFSTraverse(matrix_graph_t graph, Status (*Visit)(int v)) {
 
     // 构造visited数组
-    int* visited = (int*)malloc(graph.vertex_cnt * sizeof(int));
+    int* visited = (int*)malloc(graph.vertex_count * sizeof(int));
     /* error handler */
 
-    for (int i = 0; i < graph.vertex_cnt; i++) {
+    for (int i = 0; i < graph.vertex_count; i++) {
         visited[i] = 0;
     }
 
-    for (int v = 0; v < graph.vertex_cnt; ++v) {
+    for (int v = 0; v < graph.vertex_count; ++v) {
         if (!visited[v]) {
             DFSRecursive(graph, 0, visited);
         }
@@ -51,7 +51,7 @@ void DFSRecursive(matrix_graph_t graph, int starting_vertex_idx, int* visited) {
     visited[starting_vertex_idx] = 1;
     Visit(&graph, starting_vertex_idx);   // 访问索引starting_vertex_idx的顶点
 
-    for (int vertex_idx = FirstAdjVertex(&graph, starting_vertex_idx);
+    for (int vertex_idx = FirstAdjVertexIdx(&graph, starting_vertex_idx);
          vertex_idx >= 0;
          vertex_idx = NextAdjVertex(&graph, starting_vertex_idx, vertex_idx))
     {
@@ -70,17 +70,17 @@ void DFSRecursive(matrix_graph_t graph, int starting_vertex_idx, int* visited) {
 void BFSTraverse(matrix_graph_t graph, Status (*Visit)(matrix_graph_t*, int)) {
 
     // 构造visited数组
-    int* visited = (int*)malloc(graph.vertex_cnt * sizeof(int));
+    int* visited = (int*)malloc(graph.vertex_count * sizeof(int));
     /* error handler */
 
-    for (int i = 0; i < graph.vertex_cnt; i++) {
+    for (int i = 0; i < graph.vertex_count; i++) {
         visited[i] = 0;
     }
 
     linked_queue_node_t queue;
     InitQueue(&queue);
 
-    for (int v = 0; v < graph.vertex_cnt; ++v) {
+    for (int v = 0; v < graph.vertex_count; ++v) {
         if (!visited[v]) {
             visited[v] = 1;
             Visit(&graph, v);
@@ -90,7 +90,7 @@ void BFSTraverse(matrix_graph_t graph, Status (*Visit)(matrix_graph_t*, int)) {
             while (!QueueEmpty(&queue)) {
                 int u;
                 DeQueue(&queue, &u);
-                for (int w = FirstAdjVertex(&graph, u); w >= 0; w = NextAdjVertex(&graph, u, w)) {
+                for (int w = FirstAdjVertexIdx(&graph, u); w >= 0; w = NextAdjVertex(&graph, u, w)) {
                     if (!visited[w]) {
                         visited[w] = 1;
                         Visit(&graph, w);
@@ -110,7 +110,7 @@ void BFSTraverse(matrix_graph_t graph, Status (*Visit)(matrix_graph_t*, int)) {
  * @param min_span_tree
  */
 void Prim(matrix_graph_t* graph, MST_node_t* min_span_tree) {
-    int vertex_cnt = graph->vertex_cnt;
+    int vertex_cnt = graph->vertex_count;
 
     // warning: 此处使用数组, 如果可以, 使用set来实现vertex_set,
     // 如果你觉得用c语言做set比较麻烦, 请移步C++, C++更适合做算法
@@ -161,7 +161,7 @@ void Prim(matrix_graph_t* graph, MST_node_t* min_span_tree) {
 
 void Kruskal(matrix_graph_t* graph, MST_node_t* min_span_tree) {
 
-    int vertex_num = graph->vertex_cnt;     // 结点数量
+    int vertex_num = graph->vertex_count;     // 结点数量
     int edge_num = graph->edge_count;       // 边数量
 
     MST_t mst_node_min_heap;      // 小顶堆
@@ -169,8 +169,8 @@ void Kruskal(matrix_graph_t* graph, MST_node_t* min_span_tree) {
     InitDisjointSet(&disjoint_set, vertex_num);
 
     int arcCount = 1;
-    for (int i = 0; i < graph->vertex_cnt; i++) {
-        for (int j = 0; j < graph->vertex_cnt; j++) {
+    for (int i = 0; i < graph->vertex_count; i++) {
+        for (int j = 0; j < graph->vertex_count; j++) {
             if (graph->adj_matrix[i][j].weight.double_value == DBL_MAX) {
                 continue;
             }
@@ -243,14 +243,14 @@ void PrintMinSpanTree(MST_t min_span_tree, int size) {
 void ShortestPath_Dijkstra(matrix_graph_t* graph, int v0, int (*predecessor)[MAX_VERTEX_CNT], edge_t* distance ) {
 
     // 用Dijkstra算法求有向网G的v0顶点到其余顶点v的最短路径P[v]及其带权长度D[v]
-    int vertex_cnt = graph->vertex_cnt;
+    int vertex_cnt = graph->vertex_count;
     int* final = (int*)malloc(vertex_cnt * sizeof(int));
     // WEIGHT_TYPE type = graph->adj_matrix_t[0][0].weight_type;
 
-    for (int v = 0; v < graph->vertex_cnt; v++) {
+    for (int v = 0; v < graph->vertex_count; v++) {
         final[v] = FALSE;
 
-        for (int w = 0; w < graph->vertex_cnt; w++) {
+        for (int w = 0; w < graph->vertex_count; w++) {
             predecessor[v][w] = -1;
         }
 
@@ -335,10 +335,10 @@ void ShortestPath_Dijkstra(matrix_graph_t* graph, int v0, int (*predecessor)[MAX
  */
 int ShortestPath_BellmanFord(matrix_graph_t* graph, int v0, int (*predecessor)[MAX_VERTEX_CNT], edge_t* distance) {
 
-    int vertex_cnt = graph->vertex_cnt;
+    int vertex_cnt = graph->vertex_count;
 
     /*
-    for (int i = 0; i < vertex_cnt; i++) {
+    for (int i = 0; i < vertex_count; i++) {
         distance[i].weight_type = DOUBLE;
         distance[i].edge_info->weight.double_value = graph->adj_matrix[v0][i].edge_info->weight.double_value;
         predecessor[v0][i] = v0;
@@ -409,20 +409,23 @@ int ShortestPath_BellmanFord(matrix_graph_t* graph, int v0, int (*predecessor)[M
  *     predecessor[i][j] contains the predecessor of j on the shortest path from i to j.
  */
 void Floyd(matrix_graph_t* graph, int (*predecessor)[MAX_VERTEX_CNT], edge_t (*distance)[MAX_VERTEX_CNT]) {
-    int vertex_cnt = graph->vertex_cnt;
+    int vertex_cnt = graph->vertex_count;
 
     for (int i = 0; i < vertex_cnt; i++) {
         for (int j = 0; j < vertex_cnt; j++) {
 
             if (i == j) {
+                /*
                 if (graph->weight_type == INT) {
                     distance[i][j].weight_type = INT;
                     distance[i][j].weight.int_value = 0;
                 } else if (graph->weight_type == DOUBLE) {
-                    distance[i][j].weight_type = DOUBLE;
-                    distance[i][j].weight.double_value = 0;
-                }
+                 */
+                distance[i][j].weight_type = DOUBLE;
+                distance[i][j].weight.double_value = 0;
+                //}
             } else {
+                /*
                 if (graph->weight_type == INT) {
                     distance[i][j].weight_type = INT;
                     if (graph->adj_matrix[i][j].weight.int_value != INT_MAX) {
@@ -431,13 +434,14 @@ void Floyd(matrix_graph_t* graph, int (*predecessor)[MAX_VERTEX_CNT], edge_t (*d
                         distance[i][j].weight.int_value = INT_MAX;
                     }
                 } else if (graph->weight_type == DOUBLE) {
-                    distance[i][j].weight_type = DOUBLE;
-                    if (graph->adj_matrix[i][j].weight.double_value != DBL_MAX) {
-                        distance[i][j].weight.double_value = graph->adj_matrix[i][j].weight.double_value;
-                    } else {
-                        distance[i][j].weight.double_value = DBL_MAX;
-                    }
+                 */
+                distance[i][j].weight_type = DOUBLE;
+                if (graph->adj_matrix[i][j].weight.double_value != DBL_MAX) {
+                    distance[i][j].weight.double_value = graph->adj_matrix[i][j].weight.double_value;
+                } else {
+                    distance[i][j].weight.double_value = DBL_MAX;
                 }
+                // }
             }
 
             predecessor[i][j] = i;
@@ -447,6 +451,7 @@ void Floyd(matrix_graph_t* graph, int (*predecessor)[MAX_VERTEX_CNT], edge_t (*d
     for (int k = 0; k < vertex_cnt; k++) {
         for (int i = 0; i < vertex_cnt; i++) {
             for (int j = 0; j < vertex_cnt; j++) {
+                /*
                 if (graph->weight_type == INT) {
                     if (distance[i][k].weight.int_value + distance[k][j].weight.int_value
                             < distance[i][j].weight.int_value)
@@ -456,14 +461,15 @@ void Floyd(matrix_graph_t* graph, int (*predecessor)[MAX_VERTEX_CNT], edge_t (*d
                         predecessor[i][j] = predecessor[k][j];
                     }
                 } else if (graph->weight_type == DOUBLE) {
-                    if (distance[i][k].weight.double_value + distance[k][j].weight.double_value
-                        < distance[i][j].weight.double_value)
-                    {
-                        distance[i][j].weight.double_value =
-                            distance[i][k].weight.double_value + distance[k][j].weight.double_value;
-                        predecessor[i][j] = predecessor[k][j];
-                    }
+                 */
+                if (distance[i][k].weight.double_value + distance[k][j].weight.double_value
+                    < distance[i][j].weight.double_value)
+                {
+                    distance[i][j].weight.double_value =
+                        distance[i][k].weight.double_value + distance[k][j].weight.double_value;
+                    predecessor[i][j] = predecessor[k][j];
                 }
+                // }
             }
         }
     }
@@ -473,10 +479,10 @@ void Floyd(matrix_graph_t* graph, int (*predecessor)[MAX_VERTEX_CNT], edge_t (*d
 /*
 void PrintSingleSourceShortestPath(matrix_graph_t *graph, int v0, edge_t* distance, int (*predecessor)[MAX_VERTEX_CNT]) {
 
-    int vertex_cnt = graph->vertex_cnt;
-    int* cur_predecessor = (int*) malloc(vertex_cnt * sizeof(int));
+    int vertex_count = graph->vertex_count;
+    int* cur_predecessor = (int*) malloc(vertex_count * sizeof(int));
 
-    for (int i = 0; i < vertex_cnt; i++) {
+    for (int i = 0; i < vertex_count; i++) {
 
         // 不处理v0到v0自己本身的最短路径
         if (i == v0) {
@@ -516,7 +522,7 @@ void PrintSingleSourceShortestPath(matrix_graph_t *graph,
                                    int (*predecessor)[MAX_VERTEX_CNT],
                                    edge_t* distance)
 {
-    int vertex_cnt = graph->vertex_cnt;
+    int vertex_cnt = graph->vertex_count;
     for (int i = 0; i < vertex_cnt; i++) {
         // 不处理v0到v0自己本身的最短路径
         if (i == v0) {
@@ -527,11 +533,13 @@ void PrintSingleSourceShortestPath(matrix_graph_t *graph,
         PrintSingleSourceShortestPathRecursive(graph, v0, i, predecessor);
 
         printf(", ");
+        /*
         if (distance[i].weight_type == INT) {
             printf("最短路径长度为: %d\n", distance[i].weight.int_value);
         } else if (distance[i].weight_type == DOUBLE) {
-            printf("最短路径长度为: %.2lf\n", distance[i].weight.double_value);
-        }
+         */
+        printf("最短路径长度为: %.2lf\n", distance[i].weight.double_value);
+        // }
     }
 }
 
@@ -540,7 +548,7 @@ void PrintMultiSourceShortestPath(matrix_graph_t *graph,
                                   edge_t (*distance)[MAX_VERTEX_CNT],
                                   int (*predecessor)[MAX_VERTEX_CNT])
 {
-    int vertex_cnt = graph->vertex_cnt;
+    int vertex_cnt = graph->vertex_count;
     for (int i = 0; i < vertex_cnt; i++) {
         printf("--- 从起始点%d到其他各顶点的最短路径 ---\n", i);
         for (int j = 0; j < vertex_cnt; j++) {

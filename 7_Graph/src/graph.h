@@ -29,7 +29,7 @@ typedef enum {
 typedef enum {
     NO_EDGE,
     UNWEIGHTED,
-    INT,
+    // INT,
     DOUBLE,
 } WEIGHT_TYPE;
 
@@ -46,21 +46,17 @@ typedef struct edge_t {
 } edge_t, adj_matrix_t[MAX_VERTEX_CNT][MAX_VERTEX_CNT];
 
 
-/*
-typedef struct AceCell {
-    WEIGHT_TYPE weight_type;     // VRType是顶点关系类型
-    edge_t*  edge_info;	// 该弧相关信息的指针
-} edge_t, adj_matrix_t[MAX_VERTEX_CNT][MAX_VERTEX_CNT];
- */
-
-
 typedef struct {
-    VERTEX_TYPE vertices[MAX_VERTEX_CNT];	//!< 顶点向量
-    adj_matrix_t	adj_matrix;					//!< 邻接矩阵
-    int			vertex_cnt;                 //!< 图结点数
-    int         edge_count;                 //!< 图弧(边)数
-    GRAPH_KIND	kind;					//!< 图的种类标志
-    WEIGHT_TYPE weight_type;            //!< 权值类型
+    adj_matrix_t	adj_matrix;                                //!< 邻接矩阵
+
+    int			    vertex_count;                              //!< 图结点数
+    VERTEX_TYPE     vertices[MAX_VERTEX_CNT];                  //!< 顶点集合(数组)
+
+    int             edge_count;                                //!< 图弧(边)数
+    edge_t          edges[MAX_VERTEX_CNT * MAX_VERTEX_CNT];    //!< 边集合(数组)
+
+    GRAPH_KIND	    kind;					                   //!< 图的种类标志
+    WEIGHT_TYPE     weight_type;                               //!< 权值类型
 } matrix_graph_t;
 
 

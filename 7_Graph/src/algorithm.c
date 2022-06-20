@@ -337,33 +337,26 @@ int ShortestPath_BellmanFord(matrix_graph_t* graph, int v0, int (*predecessor)[M
 
     int vertex_cnt = graph->vertex_count;
 
-    /*
-    for (int i = 0; i < vertex_count; i++) {
-        distance[i].weight_type = DOUBLE;
-        distance[i].edge_info->weight.double_value = graph->adj_matrix[v0][i].edge_info->weight.double_value;
-        predecessor[v0][i] = v0;
+    for (int i = 0; i < graph->vertex_count; i++) {
+        distance[i].weight.double_value = DBL_MAX;
     }
-     */
-
     distance[v0].weight.double_value = 0;
     predecessor[v0][v0] = -1;
 
+    // 遍历 "图结点数 - 1" 次
     for (int i = 0; i < vertex_cnt - 1; i++) {
-        // todo: 此处可以优化, 在graph结构体增加边存储
-        for (int u = 0; u < vertex_cnt; u++) {
-            for (int v = 0; v < vertex_cnt; v++) {
-                if (u == v || graph->adj_matrix[u][v].weight.double_value == DBL_MAX) {
-                    continue;
-                }
+        // 遍历 "图边数" 次
+        for (int j = 0; j < graph->edge_count; j++) {
+            int u = graph->edges[j].starting_vertex_idx;
+            int v = graph->edges[j].ending_vertex_idx;
 
-                // 松弛
-                if (distance[u].weight.double_value + graph->adj_matrix[u][v].weight.double_value
-                    < distance[v].weight.double_value)
-                {
-                    distance[v].weight.double_value =
-                        distance[u].weight.double_value + graph->adj_matrix[u][v].weight.double_value;
-                    predecessor[v0][v] = u;
-                }
+            // 松弛
+            if (distance[u].weight.double_value + graph->adj_matrix[u][v].weight.double_value
+                < distance[v].weight.double_value)
+            {
+                distance[v].weight.double_value =
+                    distance[u].weight.double_value + graph->adj_matrix[u][v].weight.double_value;
+                predecessor[v0][v] = u;
             }
         }
     }
@@ -371,7 +364,7 @@ int ShortestPath_BellmanFord(matrix_graph_t* graph, int v0, int (*predecessor)[M
     int has_negative_weight_cycle = FALSE; // 默认没有负权环
     for (int u = 0; u < vertex_cnt; u++) {
         for (int v = 0; v < vertex_cnt; v++) {
-            if (graph->adj_matrix[u][v].weight.double_value == DBL_MAX) {
+            if (graph->adj_matrix[u][v].weight_type == NO_EDGE) {
                 continue;
             }
 

@@ -112,30 +112,33 @@ edge_t* NextEdge(matrix_graph_t* graph, int vertex_idx, edge_t* edge) {
 
 
 /*!
- * 构造无向网
+ * 构造图
  * @param graph 图(指针)
  * @param edge_arr 边信息数组
  * @param edge_cnt 边数量
  * @param vertex_index_arr 结点索引数组
  * @param vertex_cnt 结点数量
- * @return 是否成功
+ * @param graph_kind 图类型
+ * @return 执行结果
  * @note
- * vertexArr为图结点数组, 本代码将VertexType设置为int, 表示 结点0, 结点1, 结点2...
- * 实际上VertexType也可以设置为char, 表示 结点a, 结点b, 结点c ...
- * 由于本代码重点在实现算法, 因此不做VertexType的灵活性工作
+ * vertex_index_arr为图结点索引数组, 如: 结点0, 结点1, 结点2 ...
+ * 实际上应该允许传各种结点类型(vertex_type), 表示 "北京", "上海", "深圳" / "女神A", "女神B", "女神C" ...
+ * 由于本代码重点在实现算法, 因此不做vertex_type的灵活性工作
  *
- * 如有这方面兴趣, 请参考C++版本实现 https://gitee.com/cyberdash/data-structure-cpp
+ * 如有这方面兴趣, 请参考C++模板版本实现 https://gitee.com/cyberdash/data-structure-cpp 中的图代码
  */
-Status CreateUDNByEdgesAndVertices(matrix_graph_t* graph,
-                                   edge_t* edge_arr,
-                                   int edge_cnt,
-                                   const int* vertex_index_arr,
-                                   int vertex_cnt)
+Status CreateGraphByEdgesAndVertices(matrix_graph_t* graph,
+                                     edge_t* edge_arr,
+                                     int edge_cnt,
+                                     const int* vertex_index_arr,
+                                     int vertex_cnt,
+                                     GRAPH_KIND graph_kind)
 {
-    graph->vertex_count = vertex_cnt;
-    graph->edge_count = edge_cnt;
+    graph->kind = graph_kind;           //!< 图类型
+    graph->vertex_count = vertex_cnt;   //!< 结点数量
+    graph->edge_count = edge_cnt;       //!< 边数量
 
-    graph->weight_type = edge_arr->weight_type;  // 读edge_arr第0项的weight_type
+    graph->weight_type = edge_arr->weight_type;  // 使用edge_arr第0项的weight_type, 赋给graph->weight_type
 
     for (int i = 0; i < graph->vertex_count; ++i) {
 
@@ -144,30 +147,34 @@ Status CreateUDNByEdgesAndVertices(matrix_graph_t* graph,
 
         // 矩阵元素初始化NO_EDGE
         for (int j = 0; j < graph->vertex_count; ++j) {
-            graph->adj_matrix[i][j].weight_type = NO_EDGE;    //! 弧(边)权值类型
             graph->adj_matrix[i][j].starting_vertex_idx = i; //! 弧(边)的起始结点索引
             graph->adj_matrix[i][j].ending_vertex_idx = j;   //! 弧(边)的终点结点索引
+
+            if (i == j ) {
+                graph->adj_matrix[i][j].weight_type = DOUBLE;    //! 弧(边)权值类型
+                graph->adj_matrix[i][j].weight.double_value = 0;
+            } else {
+                graph->adj_matrix[i][j].weight_type = NO_EDGE;    //! 弧(边)权值类型
+                // graph->adj_matrix[i][j].weight.double_value = DBL_MAX;
+            }
         }
     }
 
     //! 使用edge_arr填充adj_matrix中对应的结点数据
     for (int i = 0; i < edge_cnt; ++i) {
 
-        int u = edge_arr[i].starting_vertex_idx;    //! 起始结点索引
-        int v = edge_arr[i].ending_vertex_idx;      //! 终点结点索引
+        int u = edge_arr[i].starting_vertex_idx;
+        int v = edge_arr[i].ending_vertex_idx;
 
         //! 边: u --> v
-        graph->adj_matrix[u][v].weight_type = graph->weight_type;
-        graph->adj_matrix[u][v].starting_vertex_idx = edge_arr[i].starting_vertex_idx;
-        graph->adj_matrix[u][v].ending_vertex_idx = edge_arr[i].ending_vertex_idx;
-        graph->adj_matrix[u][v].weight = edge_arr[i].weight;
+        graph->adj_matrix[u][v] = edge_arr[i];
 
-        // 无向图增加如下操作
-        //! 边: v --> u
-        graph->adj_matrix[v][u].weight_type = graph->weight_type;
-        graph->adj_matrix[v][u].starting_vertex_idx = edge_arr[i].ending_vertex_idx;
-        graph->adj_matrix[v][u].ending_vertex_idx = edge_arr[i].starting_vertex_idx;
-        graph->adj_matrix[v][u].weight = edge_arr[i].weight;
+
+        // 无向图/网增加如下操作
+        if (graph->kind == UDN || graph->kind == UDG) {
+            //! 边: v --> u
+            graph->adj_matrix[v][u] = edge_arr[i];
+        }
 
         // 图边信息数组赋值
         graph->edges[i] = edge_arr[i];
@@ -179,7 +186,7 @@ Status CreateUDNByEdgesAndVertices(matrix_graph_t* graph,
 
 /*
 // 使用弧信息数组构造无向网
-Status CreateUDNByEdgesAndVertices(matrix_graph_t *graph, edge_t *arcCellArr, int vertexNum, int arcNum) {
+Status CreateGraphByEdgesAndVertices(matrix_graph_t *graph, edge_t *arcCellArr, int vertexNum, int arcNum) {
 
 }
  */

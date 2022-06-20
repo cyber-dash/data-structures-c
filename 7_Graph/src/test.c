@@ -25,10 +25,10 @@
             \/
            结点3
  */
-void TestCreateUDNByArcCellArr() {
+void TestCreateUDNByEdgesAndVertices() {
     printf("\n");
     printf("------------------------- CyberDash -------------------------\n");
-    printf("                  Test CreateUDNByEdgesAndVertices                 \n");
+    printf("                  Test CreateGraphByEdgesAndVertices                 \n");
     printf("                 测试使用弧(边)数组创建无向网(UDN)               \n\n\n");
     printf("         结点0\n");
     printf("         / \\\n");
@@ -77,10 +77,10 @@ void TestCreateUDNByArcCellArr() {
     }
 
     // 建图, 如果成功则打印
-    Status status = CreateUDNByEdgesAndVertices(&G, arcCellArr, 5, vertices, 4);
+    Status status = CreateGraphByEdgesAndVertices(&G, arcCellArr, 5, vertices, 4, UDN);
     if (status == OK) {
         printf("建图成功, 打印:\n\n");
-        status = PrintGraphMatrix(&G, DOUBLE);
+        status = PrintGraphMatrix(&G);
         if (status == OK) {
             printf("打印结束\n\n");
         }
@@ -528,51 +528,64 @@ void TestBellmanFord() {
     printf("                       Test BellmanFord                      \n");
     printf("                测试贝尔曼福特(BellmanFord)最短路径              \n\n\n");
 
-    VERTEX_TYPE vertices[6] = {0, 1, 2, 3, 4, 5};
+    int vertices[6] = {0, 1, 2, 3, 4, 5};
 
-    matrix_graph_t G;
-    G.vertex_count = 6;           // 结点数量
-    G.edge_count = 9;           // 弧(边)数量
-    G.kind = DN;            // 类型:有向网
-    G.weight_type = DOUBLE;  // 弧(边)权值类型
+    matrix_graph_t graph;
+    graph.vertex_count = 6;           // 结点数量
+    graph.edge_count = 9;           // 弧(边)数量
+    graph.kind = UDN;            // 类型:有向网
+    graph.weight_type = DOUBLE;  // 弧(边)权值类型
 
     // 弧(边)信息, 注意有方向
     // 0 - 1: 0.1,   0 - 2: 0.12,  1 - 2: 0.2
     // 1 - 3: 0.14,  1 - 4: 0.13,  2 - 3: 0.05
     // 2 - 5: 0.17,  3 - 4: 0.09,  3 - 5: 0.11
-    int startingVertexIndexArr[9] = { 0, 0, 1, 1, 1, 2, 2, 3, 3}; // 起点
-    int endingVertexIndexArr[9] = { 1, 2, 2, 3, 4, 3, 5, 4, 5};   // 终点
-    double weightArr[9] = { 0.1, 0.12, 0.01, 0.14, 0.13, 0.05, 0.17, 0.09, 0.11}; // 权重
+    int starting_vertex_index_arr[9] = {0, 0, 1, 1, 1, 2, 2, 3, 3}; // 起点
+    int ending_vertex_index_arr[9] = {1, 2, 2, 3, 4, 3, 5, 4, 5};   // 终点
+    double weight_arr[9] = {0.1, 0.12, 0.01, 0.14, 0.13, 0.05, 0.17, 0.09, 0.11}; // 权重
 
+    edge_t edge_arr[9];
+    for (int i = 0; i < 9; i++) {
+        edge_arr[i].weight_type = DOUBLE;
+        edge_arr[i].starting_vertex_idx = starting_vertex_index_arr[i];
+        edge_arr[i].ending_vertex_idx = ending_vertex_index_arr[i];
+        edge_arr[i].weight.double_value = weight_arr[i];
+    }
+
+    /*
     // 对每个[i, j]进行初始化, 默认没有弧(边), 所有的弧(边)长为最大值
-    for (int i = 0; i < G.vertex_count; i++) {
-        G.vertices[i] = vertices[i];
-        for (int j = 0; j < G.vertex_count; j++) {
-            G.adj_matrix[i][j].weight_type = DOUBLE;
-            // G.adj_matrix[i][j].edge_info = (edge_t*)malloc(sizeof(edge_t));
-            G.adj_matrix[i][j].starting_vertex_idx = i;
-            G.adj_matrix[i][j].ending_vertex_idx = j;
-            G.adj_matrix[i][j].weight.double_value = DBL_MAX;
+    for (int i = 0; i < graph.vertex_count; i++) {
+        graph.vertices[i] = vertices[i];
+        for (int j = 0; j < graph.vertex_count; j++) {
+            graph.adj_matrix[i][j].weight_type = NO_EDGE;
+            // graph.adj_matrix[i][j].edge_info = (edge_t*)malloc(sizeof(edge_t));
+            graph.adj_matrix[i][j].starting_vertex_idx = i;
+            graph.adj_matrix[i][j].ending_vertex_idx = j;
+            graph.adj_matrix[i][j].weight.double_value = DBL_MAX;
         }
     }
 
-    for (int i = 0; i < G.edge_count; i++) {
-        int curRowIdx = startingVertexIndexArr[i];
-        int curColIdx = endingVertexIndexArr[i];
-        G.adj_matrix[curRowIdx][curColIdx].starting_vertex_idx = startingVertexIndexArr[i];
-        G.adj_matrix[curRowIdx][curColIdx].ending_vertex_idx = endingVertexIndexArr[i];
-        G.adj_matrix[curRowIdx][curColIdx].weight.double_value = weightArr[i];
+    for (int i = 0; i < graph.edge_count; i++) {
+        int curRowIdx = starting_vertex_index_arr[i];
+        int curColIdx = ending_vertex_index_arr[i];
+        graph.adj_matrix[curRowIdx][curColIdx].starting_vertex_idx = starting_vertex_index_arr[i];
+        graph.adj_matrix[curRowIdx][curColIdx].ending_vertex_idx = ending_vertex_index_arr[i];
+        graph.adj_matrix[curRowIdx][curColIdx].weight.double_value = weight_arr[i];
 
-        G.adj_matrix[curColIdx][curRowIdx].starting_vertex_idx = startingVertexIndexArr[i];
-        G.adj_matrix[curColIdx][curRowIdx].ending_vertex_idx = endingVertexIndexArr[i];
-        G.adj_matrix[curColIdx][curRowIdx].weight.double_value = weightArr[i];
+        graph.adj_matrix[curColIdx][curRowIdx].starting_vertex_idx = starting_vertex_index_arr[i];
+        graph.adj_matrix[curColIdx][curRowIdx].ending_vertex_idx = ending_vertex_index_arr[i];
+        graph.adj_matrix[curColIdx][curRowIdx].weight.double_value = weight_arr[i];
     }
+    */
+
+    CreateGraphByEdgesAndVertices(&graph, edge_arr, 9, vertices, 6, UDN);
 
     int predecessor[MAX_VERTEX_CNT][MAX_VERTEX_CNT];
     edge_t distance[MAX_VERTEX_CNT];
 
-    int v0 = 1; // 从索引0结点开始(到其他结点)
+    int v0 = 0; // 从索引0结点开始(到其他结点)
 
+    /*
     // D初始化
     for (int i = 0; i < MAX_VERTEX_CNT; i++) {
         distance[i].weight_type = DOUBLE;
@@ -582,10 +595,11 @@ void TestBellmanFord() {
         distance[i].ending_vertex_idx = i;
         distance[i].weight.double_value = DBL_MAX;
     }
+     */
 
-    ShortestPath_BellmanFord(&G, v0, predecessor, distance);
+    ShortestPath_BellmanFord(&graph, v0, predecessor, distance);
 
-    PrintSingleSourceShortestPath(&G, v0, predecessor, distance);
+    PrintSingleSourceShortestPath(&graph, v0, predecessor, distance);
 
     printf("-------------------- 抖音: cyberdash_yuan --------------------\n");
 }

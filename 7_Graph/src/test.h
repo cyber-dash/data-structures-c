@@ -12,7 +12,7 @@
 
 
 // 测试使用弧(边)数组建造无向网
-void TestCreateUDNByArcCellArr();
+void TestCreateUDNByEdgesAndVertices();
 
 // 测试深度优先遍历
 void TestDFSTraverse();

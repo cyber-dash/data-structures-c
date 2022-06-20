@@ -7,7 +7,7 @@
 
 int main() {
 
-    TestCreateUDNByArcCellArr();
+    TestCreateUDNByEdgesAndVertices();
 
     TestDFSTraverse();
 

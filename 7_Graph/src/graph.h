@@ -36,19 +36,22 @@ typedef enum {
 typedef union {
     int     int_value;
     double  double_value;
-} EDGE_WEIGHT_VALUE;
+} EDGE_WEIGHT;
 
-typedef struct {
+typedef struct edge_t {
+    WEIGHT_TYPE weight_type;     // VRType是顶点关系类型
     int starting_vertex_idx;       // 起点结点索引
     int ending_vertex_idx;         // 终点结点索引
-    EDGE_WEIGHT_VALUE value;    // 权值
-} edge_info_t;
+    EDGE_WEIGHT weight;    // 权值
+} edge_t, adj_matrix_t[MAX_VERTEX_CNT][MAX_VERTEX_CNT];
 
 
+/*
 typedef struct AceCell {
     WEIGHT_TYPE weight_type;     // VRType是顶点关系类型
-    edge_info_t*  edge_info;	// 该弧相关信息的指针
+    edge_t*  edge_info;	// 该弧相关信息的指针
 } edge_t, adj_matrix_t[MAX_VERTEX_CNT][MAX_VERTEX_CNT];
+ */
 
 
 typedef struct {
@@ -67,9 +70,9 @@ typedef struct {
 typedef struct {
     int starting_vertex_idx;   // 边的起始结点索引
     int ending_vertex_idx;     // 边的终点结点索引
-    EDGE_WEIGHT_VALUE weight;                // 权重
+    EDGE_WEIGHT weight;                // 权重
     WEIGHT_TYPE        weight_type;           // 权重类型
-} min_span_node_t, min_span_node_arr_t[MAX_VERTEX_CNT];
+} MST_node_t, MST_t[MAX_VERTEX_CNT];
 
 
 #endif // CYBER_DASH_COMMON_H

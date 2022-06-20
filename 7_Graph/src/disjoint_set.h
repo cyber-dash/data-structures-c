@@ -31,7 +31,7 @@ int DisjointSetFindRecursive(DisjointSet* disjoint_set, int index);
 void WeightedUnion(int node1, int node2);
 
 // 查找(非递归)
-int FindNonRecursive(int value);
+int FindNonRecursive(int weight);
 */
 
 #endif // CYBER_DASH_DISJOINT_SET_H

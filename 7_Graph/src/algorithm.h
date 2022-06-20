@@ -26,13 +26,13 @@ void BFSTraverse(matrix_graph_t graph, Status (*Visit)(matrix_graph_t *G, int v)
 void BFS(matrix_graph_t G, int v, int *visited);
 
 // Prim最小生成树
-void Prim(matrix_graph_t* graph, min_span_node_t* min_span_tree);
+void Prim(matrix_graph_t* graph, MST_node_t* min_span_tree);
 
 // 克努斯卡尔(Kruskal)最小生成树
-void Kruskal(matrix_graph_t* graph, min_span_node_t* min_span_tree);
+void Kruskal(matrix_graph_t* graph, MST_node_t* min_span_tree);
 
 // 打印最小生成树
-void PrintMinSpanTree(min_span_node_arr_t min_span_tree, int size);
+void PrintMinSpanTree(MST_t min_span_tree, int size);
 
 // 迪杰斯特拉(Dijkstra)最短路径
 void ShortestPath_Dijkstra(matrix_graph_t* graph, int v0, int (*predecessor)[MAX_VERTEX_CNT], edge_t* distance);

@@ -5,11 +5,10 @@
 #include "graph.h"
 
 
-// Status CreateGraph(matrix_graph_t *G, VERTEX_TYPE *V, edge_t *VR);
-Status CreateGraph(matrix_graph_t *G);
+Status CreateGraph(matrix_graph_t* graph);
 
 // 使用弧信息数组构造图
-Status CreateGraphByArcCellArr(matrix_graph_t *G, edge_t *arcCellArr, int vertexNum, int arcNum);
+Status CreateGraphByArcCellArr(matrix_graph_t* graph, edge_t* arcCellArr, int vertex_count, int arc_count);
 
 // 构造有向图
 Status CreateDG(matrix_graph_t *G);
@@ -37,9 +36,9 @@ Status LocateVertex(matrix_graph_t graph, VERTEX_TYPE vertex, int *idx);
 edge_t* GetFirstArc(matrix_graph_t *G, int vertexIdx);
 
 // 获取结点的基于某条弧(边)的下一条弧(边)
-edge_t* GetNextArc(matrix_graph_t *G, int vertexIdx, edge_t* arc);
+edge_t* GetNextArc(matrix_graph_t *graph, int vertex_idx, edge_t* edge);
 
 // 打印图的邻接矩阵
-Status PrintGraphMatrix(matrix_graph_t* G, WEIGHT_TYPE valueType);
+Status PrintGraphMatrix(matrix_graph_t* graph, WEIGHT_TYPE valueType);
 
 // Status PutVex(matrix_graph_t *G, VERTEX_TYPE v, );

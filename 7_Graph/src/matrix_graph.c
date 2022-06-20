@@ -81,9 +81,9 @@ int NextAdjVertex(matrix_graph_t* graph, int vertex_idx, int first_adj_vertex_id
 // 获取结点的第一条弧(边)
 edge_t* GetFirstArc(matrix_graph_t *G, int vertexIdx) {
     for (int i = 0; i < G->vertex_cnt; i++) {
-        if (G->weight_type == DOUBLE && G->adj_matrix[vertexIdx][i].edge_info->value.double_value != DBL_MAX) {
+        if (G->weight_type == DOUBLE && G->adj_matrix[vertexIdx][i].weight.double_value != DBL_MAX) {
             return &G->adj_matrix[vertexIdx][i];
-        } else if (G->weight_type == INT && G->adj_matrix[vertexIdx][i].edge_info->value.int_value != INT_MAX) {
+        } else if (G->weight_type == INT && G->adj_matrix[vertexIdx][i].weight.int_value != INT_MAX) {
             return &G->adj_matrix[vertexIdx][i];
         }
     }
@@ -94,19 +94,19 @@ edge_t* GetFirstArc(matrix_graph_t *G, int vertexIdx) {
 
 /*!
  * 获取结点的基于某条弧(边)的下一条弧(边)
- * @param G 图(指针)
- * @param vertexIdx 结点索引
- * @param arc 弧(边)(指针)
+ * @param graph 图(指针)
+ * @param vertex_idx 结点索引
+ * @param edge 弧(边)(指针)
  * @return 下一条弧(边)的指针
  */
-edge_t* GetNextArc(matrix_graph_t *G, int vertexIdx, edge_t* arc) {
-    int endingVertexIdx = arc->edge_info->ending_vertex_idx;
+edge_t* GetNextArc(matrix_graph_t* graph, int vertex_idx, edge_t* edge) {
+    int endingVertexIdx = edge->ending_vertex_idx;
 
-    for (int i = endingVertexIdx + 1; i < G->vertex_cnt; i++) {
-        if (G->weight_type == DOUBLE && G->adj_matrix[vertexIdx][i].edge_info->value.double_value != DBL_MAX) {
-            return &G->adj_matrix[vertexIdx][i];
-        } else if (G->weight_type == INT && G->adj_matrix[vertexIdx][i].edge_info->value.int_value != INT_MAX) {
-            return &G->adj_matrix[vertexIdx][i];
+    for (int i = endingVertexIdx + 1; i < graph->vertex_cnt; i++) {
+        if (graph->weight_type == DOUBLE && graph->adj_matrix[vertex_idx][i].weight.double_value != DBL_MAX) {
+            return &graph->adj_matrix[vertex_idx][i];
+        } else if (graph->weight_type == INT && graph->adj_matrix[vertex_idx][i].weight.int_value != INT_MAX) {
+            return &graph->adj_matrix[vertex_idx][i];
         }
     }
 
@@ -115,7 +115,7 @@ edge_t* GetNextArc(matrix_graph_t *G, int vertexIdx, edge_t* arc) {
 
 
 // 使用弧信息数组构造图
-Status CreateGraphByArcCellArr(matrix_graph_t *G, edge_t *arcCellArr, int vertexNum, int arcNum) {
+Status CreateGraphByArcCellArr(matrix_graph_t* graph, edge_t *arcCellArr, int vertexNum, int arcNum) {
 
     return OK;
 }
@@ -155,15 +155,14 @@ Status CreateUDNByArcCellArr(matrix_graph_t* graph,
 
             graph->adj_matrix[i][j].weight_type = graph->weight_type;    //! 弧(边)权值类型
 
-            graph->adj_matrix[i][j].edge_info = (edge_info_t*)malloc(sizeof(edge_info_t));
             /* error handler */
-            graph->adj_matrix[i][j].edge_info->starting_vertex_idx = i; //! 弧(边)的起始结点索引
-            graph->adj_matrix[i][j].edge_info->ending_vertex_idx = j;   //! 弧(边)的终点结点索引
+            graph->adj_matrix[i][j].starting_vertex_idx = i; //! 弧(边)的起始结点索引
+            graph->adj_matrix[i][j].ending_vertex_idx = j;   //! 弧(边)的终点结点索引
 
             if (graph->weight_type == DOUBLE) {
-                graph->adj_matrix[i][j].edge_info->value.double_value = DBL_MAX;   //! 如果是DOUBLE类型, 则将double_value设置成最大值
+                graph->adj_matrix[i][j].weight.double_value = DBL_MAX;   //! 如果是DOUBLE类型, 则将double_value设置成最大值
             } else if (graph->weight_type == INT) {
-                graph->adj_matrix[i][j].edge_info->value.int_value = INT_MAX;      //! 如果是INT类型, 则将int_value设置成最大值
+                graph->adj_matrix[i][j].weight.int_value = INT_MAX;      //! 如果是INT类型, 则将int_value设置成最大值
             }
         }
     }
@@ -171,18 +170,18 @@ Status CreateUDNByArcCellArr(matrix_graph_t* graph,
     //! 使用arcCellArr填充G->arcs中对应的结点数据
     for (int k = 0; k < edge_cnt; ++k) {
 
-        int i = edge_arr[k].edge_info->starting_vertex_idx;    //! 起始结点索引
-        int j = edge_arr[k].edge_info->ending_vertex_idx;      //! 终点结点索引
+        int i = edge_arr[k].starting_vertex_idx;    //! 起始结点索引
+        int j = edge_arr[k].ending_vertex_idx;      //! 终点结点索引
 
-        //! 弧(边): i --> j
-        graph->adj_matrix[i][j].edge_info->starting_vertex_idx = edge_arr[k].edge_info->starting_vertex_idx;
-        graph->adj_matrix[i][j].edge_info->ending_vertex_idx = edge_arr[k].edge_info->ending_vertex_idx;
-        graph->adj_matrix[i][j].edge_info->value = edge_arr[k].edge_info->value;
+        //! 边: i --> j
+        graph->adj_matrix[i][j].starting_vertex_idx = edge_arr[k].starting_vertex_idx;
+        graph->adj_matrix[i][j].ending_vertex_idx = edge_arr[k].ending_vertex_idx;
+        graph->adj_matrix[i][j].weight = edge_arr[k].weight;
 
-        //! 弧(边): j --> i
-        graph->adj_matrix[j][i].edge_info->starting_vertex_idx = edge_arr[k].edge_info->ending_vertex_idx;
-        graph->adj_matrix[j][i].edge_info->ending_vertex_idx = edge_arr[k].edge_info->starting_vertex_idx;
-        graph->adj_matrix[j][i].edge_info->value = edge_arr[k].edge_info->value;
+        //! 边: j --> i
+        graph->adj_matrix[j][i].starting_vertex_idx = edge_arr[k].ending_vertex_idx;
+        graph->adj_matrix[j][i].ending_vertex_idx = edge_arr[k].starting_vertex_idx;
+        graph->adj_matrix[j][i].weight = edge_arr[k].weight;
     }
 
     return OK;
@@ -191,30 +190,30 @@ Status CreateUDNByArcCellArr(matrix_graph_t* graph,
 
 /*
 // 使用弧信息数组构造无向网
-Status CreateUDNByArcCellArr(matrix_graph_t *G, edge_t *arcCellArr, int vertexNum, int arcNum) {
+Status CreateUDNByArcCellArr(matrix_graph_t *graph, edge_t *arcCellArr, int vertexNum, int arcNum) {
 
 }
  */
 
 
-Status PrintGraphMatrix(matrix_graph_t* G, WEIGHT_TYPE valueType) {
-    valueType = G->weight_type;
+Status PrintGraphMatrix(matrix_graph_t* graph, WEIGHT_TYPE valueType) {
+    valueType = graph->weight_type;
 
-    for (int i = 0; i < G->vertex_cnt; i++) {
-        for (int j = 0; j < G->vertex_cnt; j++) {
+    for (int i = 0; i < graph->vertex_cnt; i++) {
+        for (int j = 0; j < graph->vertex_cnt; j++) {
 
             if (valueType == DOUBLE) {
-                double weight = G->adj_matrix[i][j].edge_info->value.double_value == DBL_MAX ? 0
-                                                                                             : G->adj_matrix[i][j].edge_info->value.double_value;
+                double weight = graph->adj_matrix[i][j].weight.double_value == DBL_MAX ? 0
+                    : graph->adj_matrix[i][j].weight.double_value;
 
                 printf("%lf ", weight);
             } else if (valueType == INT) {
-                int weight = G->adj_matrix[i][j].edge_info->value.int_value == INT_MAX ? 0
-                                                                                       : G->adj_matrix[i][j].edge_info->value.int_value;
+                int weight = graph->adj_matrix[i][j].weight.int_value == INT_MAX ? 0
+                    : graph->adj_matrix[i][j].weight.int_value;
 
                 printf("%d ", weight);
             } else {
-                int hasWeight = G->adj_matrix[i][j].edge_info->value.int_value;
+                int hasWeight = graph->adj_matrix[i][j].weight.int_value;
 
                 printf("%d ", hasWeight);
             }

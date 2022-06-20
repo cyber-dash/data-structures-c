@@ -109,7 +109,7 @@ void BFSTraverse(matrix_graph_t graph, Status (*Visit)(matrix_graph_t*, int)) {
  * @param v0
  * @param min_span_tree
  */
-void Prim(matrix_graph_t* graph, min_span_node_t* min_span_tree) {
+void Prim(matrix_graph_t* graph, MST_node_t* min_span_tree) {
     int vertex_cnt = graph->vertex_cnt;
 
     // warning: 此处使用数组, 如果可以, 使用set来实现vertex_set,
@@ -119,7 +119,7 @@ void Prim(matrix_graph_t* graph, min_span_node_t* min_span_tree) {
     int in_vertex_set_cnt = 1;
 
     do {
-        min_span_node_arr_t min_span_node_arr;      // 小顶堆
+        MST_t min_span_node_arr;      // 小顶堆
         int cur_heap_idx = 1;
 
         for (int i = 0; i < vertex_cnt; i++) {
@@ -130,15 +130,15 @@ void Prim(matrix_graph_t* graph, min_span_node_t* min_span_tree) {
             }
             for (int j = 0; j < vertex_cnt; j++) {
                 // 如果j在vertex_set 或者 边(i, j)不存在, continue
-                if (vertex_set[j] == TRUE || graph->adj_matrix[i][j].edge_info->value.double_value == DBL_MAX) {
+                if (vertex_set[j] == TRUE || graph->adj_matrix[i][j].weight.double_value == DBL_MAX) {
                     continue;
                 }
 
-                min_span_node_t cur_min_span_node;
-                cur_min_span_node.starting_vertex_idx = graph->adj_matrix[i][j].edge_info->starting_vertex_idx;
-                cur_min_span_node.ending_vertex_idx = graph->adj_matrix[i][j].edge_info->ending_vertex_idx;
+                MST_node_t cur_min_span_node;
+                cur_min_span_node.starting_vertex_idx = graph->adj_matrix[i][j].starting_vertex_idx;
+                cur_min_span_node.ending_vertex_idx = graph->adj_matrix[i][j].ending_vertex_idx;
                 cur_min_span_node.weight_type = graph->adj_matrix[i][j].weight_type;
-                cur_min_span_node.weight.double_value = graph->adj_matrix[i][j].edge_info->value.double_value;
+                cur_min_span_node.weight.double_value = graph->adj_matrix[i][j].weight.double_value;
 
                 min_span_node_arr[cur_heap_idx] = cur_min_span_node;
 
@@ -147,7 +147,7 @@ void Prim(matrix_graph_t* graph, min_span_node_t* min_span_tree) {
         }
 
         // todo: 未完全实现的堆优化, 也可以使用loop遍历, 应该将Prim分成两个实现: 堆优化和普通遍历
-        MinHeapBuild(min_span_node_arr, cur_heap_idx - 1);
+        MinHeapBuildBySiftDown(min_span_node_arr, cur_heap_idx - 1);
         min_span_tree[in_vertex_set_cnt - 1] = min_span_node_arr[1];  // 取堆顶
 
         int idx = min_span_node_arr[1].ending_vertex_idx;
@@ -159,48 +159,48 @@ void Prim(matrix_graph_t* graph, min_span_node_t* min_span_tree) {
 }
 
 
-void Kruskal(matrix_graph_t* graph, min_span_node_t* min_span_tree) {
+void Kruskal(matrix_graph_t* graph, MST_node_t* min_span_tree) {
 
     int vertex_num = graph->vertex_cnt;     // 结点数量
     int edge_num = graph->edge_count;       // 边数量
 
-    min_span_node_arr_t minSpanNodeArr;      // 小顶堆
+    MST_t mst_node_min_heap;      // 小顶堆
     DisjointSet disjoint_set;            // 并查集
     InitDisjointSet(&disjoint_set, vertex_num);
 
     int arcCount = 1;
     for (int i = 0; i < graph->vertex_cnt; i++) {
         for (int j = 0; j < graph->vertex_cnt; j++) {
-            if (graph->adj_matrix[i][j].edge_info->value.double_value == DBL_MAX) {
+            if (graph->adj_matrix[i][j].weight.double_value == DBL_MAX) {
                 continue;
             }
 
-            edge_t curArcCell = graph->adj_matrix[i][j];
+            edge_t cur_edge = graph->adj_matrix[i][j];
 
-            min_span_node_t minSpanNode;
-            minSpanNode.starting_vertex_idx = curArcCell.edge_info->starting_vertex_idx;
-            minSpanNode.ending_vertex_idx = curArcCell.edge_info->ending_vertex_idx;
-            minSpanNode.weight_type = curArcCell.weight_type;
-            minSpanNode.weight.double_value = curArcCell.edge_info->value.double_value;
+            MST_node_t mst_node;
+            mst_node.starting_vertex_idx = cur_edge.starting_vertex_idx;
+            mst_node.ending_vertex_idx = cur_edge.ending_vertex_idx;
+            mst_node.weight_type = cur_edge.weight_type;
+            mst_node.weight.double_value = cur_edge.weight.double_value;
 
-            minSpanNodeArr[arcCount] = minSpanNode;
+            mst_node_min_heap[arcCount] = mst_node;
 
             arcCount++;
         }
     }
 
-    MinHeapBuild(minSpanNodeArr, edge_num);
+    MinHeapBuildBySiftDown(mst_node_min_heap, edge_num);
 
     // 此时, 所有的边都已经进入小顶堆, 执行Kruskal算法核心流程
 
     int count = 1;
     int idx = 0;
     while (count < vertex_num) {    // 执行n - 1次
-        min_span_node_t cur_min_span_node = minSpanNodeArr[1];  // 取堆顶
+        MST_node_t cur_min_span_node = mst_node_min_heap[1];  // 取堆顶
 
-        minSpanNodeArr[1] = minSpanNodeArr[arcCount];
+        mst_node_min_heap[1] = mst_node_min_heap[arcCount];
         arcCount--;
-        MinHeapBuild(minSpanNodeArr, arcCount);    // 重新调整堆
+        MinHeapBuildBySiftDown(mst_node_min_heap, arcCount);    // 重新调整堆
 
         int curStartingRootIdx = DisjointSetFindRecursive(&disjoint_set, cur_min_span_node.starting_vertex_idx);
         int curEndingRootIdx = DisjointSetFindRecursive(&disjoint_set, cur_min_span_node.ending_vertex_idx);
@@ -218,10 +218,10 @@ void Kruskal(matrix_graph_t* graph, min_span_node_t* min_span_tree) {
 
 
 // 打印最小生成树
-void PrintMinSpanTree(min_span_node_arr_t min_span_tree, int size) {
+void PrintMinSpanTree(MST_t min_span_tree, int size) {
 
     for (int i = 0; i < size; i++) {
-        min_span_node_t cur = min_span_tree[i];
+        MST_node_t cur = min_span_tree[i];
 
         printf("起始点: %d, 终点: %d, 距离: %lf\n",
                cur.starting_vertex_idx,
@@ -254,12 +254,12 @@ void ShortestPath_Dijkstra(matrix_graph_t* graph, int v0, int (*predecessor)[MAX
             predecessor[v][w] = -1;
         }
 
-        distance[v].edge_info->value.double_value = graph->adj_matrix[v0][v].edge_info->value.double_value;
+        distance[v].weight.double_value = graph->adj_matrix[v0][v].weight.double_value;
         predecessor[v0][v] = v0;    // v0是从v0到v的最短路径, v的前一结点
     }
 
     // 初始化, v0到v0的距离为0
-    distance[v0].edge_info->value.double_value = 0;
+    distance[v0].weight.double_value = 0;
 
     // 初始化, v0顶点属于S集
     final[v0] = TRUE;
@@ -271,9 +271,9 @@ void ShortestPath_Dijkstra(matrix_graph_t* graph, int v0, int (*predecessor)[MAX
         int v;
         for (int w = 0; w < vertex_cnt; w++) {
             if (!final[w]) {
-                if (distance[w].edge_info->value.double_value < doubleMin) {
+                if (distance[w].weight.double_value < doubleMin) {
                     v = w;
-                    doubleMin = distance[w].edge_info->value.double_value;
+                    doubleMin = distance[w].weight.double_value;
                 }
             }
         }
@@ -282,9 +282,9 @@ void ShortestPath_Dijkstra(matrix_graph_t* graph, int v0, int (*predecessor)[MAX
 
         for (int w = 0; w < vertex_cnt; w++) {
             if (!final[w] &&
-                doubleMin + graph->adj_matrix[v][w].edge_info->value.double_value < distance[w].edge_info->value.double_value)
+                doubleMin + graph->adj_matrix[v][w].weight.double_value < distance[w].weight.double_value)
             {
-                distance[w].edge_info->value.double_value = doubleMin + graph->adj_matrix[v][w].edge_info->value.double_value;
+                distance[w].weight.double_value = doubleMin + graph->adj_matrix[v][w].weight.double_value;
                 predecessor[v0][w] = v;
             }
         }
@@ -340,28 +340,28 @@ int ShortestPath_BellmanFord(matrix_graph_t* graph, int v0, int (*predecessor)[M
     /*
     for (int i = 0; i < vertex_cnt; i++) {
         distance[i].weight_type = DOUBLE;
-        distance[i].edge_info->value.double_value = graph->adj_matrix[v0][i].edge_info->value.double_value;
+        distance[i].edge_info->weight.double_value = graph->adj_matrix[v0][i].edge_info->weight.double_value;
         predecessor[v0][i] = v0;
     }
      */
 
-    distance[v0].edge_info->value.double_value = 0;
+    distance[v0].weight.double_value = 0;
     predecessor[v0][v0] = -1;
 
     for (int i = 0; i < vertex_cnt - 1; i++) {
         // todo: 此处可以优化, 在graph结构体增加边存储
         for (int u = 0; u < vertex_cnt; u++) {
             for (int v = 0; v < vertex_cnt; v++) {
-                if (u == v || graph->adj_matrix[u][v].edge_info->value.double_value == DBL_MAX) {
+                if (u == v || graph->adj_matrix[u][v].weight.double_value == DBL_MAX) {
                     continue;
                 }
 
                 // 松弛
-                if (distance[u].edge_info->value.double_value + graph->adj_matrix[u][v].edge_info->value.double_value
-                    < distance[v].edge_info->value.double_value)
+                if (distance[u].weight.double_value + graph->adj_matrix[u][v].weight.double_value
+                    < distance[v].weight.double_value)
                 {
-                    distance[v].edge_info->value.double_value =
-                        distance[u].edge_info->value.double_value + graph->adj_matrix[u][v].edge_info->value.double_value;
+                    distance[v].weight.double_value =
+                        distance[u].weight.double_value + graph->adj_matrix[u][v].weight.double_value;
                     predecessor[v0][v] = u;
                 }
             }
@@ -371,12 +371,12 @@ int ShortestPath_BellmanFord(matrix_graph_t* graph, int v0, int (*predecessor)[M
     int has_negative_weight_cycle = FALSE; // 默认没有负权环
     for (int u = 0; u < vertex_cnt; u++) {
         for (int v = 0; v < vertex_cnt; v++) {
-            if (graph->adj_matrix[u][v].edge_info->value.double_value == DBL_MAX) {
+            if (graph->adj_matrix[u][v].weight.double_value == DBL_MAX) {
                 continue;
             }
 
-            if (distance[u].edge_info->value.double_value + graph->adj_matrix[u][v].edge_info->value.double_value
-                < distance[v].edge_info->value.double_value)
+            if (distance[u].weight.double_value + graph->adj_matrix[u][v].weight.double_value
+                < distance[v].weight.double_value)
             {
                 has_negative_weight_cycle = TRUE; // 有负权环
                 break;
@@ -417,25 +417,25 @@ void Floyd(matrix_graph_t* graph, int (*predecessor)[MAX_VERTEX_CNT], edge_t (*d
             if (i == j) {
                 if (graph->weight_type == INT) {
                     distance[i][j].weight_type = INT;
-                    distance[i][j].edge_info->value.int_value = 0;
+                    distance[i][j].weight.int_value = 0;
                 } else if (graph->weight_type == DOUBLE) {
                     distance[i][j].weight_type = DOUBLE;
-                    distance[i][j].edge_info->value.double_value = 0;
+                    distance[i][j].weight.double_value = 0;
                 }
             } else {
                 if (graph->weight_type == INT) {
                     distance[i][j].weight_type = INT;
-                    if (graph->adj_matrix[i][j].edge_info->value.int_value != INT_MAX) {
-                        distance[i][j].edge_info->value.int_value = graph->adj_matrix[i][j].edge_info->value.int_value;
+                    if (graph->adj_matrix[i][j].weight.int_value != INT_MAX) {
+                        distance[i][j].weight.int_value = graph->adj_matrix[i][j].weight.int_value;
                     } else {
-                        distance[i][j].edge_info->value.int_value = INT_MAX;
+                        distance[i][j].weight.int_value = INT_MAX;
                     }
                 } else if (graph->weight_type == DOUBLE) {
                     distance[i][j].weight_type = DOUBLE;
-                    if (graph->adj_matrix[i][j].edge_info->value.double_value != DBL_MAX) {
-                        distance[i][j].edge_info->value.double_value = graph->adj_matrix[i][j].edge_info->value.double_value;
+                    if (graph->adj_matrix[i][j].weight.double_value != DBL_MAX) {
+                        distance[i][j].weight.double_value = graph->adj_matrix[i][j].weight.double_value;
                     } else {
-                        distance[i][j].edge_info->value.double_value = DBL_MAX;
+                        distance[i][j].weight.double_value = DBL_MAX;
                     }
                 }
             }
@@ -448,19 +448,19 @@ void Floyd(matrix_graph_t* graph, int (*predecessor)[MAX_VERTEX_CNT], edge_t (*d
         for (int i = 0; i < vertex_cnt; i++) {
             for (int j = 0; j < vertex_cnt; j++) {
                 if (graph->weight_type == INT) {
-                    if (distance[i][k].edge_info->value.int_value + distance[k][j].edge_info->value.int_value
-                            < distance[i][j].edge_info->value.int_value)
+                    if (distance[i][k].weight.int_value + distance[k][j].weight.int_value
+                            < distance[i][j].weight.int_value)
                     {
-                        distance[i][j].edge_info->value.int_value =
-                            distance[i][k].edge_info->value.int_value + distance[k][j].edge_info->value.int_value;
+                        distance[i][j].weight.int_value =
+                            distance[i][k].weight.int_value + distance[k][j].weight.int_value;
                         predecessor[i][j] = predecessor[k][j];
                     }
                 } else if (graph->weight_type == DOUBLE) {
-                    if (distance[i][k].edge_info->value.double_value + distance[k][j].edge_info->value.double_value
-                        < distance[i][j].edge_info->value.double_value)
+                    if (distance[i][k].weight.double_value + distance[k][j].weight.double_value
+                        < distance[i][j].weight.double_value)
                     {
-                        distance[i][j].edge_info->value.double_value =
-                            distance[i][k].edge_info->value.double_value + distance[k][j].edge_info->value.double_value;
+                        distance[i][j].weight.double_value =
+                            distance[i][k].weight.double_value + distance[k][j].weight.double_value;
                         predecessor[i][j] = predecessor[k][j];
                     }
                 }
@@ -502,17 +502,20 @@ void PrintSingleSourceShortestPath(matrix_graph_t *graph, int v0, edge_t* distan
 
         printf(", ");
         if (distance[i].weight_type == INT) {
-            printf("最短路径长度为: %d\n", distance[i].edge_info->value.int_value);
+            printf("最短路径长度为: %d\n", distance[i].edge_info->weight.int_value);
         } else if (distance[i].weight_type == DOUBLE) {
-            printf("最短路径长度为: %.2lf\n", distance[i].edge_info->value.double_value);
+            printf("最短路径长度为: %.2lf\n", distance[i].edge_info->weight.double_value);
         }
     }
 }
  */
 
 
-void PrintSingleSourceShortestPath(matrix_graph_t *graph, int v0, int (*predecessor)[MAX_VERTEX_CNT], edge_t* distance) {
-
+void PrintSingleSourceShortestPath(matrix_graph_t *graph,
+                                   int v0,
+                                   int (*predecessor)[MAX_VERTEX_CNT],
+                                   edge_t* distance)
+{
     int vertex_cnt = graph->vertex_cnt;
     for (int i = 0; i < vertex_cnt; i++) {
         // 不处理v0到v0自己本身的最短路径
@@ -525,9 +528,9 @@ void PrintSingleSourceShortestPath(matrix_graph_t *graph, int v0, int (*predeces
 
         printf(", ");
         if (distance[i].weight_type == INT) {
-            printf("最短路径长度为: %d\n", distance[i].edge_info->value.int_value);
+            printf("最短路径长度为: %d\n", distance[i].weight.int_value);
         } else if (distance[i].weight_type == DOUBLE) {
-            printf("最短路径长度为: %.2lf\n", distance[i].edge_info->value.double_value);
+            printf("最短路径长度为: %.2lf\n", distance[i].weight.double_value);
         }
     }
 }
@@ -548,7 +551,7 @@ void PrintMultiSourceShortestPath(matrix_graph_t *graph,
 
             PrintSingleSourceShortestPathRecursive(graph, i, j, predecessor);
 
-            printf(", 最短路径长度为: %.2lf\n", distance[i][j].edge_info->value.double_value);
+            printf(", 最短路径长度为: %.2lf\n", distance[i][j].weight.double_value);
         }
     }
 }

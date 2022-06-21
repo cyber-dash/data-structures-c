@@ -4,6 +4,14 @@
 
 #include "heap.h"
 
+
+typedef struct MSTMinHeap {
+    MST_node_t* min_span_node_arr;
+    int size;
+    int capacity;
+} MSTMinHeap;
+
+
 int LowerThan(MST_node_t* node1, MST_node_t* node2) {
     if (node1->weight_type == DOUBLE && node2->weight_type == DOUBLE) {
         if (node1->weight.double_value < node2->weight.double_value) {
@@ -12,15 +20,6 @@ int LowerThan(MST_node_t* node1, MST_node_t* node2) {
             return 0;
         }
     }
-    /*
-    else if (node1->weight_type == INT && node2->weight_type == INT) {
-        if (node1->weight.int_value < node2->weight.int_value) {
-            return 1;
-        } else {
-            return 0;
-        }
-    }
-     */
 
     return -1;
 }
@@ -34,15 +33,6 @@ int LargerThan(MST_node_t* node1, MST_node_t* node2) {
             return 0;
         }
     }
-    /*
-    else if (node1->weight_type == INT && node2->weight_type == INT) {
-        if (node1->weight.int_value > node2->weight.int_value) {
-            return 1;
-        } else {
-            return 0;
-        }
-    }
-     */
 
     return -1;
 }
@@ -104,25 +94,25 @@ void MinHeapBuildBySiftDown(MST_node_t* min_span_node_arr, int heap_size) {
 }
 
 
-/*
-Status PriorityQueueInit(MST_node_t * min_span_node_arr, int heap_size) {
-    for (int i = heap_size / 2; i > 0; i--) {
-        MinHeapSiftDown(min_span_node_arr, i, heap_size);
-    }
+/*!
+ * 最小优先队列初始化
+ * @param min_priority_queue 最小优先队列
+ * @param size 队列size
+ * @return 执行结果
+ */
+Status MinPriorityQueueInit(MST_node_t* min_priority_queue, int size) {
+    MinHeapBuildBySiftDown(min_priority_queue, size);
+
+    return OK;  // todo: 其他错误返回值的边界条件, 如果有兴趣的话自行补充:-)
 }
 
 
-Status PriorityQueueEnqueue(MST_node_t * min_span_node_arr,
-                            int* heap_size,
-                            linked_queue_node_t* min_span_node)
-{
+Status MinPriorityQueueEnqueue(MST_node_t* min_priority_queue, linked_queue_node_t min_span_node) {
 
 }
 
-Status PriorityQueueDequeue(MST_node_t* min_span_node_arr,
-                            int* heap_size,
-                            MST_node_t* min_span_node)
-{
-    *min_span_node = min_span_node_arr[heap_size];
+
+Status MinPriorityQueueDequeue(MST_node_t* min_priority_queue, linked_queue_node_t* min_span_node) {
+
 }
-*/
+

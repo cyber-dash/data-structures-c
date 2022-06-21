@@ -32,7 +32,6 @@ void DFSTraverse(matrix_graph_t graph, Status (*Visit)(int v)) {
 
     // 构造visited数组
     int* visited = (int*)malloc(graph.vertex_count * sizeof(int));
-    /* error handler */
 
     for (int i = 0; i < graph.vertex_count; i++) {
         visited[i] = 0;
@@ -112,11 +111,11 @@ void BFSTraverse(matrix_graph_t graph, Status (*Visit)(matrix_graph_t*, int)) {
 void Prim(matrix_graph_t* graph, MST_node_t* min_span_tree) {
     int vertex_cnt = graph->vertex_count;
 
-    // warning: 此处使用数组, 如果可以, 使用set来实现vertex_set,
+    // note: 此处使用数组, 如果可以, 使用set来实现vertex_set,
     // 如果你觉得用c语言做set比较麻烦, 请移步C++, C++更适合做算法
     int vertex_set[MAX_VERTEX_CNT];
-    vertex_set[0] = TRUE;   // 从索引0结点开始
-    int in_vertex_set_cnt = 1;
+    vertex_set[0] = TRUE;       // 从索引0结点开始
+    int in_vertex_set_cnt = 1;  // 在vertex_set中的结点数量
 
     do {
         MST_t min_span_node_arr;      // 小顶堆
@@ -128,6 +127,7 @@ void Prim(matrix_graph_t* graph, MST_node_t* min_span_tree) {
             if (vertex_set[i] == FALSE) {
                 continue;
             }
+
             for (int j = 0; j < vertex_cnt; j++) {
                 // 如果j在vertex_set 或者 边(i, j)不存在, continue
                 if (vertex_set[j] == TRUE || graph->adj_matrix[i][j].weight.double_value == DBL_MAX) {
@@ -146,7 +146,6 @@ void Prim(matrix_graph_t* graph, MST_node_t* min_span_tree) {
             }
         }
 
-        // todo: 未完全实现的堆优化, 也可以使用loop遍历, 应该将Prim分成两个实现: 堆优化和普通遍历
         MinHeapBuildBySiftDown(min_span_node_arr, cur_heap_idx - 1);
         min_span_tree[in_vertex_set_cnt - 1] = min_span_node_arr[1];  // 取堆顶
 

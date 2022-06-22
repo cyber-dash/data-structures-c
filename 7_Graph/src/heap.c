@@ -3,13 +3,7 @@
 //
 
 #include "heap.h"
-
-
-typedef struct MSTMinHeap {
-    MST_node_t* min_span_node_arr;
-    int size;
-    int capacity;
-} MSTMinHeap;
+#include "stdlib.h"
 
 
 int LowerThan(MST_node_t* node1, MST_node_t* node2) {
@@ -70,6 +64,11 @@ void MinHeapSiftDown(MST_node_t* min_span_node_arr, int index, int heap_size)
 }
 
 
+/*!
+ * 小顶堆SiftUp
+ * @param min_span_node_arr 最小生成树结点数组
+ * @param index 位置(从1开始)
+ */
 void MinHeapSiftUp(MST_node_t* min_span_node_arr, int index) {
     for (int parent_idx = index / 2; parent_idx > 0; parent_idx /= 2) {
         if (!LargerThan(min_span_node_arr + parent_idx, min_span_node_arr + index)) {
@@ -87,7 +86,6 @@ void MinHeapSiftUp(MST_node_t* min_span_node_arr, int index) {
  * @param heap_size
  */
 void MinHeapBuildBySiftDown(MST_node_t* min_span_node_arr, int heap_size) {
-
     for (int i = heap_size / 2; i > 0; i--) {
         MinHeapSiftDown(min_span_node_arr, i, heap_size);
     }
@@ -100,19 +98,42 @@ void MinHeapBuildBySiftDown(MST_node_t* min_span_node_arr, int heap_size) {
  * @param size 队列size
  * @return 执行结果
  */
-Status MinPriorityQueueInit(MST_node_t* min_priority_queue, int size) {
-    MinHeapBuildBySiftDown(min_priority_queue, size);
+Status MinPriorityQueueInit(MinPriorityQueue* min_priority_queue, int capacity) {
+    if (capacity < 0 || capacity > MAX_VERTEX_CNT * MAX_VERTEX_CNT) {
+        return ERROR;
+    }
+    min_priority_queue->mst_node_arr = (MST_node_t*)malloc(sizeof(MST_node_t) * capacity);
+    min_priority_queue->capacity = capacity;
+    min_priority_queue->size = 0;
 
     return OK;  // todo: 其他错误返回值的边界条件, 如果有兴趣的话自行补充:-)
 }
 
 
-Status MinPriorityQueueEnqueue(MST_node_t* min_priority_queue, linked_queue_node_t min_span_node) {
+Status MinPriorityQueueEnqueue(MinPriorityQueue* min_priority_queue, MST_node_t mst_node) {
+    if (min_priority_queue->size == min_priority_queue->capacity) {
+        return ERROR;
+    }
 
+    min_priority_queue->mst_node_arr[min_priority_queue->size + 1] = mst_node;
+    min_priority_queue->size++;
+
+    MinHeapSiftUp(min_priority_queue->mst_node_arr, min_priority_queue->size);
+
+    return OK;
 }
 
 
-Status MinPriorityQueueDequeue(MST_node_t* min_priority_queue, linked_queue_node_t* min_span_node) {
+Status MinPriorityQueueDequeue(MinPriorityQueue* min_priority_queue, MST_node_t * min_span_node) {
+    if (min_priority_queue->size == 0) {
+        return ERROR;
+    }
 
+    *min_span_node = min_priority_queue->mst_node_arr[1];
+
+    min_priority_queue->mst_node_arr[1] = min_priority_queue->mst_node_arr[min_priority_queue->size];
+    min_priority_queue->size--;
+
+    MinHeapSiftDown(min_priority_queue->mst_node_arr, 1, min_priority_queue->size);
 }
 

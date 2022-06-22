@@ -26,10 +26,10 @@ void BFSTraverse(matrix_graph_t graph, Status (*Visit)(matrix_graph_t *G, int v)
 void BFS(matrix_graph_t G, int v, int *visited);
 
 // Prim最小生成树
-void Prim(matrix_graph_t* graph, MST_node_t* min_span_tree);
+void Prim(matrix_graph_t* graph, edge_t* min_span_tree);
 
 // 克努斯卡尔(Kruskal)最小生成树
-void Kruskal(matrix_graph_t* graph, MST_node_t* min_span_tree);
+void Kruskal(matrix_graph_t* graph, edge_t* min_span_tree);
 
 // 打印最小生成树
 void PrintMinSpanTree(MST_t min_span_tree, int size);
@@ -44,7 +44,7 @@ int ShortestPath_BellmanFord(matrix_graph_t* graph, int v0, int (*predecessor)[M
 void Floyd(matrix_graph_t* graph, int (*predecessor)[MAX_VERTEX_CNT], edge_t (*distance)[MAX_VERTEX_CNT]);
 
 // 打印单源最短路径
-void PrintSingleSourceShortestPath(matrix_graph_t *graph, int v0, int (*predecessor)[MAX_VERTEX_CNT], edge_t* distance);
+void PrintSingleSourceShortestPath(matrix_graph_t *graph, int starting_vertex_index, int (*predecessor)[MAX_VERTEX_CNT], edge_t* distance);
 
 // 打印单源最短路径(递归)
 void PrintSingleSourceShortestPathRecursive(matrix_graph_t *graph, int i, int j, int (*predecessor)[MAX_VERTEX_CNT]);

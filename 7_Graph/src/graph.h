@@ -43,7 +43,7 @@ typedef struct edge_t {
     int starting_vertex_idx;       // 起点结点索引
     int ending_vertex_idx;         // 终点结点索引
     EDGE_WEIGHT weight;    // 权值
-} edge_t, adj_matrix_t[MAX_VERTEX_CNT][MAX_VERTEX_CNT];
+} edge_t, path_t, adj_matrix_t[MAX_VERTEX_CNT][MAX_VERTEX_CNT], MST_t[MAX_VERTEX_CNT];
 
 
 typedef struct {
@@ -61,14 +61,16 @@ typedef struct {
 
 
 /*!
- * 最小生成树结点/数组
+ * 图路径结构体
  */
+ /*
 typedef struct {
-    int starting_vertex_idx;   // 边的起始结点索引
-    int ending_vertex_idx;     // 边的终点结点索引
-    EDGE_WEIGHT weight;                // 权重
-    WEIGHT_TYPE        weight_type;           // 权重类型
-} MST_node_t, MST_t[MAX_VERTEX_CNT];
+    int starting_vertex_idx;            //!< 路径的起点索引
+    int ending_vertex_idx;              //!< 路径的终点索引
+    EDGE_WEIGHT weight;                 //!< 权重
+    WEIGHT_TYPE weight_type;            //!< 权重类型
+} Path_t, MST_t[MAX_VERTEX_CNT];
+  */
 
 
 #endif // CYBER_DASH_COMMON_H

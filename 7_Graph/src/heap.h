@@ -10,34 +10,34 @@
 
 
 typedef struct MinPriorityQueue {
-    MST_node_t* mst_node_arr;
+    path_t* mst_node_arr;
     int size;
     int capacity;
 } MinPriorityQueue;
 
 
-int LowerThan(MST_node_t* node1, MST_node_t* node2);
+int LowerThan(edge_t* node1, edge_t* node2);
 
 
-int LargerThan(MST_node_t* node1, MST_node_t* node2);
+int LargerThan(edge_t* node1, edge_t* node2);
 
 
-void MinHeapSiftDown(MST_node_t* min_span_node_arr, int index, int heap_size);
+void MinHeapSiftDown(edge_t* min_span_node_arr, int index, int heap_size);
 
 
-void MinHeapSiftUp(MST_node_t* min_span_node_arr, int index);
+void MinHeapSiftUp(edge_t* min_span_node_arr, int index);
 
 
-void MinHeapBuildBySiftDown(MST_node_t *min_span_node_arr, int heap_size);
+void MinHeapBuildBySiftDown(edge_t *min_span_node_arr, int heap_size);
 
 
 Status MinPriorityQueueInit(MinPriorityQueue* min_priority_queue, int capacity);
 
 
-Status MinPriorityQueueEnqueue(MinPriorityQueue* min_priority_queue, MST_node_t mst_node);
+Status MinPriorityQueueEnqueue(MinPriorityQueue* min_priority_queue, edge_t mst_node);
 
 
-Status MinPriorityQueueDequeue(MinPriorityQueue* min_priority_queue, MST_node_t* min_span_node);
+Status MinPriorityQueueDequeue(MinPriorityQueue* min_priority_queue, edge_t* min_span_node);
 
 
 

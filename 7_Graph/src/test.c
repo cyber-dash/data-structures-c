@@ -257,31 +257,31 @@ void TestBuildHeap() {
 
     MST_t minSpanNodeArr;
 
-    MST_node_t minSpanNode1;
+    edge_t minSpanNode1;
     minSpanNode1.weight_type = DOUBLE;
     minSpanNode1.weight.double_value = 0.4;
     minSpanNode1.starting_vertex_idx = 0;
     minSpanNode1.ending_vertex_idx = 1;
 
-    MST_node_t minSpanNode2;
+    edge_t minSpanNode2;
     minSpanNode2.weight_type = DOUBLE;
     minSpanNode2.weight.double_value = 0.2;
     minSpanNode2.starting_vertex_idx = 0;
     minSpanNode2.ending_vertex_idx = 2;
 
-    MST_node_t minSpanNode3;
+    edge_t minSpanNode3;
     minSpanNode3.weight_type = DOUBLE;
     minSpanNode3.weight.double_value = 0.5;
     minSpanNode3.starting_vertex_idx = 1;
     minSpanNode3.ending_vertex_idx = 2;
 
-    MST_node_t minSpanNode4;
+    edge_t minSpanNode4;
     minSpanNode4.weight_type = DOUBLE;
     minSpanNode4.weight.double_value = 0.3;
     minSpanNode4.starting_vertex_idx = 0;
     minSpanNode4.ending_vertex_idx = 3;
 
-    MST_node_t minSpanNode5;
+    edge_t minSpanNode5;
     minSpanNode5.weight_type = DOUBLE;
     minSpanNode5.weight.double_value = 0.1;
     minSpanNode5.starting_vertex_idx = 1;
@@ -335,7 +335,6 @@ void TestPrim() {
 
         for (int j = 0; j < graph.vertex_count; j++) {
             graph.adj_matrix[i][j].weight_type = NO_EDGE;
-            // graph.adj_matrix[i][j].edge_info = (edge_t*)malloc(sizeof(edge_t));
             graph.adj_matrix[i][j].weight.double_value = DBL_MAX;
         }
     }
@@ -386,7 +385,6 @@ void TestKruskal() {
 
         for (int j = 0; j < G.vertex_count; j++) {
             G.adj_matrix[i][j].weight_type = NO_EDGE;
-            // G.adj_matrix[i][j].edge_info = (edge_t*)malloc(sizeof(edge_t));
             G.adj_matrix[i][j].weight.double_value = DBL_MAX;
         }
     }
@@ -405,7 +403,6 @@ void TestKruskal() {
         int curRowIdx = startingVertexIndexArr[i];
         int curColIdx = endingVertexIndexArr[i];
         G.adj_matrix[curRowIdx][curColIdx].weight_type = DOUBLE;
-        // G.adj_matrix[curRowIdx][curColIdx].edge_info = (edge_t*)malloc(sizeof(edge_t));
         G.adj_matrix[curRowIdx][curColIdx].starting_vertex_idx = startingVertexIndexArr[i];
         G.adj_matrix[curRowIdx][curColIdx].ending_vertex_idx = endingVertexIndexArr[i];
         G.adj_matrix[curRowIdx][curColIdx].weight.double_value = weightArr[i];

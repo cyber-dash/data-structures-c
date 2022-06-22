@@ -108,98 +108,98 @@ void BFSTraverse(matrix_graph_t graph, Status (*Visit)(matrix_graph_t*, int)) {
  * @param v0
  * @param min_span_tree
  */
-void Prim(matrix_graph_t* graph, MST_node_t* min_span_tree) {
-    int vertex_cnt = graph->vertex_count;
+void Prim(matrix_graph_t* graph, edge_t* min_span_tree) {
+    int vertex_count = graph->vertex_count;
 
     // note: 此处使用数组, 如果可以, 使用set来实现vertex_set,
     // 如果你觉得用c语言做set比较麻烦, 请移步C++, C++更适合做算法
     int vertex_set[MAX_VERTEX_CNT];
-    vertex_set[0] = TRUE;       // 从索引0结点开始
+    vertex_set[0] = 0;       // 从索引0结点开始
     int in_vertex_set_cnt = 1;  // 在vertex_set中的结点数量
 
-    do {
-        MST_t min_span_node_arr;      // 小顶堆
-        int cur_heap_idx = 1;
+    while (in_vertex_set_cnt < vertex_count) {
 
-        for (int i = 0; i < vertex_cnt; i++) {
+        MinPriorityQueue min_priority_queue;
+        MinPriorityQueueInit(&min_priority_queue, vertex_count * vertex_count);
 
-            // 如果i不在vertex_set, continue
-            if (vertex_set[i] == FALSE) {
-                continue;
-            }
+        for (int i = 0; i < in_vertex_set_cnt; i++) {
+            int cur_starting_vertex_idx = vertex_set[i];
+            for (int j = 0; j < vertex_count; j++) {
 
-            for (int j = 0; j < vertex_cnt; j++) {
-                // 如果j在vertex_set 或者 边(i, j)不存在, continue
-                if (vertex_set[j] == TRUE || graph->adj_matrix[i][j].weight.double_value == DBL_MAX) {
+                // 检查索引j结点是否在vertex_set中
+                int in_vertex_set = FALSE;
+                for (int k = 0; k < in_vertex_set_cnt; k++) {
+                    if (j == vertex_set[k]) {
+                        in_vertex_set = TRUE;
+                        break;
+                    }
+                }
+
+                // 如果索引j结点在vertex_set中, continue
+                if (in_vertex_set) {
                     continue;
                 }
 
-                MST_node_t cur_min_span_node;
-                cur_min_span_node.starting_vertex_idx = graph->adj_matrix[i][j].starting_vertex_idx;
-                cur_min_span_node.ending_vertex_idx = graph->adj_matrix[i][j].ending_vertex_idx;
-                cur_min_span_node.weight_type = graph->adj_matrix[i][j].weight_type;
-                cur_min_span_node.weight.double_value = graph->adj_matrix[i][j].weight.double_value;
+                // 如果cur_starting_vertex_idx == j, 或者边(cur_starting_vertex_idx == j, j)不存在, continue
+                if (cur_starting_vertex_idx == j || graph->adj_matrix[cur_starting_vertex_idx][j].weight_type == NO_EDGE) {
+                    continue;
+                }
 
-                min_span_node_arr[cur_heap_idx] = cur_min_span_node;
-
-                cur_heap_idx++;
+                edge_t cur_adj_edge = graph->adj_matrix[cur_starting_vertex_idx][j];
+                MinPriorityQueueEnqueue(&min_priority_queue, cur_adj_edge);
             }
         }
 
-        MinHeapBuildBySiftDown(min_span_node_arr, cur_heap_idx - 1);
-        min_span_tree[in_vertex_set_cnt - 1] = min_span_node_arr[1];  // 取堆顶
+        edge_t cur_mst_edge;
+        MinPriorityQueueDequeue(&min_priority_queue, &cur_mst_edge);
+        min_span_tree[in_vertex_set_cnt - 1] = cur_mst_edge;
 
-        int idx = min_span_node_arr[1].ending_vertex_idx;
-        vertex_set[idx] = TRUE;
+        vertex_set[in_vertex_set_cnt] = cur_mst_edge.ending_vertex_idx;
 
         in_vertex_set_cnt++;
-
-    } while (in_vertex_set_cnt < vertex_cnt);
+    }
 }
 
 
-void Kruskal(matrix_graph_t* graph, MST_node_t* min_span_tree) {
+void Kruskal(matrix_graph_t* graph, edge_t* min_span_tree) {
 
-    int vertex_num = graph->vertex_count;     // 结点数量
-    int edge_num = graph->edge_count;       // 边数量
+    int vertex_count = graph->vertex_count;     // 结点数量
 
-    MST_t mst_node_min_heap;      // 小顶堆
+    MinPriorityQueue min_priority_queue;
+    MinPriorityQueueInit(&min_priority_queue, vertex_count * vertex_count);
+
     DisjointSet disjoint_set;            // 并查集
-    InitDisjointSet(&disjoint_set, vertex_num);
+    InitDisjointSet(&disjoint_set, vertex_count);
 
-    int arcCount = 1;
+    int edge_count = 1;
     for (int i = 0; i < graph->vertex_count; i++) {
         for (int j = 0; j < graph->vertex_count; j++) {
-            if (graph->adj_matrix[i][j].weight.double_value == DBL_MAX) {
+            // if (graph->adj_matrix[i][j].weight.double_value == DBL_MAX) {
+            if (graph->adj_matrix[i][j].weight_type == NO_EDGE) {
                 continue;
             }
 
             edge_t cur_edge = graph->adj_matrix[i][j];
 
-            MST_node_t mst_node;
+            edge_t mst_node;
             mst_node.starting_vertex_idx = cur_edge.starting_vertex_idx;
             mst_node.ending_vertex_idx = cur_edge.ending_vertex_idx;
             mst_node.weight_type = cur_edge.weight_type;
             mst_node.weight.double_value = cur_edge.weight.double_value;
 
-            mst_node_min_heap[arcCount] = mst_node;
+            MinPriorityQueueEnqueue(&min_priority_queue, mst_node);
 
-            arcCount++;
+            edge_count++;
         }
     }
-
-    MinHeapBuildBySiftDown(mst_node_min_heap, edge_num);
 
     // 此时, 所有的边都已经进入小顶堆, 执行Kruskal算法核心流程
 
     int count = 1;
     int idx = 0;
-    while (count < vertex_num) {    // 执行n - 1次
-        MST_node_t cur_min_span_node = mst_node_min_heap[1];  // 取堆顶
-
-        mst_node_min_heap[1] = mst_node_min_heap[arcCount];
-        arcCount--;
-        MinHeapBuildBySiftDown(mst_node_min_heap, arcCount);    // 重新调整堆
+    while (count < vertex_count) {    // 执行n - 1次
+        edge_t cur_min_span_node;
+        MinPriorityQueueDequeue(&min_priority_queue, &cur_min_span_node);
 
         int curStartingRootIdx = DisjointSetFindRecursive(&disjoint_set, cur_min_span_node.starting_vertex_idx);
         int curEndingRootIdx = DisjointSetFindRecursive(&disjoint_set, cur_min_span_node.ending_vertex_idx);
@@ -220,7 +220,7 @@ void Kruskal(matrix_graph_t* graph, MST_node_t* min_span_tree) {
 void PrintMinSpanTree(MST_t min_span_tree, int size) {
 
     for (int i = 0; i < size; i++) {
-        MST_node_t cur = min_span_tree[i];
+        edge_t cur = min_span_tree[i];
 
         printf("起始点: %d, 终点: %d, 距离: %lf\n",
                cur.starting_vertex_idx,
@@ -244,7 +244,6 @@ void ShortestPath_Dijkstra(matrix_graph_t* graph, int v0, int (*predecessor)[MAX
     // 用Dijkstra算法求有向网G的v0顶点到其余顶点v的最短路径P[v]及其带权长度D[v]
     int vertex_cnt = graph->vertex_count;
     int* final = (int*)malloc(vertex_cnt * sizeof(int));
-    // WEIGHT_TYPE type = graph->adj_matrix_t[0][0].weight_type;
 
     for (int v = 0; v < graph->vertex_count; v++) {
         final[v] = FALSE;
@@ -407,33 +406,15 @@ void Floyd(matrix_graph_t* graph, int (*predecessor)[MAX_VERTEX_CNT], edge_t (*d
         for (int j = 0; j < vertex_cnt; j++) {
 
             if (i == j) {
-                /*
-                if (graph->weight_type == INT) {
-                    distance[i][j].weight_type = INT;
-                    distance[i][j].weight.int_value = 0;
-                } else if (graph->weight_type == DOUBLE) {
-                 */
                 distance[i][j].weight_type = DOUBLE;
                 distance[i][j].weight.double_value = 0;
-                //}
             } else {
-                /*
-                if (graph->weight_type == INT) {
-                    distance[i][j].weight_type = INT;
-                    if (graph->adj_matrix[i][j].weight.int_value != INT_MAX) {
-                        distance[i][j].weight.int_value = graph->adj_matrix[i][j].weight.int_value;
-                    } else {
-                        distance[i][j].weight.int_value = INT_MAX;
-                    }
-                } else if (graph->weight_type == DOUBLE) {
-                 */
                 distance[i][j].weight_type = DOUBLE;
                 if (graph->adj_matrix[i][j].weight.double_value != DBL_MAX) {
                     distance[i][j].weight.double_value = graph->adj_matrix[i][j].weight.double_value;
                 } else {
                     distance[i][j].weight.double_value = DBL_MAX;
                 }
-                // }
             }
 
             predecessor[i][j] = i;
@@ -443,17 +424,6 @@ void Floyd(matrix_graph_t* graph, int (*predecessor)[MAX_VERTEX_CNT], edge_t (*d
     for (int k = 0; k < vertex_cnt; k++) {
         for (int i = 0; i < vertex_cnt; i++) {
             for (int j = 0; j < vertex_cnt; j++) {
-                /*
-                if (graph->weight_type == INT) {
-                    if (distance[i][k].weight.int_value + distance[k][j].weight.int_value
-                            < distance[i][j].weight.int_value)
-                    {
-                        distance[i][j].weight.int_value =
-                            distance[i][k].weight.int_value + distance[k][j].weight.int_value;
-                        predecessor[i][j] = predecessor[k][j];
-                    }
-                } else if (graph->weight_type == DOUBLE) {
-                 */
                 if (distance[i][k].weight.double_value + distance[k][j].weight.double_value
                     < distance[i][j].weight.double_value)
                 {
@@ -461,77 +431,29 @@ void Floyd(matrix_graph_t* graph, int (*predecessor)[MAX_VERTEX_CNT], edge_t (*d
                         distance[i][k].weight.double_value + distance[k][j].weight.double_value;
                     predecessor[i][j] = predecessor[k][j];
                 }
-                // }
             }
         }
     }
 }
 
 
-/*
-void PrintSingleSourceShortestPath(matrix_graph_t *graph, int v0, edge_t* distance, int (*predecessor)[MAX_VERTEX_CNT]) {
-
-    int vertex_count = graph->vertex_count;
-    int* cur_predecessor = (int*) malloc(vertex_count * sizeof(int));
-
-    for (int i = 0; i < vertex_count; i++) {
-
-        // 不处理v0到v0自己本身的最短路径
-        if (i == v0) {
-            continue;
-        }
-
-        // 构造"以索引v0结点为起点, 索引i结点为终点"的最短路径
-        int pre_vertex_index = i;
-        int idx = 0;
-        while (pre_vertex_index != v0) {
-            cur_predecessor[idx] = pre_vertex_index;
-            pre_vertex_index = predecessor[pre_vertex_index];
-            idx++;
-        }
-
-        printf("起始点%d到结点%d的最短路径为:\n", v0, i);
-        printf("%d ", v0);
-
-        while (idx > 0) {
-            idx--;
-            printf(" idx ");
-        }
-
-        printf(", ");
-        if (distance[i].weight_type == INT) {
-            printf("最短路径长度为: %d\n", distance[i].edge_info->weight.int_value);
-        } else if (distance[i].weight_type == DOUBLE) {
-            printf("最短路径长度为: %.2lf\n", distance[i].edge_info->weight.double_value);
-        }
-    }
-}
- */
-
-
 void PrintSingleSourceShortestPath(matrix_graph_t *graph,
-                                   int v0,
+                                   int starting_vertex_index,
                                    int (*predecessor)[MAX_VERTEX_CNT],
                                    edge_t* distance)
 {
     int vertex_cnt = graph->vertex_count;
     for (int i = 0; i < vertex_cnt; i++) {
         // 不处理v0到v0自己本身的最短路径
-        if (i == v0) {
+        if (i == starting_vertex_index) {
             continue;
         }
 
-        printf("起始点%d到结点%d的最短路径为:\n", v0, i);
-        PrintSingleSourceShortestPathRecursive(graph, v0, i, predecessor);
+        printf("起始点%d到结点%d的最短路径为:\n", starting_vertex_index, i);
+        PrintSingleSourceShortestPathRecursive(graph, starting_vertex_index, i, predecessor);
 
         printf(", ");
-        /*
-        if (distance[i].weight_type == INT) {
-            printf("最短路径长度为: %d\n", distance[i].weight.int_value);
-        } else if (distance[i].weight_type == DOUBLE) {
-         */
         printf("最短路径长度为: %.2lf\n", distance[i].weight.double_value);
-        // }
     }
 }
 

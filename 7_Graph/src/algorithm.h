@@ -38,7 +38,7 @@ void PrintMinSpanTree(MST_t min_span_tree, int size);
 void ShortestPath_Dijkstra(matrix_graph_t* graph, int v0, int (*predecessor)[MAX_VERTEX_CNT], edge_t* distance);
 
 // 贝尔曼福特(Bellman-Ford)最短路径
-int ShortestPath_BellmanFord(matrix_graph_t* graph, int v0, int (*predecessor)[MAX_VERTEX_CNT], edge_t* distance);
+int BellmanFord(matrix_graph_t* graph, int starting_vertex_index, int (*predecessor)[MAX_VERTEX_CNT], edge_t* distance);
 
 // 弗洛伊德(Floyd)最短路径
 void Floyd(matrix_graph_t* graph, int (*predecessor)[MAX_VERTEX_CNT], edge_t (*distance)[MAX_VERTEX_CNT]);

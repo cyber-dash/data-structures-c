@@ -174,6 +174,8 @@ Status CreateGraphByEdgesAndVertices(matrix_graph_t* graph,
         if (graph->kind == UDN || graph->kind == UDG) {
             //! 边: v --> u
             graph->adj_matrix[v][u] = edge_arr[i];
+            graph->adj_matrix[v][u].starting_vertex_idx = edge_arr[i].ending_vertex_idx;
+            graph->adj_matrix[v][u].ending_vertex_idx = edge_arr[i].starting_vertex_idx;
         }
 
         // 图边信息数组赋值

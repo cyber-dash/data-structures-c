@@ -163,56 +163,54 @@ void Prim(matrix_graph_t* graph, edge_t* min_span_tree) {
 
 void Kruskal(matrix_graph_t* graph, edge_t* min_span_tree) {
 
-    int vertex_count = graph->vertex_count;     // 结点数量
-
+    // 初始化最小优先队列, 容量 = 图边数
     MinPriorityQueue min_priority_queue;
-    MinPriorityQueueInit(&min_priority_queue, vertex_count * vertex_count);
+    MinPriorityQueueInit(&min_priority_queue, graph->edge_count);
 
-    DisjointSet disjoint_set;            // 并查集
-    InitDisjointSet(&disjoint_set, vertex_count);
+    // 初始化并查集, 容量 = 图结点数
+    DisjointSet disjoint_set;
+    InitDisjointSet(&disjoint_set, graph->vertex_count);
 
-    int edge_count = 1;
+    // 将所有边插入到最小优先队列
     for (int i = 0; i < graph->vertex_count; i++) {
         for (int j = 0; j < graph->vertex_count; j++) {
-            // if (graph->adj_matrix[i][j].weight.double_value == DBL_MAX) {
             if (graph->adj_matrix[i][j].weight_type == NO_EDGE) {
                 continue;
             }
 
-            edge_t cur_edge = graph->adj_matrix[i][j];
-
-            edge_t mst_node;
-            mst_node.starting_vertex_idx = cur_edge.starting_vertex_idx;
-            mst_node.ending_vertex_idx = cur_edge.ending_vertex_idx;
-            mst_node.weight_type = cur_edge.weight_type;
-            mst_node.weight.double_value = cur_edge.weight.double_value;
+            edge_t mst_node = graph->adj_matrix[i][j];
 
             MinPriorityQueuePush(&min_priority_queue, mst_node);
-
-            edge_count++;
         }
     }
 
-    // 此时, 所有的边都已经进入小顶堆, 执行Kruskal算法核心流程
+    /*
+    for (int i = 0; i < graph->edge_count; i++) {
+        MinPriorityQueuePush(&min_priority_queue, graph->edge_array[i]);
+    }
+     */
 
-    int count = 1;
-    int i = 0;
-    while (count < vertex_count) {    // 执行n - 1次
+    // --- 此时, 所有的边都已经进入小顶堆, 执行Kruskal算法核心流程 ---
+
+    for (int index = 0; index < graph->vertex_count - 1;) {
+
+        // 拿到最小优先队列队头(最小堆堆顶)
         edge_t cur_mst_item;
         MinPriorityQueuePop(&min_priority_queue, &cur_mst_item);
 
+        // 队头对应的最短边起点/终点对应的并查集根索引
         int cur_starting_root_index = DisjointSetFindRecursive(&disjoint_set, cur_mst_item.starting_vertex_idx);
         int cur_ending_root_index = DisjointSetFindRecursive(&disjoint_set, cur_mst_item.ending_vertex_idx);
 
+        // 如果:起点根索引 不等于 终点根索引, 则
         if (cur_starting_root_index != cur_ending_root_index) {
+            // 并查集合并
             DisjointSetUnion(&disjoint_set, cur_starting_root_index, cur_ending_root_index);
 
-            min_span_tree[i] = cur_mst_item;
-
-            i++;
-            count++;
+            // min_span_tree增加元素
+            min_span_tree[index] = cur_mst_item;
+            index++;
         }
-
     }
 }
 
@@ -294,7 +292,7 @@ void ShortestPath_Dijkstra(matrix_graph_t* graph, int v0, int (*predecessor)[MAX
 /*!
  * 贝尔曼福特(Bellman-Ford)最短路径
  * @param graph
- * @param v0
+ * @param starting_vertex_index
  * @param predecessor
  * @param distance
  * @return
@@ -332,18 +330,19 @@ void ShortestPath_Dijkstra(matrix_graph_t* graph, int v0, int (*predecessor)[MAX
  *         如果 distance[u] + 边(u, v)权重 < distance[v]:
  *             error "图包含负回路"
  */
-int ShortestPath_BellmanFord(matrix_graph_t* graph, int v0, int (*predecessor)[MAX_VERTEX_CNT], edge_t* distance) {
-
-    int vertex_cnt = graph->vertex_count;
-
+int BellmanFord(matrix_graph_t* graph,
+                int starting_vertex_index,
+                int (*predecessor)[MAX_VERTEX_CNT],
+                path_t* distance)
+{
     for (int i = 0; i < graph->vertex_count; i++) {
         distance[i].weight.double_value = DBL_MAX;
     }
-    distance[v0].weight.double_value = 0;
-    predecessor[v0][v0] = -1;
+    distance[starting_vertex_index].weight.double_value = 0;
+    predecessor[starting_vertex_index][starting_vertex_index] = -1;
 
     // 遍历 "图结点数 - 1" 次
-    for (int i = 0; i < vertex_cnt - 1; i++) {
+    for (int i = 0; i < graph->vertex_count - 1; i++) {
         // 遍历 "图边数" 次
         for (int j = 0; j < graph->edge_count; j++) {
             int u = graph->edge_array[j].starting_vertex_idx;
@@ -355,12 +354,14 @@ int ShortestPath_BellmanFord(matrix_graph_t* graph, int v0, int (*predecessor)[M
             {
                 distance[v].weight.double_value =
                     distance[u].weight.double_value + graph->adj_matrix[u][v].weight.double_value;
-                predecessor[v0][v] = u;
+                predecessor[starting_vertex_index][v] = u;
             }
         }
     }
 
     int has_negative_weight_cycle = FALSE; // 默认没有负权环
+
+    /*
     for (int u = 0; u < vertex_cnt; u++) {
         for (int v = 0; v < vertex_cnt; v++) {
             if (graph->adj_matrix[u][v].weight_type == NO_EDGE) {
@@ -373,6 +374,22 @@ int ShortestPath_BellmanFord(matrix_graph_t* graph, int v0, int (*predecessor)[M
                 has_negative_weight_cycle = TRUE; // 有负权环
                 break;
             }
+        }
+    }
+     */
+
+    for (int i = 0; i < graph->edge_count; i++) {
+        int cur_starting_vertex_index = graph->edge_array[i].starting_vertex_idx;
+        int cur_ending_vertex_index = graph->edge_array[i].ending_vertex_idx;
+
+        if (distance[cur_starting_vertex_index].weight.double_value
+            +
+            graph->adj_matrix[cur_starting_vertex_index][cur_ending_vertex_index].weight.double_value
+            <
+            distance[cur_ending_vertex_index].weight.double_value)
+        {
+            has_negative_weight_cycle = TRUE; // 有负权环
+            break;
         }
     }
 

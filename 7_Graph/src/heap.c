@@ -6,9 +6,15 @@
 #include "stdlib.h"
 
 
-int LowerThan(edge_t* node1, edge_t* node2) {
-    if (node1->weight_type == DOUBLE && node2->weight_type == DOUBLE) {
-        if (node1->weight.double_value < node2->weight.double_value) {
+/*!
+ * 小于(<)
+ * @param item1 元素1
+ * @param item2 元素2
+ * @return 比较结果
+ */
+int LowerThan(edge_t* item1, edge_t* item2) {
+    if (item1->weight_type == DOUBLE && item2->weight_type == DOUBLE) {
+        if (item1->weight.double_value < item2->weight.double_value) {
             return 1;
         } else {
             return 0;
@@ -19,9 +25,15 @@ int LowerThan(edge_t* node1, edge_t* node2) {
 }
 
 
-int LargerThan(edge_t* node1, edge_t* node2) {
-    if (node1->weight_type == DOUBLE && node2->weight_type == DOUBLE) {
-        if (node1->weight.double_value > node2->weight.double_value) {
+/*!
+ * 大于(>)
+ * @param item1 元素1
+ * @param item2 元素2
+ * @return 比较结果
+ */
+int LargerThan(edge_t* item1, edge_t* item2) {
+    if (item1->weight_type == DOUBLE && item2->weight_type == DOUBLE) {
+        if (item1->weight.double_value > item2->weight.double_value) {
             return 1;
         } else {
             return 0;
@@ -32,62 +44,69 @@ int LargerThan(edge_t* node1, edge_t* node2) {
 }
 
 
-void swap(edge_t* node1, edge_t* node2) {
-    edge_t tmp = *node1;
-    *node1 = *node2;
-    *node2 = tmp;
+/*!
+ * 交换元素值
+ * @param item1 元素1(指针)
+ * @param item2 元素2(指针)
+ */
+void Swap(edge_t* item1, edge_t* item2) {
+    edge_t tmp = *item1;
+    *item1 = *item2;
+    *item2 = tmp;
 }
 
 
-// @brief 迭代建立小顶堆
-// @param H 堆数据
-// @param s 结点值
-// @param m 堆最大长度
-// 索引从1开始, 因此是乘以2
-void MinHeapSiftDown(edge_t* min_span_node_arr, int index, int heap_size)
+/*!
+ * 小顶堆SiftDown
+ * @brief 迭代建立小顶堆
+ * @param item_array 堆元素数组
+ * @param index 执行SiftDown的索引
+ * @param heap_size 堆size
+ */
+void MinHeapSiftDown(edge_t* item_array, int index, int heap_size)
 {
-    for (int child_idx = 2 * index; child_idx <= heap_size; child_idx *= 2) {
+    for (int child_index = 2 * index; child_index <= heap_size; child_index *= 2) {
 
-        //! index的孩子结点中, 权重较小的结点索引, 赋给child_idx
-        if (child_idx < heap_size && LargerThan(min_span_node_arr + child_idx, min_span_node_arr + child_idx + 1)) {
-            child_idx++;
+        // index的孩子结点中, 权重较小的结点索引, 赋给child_idx
+        if (child_index < heap_size && LargerThan(item_array + child_index, item_array + child_index + 1)) {
+            child_index++;
         }
 
-        //! 如果父节点<=子节点, sift down结束
-        if (!LargerThan(min_span_node_arr + index, min_span_node_arr + child_idx)) {
+        // 如果父节点<=子节点, sift down结束
+        if (!LargerThan(item_array + index, item_array + child_index)) {
             break;
         }
 
         //! 交换父子结点
-        swap(min_span_node_arr + index, min_span_node_arr + child_idx);
+        Swap(item_array + index, item_array + child_index);
     }
 }
 
 
 /*!
  * 小顶堆SiftUp
- * @param min_span_node_arr 最小生成树结点数组
- * @param index 位置(从1开始)
+ * @param item_array 堆元素数组
+ * @param index 执行SiftUp的索引
  */
-void MinHeapSiftUp(edge_t* min_span_node_arr, int index) {
+void MinHeapSiftUp(edge_t* item_array, int index) {
     for (int parent_idx = index / 2; parent_idx > 0; parent_idx /= 2) {
-        if (!LargerThan(min_span_node_arr + parent_idx, min_span_node_arr + index)) {
+        if (!LargerThan(item_array + parent_idx, item_array + index)) {
             break;
         }
 
-        swap(min_span_node_arr + parent_idx, min_span_node_arr + index);
+        Swap(item_array + parent_idx, item_array + index);
     }
 }
 
 
 /*!
- * 建堆
- * @param min_span_node_arr mst结点数组
- * @param heap_size
+ * 建堆(使用SiftDown)
+ * @param item_array 堆元素数组
+ * @param heap_size 堆size
  */
-void MinHeapBuildBySiftDown(edge_t* min_span_node_arr, int heap_size) {
+void MinHeapBuildBySiftDown(edge_t* item_array, int heap_size) {
     for (int i = heap_size / 2; i > 0; i--) {
-        MinHeapSiftDown(min_span_node_arr, i, heap_size);
+        MinHeapSiftDown(item_array, i, heap_size);
     }
 }
 
@@ -95,45 +114,57 @@ void MinHeapBuildBySiftDown(edge_t* min_span_node_arr, int heap_size) {
 /*!
  * 最小优先队列初始化
  * @param min_priority_queue 最小优先队列
- * @param size 队列size
+ * @param capacity 队列容量
  * @return 执行结果
  */
 Status MinPriorityQueueInit(MinPriorityQueue* min_priority_queue, int capacity) {
     if (capacity < 0 || capacity > MAX_VERTEX_CNT * MAX_VERTEX_CNT) {
         return ERROR;
     }
-    min_priority_queue->mst_node_arr = (edge_t*)malloc(sizeof(edge_t) * capacity);
+    min_priority_queue->mst_item_array = (edge_t*)malloc(sizeof(edge_t) * capacity);
     min_priority_queue->capacity = capacity;
     min_priority_queue->size = 0;
-
-    return OK;  // todo: 其他错误返回值的边界条件, 如果有兴趣的话自行补充:-)
-}
-
-
-Status MinPriorityQueueEnqueue(MinPriorityQueue* min_priority_queue, edge_t mst_node) {
-    if (min_priority_queue->size == min_priority_queue->capacity) {
-        return ERROR;
-    }
-
-    min_priority_queue->mst_node_arr[min_priority_queue->size + 1] = mst_node;
-    min_priority_queue->size++;
-
-    MinHeapSiftUp(min_priority_queue->mst_node_arr, min_priority_queue->size);
 
     return OK;
 }
 
 
-Status MinPriorityQueueDequeue(MinPriorityQueue* min_priority_queue, edge_t * min_span_node) {
+/*!
+ * 最小优先队列入队
+ * @param min_priority_queue 最小优先队列(指针)
+ * @param item 入队元素
+ * @return 执行结果
+ */
+Status MinPriorityQueuePush(MinPriorityQueue* min_priority_queue, edge_t item) {
+    if (min_priority_queue->size == min_priority_queue->capacity) {
+        return ERROR;
+    }
+
+    min_priority_queue->mst_item_array[min_priority_queue->size + 1] = item;
+    min_priority_queue->size++;
+
+    MinHeapSiftUp(min_priority_queue->mst_item_array, min_priority_queue->size);
+
+    return OK;
+}
+
+
+/*!
+ * 最小优先队列队头出队
+ * @param min_priority_queue 最小优先队列(指针)
+ * @param item 保存出队元素的元素(指针)
+ * @return 执行结果
+ */
+Status MinPriorityQueuePop(MinPriorityQueue* min_priority_queue, edge_t* item) {
     if (min_priority_queue->size == 0) {
         return ERROR;
     }
 
-    *min_span_node = min_priority_queue->mst_node_arr[1];
+    *item = min_priority_queue->mst_item_array[1];
 
-    min_priority_queue->mst_node_arr[1] = min_priority_queue->mst_node_arr[min_priority_queue->size];
+    min_priority_queue->mst_item_array[1] = min_priority_queue->mst_item_array[min_priority_queue->size];
     min_priority_queue->size--;
 
-    MinHeapSiftDown(min_priority_queue->mst_node_arr, 1, min_priority_queue->size);
+    MinHeapSiftDown(min_priority_queue->mst_item_array, 1, min_priority_queue->size);
 }
 

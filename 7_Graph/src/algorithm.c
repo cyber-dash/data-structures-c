@@ -146,12 +146,12 @@ void Prim(matrix_graph_t* graph, edge_t* min_span_tree) {
                 }
 
                 edge_t cur_adj_edge = graph->adj_matrix[cur_starting_vertex_idx][j];
-                MinPriorityQueueEnqueue(&min_priority_queue, cur_adj_edge);
+                MinPriorityQueuePush(&min_priority_queue, cur_adj_edge);
             }
         }
 
         edge_t cur_mst_edge;
-        MinPriorityQueueDequeue(&min_priority_queue, &cur_mst_edge);
+        MinPriorityQueuePop(&min_priority_queue, &cur_mst_edge);
         min_span_tree[in_vertex_set_cnt - 1] = cur_mst_edge;
 
         vertex_set[in_vertex_set_cnt] = cur_mst_edge.ending_vertex_idx;
@@ -187,7 +187,7 @@ void Kruskal(matrix_graph_t* graph, edge_t* min_span_tree) {
             mst_node.weight_type = cur_edge.weight_type;
             mst_node.weight.double_value = cur_edge.weight.double_value;
 
-            MinPriorityQueueEnqueue(&min_priority_queue, mst_node);
+            MinPriorityQueuePush(&min_priority_queue, mst_node);
 
             edge_count++;
         }
@@ -196,22 +196,23 @@ void Kruskal(matrix_graph_t* graph, edge_t* min_span_tree) {
     // 此时, 所有的边都已经进入小顶堆, 执行Kruskal算法核心流程
 
     int count = 1;
-    int idx = 0;
+    int i = 0;
     while (count < vertex_count) {    // 执行n - 1次
-        edge_t cur_min_span_node;
-        MinPriorityQueueDequeue(&min_priority_queue, &cur_min_span_node);
+        edge_t cur_mst_item;
+        MinPriorityQueuePop(&min_priority_queue, &cur_mst_item);
 
-        int curStartingRootIdx = DisjointSetFindRecursive(&disjoint_set, cur_min_span_node.starting_vertex_idx);
-        int curEndingRootIdx = DisjointSetFindRecursive(&disjoint_set, cur_min_span_node.ending_vertex_idx);
+        int cur_starting_root_index = DisjointSetFindRecursive(&disjoint_set, cur_mst_item.starting_vertex_idx);
+        int cur_ending_root_index = DisjointSetFindRecursive(&disjoint_set, cur_mst_item.ending_vertex_idx);
 
-        if (curStartingRootIdx != curEndingRootIdx) {
-            DisjointSetUnion(&disjoint_set, curStartingRootIdx, curEndingRootIdx);
+        if (cur_starting_root_index != cur_ending_root_index) {
+            DisjointSetUnion(&disjoint_set, cur_starting_root_index, cur_ending_root_index);
 
-            min_span_tree[idx] = cur_min_span_node;
-            idx++;
+            min_span_tree[i] = cur_mst_item;
+
+            i++;
+            count++;
         }
 
-        count++;
     }
 }
 
@@ -345,8 +346,8 @@ int ShortestPath_BellmanFord(matrix_graph_t* graph, int v0, int (*predecessor)[M
     for (int i = 0; i < vertex_cnt - 1; i++) {
         // 遍历 "图边数" 次
         for (int j = 0; j < graph->edge_count; j++) {
-            int u = graph->edges[j].starting_vertex_idx;
-            int v = graph->edges[j].ending_vertex_idx;
+            int u = graph->edge_array[j].starting_vertex_idx;
+            int v = graph->edge_array[j].ending_vertex_idx;
 
             // 松弛
             if (distance[u].weight.double_value + graph->adj_matrix[u][v].weight.double_value
@@ -387,7 +388,7 @@ int ShortestPath_BellmanFord(matrix_graph_t* graph, int v0, int (*predecessor)[M
  * @note
  *
  * 弗洛伊德算法:
- *     distance[][] is a distance matrix for n vertices.
+ *     distance[][] is a distance matrix for n vertex_array.
  *         distance[i][j] is the distance to move directly from i to j.
  *         if no direct link from i to j
  *             then initialize distance[i][j] = INFINITY

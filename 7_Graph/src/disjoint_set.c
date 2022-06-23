@@ -8,19 +8,19 @@
 
 /*!
  * 初始化并查集
- * @param disjoint_set
- * @param size
- * @return
+ * @param disjoint_set 并查集(指针)
+ * @param size 并查集大小
+ * @return 执行结果
  */
 Status InitDisjointSet(DisjointSet* disjoint_set, int size) {
     disjoint_set->size = size;
-    disjoint_set->parent = (int*)malloc(size * sizeof(int));
-    if (!disjoint_set->parent) {
+    disjoint_set->parent_index_array = (int*)malloc(size * sizeof(int));
+    if (!disjoint_set->parent_index_array) {
         return NON_ALLOCATED;
     }
 
     for (int i = 0; i < size; i++) {
-        disjoint_set->parent[i] = -1;
+        disjoint_set->parent_index_array[i] = ROOT_PARENT_INDEX;
     }
 
     return OK;
@@ -33,7 +33,7 @@ Status InitDisjointSet(DisjointSet* disjoint_set, int size) {
  * @return 是否成功
  */
 Status DisjointSetDestroy(DisjointSet** disjoint_set) {
-    free((*disjoint_set)->parent);
+    free((*disjoint_set)->parent_index_array);
     free(*disjoint_set);
     *disjoint_set = NULL;
 
@@ -50,8 +50,8 @@ Status DisjointSetUnion(DisjointSet* disjoint_set, int node1, int node2) {
         return OK;
     }
 
-    disjoint_set->parent[root1] += disjoint_set->parent[root2];
-    disjoint_set->parent[root2] = root1; // 将根root2连接到另一根root1下面
+    disjoint_set->parent_index_array[root1] += disjoint_set->parent_index_array[root2];
+    disjoint_set->parent_index_array[root2] = root1; // 将根root2连接到另一根root1下面
 
     return OK;
 }
@@ -64,9 +64,9 @@ Status DisjointSetUnion(DisjointSet* disjoint_set, int node1, int node2) {
  * @return 根结点索引
  */
 int DisjointSetFindRecursive(DisjointSet* disjoint_set, int index) {
-    if (disjoint_set->parent[index] < 0) {
+    if (disjoint_set->parent_index_array[index] < 0) {
         return index;
     }
 
-    return DisjointSetFindRecursive(disjoint_set, disjoint_set->parent[index]);
+    return DisjointSetFindRecursive(disjoint_set, disjoint_set->parent_index_array[index]);
 }

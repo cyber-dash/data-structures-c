@@ -10,34 +10,34 @@
 
 
 typedef struct MinPriorityQueue {
-    path_t* mst_node_arr;
+    path_t* mst_item_array;
     int size;
     int capacity;
 } MinPriorityQueue;
 
 
-int LowerThan(edge_t* node1, edge_t* node2);
+int LowerThan(edge_t* item1, edge_t* item2);
 
 
-int LargerThan(edge_t* node1, edge_t* node2);
+int LargerThan(edge_t* item1, edge_t* item2);
 
 
-void MinHeapSiftDown(edge_t* min_span_node_arr, int index, int heap_size);
+void MinHeapSiftDown(edge_t* item_arr, int index, int heap_size);
 
 
-void MinHeapSiftUp(edge_t* min_span_node_arr, int index);
+void MinHeapSiftUp(edge_t* item_arr, int index);
 
 
-void MinHeapBuildBySiftDown(edge_t *min_span_node_arr, int heap_size);
+void MinHeapBuildBySiftDown(edge_t *item_arr, int heap_size);
 
 
 Status MinPriorityQueueInit(MinPriorityQueue* min_priority_queue, int capacity);
 
 
-Status MinPriorityQueueEnqueue(MinPriorityQueue* min_priority_queue, edge_t mst_node);
+Status MinPriorityQueuePush(MinPriorityQueue* min_priority_queue, edge_t item);
 
 
-Status MinPriorityQueueDequeue(MinPriorityQueue* min_priority_queue, edge_t* min_span_node);
+Status MinPriorityQueuePop(MinPriorityQueue* min_priority_queue, edge_t* item);
 
 
 

@@ -8,11 +8,13 @@
 
 #include "graph.h"
 
+
+#define ROOT_PARENT_INDEX   -1
+
 typedef struct {
     int size; //!< 大小
-    int* parent; //!< 父节点数组
+    int* parent_index_array; //!< 父节点数组
 } DisjointSet;
-
 
 // 构造函数
 Status InitDisjointSet(DisjointSet* disjoint_set, int size);

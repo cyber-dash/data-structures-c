@@ -20,9 +20,6 @@ void TestDFSTraverse();
 // 测试广度优先遍历
 void TestBFSTraverse();
 
-// 测试建堆
-void TestBuildHeap();
-
 // 测试(Prim)最小生成树
 void TestPrim();
 

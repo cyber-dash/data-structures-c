@@ -6,11 +6,16 @@
 #define CYBER_DASH_COMMON_H
 
 
-#define MAX_VERTEX_CNT	30						// 最大顶点个数
-#define VERTEX_TYPE	    int
-#define FALSE           0
-#define TRUE            1
+#define MAX_VERTEX_CNT  50  //!< 最大顶点个数
+#define VERTEX_TYPE	    int //!< 结点类型
 
+#define FALSE   0
+#define TRUE    1
+
+
+/*!
+ * 函数返回值
+ */
 typedef enum {
     OK,
     ERROR,
@@ -19,58 +24,54 @@ typedef enum {
     NON_EXISTENT
 } Status;
 
-typedef enum {
-    DG,
-    DN,
-    UDG,
-    UDN
-} GRAPH_KIND;	// {有向图, 有向网, 无向图, 无向网}
 
 typedef enum {
-    NO_EDGE,
-    UNWEIGHTED,
+    DG,    //!< 有向图
+    DN,    //!< 有向网
+    UDG,   //!< 无向图
+    UDN    //!< 无向网
+} GRAPH_KIND;
+
+
+typedef enum {
+    NO_EDGE,    //!< 没有边(弧)
+    UNWEIGHTED, //!< 无权值
     // INT,
-    DOUBLE,
+    DOUBLE,     //!< 双精度
 } WEIGHT_TYPE;
+
 
 typedef union {
     int     int_value;
     double  double_value;
-} EDGE_WEIGHT;
+} WEIGHT;
+
 
 typedef struct edge_t {
-    WEIGHT_TYPE weight_type;     // VRType是顶点关系类型
-    int starting_vertex_idx;       // 起点结点索引
-    int ending_vertex_idx;         // 终点结点索引
-    EDGE_WEIGHT weight;    // 权值
+    int starting_vertex_idx;    //!< 起点索引
+    int ending_vertex_idx;      //!< 终点索引
+    WEIGHT_TYPE weight_type;    //!< 边权值类型
+    WEIGHT weight;              //!< 边权值
 } edge_t, path_t, adj_matrix_t[MAX_VERTEX_CNT][MAX_VERTEX_CNT], MST_t[MAX_VERTEX_CNT];
 
 
-typedef struct {
-    adj_matrix_t	adj_matrix;                                //!< 邻接矩阵
-
-    int			    vertex_count;                              //!< 图结点数
-    VERTEX_TYPE     vertices[MAX_VERTEX_CNT];                  //!< 顶点集合(数组)
-
-    int             edge_count;                                //!< 图弧(边)数
-    edge_t          edges[MAX_VERTEX_CNT * MAX_VERTEX_CNT];    //!< 边集合(数组)
-
-    GRAPH_KIND	    kind;					                   //!< 图的种类标志
-    WEIGHT_TYPE     weight_type;                               //!< 权值类型
-} matrix_graph_t;
 
 
 /*!
- * 图路径结构体
+ * 邻接矩阵图
  */
- /*
 typedef struct {
-    int starting_vertex_idx;            //!< 路径的起点索引
-    int ending_vertex_idx;              //!< 路径的终点索引
-    EDGE_WEIGHT weight;                 //!< 权重
-    WEIGHT_TYPE weight_type;            //!< 权重类型
-} Path_t, MST_t[MAX_VERTEX_CNT];
-  */
+    int			    vertex_count;                                  //!< 图结点数
+    int             edge_count;                                    //!< 图弧(边)数
+
+    GRAPH_KIND	    kind;					                       //!< 图的种类标志
+    WEIGHT_TYPE     weight_type;                                   //!< 边权值类型
+
+    VERTEX_TYPE     vertex_array[MAX_VERTEX_CNT];                  //!< 顶点集合(数组)
+    edge_t          edge_array[MAX_VERTEX_CNT * MAX_VERTEX_CNT];   //!< 边集合(数组)
+    adj_matrix_t	adj_matrix;                                    //!< 邻接矩阵
+
+} matrix_graph_t;
 
 
 #endif // CYBER_DASH_COMMON_H

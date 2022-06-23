@@ -18,7 +18,7 @@
  */
 Status LocateVertex(matrix_graph_t graph, VERTEX_TYPE vertex, int* vertex_idx) {
     for (int cur_vertex_idx = 0; cur_vertex_idx < graph.vertex_count; cur_vertex_idx++) {
-        if (graph.vertices[cur_vertex_idx] == vertex) {
+        if (graph.vertex_array[cur_vertex_idx] == vertex) {
             *vertex_idx = cur_vertex_idx;
             return OK;
         }
@@ -143,7 +143,7 @@ Status CreateGraphByEdgesAndVertices(matrix_graph_t* graph,
     for (int i = 0; i < graph->vertex_count; ++i) {
 
         // 结点信息数组
-        graph->vertices[i] = vertex_index_arr[i];
+        graph->vertex_array[i] = vertex_index_arr[i];
 
         // 矩阵元素初始化NO_EDGE
         for (int j = 0; j < graph->vertex_count; ++j) {
@@ -177,7 +177,7 @@ Status CreateGraphByEdgesAndVertices(matrix_graph_t* graph,
         }
 
         // 图边信息数组赋值
-        graph->edges[i] = edge_arr[i];
+        graph->edge_array[i] = edge_arr[i];
     }
 
     return OK;

@@ -28,8 +28,8 @@
 void TestCreateUDNByEdgesAndVertices() {
     printf("\n");
     printf("------------------------- CyberDash -------------------------\n");
-    printf("                  Test CreateGraphByEdgesAndVertices                 \n");
-    printf("                 测试使用弧(边)数组创建无向网(UDN)               \n\n\n");
+    printf("               Test CreateGraphByEdgesAndVertices            \n");
+    printf("              测试使用边(弧)数组结点数组创建无向网(UDN)           \n\n\n");
     printf("         结点0\n");
     printf("         / \\\n");
     printf("        /   \\\n");
@@ -46,14 +46,14 @@ void TestCreateUDNByEdgesAndVertices() {
 
     VERTEX_TYPE vertices[4] = { 0, 1, 2, 3 };
 
-    matrix_graph_t G;
-    G.vertex_count = 4;   // 结点数量
-    G.edge_count = 5;   // 弧(边)数量
-    G.kind = UDN;   // 类型:无向网
+    matrix_graph_t graph;
+    graph.vertex_count = 4; // 结点数量
+    graph.edge_count = 5;   // 弧(边)数量
+    graph.kind = UDN;       // 类型:无向网
 
-    // 结点信息写到G.vexs数组
+    // 结点信息写到graph.vertices数组
     for (int i = 0; i < sizeof(vertices) / sizeof(VERTEX_TYPE); i++) {
-        G.vertices[i] = vertices[i];
+        graph.vertex_array[i] = vertices[i];
     }
 
     // 弧(边)信息, 注意没有方向
@@ -77,10 +77,10 @@ void TestCreateUDNByEdgesAndVertices() {
     }
 
     // 建图, 如果成功则打印
-    Status status = CreateGraphByEdgesAndVertices(&G, arcCellArr, 5, vertices, 4, UDN);
+    Status status = CreateGraphByEdgesAndVertices(&graph, arcCellArr, 5, vertices, 4, UDN);
     if (status == OK) {
         printf("建图成功, 打印:\n\n");
-        status = PrintGraphMatrix(&G);
+        status = PrintGraphMatrix(&graph);
         if (status == OK) {
             printf("打印结束\n\n");
         }
@@ -140,7 +140,7 @@ void TestDFSTraverse() {
 
     // 结点信息写到G.vexs数组
     for (int i = 0; i < sizeof(vertices) / sizeof(VERTEX_TYPE); i++) {
-        G.vertices[i] = vertices[i];
+        G.vertex_array[i] = vertices[i];
     }
 
     // 弧(边)信息, 注意没有方向
@@ -218,7 +218,7 @@ void TestBFSTraverse() {
 
     // 结点信息写到G.vexs数组
     for (int i = 0; i < sizeof(vertices) / sizeof(VERTEX_TYPE); i++) {
-        G.vertices[i] = vertices[i];
+        G.vertex_array[i] = vertices[i];
     }
 
     // 弧(边)信息, 注意没有方向
@@ -249,68 +249,6 @@ void TestBFSTraverse() {
 }
 
 
-void TestBuildHeap() {
-    printf("\n");
-    printf("------------------------- CyberDash -------------------------\n");
-    printf("                        Test MinHeapBuildBySiftDown                       \n");
-    printf("                           测试建堆                           \n\n\n");
-
-    MST_t minSpanNodeArr;
-
-    edge_t minSpanNode1;
-    minSpanNode1.weight_type = DOUBLE;
-    minSpanNode1.weight.double_value = 0.4;
-    minSpanNode1.starting_vertex_idx = 0;
-    minSpanNode1.ending_vertex_idx = 1;
-
-    edge_t minSpanNode2;
-    minSpanNode2.weight_type = DOUBLE;
-    minSpanNode2.weight.double_value = 0.2;
-    minSpanNode2.starting_vertex_idx = 0;
-    minSpanNode2.ending_vertex_idx = 2;
-
-    edge_t minSpanNode3;
-    minSpanNode3.weight_type = DOUBLE;
-    minSpanNode3.weight.double_value = 0.5;
-    minSpanNode3.starting_vertex_idx = 1;
-    minSpanNode3.ending_vertex_idx = 2;
-
-    edge_t minSpanNode4;
-    minSpanNode4.weight_type = DOUBLE;
-    minSpanNode4.weight.double_value = 0.3;
-    minSpanNode4.starting_vertex_idx = 0;
-    minSpanNode4.ending_vertex_idx = 3;
-
-    edge_t minSpanNode5;
-    minSpanNode5.weight_type = DOUBLE;
-    minSpanNode5.weight.double_value = 0.1;
-    minSpanNode5.starting_vertex_idx = 1;
-    minSpanNode5.ending_vertex_idx = 3;
-
-    minSpanNodeArr[1] =  minSpanNode1;
-    minSpanNodeArr[2] =  minSpanNode2;
-    minSpanNodeArr[3] =  minSpanNode3;
-    minSpanNodeArr[4] =  minSpanNode4;
-    minSpanNodeArr[5] =  minSpanNode5;
-
-    printf("建堆前的最小生成树结点数组:\n");
-    for (int i = 1; i <= 5; i++) {
-        printf("%lf ", minSpanNodeArr[i].weight.double_value);
-    }
-    printf("\n");
-
-    MinHeapBuildBySiftDown(minSpanNodeArr, 5);
-
-    printf("建堆后的最小生成树结点数组:\n");
-    for (int i = 1; i <= 5; i++) {
-        printf("%lf ", minSpanNodeArr[i].weight.double_value);
-    }
-    printf("\n");
-
-    printf("-------------------- 抖音: cyberdash_yuan --------------------\n");
-}
-
-
 /*!
  * 测试(Prim)最小生成树
  */
@@ -331,7 +269,7 @@ void TestPrim() {
     // 构造adj_matrix数组,
     // 每个数组元素的weight_type设置为NO_EDGE
     for (int i = 0; i < graph.vertex_count; i++) {
-        graph.vertices[i] = vertices[i];
+        graph.vertex_array[i] = vertices[i];
 
         for (int j = 0; j < graph.vertex_count; j++) {
             graph.adj_matrix[i][j].weight_type = NO_EDGE;
@@ -381,7 +319,7 @@ void TestKruskal() {
     G.weight_type = DOUBLE;
 
     for (int i = 0; i < G.vertex_count; i++) {
-        G.vertices[i] = vertices[i];
+        G.vertex_array[i] = vertices[i];
 
         for (int j = 0; j < G.vertex_count; j++) {
             G.adj_matrix[i][j].weight_type = NO_EDGE;
@@ -461,7 +399,7 @@ void TestDijkstra() {
 
     // 对每个[i, j]进行初始化, 默认没有弧(边), 所有的弧(边)长为最大值
     for (int i = 0; i < G.vertex_count; i++) {
-        G.vertices[i] = vertices[i];
+        G.vertex_array[i] = vertices[i];
         for (int j = 0; j < G.vertex_count; j++) {
             G.adj_matrix[i][j].weight_type = DOUBLE;
             // G.adj_matrix[i][j].edge_info = (edge_t*)malloc(sizeof(edge_t));
@@ -552,7 +490,7 @@ void TestBellmanFord() {
     /*
     // 对每个[i, j]进行初始化, 默认没有弧(边), 所有的弧(边)长为最大值
     for (int i = 0; i < graph.vertex_count; i++) {
-        graph.vertices[i] = vertices[i];
+        graph.vertex_array[i] = vertex_array[i];
         for (int j = 0; j < graph.vertex_count; j++) {
             graph.adj_matrix[i][j].weight_type = NO_EDGE;
             // graph.adj_matrix[i][j].edge_info = (edge_t*)malloc(sizeof(edge_t));
@@ -642,7 +580,7 @@ void TestFloyd() {
 
     // 对每个[i, j]进行初始化, 默认没有弧(边), 所有的弧(边)长为最大值
     for (int i = 0; i < G.vertex_count; i++) {
-        G.vertices[i] = vertices[i];
+        G.vertex_array[i] = vertices[i];
         for (int j = 0; j < G.vertex_count; j++) {
             G.adj_matrix[i][j].weight_type = DOUBLE;
             // G.adj_matrix[i][j].edge_info = (edge_t*)malloc(sizeof(edge_t));

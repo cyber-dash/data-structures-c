@@ -13,8 +13,6 @@ int main() {
 
     TestBFSTraverse();
 
-    TestBuildHeap();
-
     TestPrim();
 
     TestKruskal();

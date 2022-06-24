@@ -48,8 +48,8 @@ typedef union {
 
 
 typedef struct edge_t {
-    int starting_vertex_idx;    //!< 起点索引
-    int ending_vertex_idx;      //!< 终点索引
+    int starting_vertex_index;    //!< 起点索引
+    int ending_vertex_index;      //!< 终点索引
     WEIGHT_TYPE weight_type;    //!< 边权值类型
     WEIGHT weight;              //!< 边权值
 } edge_t, path_t, adj_matrix_t[MAX_VERTEX_CNT][MAX_VERTEX_CNT], MST_t[MAX_VERTEX_CNT * MAX_VERTEX_CNT];

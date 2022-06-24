@@ -71,8 +71,8 @@ void TestCreateUDNByEdgesAndVertices() {
     for (int i = 0; i < sizeof(arcCellArr) / sizeof(edge_t); i++) {
         arcCellArr[i].weight_type = DOUBLE;
         // arcCellArr[i].edge_info = (edge_t*)malloc(sizeof(edge_t));
-        arcCellArr[i].starting_vertex_idx = startingVertexIndexArr[i];
-        arcCellArr[i].ending_vertex_idx = endingVertexIndexArr[i];
+        arcCellArr[i].starting_vertex_index = startingVertexIndexArr[i];
+        arcCellArr[i].ending_vertex_index = endingVertexIndexArr[i];
         arcCellArr[i].weight.double_value = weightArr[i];
     }
 
@@ -158,8 +158,8 @@ void TestDFSTraverse() {
     for (int i = 0; i < sizeof(arcCellArr) / sizeof(edge_t); i++) {
         arcCellArr[i].weight_type = DOUBLE;
         // arcCellArr[i].edge_info = (edge_t*)malloc(sizeof(edge_t));
-        arcCellArr[i].starting_vertex_idx = startingVertexIndexArr[i];
-        arcCellArr[i].ending_vertex_idx = endingVertexIndexArr[i];
+        arcCellArr[i].starting_vertex_index = startingVertexIndexArr[i];
+        arcCellArr[i].ending_vertex_index = endingVertexIndexArr[i];
         arcCellArr[i].weight.double_value = weightArr[i];
     }
 
@@ -235,8 +235,8 @@ void TestBFSTraverse() {
     edge_t edge_array[5];
     for (int i = 0; i < sizeof(edge_array) / sizeof(edge_t); i++) {
         edge_array[i].weight_type = DOUBLE;
-        edge_array[i].starting_vertex_idx = startingVertexIndexArr[i];
-        edge_array[i].ending_vertex_idx = endingVertexIndexArr[i];
+        edge_array[i].starting_vertex_index = startingVertexIndexArr[i];
+        edge_array[i].ending_vertex_index = endingVertexIndexArr[i];
         edge_array[i].weight.double_value = weightArr[i];
     }
 
@@ -286,8 +286,8 @@ void TestPrim() {
         int starting_vertex_idx = starting_vertex_idx_arr[i];
         int ending_vertex_idx = ending_vertex_idx_arr[i];
         graph.adj_matrix[starting_vertex_idx][ending_vertex_idx].weight_type = DOUBLE;
-        graph.adj_matrix[starting_vertex_idx][ending_vertex_idx].starting_vertex_idx = starting_vertex_idx;
-        graph.adj_matrix[starting_vertex_idx][ending_vertex_idx].ending_vertex_idx = ending_vertex_idx;
+        graph.adj_matrix[starting_vertex_idx][ending_vertex_idx].starting_vertex_index = starting_vertex_idx;
+        graph.adj_matrix[starting_vertex_idx][ending_vertex_idx].ending_vertex_index = ending_vertex_idx;
         graph.adj_matrix[starting_vertex_idx][ending_vertex_idx].weight.double_value = weight_arr[i];
     }
 
@@ -327,8 +327,8 @@ void TestKruskal() {
     edge_t edge_array[5];
     for (int i = 0; i < edge_count; i++) {
         edge_array[i].weight_type = DOUBLE;
-        edge_array[i].starting_vertex_idx = starting_vertex_index_array[i];
-        edge_array[i].ending_vertex_idx = ending_vertex_index_array[i];
+        edge_array[i].starting_vertex_index = starting_vertex_index_array[i];
+        edge_array[i].ending_vertex_index = ending_vertex_index_array[i];
         edge_array[i].weight.double_value = weight_array[i];
     }
 
@@ -392,8 +392,8 @@ void TestDijkstra() {
         for (int j = 0; j < G.vertex_count; j++) {
             G.adj_matrix[i][j].weight_type = DOUBLE;
             // G.adj_matrix[i][j].edge_info = (edge_t*)malloc(sizeof(edge_t));
-            G.adj_matrix[i][j].starting_vertex_idx = i;
-            G.adj_matrix[i][j].ending_vertex_idx = j;
+            G.adj_matrix[i][j].starting_vertex_index = i;
+            G.adj_matrix[i][j].ending_vertex_index = j;
             G.adj_matrix[i][j].weight.double_value = DBL_MAX;
         }
     }
@@ -401,8 +401,8 @@ void TestDijkstra() {
     for (int i = 0; i < G.edge_count; i++) {
         int curRowIdx = startingVertexIndexArr[i];
         int curColIdx = endingVertexIndexArr[i];
-        G.adj_matrix[curRowIdx][curColIdx].starting_vertex_idx = startingVertexIndexArr[i];
-        G.adj_matrix[curRowIdx][curColIdx].ending_vertex_idx = endingVertexIndexArr[i];
+        G.adj_matrix[curRowIdx][curColIdx].starting_vertex_index = startingVertexIndexArr[i];
+        G.adj_matrix[curRowIdx][curColIdx].ending_vertex_index = endingVertexIndexArr[i];
         G.adj_matrix[curRowIdx][curColIdx].weight.double_value = weightArr[i];
     }
 
@@ -415,8 +415,8 @@ void TestDijkstra() {
         D[i].weight_type = DOUBLE;
         // D[i].edge_info = (edge_t*)malloc(sizeof(edge_t));
 
-        D[i].starting_vertex_idx = 0;
-        D[i].ending_vertex_idx = i;
+        D[i].starting_vertex_index = 0;
+        D[i].ending_vertex_index = i;
         D[i].weight.double_value = DBL_MAX;
     }
 
@@ -473,8 +473,8 @@ void TestBellmanFord() {
     edge_t edge_array[9];
     for (int i = 0; i < edge_count; i++) {
         edge_array[i].weight_type = DOUBLE;
-        edge_array[i].starting_vertex_idx = starting_vertex_index_array[i];
-        edge_array[i].ending_vertex_idx = ending_vertex_index_array[i];
+        edge_array[i].starting_vertex_index = starting_vertex_index_array[i];
+        edge_array[i].ending_vertex_index = ending_vertex_index_array[i];
         edge_array[i].weight.double_value = weight_array[i];
     }
 
@@ -538,14 +538,14 @@ void TestFloyd() {
         for (int j = 0; j < G.vertex_count; j++) {
             G.adj_matrix[i][j].weight_type = DOUBLE;
             // G.adj_matrix[i][j].edge_info = (edge_t*)malloc(sizeof(edge_t));
-            G.adj_matrix[i][j].starting_vertex_idx = i;
-            G.adj_matrix[i][j].ending_vertex_idx = j;
+            G.adj_matrix[i][j].starting_vertex_index = i;
+            G.adj_matrix[i][j].ending_vertex_index = j;
             G.adj_matrix[i][j].weight.double_value = DBL_MAX;
 
             G.adj_matrix[j][i].weight_type = DOUBLE;
             // G.adj_matrix[j][i].edge_info = (edge_t*)malloc(sizeof(edge_t));
-            G.adj_matrix[j][i].starting_vertex_idx = j;
-            G.adj_matrix[j][i].ending_vertex_idx = i;
+            G.adj_matrix[j][i].starting_vertex_index = j;
+            G.adj_matrix[j][i].ending_vertex_index = i;
             G.adj_matrix[j][i].weight.double_value = DBL_MAX;
         }
     }
@@ -554,12 +554,12 @@ void TestFloyd() {
         int row_idx = starting_vertex_index_arr[i];
         int col_idx = ending_vertex_index_arr[i];
 
-        G.adj_matrix[row_idx][col_idx].starting_vertex_idx = row_idx;
-        G.adj_matrix[row_idx][col_idx].ending_vertex_idx = col_idx;
+        G.adj_matrix[row_idx][col_idx].starting_vertex_index = row_idx;
+        G.adj_matrix[row_idx][col_idx].ending_vertex_index = col_idx;
         G.adj_matrix[row_idx][col_idx].weight.double_value = weight_arr[i];
 
-        G.adj_matrix[col_idx][row_idx].starting_vertex_idx = col_idx;
-        G.adj_matrix[col_idx][row_idx].ending_vertex_idx = row_idx;
+        G.adj_matrix[col_idx][row_idx].starting_vertex_index = col_idx;
+        G.adj_matrix[col_idx][row_idx].ending_vertex_index = row_idx;
         G.adj_matrix[col_idx][row_idx].weight.double_value = weight_arr[i];
     }
 

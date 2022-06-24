@@ -12,14 +12,14 @@
  * 获取结点vertex的索引
  * @param graph 图
  * @param vertex 结点
- * @param vertex_idx 索引(int指针)
+ * @param vertex_index 索引(int指针)
  * @return 是否成功
  * @note
  */
-Status LocateVertex(matrix_graph_t graph, VERTEX_TYPE vertex, int* vertex_idx) {
-    for (int cur_vertex_idx = 0; cur_vertex_idx < graph.vertex_count; cur_vertex_idx++) {
-        if (graph.vertex_array[cur_vertex_idx] == vertex) {
-            *vertex_idx = cur_vertex_idx;
+Status LocateVertex(matrix_graph_t graph, VERTEX_TYPE vertex, int* vertex_index) {
+    for (int i = 0; i < graph.vertex_count; i++) {
+        if (graph.vertex_array[i] == vertex) {
+            *vertex_index = i;
             return OK;
         }
     }
@@ -31,18 +31,16 @@ Status LocateVertex(matrix_graph_t graph, VERTEX_TYPE vertex, int* vertex_idx) {
 /*!
  * 获取某结点在图G中的第一个邻接节点的索引
  * @param graph 图(指针)
- * @param vertex_idx 结点索引
+ * @param vertex_index 结点索引
  * @return 第一个邻接节点的索引
  * @note
  *  成功: 返回索引值
  *  失败: 返回 -1
  */
-int FirstAdjVertexIdx(matrix_graph_t* graph, int vertex_idx) {
-    for (int cur_vertex_idx = 0; cur_vertex_idx < graph->vertex_count; cur_vertex_idx++) {
-        if (cur_vertex_idx != vertex_idx &&
-            graph->adj_matrix[vertex_idx][cur_vertex_idx].weight_type != NO_EDGE)
-        {
-            return cur_vertex_idx;
+int FirstAdjVertexIdx(matrix_graph_t* graph, int vertex_index) {
+    for (int i = 0; i < graph->vertex_count; i++) {
+        if (i != vertex_index && graph->adj_matrix[vertex_index][i].weight_type != NO_EDGE) {
+            return i;
         }
     }
 
@@ -53,26 +51,21 @@ int FirstAdjVertexIdx(matrix_graph_t* graph, int vertex_idx) {
 /*!
  * 结点(索引)v在图G中的, 结点(索引)w之外第一个(索引)邻接节点
  * @param graph 图指针
- * @param vertex_idx 节点索引v
+ * @param vertex_index 节点索引v
  * @param first_adj_vertex_idx 节点索引v的一个邻接节点索引w
  * @return 下一个邻接结点的索引
  * @note
  *  成功: 返回索引值
  *  失败: 返回 -1
  */
-int NextAdjVertexIdx(matrix_graph_t* graph, int vertex_idx, int first_adj_vertex_idx) {
+int NextAdjVertexIdx(matrix_graph_t* graph, int vertex_index, int first_adj_vertex_idx) {
     if (first_adj_vertex_idx == graph->vertex_count - 1) {
         return -1;
     }
 
-    for (int cur_vertex_idx = first_adj_vertex_idx + 1;
-         cur_vertex_idx < graph->vertex_count;
-         cur_vertex_idx++)
-    {
-        if (cur_vertex_idx != vertex_idx &&
-            graph->adj_matrix[vertex_idx][cur_vertex_idx].weight_type != NO_EDGE)
-        {
-            return cur_vertex_idx;
+    for (int i = first_adj_vertex_idx + 1; i < graph->vertex_count; i++) {
+        if (i != vertex_index && graph->adj_matrix[vertex_index][i].weight_type != NO_EDGE) {
+            return i;
         }
     }
 
@@ -101,8 +94,8 @@ edge_t* FirstEdge(matrix_graph_t* graph, int vertex_idx) {
  */
 edge_t* NextEdge(matrix_graph_t* graph, int vertex_idx, edge_t* edge) {
 
-    for (int i = edge->ending_vertex_idx + 1; i < graph->vertex_count; i++) {
-        if (graph->weight_type == NO_EDGE /*&& graph->adj_matrix[vertex_idx][i].weight.double_value != DBL_MAX */) {
+    for (int i = edge->ending_vertex_index + 1; i < graph->vertex_count; i++) {
+        if (graph->weight_type == NO_EDGE) {
             return &graph->adj_matrix[vertex_idx][i];
         }
     }
@@ -147,14 +140,14 @@ Status CreateGraphByEdgesAndVertices(matrix_graph_t* graph,
 
         // 矩阵元素初始化NO_EDGE
         for (int j = 0; j < graph->vertex_count; ++j) {
-            graph->adj_matrix[i][j].starting_vertex_idx = i; //! 弧(边)的起始结点索引
-            graph->adj_matrix[i][j].ending_vertex_idx = j;   //! 弧(边)的终点结点索引
+            graph->adj_matrix[i][j].starting_vertex_index = i;      //! 弧(边)的起始结点索引
+            graph->adj_matrix[i][j].ending_vertex_index = j;        //! 弧(边)的终点结点索引
 
             if (i == j ) {
-                graph->adj_matrix[i][j].weight_type = DOUBLE;    //! 弧(边)权值类型
+                graph->adj_matrix[i][j].weight_type = DOUBLE;       //! 弧(边)权值类型 todo: 可以放到参数, 有兴趣自己实现:-)
                 graph->adj_matrix[i][j].weight.double_value = 0;
             } else {
-                graph->adj_matrix[i][j].weight_type = NO_EDGE;    //! 弧(边)权值类型
+                graph->adj_matrix[i][j].weight_type = NO_EDGE;      //! 弧(边)权值类型
             }
         }
     }
@@ -162,8 +155,8 @@ Status CreateGraphByEdgesAndVertices(matrix_graph_t* graph,
     //! 使用edge_arr填充adj_matrix中对应的结点数据
     for (int i = 0; i < edge_cnt; ++i) {
 
-        int u = edge_arr[i].starting_vertex_idx;
-        int v = edge_arr[i].ending_vertex_idx;
+        int u = edge_arr[i].starting_vertex_index;
+        int v = edge_arr[i].ending_vertex_index;
 
         //! 边: u --> v
         graph->adj_matrix[u][v] = edge_arr[i];
@@ -173,8 +166,8 @@ Status CreateGraphByEdgesAndVertices(matrix_graph_t* graph,
         if (graph->kind == UDN || graph->kind == UDG) {
             //! 边: v --> u
             graph->adj_matrix[v][u] = edge_arr[i];
-            graph->adj_matrix[v][u].starting_vertex_idx = edge_arr[i].ending_vertex_idx;
-            graph->adj_matrix[v][u].ending_vertex_idx = edge_arr[i].starting_vertex_idx;
+            graph->adj_matrix[v][u].starting_vertex_index = edge_arr[i].ending_vertex_index;
+            graph->adj_matrix[v][u].ending_vertex_index = edge_arr[i].starting_vertex_index;
         }
 
         // 图边信息数组赋值
@@ -185,14 +178,11 @@ Status CreateGraphByEdgesAndVertices(matrix_graph_t* graph,
 }
 
 
-/*
-// 使用弧信息数组构造无向网
-Status CreateGraphByEdgesAndVertices(matrix_graph_t *graph, edge_t *arcCellArr, int vertexNum, int arcNum) {
-
-}
+/*!
+ * 打印图邻接矩阵
+ * @param graph 图(指针)
+ * @return 执行结果
  */
-
-
 Status PrintGraphMatrix(matrix_graph_t* graph) {
     for (int i = 0; i < graph->vertex_count; i++) {
         for (int j = 0; j < graph->vertex_count; j++) {

@@ -156,7 +156,7 @@ void Prim(matrix_graph_t* graph, edge_t* min_span_tree) {
 
         min_span_tree[in_vertex_set_cnt - 1] = cur_mst_edge;
 
-        vertex_set[in_vertex_set_cnt] = cur_mst_edge.ending_vertex_idx;
+        vertex_set[in_vertex_set_cnt] = cur_mst_edge.ending_vertex_index;
         in_vertex_set_cnt++;
     }
 }
@@ -197,8 +197,8 @@ void Kruskal(matrix_graph_t* graph, edge_t* min_span_tree) {
         MinPriorityQueuePop(&min_priority_queue, &cur_mst_item);
 
         // 队头对应的最短边起点/终点对应的并查集根索引
-        int cur_starting_root_index = DisjointSetFindRecursive(&disjoint_set, cur_mst_item.starting_vertex_idx);
-        int cur_ending_root_index = DisjointSetFindRecursive(&disjoint_set, cur_mst_item.ending_vertex_idx);
+        int cur_starting_root_index = DisjointSetFindRecursive(&disjoint_set, cur_mst_item.starting_vertex_index);
+        int cur_ending_root_index = DisjointSetFindRecursive(&disjoint_set, cur_mst_item.ending_vertex_index);
 
         // 如果:起点根索引 不等于 终点根索引, 则
         if (cur_starting_root_index != cur_ending_root_index) {
@@ -223,8 +223,8 @@ void PrintMinSpanTree(MST_t min_span_tree, int size) {
         edge_t cur = min_span_tree[i];
 
         printf("起始点: %d, 终点: %d, 距离: %lf\n",
-               cur.starting_vertex_idx,
-               cur.ending_vertex_idx,
+               cur.starting_vertex_index,
+               cur.ending_vertex_index,
                cur.weight.double_value);
     }
 }
@@ -346,8 +346,8 @@ int BellmanFord(matrix_graph_t* graph,
     for (int i = 0; i < graph->vertex_count - 1; i++) {
         // 遍历 "图边数" 次
         for (int j = 0; j < graph->edge_count; j++) {
-            int u = graph->edge_array[j].starting_vertex_idx;
-            int v = graph->edge_array[j].ending_vertex_idx;
+            int u = graph->edge_array[j].starting_vertex_index;
+            int v = graph->edge_array[j].ending_vertex_index;
 
             // 松弛
             if (distance[u].weight.double_value + graph->adj_matrix[u][v].weight.double_value
@@ -380,8 +380,8 @@ int BellmanFord(matrix_graph_t* graph,
      */
 
     for (int i = 0; i < graph->edge_count; i++) {
-        int cur_starting_vertex_index = graph->edge_array[i].starting_vertex_idx;
-        int cur_ending_vertex_index = graph->edge_array[i].ending_vertex_idx;
+        int cur_starting_vertex_index = graph->edge_array[i].starting_vertex_index;
+        int cur_ending_vertex_index = graph->edge_array[i].ending_vertex_index;
 
         if (distance[cur_starting_vertex_index].weight.double_value
             +

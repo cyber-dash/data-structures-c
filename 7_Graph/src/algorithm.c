@@ -103,10 +103,9 @@ void BFSTraverse(matrix_graph_t graph, Status (*Visit)(matrix_graph_t*, int)) {
 
 
 /*!
- *
- * @param graph
- * @param v0
- * @param min_span_tree
+ * Prim最小生成树算法
+ * @param graph 图(指针)
+ * @param min_span_tree 最小生成树(数组)
  */
 void Prim(matrix_graph_t* graph, edge_t* min_span_tree) {
     int vertex_count = graph->vertex_count;
@@ -141,7 +140,9 @@ void Prim(matrix_graph_t* graph, edge_t* min_span_tree) {
                 }
 
                 // 如果cur_starting_vertex_idx == j, 或者边(cur_starting_vertex_idx == j, j)不存在, continue
-                if (cur_starting_vertex_idx == j || graph->adj_matrix[cur_starting_vertex_idx][j].weight_type == NO_EDGE) {
+                if (cur_starting_vertex_idx == j ||
+                    graph->adj_matrix[cur_starting_vertex_idx][j].weight_type == NO_EDGE)
+                {
                     continue;
                 }
 
@@ -152,15 +153,20 @@ void Prim(matrix_graph_t* graph, edge_t* min_span_tree) {
 
         edge_t cur_mst_edge;
         MinPriorityQueuePop(&min_priority_queue, &cur_mst_edge);
+
         min_span_tree[in_vertex_set_cnt - 1] = cur_mst_edge;
 
         vertex_set[in_vertex_set_cnt] = cur_mst_edge.ending_vertex_idx;
-
         in_vertex_set_cnt++;
     }
 }
 
 
+/*!
+ * Kruskal最小生成树
+ * @param graph 图(指针)
+ * @param min_span_tree 最小生成树(数组)
+ */
 void Kruskal(matrix_graph_t* graph, edge_t* min_span_tree) {
 
     // 初始化最小优先队列, 容量 = 图边数
@@ -173,22 +179,14 @@ void Kruskal(matrix_graph_t* graph, edge_t* min_span_tree) {
 
     // 将所有边插入到最小优先队列
     for (int i = 0; i < graph->vertex_count; i++) {
-        for (int j = 0; j < graph->vertex_count; j++) {
+        for (int j = i + 1; j < graph->vertex_count; j++) {
             if (graph->adj_matrix[i][j].weight_type == NO_EDGE) {
                 continue;
             }
 
-            edge_t mst_node = graph->adj_matrix[i][j];
-
-            MinPriorityQueuePush(&min_priority_queue, mst_node);
+            MinPriorityQueuePush(&min_priority_queue, graph->adj_matrix[i][j]);
         }
     }
-
-    /*
-    for (int i = 0; i < graph->edge_count; i++) {
-        MinPriorityQueuePush(&min_priority_queue, graph->edge_array[i]);
-    }
-     */
 
     // --- 此时, 所有的边都已经进入小顶堆, 执行Kruskal算法核心流程 ---
 
@@ -215,9 +213,12 @@ void Kruskal(matrix_graph_t* graph, edge_t* min_span_tree) {
 }
 
 
-// 打印最小生成树
+/*!
+ * 打印最小生成树
+ * @param min_span_tree 最小生成树(数组)
+ * @param size 边数量
+ */
 void PrintMinSpanTree(MST_t min_span_tree, int size) {
-
     for (int i = 0; i < size; i++) {
         edge_t cur = min_span_tree[i];
 

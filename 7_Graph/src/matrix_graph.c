@@ -83,7 +83,7 @@ int NextAdjVertexIdx(matrix_graph_t* graph, int vertex_idx, int first_adj_vertex
 // 获取结点的第一条弧(边)
 edge_t* FirstEdge(matrix_graph_t* graph, int vertex_idx) {
     for (int i = 0; i < graph->vertex_count; i++) {
-        if (graph->weight_type != NO_EDGE /*&& graph->adj_matrix[vertex_idx][i].weight.double_value != DBL_MAX*/) {
+        if (graph->weight_type != NO_EDGE) {
             return &graph->adj_matrix[vertex_idx][i];
         }
     }
@@ -155,7 +155,6 @@ Status CreateGraphByEdgesAndVertices(matrix_graph_t* graph,
                 graph->adj_matrix[i][j].weight.double_value = 0;
             } else {
                 graph->adj_matrix[i][j].weight_type = NO_EDGE;    //! 弧(边)权值类型
-                // graph->adj_matrix[i][j].weight.double_value = DBL_MAX;
             }
         }
     }

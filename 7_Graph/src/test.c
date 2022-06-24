@@ -232,13 +232,12 @@ void TestBFSTraverse() {
     double weightArr[5] = { 0.1, 0.12, 0.2, 0.14, 0.05 }; // 权重
 
     // 使用起点(索引)数组, 终点(索引)数组, 权重数组, 构造弧(边)数组
-    edge_t arcCellArr[5];
-    for (int i = 0; i < sizeof(arcCellArr) / sizeof(edge_t); i++) {
-        arcCellArr[i].weight_type = DOUBLE;
-        // arcCellArr[i].edge_info = (edge_t*)malloc(sizeof(edge_t));
-        arcCellArr[i].starting_vertex_idx = startingVertexIndexArr[i];
-        arcCellArr[i].ending_vertex_idx = endingVertexIndexArr[i];
-        arcCellArr[i].weight.double_value = weightArr[i];
+    edge_t edge_array[5];
+    for (int i = 0; i < sizeof(edge_array) / sizeof(edge_t); i++) {
+        edge_array[i].weight_type = DOUBLE;
+        edge_array[i].starting_vertex_idx = startingVertexIndexArr[i];
+        edge_array[i].ending_vertex_idx = endingVertexIndexArr[i];
+        edge_array[i].weight.double_value = weightArr[i];
     }
 
     printf("广度优先遍历:\n");
@@ -319,22 +318,7 @@ void TestKruskal() {
 
     VERTEX_TYPE vertex_array[4] = { 0, 1, 2, 3 };
 
-    /*
-    for (int i = 0; i < vertex_count; i++) {
-        graph.vertex_array[i] = vertex_array[i];
-
-        for (int j = 0; j < vertex_count; j++) {
-            graph.adj_matrix[i][j].weight_type = NO_EDGE;
-            graph.adj_matrix[i][j].weight.double_value = DBL_MAX;
-        }
-    }
-     */
-
-    // 0 - 1: 0.1
-    // 0 - 2: 0.12
-    // 1 - 2: 0.01
-    // 1 - 3: 0.14
-    // 2 - 3: 0.05
+    // 0 - 1: 0.1, 0 - 2: 0.12, 1 - 2: 0.01, 1 - 3: 0.14, 2 - 3: 0.05
     int starting_vertex_index_array[5] = {0, 0, 1, 1, 2 }; // 起点
     int ending_vertex_index_array[5] = {1, 2, 2, 3, 3 };   // 终点
     double weight_array[5] = {0.1, 0.12, 0.01, 0.14, 0.05 }; // 权重

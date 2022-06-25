@@ -15,6 +15,7 @@
 Status InitDisjointSet(DisjointSet* disjoint_set, int size) {
     disjoint_set->size = size;
     disjoint_set->parent_index_array = (int*)malloc(size * sizeof(int));
+    // disjoint_set->parent_index_array = (int*)malloc(MAX_EDGE_CNT * sizeof(int));
     if (!disjoint_set->parent_index_array) {
         return NON_ALLOCATED;
     }
@@ -64,9 +65,12 @@ Status DisjointSetUnion(DisjointSet* disjoint_set, int node1, int node2) {
  * @return 根结点索引
  */
 int DisjointSetFindRecursive(DisjointSet* disjoint_set, int index) {
-    if (disjoint_set->parent_index_array[index] < 0) {
+    int parent_index = disjoint_set->parent_index_array[index];
+    // if (disjoint_set->parent_index_array[index] < 0) {
+    if (parent_index < 0) {
         return index;
     }
 
-    return DisjointSetFindRecursive(disjoint_set, disjoint_set->parent_index_array[index]);
+    // return DisjointSetFindRecursive(disjoint_set, disjoint_set->parent_index_array[index]);
+    return DisjointSetFindRecursive(disjoint_set, parent_index);
 }

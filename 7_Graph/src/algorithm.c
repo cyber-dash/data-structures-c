@@ -4,6 +4,7 @@
 
 #include <stdlib.h>
 #include <limits.h>
+#include <string.h>
 #include <float.h>
 #include "algorithm.h"
 #include "queue.h"
@@ -173,9 +174,9 @@ void Kruskal(matrix_graph_t* graph, edge_t* min_span_tree) {
     MinPriorityQueue min_priority_queue;
     MinPriorityQueueInit(&min_priority_queue, graph->edge_count);
 
-    // 初始化并查集, 容量 = 图结点数
+    // 初始化并查集, 容量 = 图边数
     DisjointSet disjoint_set;
-    InitDisjointSet(&disjoint_set, graph->vertex_count);
+    InitDisjointSet(&disjoint_set, graph->edge_count);
 
     // 将所有边插入到最小优先队列
     for (int i = 0; i < graph->vertex_count; i++) {
@@ -196,9 +197,15 @@ void Kruskal(matrix_graph_t* graph, edge_t* min_span_tree) {
         edge_t cur_mst_item;
         MinPriorityQueuePop(&min_priority_queue, &cur_mst_item);
 
+        printf("cur_mst_item.starting_vertex_index: %d, cur_mst_item.ending_vertex_index: %d\n",
+               cur_mst_item.starting_vertex_index, cur_mst_item.ending_vertex_index);
+
         // 队头对应的最短边起点/终点对应的并查集根索引
         int cur_starting_root_index = DisjointSetFindRecursive(&disjoint_set, cur_mst_item.starting_vertex_index);
         int cur_ending_root_index = DisjointSetFindRecursive(&disjoint_set, cur_mst_item.ending_vertex_index);
+
+        printf("cur_starting_root_index: %d, cur_ending_root_index: %d\n",
+               cur_starting_root_index, cur_ending_root_index);
 
         // 如果:起点根索引 不等于 终点根索引, 则
         if (cur_starting_root_index != cur_ending_root_index) {
@@ -210,6 +217,8 @@ void Kruskal(matrix_graph_t* graph, edge_t* min_span_tree) {
             index++;
         }
     }
+
+    int a = 0;
 }
 
 
@@ -222,11 +231,13 @@ void PrintMinSpanTree(MST_t min_span_tree, int size) {
     for (int i = 0; i < size; i++) {
         edge_t cur = min_span_tree[i];
 
-        printf("起始点: %d, 终点: %d, 距离: %lf\n",
+        printf("starting_vertex %d ending_vertex %d dist %lf\n",
                cur.starting_vertex_index,
                cur.ending_vertex_index,
                cur.weight.double_value);
     }
+
+    printf("\n");
 }
 
 

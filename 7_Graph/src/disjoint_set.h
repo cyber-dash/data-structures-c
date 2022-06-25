@@ -11,7 +11,7 @@
 
 #define ROOT_PARENT_INDEX   -1
 
-typedef struct {
+typedef struct DisjointSet {
     int size; //!< 大小
     int* parent_index_array; //!< 父节点数组
 } DisjointSet;

@@ -28,6 +28,7 @@ Status DisjointSetUnion(DisjointSet* disjoint_set, int root1, int root2);
 // 查找
 int DisjointSetFindRecursive(DisjointSet* disjoint_set, int index);
 
+int DisjointSetFind(DisjointSet* disjoint_set, int index);
 /*
 // 合并集合(Weighted)
 void WeightedUnion(int node1, int node2);

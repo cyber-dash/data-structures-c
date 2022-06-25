@@ -21,7 +21,7 @@ Status InitDisjointSet(DisjointSet* disjoint_set, int size) {
     }
 
     for (int i = 0; i < size; i++) {
-        disjoint_set->parent_index_array[i] = ROOT_PARENT_INDEX;
+        disjoint_set->parent_index_array[i] = -1;
     }
 
     return OK;
@@ -46,6 +46,12 @@ Status DisjointSetDestroy(DisjointSet** disjoint_set) {
 Status DisjointSetUnion(DisjointSet* disjoint_set, int node1, int node2) {
     int root1 = DisjointSetFindRecursive(disjoint_set, node1);
     int root2 = DisjointSetFindRecursive(disjoint_set, node2);
+    // int root1 = DisjointSetFind(disjoint_set, node1);
+    // int root2 = DisjointSetFind(disjoint_set, node2);
+
+    if (root1 < 0 || root2 < 0) {
+        return ERROR;
+    }
 
     if (root1 == root2) {   // 不需要合并
         return OK;
@@ -73,4 +79,23 @@ int DisjointSetFindRecursive(DisjointSet* disjoint_set, int index) {
 
     // return DisjointSetFindRecursive(disjoint_set, disjoint_set->parent_index_array[index]);
     return DisjointSetFindRecursive(disjoint_set, parent_index);
+}
+
+
+/*
+int DisjointSet::FindNonRecursive(int value) {
+
+    while (parent_[value] >= 0) {
+        value = parent_[value];
+    }
+
+    return value;
+}
+ */
+int DisjointSetFind(DisjointSet* disjoint_set, int index) {
+    while (disjoint_set->parent_index_array[index] >= 0) {
+        index = disjoint_set->parent_index_array[index];
+    }
+
+    return index;
 }

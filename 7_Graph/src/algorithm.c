@@ -231,10 +231,15 @@ void PrintMinSpanTree(MST_t min_span_tree, int size) {
     for (int i = 0; i < size; i++) {
         edge_t cur = min_span_tree[i];
 
-        printf("starting_vertex %d ending_vertex %d dist %lf\n",
+        /*
+            printf("starting_vertex %d ending_vertex %d dist %f\n",
+                   cur.starting_vertex_index,
+                   cur.ending_vertex_index,
+                   cur.weight.double_value);
+                   */
+        printf("starting_vertex: %d, ending_vertex: %d\n",
                cur.starting_vertex_index,
-               cur.ending_vertex_index,
-               cur.weight.double_value);
+               cur.ending_vertex_index);
     }
 
     printf("\n");

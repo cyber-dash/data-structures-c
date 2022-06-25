@@ -338,8 +338,8 @@ void TestKruskal() {
     MST_t min_span_tree;
     Kruskal(&graph, min_span_tree);
 
-    // printf("最小生成树: \n");
-    //PrintMinSpanTree(min_span_tree, graph.vertex_count - 1);
+    printf("最小生成树: \n");
+    PrintMinSpanTree(min_span_tree, graph.vertex_count - 1);
 
     printf("-------------------- 抖音: cyberdash_yuan --------------------\n");
 }

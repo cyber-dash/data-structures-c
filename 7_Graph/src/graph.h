@@ -6,7 +6,8 @@
 #define CYBER_DASH_COMMON_H
 
 
-#define MAX_VERTEX_CNT  50  //!< 最大顶点个数
+#define MAX_VERTEX_CNT  10  //!< 最大顶点数
+#define MAX_EDGE_CNT    30  //!< 最大边数
 #define VERTEX_TYPE	    int //!< 结点类型
 
 #define FALSE   0
@@ -48,11 +49,11 @@ typedef union {
 
 
 typedef struct edge_t {
-    int starting_vertex_idx;    //!< 起点索引
-    int ending_vertex_idx;      //!< 终点索引
+    int starting_vertex_index;    //!< 起点索引
+    int ending_vertex_index;      //!< 终点索引
     WEIGHT_TYPE weight_type;    //!< 边权值类型
     WEIGHT weight;              //!< 边权值
-} edge_t, path_t, adj_matrix_t[MAX_VERTEX_CNT][MAX_VERTEX_CNT], MST_t[MAX_VERTEX_CNT * MAX_VERTEX_CNT];
+} edge_t, path_t, adj_matrix_t[MAX_VERTEX_CNT][MAX_VERTEX_CNT], MST_t[MAX_EDGE_CNT];
 
 
 
@@ -68,7 +69,7 @@ typedef struct {
     WEIGHT_TYPE     weight_type;                                   //!< 边权值类型
 
     VERTEX_TYPE     vertex_array[MAX_VERTEX_CNT];                  //!< 顶点集合(数组)
-    edge_t          edge_array[MAX_VERTEX_CNT * MAX_VERTEX_CNT];   //!< 边集合(数组)
+    edge_t          edge_array[MAX_EDGE_CNT];   //!< 边集合(数组)
     adj_matrix_t	adj_matrix;                                    //!< 邻接矩阵
 
 } matrix_graph_t;

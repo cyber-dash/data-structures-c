@@ -166,5 +166,7 @@ Status MinPriorityQueuePop(MinPriorityQueue* min_priority_queue, edge_t* item) {
     min_priority_queue->size--;
 
     MinHeapSiftDown(min_priority_queue->mst_item_array, 1, min_priority_queue->size);
+
+    return OK;
 }
 

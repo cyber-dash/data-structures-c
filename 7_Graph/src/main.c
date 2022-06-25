@@ -7,6 +7,7 @@
 
 int main() {
 
+    /*
     TestCreateUDNByEdgesAndVertices();
 
     TestDFSTraverse();
@@ -15,13 +16,16 @@ int main() {
 
     TestPrim();
 
+    */
     TestKruskal();
 
+    /*
     TestDijkstra();
 
     TestBellmanFord();
 
     TestFloyd();
+     */
 
     return 0;
 }

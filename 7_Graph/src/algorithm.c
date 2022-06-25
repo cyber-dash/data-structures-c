@@ -46,13 +46,13 @@ void DFSTraverse(matrix_graph_t graph, Status (*Visit)(int v)) {
 
 
 // todo: Visit函数写到参数
-void DFSRecursive(matrix_graph_t graph, int starting_vertex_idx, int* visited) {
-    visited[starting_vertex_idx] = 1;
-    Visit(&graph, starting_vertex_idx);   // 访问索引starting_vertex_idx的顶点
+void DFSRecursive(matrix_graph_t graph, int starting_vertex_index, int* visited) {
+    visited[starting_vertex_index] = 1;
+    Visit(&graph, starting_vertex_index);   // 访问索引starting_vertex_idx的顶点
 
-    for (int vertex_idx = FirstAdjVertexIdx(&graph, starting_vertex_idx);
+    for (int vertex_idx = FirstAdjVertexIdx(&graph, starting_vertex_index);
          vertex_idx >= 0;
-         vertex_idx = NextAdjVertexIdx(&graph, starting_vertex_idx, vertex_idx))
+         vertex_idx = NextAdjVertexIdx(&graph, starting_vertex_index, vertex_idx))
     {
         if (!visited[vertex_idx]) {
             DFSRecursive(graph, vertex_idx, visited);
@@ -156,7 +156,7 @@ void Prim(matrix_graph_t* graph, edge_t* min_span_tree) {
 
         min_span_tree[in_vertex_set_cnt - 1] = cur_mst_edge;
 
-        vertex_set[in_vertex_set_cnt] = cur_mst_edge.ending_vertex_idx;
+        vertex_set[in_vertex_set_cnt] = cur_mst_edge.ending_vertex_index;
         in_vertex_set_cnt++;
     }
 }
@@ -197,8 +197,8 @@ void Kruskal(matrix_graph_t* graph, edge_t* min_span_tree) {
         MinPriorityQueuePop(&min_priority_queue, &cur_mst_item);
 
         // 队头对应的最短边起点/终点对应的并查集根索引
-        int cur_starting_root_index = DisjointSetFindRecursive(&disjoint_set, cur_mst_item.starting_vertex_idx);
-        int cur_ending_root_index = DisjointSetFindRecursive(&disjoint_set, cur_mst_item.ending_vertex_idx);
+        int cur_starting_root_index = DisjointSetFindRecursive(&disjoint_set, cur_mst_item.starting_vertex_index);
+        int cur_ending_root_index = DisjointSetFindRecursive(&disjoint_set, cur_mst_item.ending_vertex_index);
 
         // 如果:起点根索引 不等于 终点根索引, 则
         if (cur_starting_root_index != cur_ending_root_index) {
@@ -223,71 +223,91 @@ void PrintMinSpanTree(MST_t min_span_tree, int size) {
         edge_t cur = min_span_tree[i];
 
         printf("起始点: %d, 终点: %d, 距离: %lf\n",
-               cur.starting_vertex_idx,
-               cur.ending_vertex_idx,
+               cur.starting_vertex_index,
+               cur.ending_vertex_index,
                cur.weight.double_value);
     }
 }
 
 
+
 /*!
  * 迪杰斯特拉(Dijkstra)最短路径
- * @param graph
- * @param v0
- * @param predecessor
- * @param distance
+ * @param graph 图(指针)
+ * @param starting_vertex_index 起点索引
+ * @param predecessor 前驱数组
+ * @param distance 最短路径数组
  * @note
- * predecessor目前是二维数组, 用于多源最短路径, 单源可以替换成一维数组
+ * predecessor本实现使用二维数组, 这普遍用在多源最短路径, 单源可以替换成一维数组
  */
-void ShortestPath_Dijkstra(matrix_graph_t* graph, int v0, int (*predecessor)[MAX_VERTEX_CNT], edge_t* distance ) {
+void Dijkstra(matrix_graph_t* graph, int starting_vertex_index, int(*predecessor)[MAX_VERTEX_CNT], edge_t* distance) {
 
-    // 用Dijkstra算法求有向网G的v0顶点到其余顶点v的最短路径P[v]及其带权长度D[v]
-    int vertex_cnt = graph->vertex_count;
-    int* final = (int*)malloc(vertex_cnt * sizeof(int));
+    /// --- 初始化 ---
 
-    for (int v = 0; v < graph->vertex_count; v++) {
-        final[v] = FALSE;
+    // 结点集合初始化, 每个结点都不在集合中
+    int* vertex_index_set = (int*)malloc(graph->vertex_count * sizeof(int));
+    memset(vertex_index_set, 0, graph->vertex_count * sizeof(int));
 
-        for (int w = 0; w < graph->vertex_count; w++) {
-            predecessor[v][w] = -1;
-        }
-
-        distance[v].weight.double_value = graph->adj_matrix[v0][v].weight.double_value;
-        predecessor[v0][v] = v0;    // v0是从v0到v的最短路径, v的前一结点
+    // distance数组初始化, distance[起始点]的路径距离值为0, distance[起始点之外其他结点]的路径距离值为DBL_MAX(double类型最大值)
+    for (int i = 0; i < graph->vertex_count; i++) {
+        distance[i].weight_type = DOUBLE;
+        distance[i].weight.double_value = DBL_MAX;
     }
+    distance[starting_vertex_index].weight.double_value = 0;
 
-    // 初始化, v0到v0的距离为0
-    distance[v0].weight.double_value = 0;
+    // 初始化最小优先队列, 路径 起始点->起始点 的信息(从临界数组中获取)入队
+    MinPriorityQueue min_priority_queue;
+    MinPriorityQueueInit(&min_priority_queue, graph->vertex_count);
+    MinPriorityQueuePush(&min_priority_queue, graph->adj_matrix[starting_vertex_index][starting_vertex_index]);
 
-    // 初始化, v0顶点属于S集
-    final[v0] = TRUE;
+    /// --- 贪心 ---
 
-    // 开始主循环, 每次求得v0到某个v顶点的最短路径, 并加v到S集
-    for (int i = 1; i < vertex_cnt; i++) {
-        double doubleMin = DBL_MAX;    // 最大的double型数值, float.h文件
+    while (min_priority_queue.size != 0) {
 
-        int v;
-        for (int w = 0; w < vertex_cnt; w++) {
-            if (!final[w]) {
-                if (distance[w].weight.double_value < doubleMin) {
-                    v = w;
-                    doubleMin = distance[w].weight.double_value;
-                }
+        // 最小优先队列pop出当前最短路径cur_min_distance
+        path_t cur_min_distance;
+        MinPriorityQueuePop(&min_priority_queue, &cur_min_distance);
+
+        // 取当前最短路径终点索引cur_ending_vertex_index, 进入集合vertex_index_set
+        int cur_ending_vertex_index = cur_min_distance.ending_vertex_index;
+        vertex_index_set[cur_ending_vertex_index] = TRUE;
+
+        // --- 松弛 starting_vertex_index --> i(使用cur_ending_vertex_index) ---
+
+        for (int i = 0; i < graph->vertex_count; i++) {
+
+            // 索引i结点已经在集合vertex_set 或者 cur_ending_vertex_index与i之间没有边, continue
+            if (vertex_index_set[i] == TRUE || graph->adj_matrix[cur_ending_vertex_index][i].weight_type == NO_EDGE) {
+                continue;
             }
-        }
 
-        final[v] = TRUE;    // 离v0最近的v, 加入到S集合
-
-        for (int w = 0; w < vertex_cnt; w++) {
-            if (!final[w] &&
-                doubleMin + graph->adj_matrix[v][w].weight.double_value < distance[w].weight.double_value)
+            // 如果
+            //   边 (starting_vertex_index --> cur_ending_vertex_index)         的weight
+            //    +
+            //   边                           (cur_ending_vertex_index  -->  i) 的weight
+            //    <
+            //   边 (starting_vertex_index ------------------------------->  i) 的weight
+            // 则
+            //   更新distance[j]和predecessor[starting_vertex_index][j]
+            //   distance[i]进入最小优先队列
+            if (distance[cur_ending_vertex_index].weight.double_value
+                +
+                graph->adj_matrix[cur_min_distance.ending_vertex_index][i].weight.double_value
+                <
+                distance[i].weight.double_value)
             {
-                distance[w].weight.double_value = doubleMin + graph->adj_matrix[v][w].weight.double_value;
-                predecessor[v0][w] = v;
+                distance[i].weight.double_value = distance[cur_ending_vertex_index].weight.double_value +
+                    graph->adj_matrix[cur_min_distance.ending_vertex_index][i].weight.double_value;
+                distance[i].ending_vertex_index = i;
+
+                predecessor[starting_vertex_index][i] = cur_min_distance.ending_vertex_index;
+
+                MinPriorityQueuePush(&min_priority_queue, distance[i]);
             }
         }
     }
 }
+
 
 
 /*!
@@ -346,8 +366,8 @@ int BellmanFord(matrix_graph_t* graph,
     for (int i = 0; i < graph->vertex_count - 1; i++) {
         // 遍历 "图边数" 次
         for (int j = 0; j < graph->edge_count; j++) {
-            int u = graph->edge_array[j].starting_vertex_idx;
-            int v = graph->edge_array[j].ending_vertex_idx;
+            int u = graph->edge_array[j].starting_vertex_index;
+            int v = graph->edge_array[j].ending_vertex_index;
 
             // 松弛
             if (distance[u].weight.double_value + graph->adj_matrix[u][v].weight.double_value
@@ -380,8 +400,8 @@ int BellmanFord(matrix_graph_t* graph,
      */
 
     for (int i = 0; i < graph->edge_count; i++) {
-        int cur_starting_vertex_index = graph->edge_array[i].starting_vertex_idx;
-        int cur_ending_vertex_index = graph->edge_array[i].ending_vertex_idx;
+        int cur_starting_vertex_index = graph->edge_array[i].starting_vertex_index;
+        int cur_ending_vertex_index = graph->edge_array[i].ending_vertex_index;
 
         if (distance[cur_starting_vertex_index].weight.double_value
             +

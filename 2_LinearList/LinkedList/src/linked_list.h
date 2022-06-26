@@ -30,7 +30,7 @@ Status LinkedListInsert(linked_list_t linked_list_head, int pos, ELEM_TYPE elem)
 
 Status LinkedListDelete(linked_list_t linked_list_head, int pos, ELEM_TYPE* elem);
 
-Status LinkedListMerge(linked_list_t list_a_head, linked_list_t list_b_head, linked_list_t* merged_list_head);
+Status LinkedListMergeTwoSortedList(linked_list_t list_a_head, linked_list_t list_b_head, linked_list_t* merged_list_head);
 
 void LinkedListPrint(linked_list_t linked_list_head);
 

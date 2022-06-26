@@ -107,3 +107,31 @@ void TestLinkedListInsert() {
 
     printf("\n-------------------------------------------------------------\n\n");
 }
+
+
+void TestLinkedListMerge() {
+    printf("\n");
+    printf("|------------------------ CyberDash ------------------------|\n");
+    printf("|                      测试有序链表的合并                      |\n");
+
+    ELEM_TYPE elements1[4] = { 2, 4, 6, 8 };
+    ELEM_TYPE elements2[4] = { 1, 3, 5, 7 };
+
+    linked_node_t* linked_list_head1 = NULL;
+    linked_node_t* linked_list_head2 = NULL;
+    linked_node_t* merged_linked_list_head = NULL;
+
+    printf("创建链表1:\n");
+    LinkedListCreate(&linked_list_head1, elements1, sizeof(elements1) / sizeof(ELEM_TYPE));
+    LinkedListPrint(linked_list_head1);
+
+    printf("创建链表2:\n");
+    LinkedListCreate(&linked_list_head2, elements2, sizeof(elements1) / sizeof(ELEM_TYPE));
+    LinkedListPrint(linked_list_head2);
+
+    printf("合并链表:\n");
+    LinkedListMergeTwoSortedList(linked_list_head1, linked_list_head2, &merged_linked_list_head);
+    LinkedListPrint(merged_linked_list_head);
+
+    printf("\n-------------------------------------------------------------\n\n");
+}

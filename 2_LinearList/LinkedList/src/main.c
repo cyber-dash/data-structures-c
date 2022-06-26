@@ -15,5 +15,7 @@ int main() {
 
     TestLinkedListInsert();
 
+    TestLinkedListMerge();
+
     return 0;
 }

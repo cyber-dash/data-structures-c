@@ -17,5 +17,7 @@ void TestLinkedListDelete();
 
 void TestLinkedListInsert();
 
+void TestLinkedListMerge();
+
 
 #endif // CYBER_DASH_LINKED_LIST_TEST_H

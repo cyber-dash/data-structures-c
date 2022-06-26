@@ -14,10 +14,13 @@
 Status Visit(matrix_graph_t* graph, int vertex);
 
 // DFS遍历
-void DFSTraverse(matrix_graph_t graph, Status (*Visit)(int v));
+void DFSTraverse(matrix_graph_t graph, Status (*Visit)(matrix_graph_t* graph, int vertex_index));
 
-// DFS遍历(结点(索引)v为起始点)
-void DFSRecursive(matrix_graph_t graph, int starting_vertex_index, int *visited);
+// DFS遍历(索引starting_vertex_index结点为起始点)
+void DFSRecursive(matrix_graph_t graph,
+                  int starting_vertex_index,
+                  int* visited_vertex_index_array,
+                  Status (*Visit)(matrix_graph_t* graph, int vertex_index));
 
 // BFS遍历
 void BFSTraverse(matrix_graph_t graph, Status (*Visit)(matrix_graph_t *G, int v));

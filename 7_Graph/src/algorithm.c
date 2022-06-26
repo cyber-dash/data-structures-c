@@ -3,7 +3,6 @@
 //
 
 #include <stdlib.h>
-#include <limits.h>
 #include <string.h>
 #include <float.h>
 #include "algorithm.h"
@@ -12,14 +11,9 @@
 #include "disjoint_set.h"
 
 
-Status Visit(matrix_graph_t *graph, int vertex) {
-    int index;
-    Status status = LocateVertex(*graph, vertex, &index);
-    if (status == OK) {
-        printf("%d ", index);
-    }
-
-    return status;
+Status Visit(matrix_graph_t *graph, int vertex_index) {
+    printf("%d ", vertex_index);
+    return OK;
 }
 
 
@@ -29,34 +23,43 @@ Status Visit(matrix_graph_t *graph, int vertex) {
  * @param Visit 结点访问函数
  * @note
  */
-void DFSTraverse(matrix_graph_t graph, Status (*Visit)(int v)) {
+void DFSTraverse(matrix_graph_t graph, Status (*Visit)(matrix_graph_t* graph, int vertex_index)) {
 
-    // 构造visited数组
-    int* visited = (int*)malloc(graph.vertex_count * sizeof(int));
+    int* visited_vertex_index_array = (int*)malloc(graph.vertex_count * sizeof(int));
 
     for (int i = 0; i < graph.vertex_count; i++) {
-        visited[i] = 0;
+        visited_vertex_index_array[i] = 0;
     }
 
-    for (int v = 0; v < graph.vertex_count; ++v) {
-        if (!visited[v]) {
-            DFSRecursive(graph, 0, visited);
+    for (int i = 0; i < graph.vertex_count; i++) {
+        if (!visited_vertex_index_array[i]) {
+            DFSRecursive(graph, i, visited_vertex_index_array, Visit);
         }
     }
 }
 
 
-// todo: Visit函数写到参数
-void DFSRecursive(matrix_graph_t graph, int starting_vertex_index, int* visited) {
-    visited[starting_vertex_index] = 1;
-    Visit(&graph, starting_vertex_index);   // 访问索引starting_vertex_idx的顶点
+/*!
+ *
+ * @param graph
+ * @param starting_vertex_index
+ * @param visited_vertex_index_array
+ * @param Visit
+ */
+void DFSRecursive(matrix_graph_t graph,
+                  int starting_vertex_index,
+                  int* visited_vertex_index_array,
+                  Status (*Visit)(matrix_graph_t*, int))
+{
+    visited_vertex_index_array[starting_vertex_index] = 1;
+    Visit(&graph, starting_vertex_index);   // 访问索引starting_vertex_index的结点
 
-    for (int vertex_idx = FirstAdjVertexIdx(&graph, starting_vertex_index);
-         vertex_idx >= 0;
-         vertex_idx = NextAdjVertexIdx(&graph, starting_vertex_index, vertex_idx))
+    for (int i = FirstAdjVertexIdx(&graph, starting_vertex_index);
+         i >= 0;
+         i = NextAdjVertexIdx(&graph, starting_vertex_index, i))
     {
-        if (!visited[vertex_idx]) {
-            DFSRecursive(graph, vertex_idx, visited);
+        if (!visited_vertex_index_array[i]) {
+            DFSRecursive(graph, i, visited_vertex_index_array, Visit);
         }
     }
 }
@@ -70,31 +73,45 @@ void DFSRecursive(matrix_graph_t graph, int starting_vertex_index, int* visited)
 void BFSTraverse(matrix_graph_t graph, Status (*Visit)(matrix_graph_t*, int)) {
 
     // 构造visited数组
-    int* visited = (int*)malloc(graph.vertex_count * sizeof(int));
-    /* error handler */
+    int* visited_vertex_index_array = (int*)malloc(graph.vertex_count * sizeof(int));
 
     for (int i = 0; i < graph.vertex_count; i++) {
-        visited[i] = 0;
+        visited_vertex_index_array[i] = 0;
     }
 
     linked_queue_node_t queue;
     InitQueue(&queue);
 
-    for (int v = 0; v < graph.vertex_count; ++v) {
-        if (!visited[v]) {
-            visited[v] = 1;
-            Visit(&graph, v);
+    for (int i = 0; i < graph.vertex_count; i++) {
+        if (!visited_vertex_index_array[i]) {
+            visited_vertex_index_array[i] = 1;
+            Visit(&graph, i);
 
-            EnQueue(&queue, v);
+            EnQueue(&queue, i);
 
             while (!QueueEmpty(&queue)) {
-                int u;
-                DeQueue(&queue, &u);
-                for (int w = FirstAdjVertexIdx(&graph, u); w >= 0; w = NextAdjVertexIdx(&graph, u, w)) {
-                    if (!visited[w]) {
-                        visited[w] = 1;
-                        Visit(&graph, w);
-                        EnQueue(&queue, w);
+
+                // 取队头
+                int vertex_index;
+                DeQueue(&queue, &vertex_index);
+
+                // 遍历队头的未遍历的邻结点
+                for (int neighbor_vertex_index = FirstAdjVertexIdx(&graph, vertex_index);
+                     neighbor_vertex_index >= 0;
+                     neighbor_vertex_index = NextAdjVertexIdx(&graph, vertex_index, neighbor_vertex_index)
+                    )
+                {
+                    // 如果: 当前邻结点未被访问
+                    if (!visited_vertex_index_array[neighbor_vertex_index]) {
+
+                        // 访问当前邻结点
+                        Visit(&graph, neighbor_vertex_index);
+
+                        // 当前邻结点入队
+                        EnQueue(&queue, neighbor_vertex_index);
+
+                        // 标记当前邻结点被访问
+                        visited_vertex_index_array[neighbor_vertex_index] = 1;
                     }
                 }
             }

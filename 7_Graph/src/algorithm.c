@@ -223,18 +223,10 @@ void Kruskal(matrix_graph_t* graph, edge_t* min_span_tree) {
  */
 void PrintMinSpanTree(MST_t min_span_tree, int size) {
     for (int i = 0; i < size; i++) {
-        edge_t cur = min_span_tree[i];
-
-            printf("starting_vertex: %d ending_vertex: %d, dist %lf\n",
-                   cur.starting_vertex_index,
-                   cur.ending_vertex_index,
-                   cur.weight.double_value);
-
-        /*
-        printf("starting_vertex: %d, ending_vertex: %d\n",
-               cur.starting_vertex_index,
-               cur.ending_vertex_index);
-               */
+        printf("起始点: %d, 终点: %d, 距离: %lf\n",
+               min_span_tree[i].starting_vertex_index,
+               min_span_tree[i].ending_vertex_index,
+               min_span_tree[i].weight.double_value);
     }
 
     printf("\n");

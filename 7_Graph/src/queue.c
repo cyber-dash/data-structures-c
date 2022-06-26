@@ -22,8 +22,8 @@ Status InitQueue(linked_queue_node_t *queue) {
 
 
 /*!
- *
- * @param queue
+ * 队列入队
+ * @param queue 队列(指针)
  * @param v
  * @return
  */

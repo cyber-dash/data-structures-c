@@ -333,7 +333,7 @@ void TestKruskal() {
     }
 
     // 图初始化
-    CreateGraphByEdgesAndVertices(&graph, edge_array, edge_count, vertex_array, vertex_count, graph_kind);
+    CreateGraphByEdgesAndVertices(&graph,edge_array, edge_count, vertex_array, vertex_count, graph_kind);
 
     MST_t min_span_tree;
     Kruskal(&graph, min_span_tree);
@@ -378,7 +378,7 @@ void TestDijkstra() {
     int edge_count = 9;           // 弧(边)数量
     GRAPH_KIND graph_kind = UDN;            // 类型:有向网
 
-    // 弧(边)信息, 注意有方向
+    // 边(弧)信息
     // 0 - 1: 0.1,   0 - 2: 0.12,  1 - 2: 0.2
     // 1 - 3: 0.14,  1 - 4: 0.13,  2 - 3: 0.05
     // 2 - 5: 0.17,  3 - 4: 0.09,  3 - 5: 0.11
@@ -400,10 +400,10 @@ void TestDijkstra() {
 
     int predecessor[MAX_VERTEX_CNT][MAX_VERTEX_CNT];
     path_t distance[MAX_VERTEX_CNT];
-    int v0 = 0; // 从索引0结点开始(到其他结点)
+    int starting_vertex_index = 0; // 从索引0结点开始(到其他结点)
 
-    Dijkstra(&graph, v0, predecessor, distance);
-    PrintSingleSourceShortestPath(&graph, v0, predecessor, distance);
+    Dijkstra(&graph, starting_vertex_index, predecessor, distance);
+    PrintSingleSourceShortestPath(&graph, starting_vertex_index, predecessor, distance);
 
     printf("-------------------- 抖音: cyberdash_yuan --------------------\n");
 }

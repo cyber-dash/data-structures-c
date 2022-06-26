@@ -197,17 +197,13 @@ void Kruskal(matrix_graph_t* graph, edge_t* min_span_tree) {
         edge_t cur_mst_item;
         MinPriorityQueuePop(&min_priority_queue, &cur_mst_item);
 
-        printf("cur_mst_item.starting_vertex_index: %d, cur_mst_item.ending_vertex_index: %d\n",
-               cur_mst_item.starting_vertex_index, cur_mst_item.ending_vertex_index);
-
         // 队头对应的最短边起点/终点对应的并查集根索引
-        int cur_starting_root_index = DisjointSetFindRecursive(&disjoint_set, cur_mst_item.starting_vertex_index);
-        int cur_ending_root_index = DisjointSetFindRecursive(&disjoint_set, cur_mst_item.ending_vertex_index);
+        int cur_starting_root_index =
+            DisjointSetFind(&disjoint_set, cur_mst_item.starting_vertex_index);
+        int cur_ending_root_index =
+            DisjointSetFind(&disjoint_set, cur_mst_item.ending_vertex_index);
 
-        printf("cur_starting_root_index: %d, cur_ending_root_index: %d\n",
-               cur_starting_root_index, cur_ending_root_index);
-
-        // 如果:起点根索引 不等于 终点根索引, 则
+        // 如果: 起点根索引 不等于 终点根索引
         if (cur_starting_root_index != cur_ending_root_index) {
             // 并查集合并
             DisjointSetUnion(&disjoint_set, cur_starting_root_index, cur_ending_root_index);
@@ -217,8 +213,6 @@ void Kruskal(matrix_graph_t* graph, edge_t* min_span_tree) {
             index++;
         }
     }
-
-    int a = 0;
 }
 
 
@@ -231,15 +225,16 @@ void PrintMinSpanTree(MST_t min_span_tree, int size) {
     for (int i = 0; i < size; i++) {
         edge_t cur = min_span_tree[i];
 
-        /*
-            printf("starting_vertex %d ending_vertex %d dist %f\n",
+            printf("starting_vertex: %d ending_vertex: %d, dist %lf\n",
                    cur.starting_vertex_index,
                    cur.ending_vertex_index,
                    cur.weight.double_value);
-                   */
+
+        /*
         printf("starting_vertex: %d, ending_vertex: %d\n",
                cur.starting_vertex_index,
                cur.ending_vertex_index);
+               */
     }
 
     printf("\n");

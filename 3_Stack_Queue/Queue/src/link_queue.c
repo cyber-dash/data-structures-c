@@ -7,58 +7,99 @@
 #include "stdlib.h"
 
 
-//----- 基本操作的函数原型说明 -----
-Status InitQueue(LinkQueue *Q) {
-    // 构造一个空队列Q
-    Q->front = Q->rear = (QueuePtr)malloc(sizeof(QNode));
-    if (!Q->front) exit(OVERFLOW);
-    Q->front->next = NULL;
-    return OK;
-}
-
-
-Status LqDestroyQueue(LinkQueue *Q) {
-    // 销毁队列Q
-    while (Q->front) {
-        Q->rear = Q->front->next;
-        free(Q->front);
-        Q->front = Q->rear;
+/*!
+ * 构造一个空队列
+ * @param link_queue 链式队列(指针)
+ * @return 执行结果
+ */
+Status LinkQueueInit(link_queue_t* link_queue) {
+    link_queue->rear = (link_queue_node_t*)malloc(sizeof(link_queue_node_t));
+    if (!link_queue->rear) {
+        return NON_ALLOCATED;
     }
+
+    link_queue->front = link_queue->rear;
+    link_queue->front->next = NULL;
+
     return OK;
 }
 
 
-Status EnQueue(LinkQueue *Q, QElemType v) {
+/*!
+ *
+ * @param link_queue
+ * @return
+ */
+Status LinkQueueDestroy(link_queue_t* link_queue) {
+    // 销毁队列Q
+    while (link_queue->front) {
+        link_queue->rear = link_queue->front->next;
+        free(link_queue->front);
+
+        link_queue->front = link_queue->rear;
+    }
+
+    return OK;
+}
+
+
+/*!
+ *
+ * @param link_queue
+ * @param elem
+ * @return
+ */
+Status LinkQueueEnQueue(link_queue_t* link_queue, QUEUE_ELEM elem) {
     // 插入元素e为Q的新的队尾元素
-    QueuePtr p = (QueuePtr)malloc(sizeof(QNode));
-    if (!p) exit(OVERFLOW); // 存储分配失败
-    p->data = v;
-    p->next = NULL;
-    Q->rear->next = p;
-    Q->rear = p;
+    link_queue_node_t* new_node = (link_queue_node_t*)malloc(sizeof(link_queue_node_t));
+    if (!new_node) {
+        return NON_ALLOCATED; // 存储分配失败
+    }
+
+    new_node->data = elem;
+    new_node->next = NULL;
+
+    link_queue->rear->next = new_node;
+    link_queue->rear = new_node;
+
     return OK;
 }
 
 
-Status DeQueue(LinkQueue *Q, QElemType *v) {
-    // 若队列不空, 则删除Q的队头元素, 用e返回其值, 并返回OK;
-    // 否则返回ERROR
-    if (Q->front == Q->rear) return ERROR;
-    QueuePtr p = Q->front->next;
-    *v = p->data;
-    Q->front->next = p->next;
-    if (Q->rear == p) Q->rear = Q->front;
-    free(p);
+/*!
+ *
+ * @param link_queue
+ * @param elem
+ * @return
+ */
+Status LinkQueueDeQueue(link_queue_t* link_queue, QUEUE_ELEM* elem) {
+    if (link_queue->front == link_queue->rear) {
+        return NON_EXISTENT;
+    }
+
+    link_queue_node_t* dequeue_node = link_queue->front->next;
+    *elem = dequeue_node->data;
+
+    link_queue->front->next = dequeue_node->next;
+
+    free(dequeue_node);
+    dequeue_node = NULL;
+
     return OK;
 }
 
 
-int LqQueueLength(LinkQueue Q) {
+/*!
+ *
+ * @param link_queue
+ * @return
+ */
+int LinkQueueLength(link_queue_t link_queue) {
     // 返回Q的元素个数, 即为队列的长度
-    QueuePtr cur = Q.front;
+    link_queue_node_t* cur = link_queue.front;
     int length = 0;
 
-    while (cur != Q.rear) {
+    while (cur != link_queue.rear) {
         length++;
         cur = cur->next;
     }
@@ -68,34 +109,39 @@ int LqQueueLength(LinkQueue Q) {
 
 
 /*
-Status ClearQueue(LinkQueue *Q) {
+Status ClearQueue(link_queue_t *Q) {
     // 将Q清为空队列
 
 }
 
 
-Status QueueEmpty(LinkQueue Q) {
+Status QueueEmpty(link_queue_t Q) {
     // 若队列Q为空队列, 则返回TRUE, 否则返回FALSE
 
 }
 
 
-Status GetHead(LinkQueue Q, QElemType *e) {
+Status GetHead(link_queue_t Q, QUEUE_ELEM *e) {
     // 若度列不空, 则用e返回Q的队头元素, 并返回OK;否则返回ERROR
 
 }
 
 
 // 从队头到队尾一次对队列Q中每个元素调用函数visit, 一旦visit失败, 则操作失败
-Status QueueTraverse(LinkQueue Q, void (*visit)(QNode qNode)) {
+Status QueueTraverse(link_queue_t Q, void (*visit)(link_queue_node_t qNode)) {
 
 }
 */
 
-void PrintLinkQueue(LinkQueue *Q) {
+
+/*!
+ *
+ * @param link_queue
+ */
+void LinkQueuePrint(link_queue_t* link_queue) {
     printf("从队头向队尾打印元素(队头 ... 队尾): \n");
 
-    QNode *cur = Q->front->next;
+    link_queue_node_t *cur = link_queue->front->next;
     while (cur != NULL) {
         printf("%d ", cur->data);
         cur = cur->next;

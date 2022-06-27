@@ -8,25 +8,26 @@
 #include "type.h"
 
 
-typedef struct QNode {
-    QElemType       data;
-    struct QNode    *next;
-} QNode, *QueuePtr;
-typedef struct LinkQueue {
-    QueuePtr    front;  // 队头指针
-    QueuePtr    rear;   // 队尾指针
-}LinkQueue;
+typedef struct link_queue_node_t {
+    QUEUE_ELEM                  data;
+    struct link_queue_node_t*   next;
+} link_queue_node_t;
+
+typedef struct link_queue_t {
+    link_queue_node_t*  front;  // 队头指针
+    link_queue_node_t*  rear;   // 队尾指针
+} link_queue_t;
 
 
-Status InitQueue(LinkQueue *Q);
+Status LinkQueueInit(link_queue_t* link_queue);
 
-Status EnQueue(LinkQueue *Q, QElemType v);
+Status LinkQueueEnQueue(link_queue_t *link_queue, QUEUE_ELEM elem);
 
-Status DeQueue(LinkQueue *Q, QElemType *v);
+Status LinkQueueDeQueue(link_queue_t *link_queue, QUEUE_ELEM *elem);
 
-int LqQueueLength(LinkQueue Q);
+int LinkQueueLength(link_queue_t link_queue);
 
-void PrintLinkQueue(LinkQueue *Q);
+void LinkQueuePrint(link_queue_t *link_queue);
 
 
 #endif // CYBER_DASH_STACK_QUEUE_H

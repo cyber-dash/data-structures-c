@@ -19,7 +19,7 @@ typedef struct {
 } linked_queue_node_t, *linked_queue_t;
 
 
-Status InitQueue(linked_queue_node_t* queue);
+Status InitQueue(linked_queue_node_t* link_queue);
 
 Status EnQueue(linked_queue_node_t* queue, int v);
 

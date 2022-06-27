@@ -41,26 +41,29 @@ void DFSTraverse(matrix_graph_t graph, Status (*Visit)(matrix_graph_t* graph, in
 
 /*!
  *
- * @param graph
- * @param starting_vertex_index
- * @param visited_vertex_index_array
- * @param Visit
+ * @param graph 图
+ * @param vertex_index 图结点索引
+ * @param visited_vertex_index_array 已访问结点索引的数组
+ * @param Visit 访问函数
  */
 void DFSRecursive(matrix_graph_t graph,
-                  int starting_vertex_index,
+                  int vertex_index,
                   int* visited_vertex_index_array,
                   Status (*Visit)(matrix_graph_t*, int))
 {
-    visited_vertex_index_array[starting_vertex_index] = 1;
-    Visit(&graph, starting_vertex_index);   // 访问索引starting_vertex_index的结点
+    Visit(&graph, vertex_index);                    // 访问索引vertex_index结点
+    visited_vertex_index_array[vertex_index] = 1;   // 标记索引vertex_index结点已经被访问过
 
-    for (int i = FirstAdjVertexIdx(&graph, starting_vertex_index);
-         i >= 0;
-         i = NextAdjVertexIdx(&graph, starting_vertex_index, i))
-    {
-        if (!visited_vertex_index_array[i]) {
-            DFSRecursive(graph, i, visited_vertex_index_array, Visit);
+    // 遍历vertex_index结点的所有相邻结点
+    for (int i = FirstAdjVertexIdx(&graph, vertex_index); i >= 0; i = NextAdjVertexIdx(&graph, vertex_index, i)) {
+
+        // 如果当前结点(索引i结点)已经访问过, continue
+        if (visited_vertex_index_array[i]) {
+            continue;
         }
+
+        // 递归调用, 对当前结点执行DFSRecursive
+        DFSRecursive(graph, i, visited_vertex_index_array, Visit);
     }
 }
 

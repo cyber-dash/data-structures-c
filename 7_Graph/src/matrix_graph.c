@@ -3,7 +3,6 @@
 //
 
 #include <stdio.h>
-#include <stdlib.h>
 #include <float.h>
 #include "matrix_graph.h"
 
@@ -131,18 +130,20 @@ Status CreateGraphByEdgesAndVertices(matrix_graph_t* graph,
     if (edge_count > MAX_EDGE_CNT || vertex_count > MAX_VERTEX_CNT) {
         return ERROR;
     }
-    graph->kind = graph_kind;           //!< 图类型
-    graph->vertex_count = vertex_count;   //!< 结点数量
-    graph->edge_count = edge_count;       //!< 边数量
 
+    graph->kind = graph_kind;              //!< 图类型
+    graph->vertex_count = vertex_count;    //!< 结点数量
+    graph->edge_count = edge_count;        //!< 边数量
     graph->weight_type = edge_array->weight_type;  // 使用edge_arr第0项的weight_type, 赋给graph->weight_type
 
     for (int i = 0; i < graph->vertex_count; ++i) {
 
-        // 结点信息数组
+        // 结点信息数组各元素初始化
         graph->vertex_array[i] = vertex_index_array[i];
 
-        // 矩阵元素初始化NO_EDGE
+        // 邻接矩阵每个元素初始化
+        //     主对角线元素, weight_type设为DOUBLE, weight.double_value设为0
+        //     非主对角线元素, weight_type设为NO_EDGE
         for (int j = 0; j < graph->vertex_count; ++j) {
             graph->adj_matrix[i][j].starting_vertex_index = i; //! 边的起点索引
             graph->adj_matrix[i][j].ending_vertex_index = j;   //! 边的终点索引
@@ -156,19 +157,18 @@ Status CreateGraphByEdgesAndVertices(matrix_graph_t* graph,
         }
     }
 
-    //! 使用edge_arr填充adj_matrix中对应的结点数据
+    //! 使用edge_array填充adj_matrix中对应的结点数据
     for (int i = 0; i < edge_count; ++i) {
 
+        //! 边: u --> v
         int u = edge_array[i].starting_vertex_index;
         int v = edge_array[i].ending_vertex_index;
 
-        //! 边: u --> v
         graph->adj_matrix[u][v] = edge_array[i];
 
 
-        // 无向图/网增加如下操作
+        // 无向图/网, 增加 边: v --> u
         if (graph->kind == UDN || graph->kind == UDG) {
-            //! 边: v --> u
             graph->adj_matrix[v][u] = edge_array[i];
             graph->adj_matrix[v][u].starting_vertex_index = v;
             graph->adj_matrix[v][u].ending_vertex_index = u;

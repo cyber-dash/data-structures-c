@@ -18,7 +18,7 @@ void DFSTraverse(matrix_graph_t graph, Status (*Visit)(matrix_graph_t* graph, in
 
 // DFS遍历(索引starting_vertex_index结点为起始点)
 void DFSRecursive(matrix_graph_t graph,
-                  int starting_vertex_index,
+                  int vertex_index,
                   int* visited_vertex_index_array,
                   Status (*Visit)(matrix_graph_t* graph, int vertex_index));
 

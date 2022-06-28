@@ -12,7 +12,7 @@ void TestAddAndReplaceElem() {
     printf("                    Test AddAndReplaceElem                   \n");
     printf("                       测试新增(替换)函数                       \n\n\n");
 
-    TSMatrix tsMatrix;
+    sparse_matrix_t tsMatrix;
     CreateSMatrix(&tsMatrix, 50, 40);
 
     AddAndReplaceElem(&tsMatrix, 1, 1, 9);
@@ -35,7 +35,7 @@ void TestTransposeSMatrix() {
     printf("                    Test TransposeSMatrix                    \n");
     printf("                           测试转置                           \n\n\n");
 
-    TSMatrix tsMatrix;
+    sparse_matrix_t tsMatrix;
     CreateSMatrix(&tsMatrix, 50, 40);
 
     AddAndReplaceElem(&tsMatrix, 1, 1, 9);
@@ -49,7 +49,7 @@ void TestTransposeSMatrix() {
     printf("\n转置前: \n");
     PrintSMatrix(tsMatrix);
 
-    TSMatrix tsMatrix2;
+    sparse_matrix_t tsMatrix2;
     TransposeSMatrix(tsMatrix, &tsMatrix2);
 
     printf("\n转置后: \n");
@@ -65,7 +65,7 @@ void TestFastTransposeSMatrix() {
     printf("                  Test FastTransposeSMatrix                  \n");
     printf("                          测试快速转置                         \n\n\n");
 
-    TSMatrix tsMatrix;
+    sparse_matrix_t tsMatrix;
     CreateSMatrix(&tsMatrix, 50, 40);
 
     AddAndReplaceElem(&tsMatrix, 1, 1, 9);
@@ -79,7 +79,7 @@ void TestFastTransposeSMatrix() {
     printf("\n转置前: \n");
     PrintSMatrix(tsMatrix);
 
-    TSMatrix tsMatrix2;
+    sparse_matrix_t tsMatrix2;
     FastTransposeSMatrix(tsMatrix, &tsMatrix2);
 
     printf("\n转置后: \n");

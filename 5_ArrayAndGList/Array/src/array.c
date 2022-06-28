@@ -31,7 +31,7 @@ Status InitArray(Array* A, int dim, ...) {
 		return OVERFLOW;
 	}
 
-	// 求映像函数的常数ci, 并存入A.constants[i - 1], i = 1, ..., dim
+	// 求映像函数的常数ci, 并存入A.constants[row - 1], row = 1, ..., dim
 	A->constants = (int*)malloc(dim * sizeof(int));
 	if (!A->constants) {
 		return OVERFLOW;

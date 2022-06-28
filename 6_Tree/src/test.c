@@ -14,14 +14,14 @@ Status VisitChar(TElemType e) { // 输出元素e的值
 }
 
 
-Status VisitBinaryTreeNode(BiTNode e) { // 输出元素e的值
+Status VisitBinaryTreeNode(binary_tree_node_t e) { // 输出元素e的值
   printf("%c", e.data);                 // 使用时, 加上格式串
   return OK;
 }
 
 
 void TestBinaryTreeCreateBiTree() {
-  BiTree* testTree = (BiTree*)malloc(sizeof(BiTree));
+  binary_tree_t* testTree = (binary_tree_t*)malloc(sizeof(binary_tree_t));
   CreateBiTree(testTree);
 }
 
@@ -41,15 +41,15 @@ void TestBinaryTreePreOrderTraverse() {
     printf("|                           \\                               |\n");
     printf("|                            G                              |\n");
 
-    BiTree *testTree = (BiTree*)malloc(sizeof(BiTree));
+    binary_tree_t *testTree = (binary_tree_t*)malloc(sizeof(binary_tree_t));
 
     char treeString[] = "ABC  DE G  F   ";
     int pos = 0;
 
-    CreateBiTreeByString(testTree, treeString, &pos, strlen(treeString));
+    Status status = CreateBiTreeByString(testTree, treeString, &pos, strlen(treeString));
 
-    Status res = PreOrderTraverse(*testTree, VisitChar);
-    if (res == OK) {
+    status = PreOrderTraverse(*testTree, VisitChar);
+    if (status == OK) {
         printf("\n前序遍历结束\n");
     } else {
         printf("\n前序遍历失败\n");
@@ -74,15 +74,15 @@ void TestBinaryTreeInOrderTraverse() {
     printf("|                           \\                               |\n");
     printf("|                            G                              |\n");
 
-    BiTree* testTree = (BiTree*)malloc(sizeof(BiTree));
+    binary_tree_t* testTree = (binary_tree_t*)malloc(sizeof(binary_tree_t));
 
     char treeString[] = "ABC  DE G  F   ";
     int pos = 0;
 
-    CreateBiTreeByString(testTree, treeString, &pos, strlen(treeString));
+    Status status = CreateBiTreeByString(testTree, treeString, &pos, strlen(treeString));
 
-    Status res = InOrderTraverse(*testTree, VisitChar);
-    if (res == OK) {
+    status = InOrderTraverse(*testTree, VisitChar);
+    if (status == OK) {
         printf("\n中序遍历结束\n");
     } else {
         printf("\n中序遍历失败\n");
@@ -107,7 +107,7 @@ void TestBinaryTreeInOrderTraverse2() {
     printf("|                           \\                               |\n");
     printf("|                            G                              |\n");
 
-    BiTree* testTree = (BiTree*)malloc(sizeof(BiTree));
+    binary_tree_t* testTree = (binary_tree_t*)malloc(sizeof(binary_tree_t));
 
     char treeString[] = "ABC  DE G  F   ";
     int pos = 0;

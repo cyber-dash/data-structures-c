@@ -24,12 +24,12 @@
  *        \
  *         G
  */
-Status CreateBiTree(BiTree *T) {
+Status CreateBiTree(binary_tree_t *T) {
   char ch;
   int res = scanf("%c", &ch);
   if (ch == ' ') *T = NULL;
   else {
-    if (!(*T = (BiTNode*)malloc(sizeof(BiTNode)))) exit(OVERFLOW);
+    if (!(*T = (binary_tree_node_t*)malloc(sizeof(binary_tree_node_t)))) exit(OVERFLOW);
     (*T)->data = ch;                    // 生成根节点
     CreateBiTree(&(*T)->lchild);   // 构造左子树
     CreateBiTree(&(*T)->rchild);   // 构造右子树
@@ -50,7 +50,7 @@ Status CreateBiTree(BiTree *T) {
  * 本函数在书中未出现, 是对CreateBiTree函数的改造
  * 避免在函数调用中手动输入, 改为传字符串参数, 更加灵活
  */
-Status CreateBiTreeByString(BiTree *T, char *string, int *posPtr, int strLen) {
+Status CreateBiTreeByString(binary_tree_t *T, char *string, int *posPtr, int strLen) {
     int pos = *posPtr;
     if (pos >= strLen) {
         return OK;
@@ -61,7 +61,7 @@ Status CreateBiTreeByString(BiTree *T, char *string, int *posPtr, int strLen) {
     if (ch == ' ')
         *T = NULL;
     else {
-        if (!(*T = (BiTNode*)malloc(sizeof(BiTNode)))) {
+        if (!(*T = (binary_tree_node_t*)malloc(sizeof(binary_tree_node_t)))) {
             return OVERFLOW;
         }
         (*T)->data = ch; // 子树根节点赋值
@@ -86,7 +86,7 @@ Status CreateBiTreeByString(BiTree *T, char *string, int *posPtr, int strLen) {
  * @param Visit 节点元素访问函数
  * @return 是否遍历成功
  */
-Status PreOrderTraverse(BiTree T, Status (*Visit)(TElemType e)) {
+Status PreOrderTraverse(binary_tree_t T, Status (*Visit)(TElemType e)) {
   if (T) {
     Visit(T->data);
     if (PreOrderTraverse(T->lchild, Visit)) {
@@ -101,24 +101,31 @@ Status PreOrderTraverse(BiTree T, Status (*Visit)(TElemType e)) {
 
 /*!
  * 算法6.2 中序遍历
- * @param T 二叉树
+ * @param node 二叉树
  * @param Visit 结点元素访问函数
  * @return 是否成功
  * @note
  */
-Status InOrderTraverse(BiTree T, Status (*Visit)(TElemType e)) {
-    SqStack S;
-    InitStack(&S);
-    Push(&S, T); // 根指针进栈
+Status InOrderTraverse(binary_tree_node_t* node, Status (*Visit)(TElemType e)) {
 
-    while (!StackEmpty(S)) {
-        BiTNode *p;
-        while (GetTop(S, &p) && p) Push(&S, p->lchild); // 向左走到尽头
-        Pop(&S, &p);
+    seq_stack_t stack;
+    StackInit(&stack);
 
-        if (!StackEmpty(S)) {
-            Pop(&S, &p);    if (!Visit(p->data)) return ERROR;
-            Push(&S, p->rchild);
+    StackPush(&stack, node); // 根指针进栈
+
+    while (!StackEmpty(stack)) {
+        binary_tree_node_t* p;
+        while (StackGetTop(stack, &p) && p) {
+            StackPush(&stack, p->lchild); // 向左走到尽头
+        }
+        Pop(&stack, &p);
+
+        if (!StackEmpty(stack)) {
+            Pop(&stack, &p);
+            if (!Visit(p->data)) {
+                return ERROR;
+            }
+            StackPush(&stack, p->rchild);
         }
     }
 
@@ -133,13 +140,13 @@ Status InOrderTraverse(BiTree T, Status (*Visit)(TElemType e)) {
  * @note
  * 第131页
  */
-Status InOrderTraverse2(BiTree T, Status (*Visit)(TElemType e)) {
-    SqStack S;
-    InitStack(&S);
+Status InOrderTraverse2(binary_tree_t T, Status (*Visit)(TElemType e)) {
+    seq_stack_t S;
+    StackInit(&S);
 
-    BiTNode *p = T;
+    binary_tree_node_t *p = T;
     while (p || !StackEmpty(S)) {
-        if (p) { Push(&S, p); p = p->lchild; }
+        if (p) { StackPush(&S, p); p = p->lchild; }
         else {
             Pop(&S, &p);    if (!Visit(p->data)) return ERROR;
             p = p->rchild;

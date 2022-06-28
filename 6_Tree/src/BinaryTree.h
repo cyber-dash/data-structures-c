@@ -13,19 +13,19 @@
 typedef TElemType SqBiTree[MAX_TREE_SIZE]; // 0号单元存储根节点
 
 
-Status CreateBiTree(BiTree *T);
+Status CreateBiTree(binary_tree_t *T);
 
-Status CreateBiTreeByString(BiTree *T, char *string, int *pos, int strLen);
+Status CreateBiTreeByString(binary_tree_t *T, char *string, int *pos, int strLen);
 
-Status PreOrderTraverse(BiTree T, Status (*Visit)(TElemType e));
+Status PreOrderTraverse(binary_tree_t T, Status (*Visit)(TElemType e));
 
-Status InOrderTraverse(BiTree T, Status (*Visit)(TElemType e));
+Status InOrderTraverse(binary_tree_t node, Status (*Visit)(TElemType e));
 
-Status InOrderTraverse2(BiTree T, Status (*Visit)(TElemType e));
+Status InOrderTraverse2(binary_tree_t T, Status (*Visit)(TElemType e));
 
-Status PostOrderTraverse(BiTree T, Status (*Visit)(TElemType e));
+Status PostOrderTraverse(binary_tree_t T, Status (*Visit)(TElemType e));
 
-Status LevelOrderTraverse(BiTree T, Status (*Visit)(TElemType e));
+Status LevelOrderTraverse(binary_tree_t T, Status (*Visit)(TElemType e));
 
 
 #endif // CYBER_DASH_BINARY_TREE_H

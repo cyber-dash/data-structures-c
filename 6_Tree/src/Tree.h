@@ -10,7 +10,17 @@
 
 #define MAX_TREE_SIZE 100           // 最大结点数
 
-typedef enum Status { ERROR, OVERFLOW, OK } Status;
+typedef enum Status { OK, ERROR, OVERFLOW} Status;
+
+/*
+typedef enum Status {
+    OK,
+    NON_ALLOCATED,
+    NON_EXISTENT,
+    ERROR,
+    OVERFLOW
+} Status;
+*/
 
 
 #endif // CYBER_DASH_TREE_COMMON_H

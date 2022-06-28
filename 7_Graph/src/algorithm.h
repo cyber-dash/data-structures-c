@@ -14,10 +14,13 @@
 Status Visit(matrix_graph_t* graph, int vertex);
 
 // DFS遍历
-void DFSTraverse(matrix_graph_t graph, Status (*Visit)(int v));
+void DFSTraverse(matrix_graph_t graph, Status (*Visit)(matrix_graph_t* graph, int vertex_index));
 
-// DFS遍历(结点(索引)v为起始点)
-void DFSRecursive(matrix_graph_t graph, int starting_vertex_idx, int *visited);
+// DFS遍历(索引starting_vertex_index结点为起始点)
+void DFSRecursive(matrix_graph_t graph,
+                  int vertex_index,
+                  int* visited_vertex_index_array,
+                  Status (*Visit)(matrix_graph_t* graph, int vertex_index));
 
 // BFS遍历
 void BFSTraverse(matrix_graph_t graph, Status (*Visit)(matrix_graph_t *G, int v));
@@ -35,7 +38,7 @@ void Kruskal(matrix_graph_t* graph, edge_t* min_span_tree);
 void PrintMinSpanTree(MST_t min_span_tree, int size);
 
 // 迪杰斯特拉(Dijkstra)最短路径
-void ShortestPath_Dijkstra(matrix_graph_t* graph, int v0, int (*predecessor)[MAX_VERTEX_CNT], edge_t* distance);
+void Dijkstra(matrix_graph_t* graph, int v0, int (*predecessor)[MAX_VERTEX_CNT], edge_t* distance);
 
 // 贝尔曼福特(Bellman-Ford)最短路径
 int BellmanFord(matrix_graph_t* graph, int starting_vertex_index, int (*predecessor)[MAX_VERTEX_CNT], edge_t* distance);

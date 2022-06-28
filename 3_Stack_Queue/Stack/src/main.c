@@ -8,13 +8,13 @@
 
 int main() {
 
-  TestStackInsert();
+    TestStackInsert();
 
-  TestStackLength();
+    TestStackLength();
 
-  TestClearStack();
+    TestClearStack();
 
-  TestGetTop();
+    TestGetTop();
 
-  return 0;
+    return 0;
 }

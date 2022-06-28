@@ -7,23 +7,27 @@
 #include <stdlib.h>
 
 
-//----- 基本操作的函数原型说明 -----
-Status InitQueue(linked_queue_node_t *queue) {
+/*!
+ *
+ * @param link_queue
+ * @return
+ */
+Status InitQueue(linked_queue_node_t* link_queue) {
     // 构造一个空队列Q
-    queue->rear = (node_t*)malloc(sizeof(node_t));
-    if (!queue->front) {
-        exit(OVERFLOW);
+    link_queue->rear = (node_t*)malloc(sizeof(node_t));
+    if (!link_queue->rear) {
+        return NON_ALLOCATED;
     }
 
-    queue->front = queue->rear;
-    queue->front->next = NULL;
+    link_queue->front = link_queue->rear;
+    link_queue->front->next = NULL;
     return OK;
 }
 
 
 /*!
- *
- * @param queue
+ * 队列入队
+ * @param queue 队列(指针)
  * @param v
  * @return
  */

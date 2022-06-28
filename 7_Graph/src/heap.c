@@ -121,7 +121,7 @@ Status MinPriorityQueueInit(MinPriorityQueue* min_priority_queue, int capacity) 
     if (capacity < 0 || capacity > MAX_VERTEX_CNT * MAX_VERTEX_CNT) {
         return ERROR;
     }
-    min_priority_queue->mst_item_array = (edge_t*)malloc(sizeof(edge_t) * capacity);
+    min_priority_queue->mst_item_array = (edge_t*)malloc(sizeof(edge_t) * (capacity + 1));
     min_priority_queue->capacity = capacity;
     min_priority_queue->size = 0;
 
@@ -166,5 +166,7 @@ Status MinPriorityQueuePop(MinPriorityQueue* min_priority_queue, edge_t* item) {
     min_priority_queue->size--;
 
     MinHeapSiftDown(min_priority_queue->mst_item_array, 1, min_priority_queue->size);
+
+    return OK;
 }
 

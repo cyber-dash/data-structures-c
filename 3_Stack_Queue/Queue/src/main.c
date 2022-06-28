@@ -7,15 +7,14 @@
 
 
 int main() {
-  printf("Hello world\n");
 
-  // TestSqEnQueue();
+    TestSeqQueueEnQueueAndDeQueue();
 
-  // TestSqDeQueue();
+    TestSeqQueueDeQueue();
 
-  TestLinkEnQueue();
+    TestLinkQueueEnQueueAndDeQueue();
 
-  // TestLinkDeQueue();
+  TestLinkDeQueue();
 
   return 0;
 }

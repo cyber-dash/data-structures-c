@@ -6,11 +6,15 @@
 #define CYBER_DASH_QUEUE_TEST_H
 
 
-void TestSqEnQueue();
+#include "link_queue.h"
+#include "seq_queue.h"
 
-void TestSqDeQueue();
 
-void TestLinkEnQueue();
+void TestSeqQueueEnQueueAndDeQueue();
+
+void TestSeqQueueDeQueue();
+
+void TestLinkQueueEnQueueAndDeQueue();
 
 void TestLinkDeQueue();
 

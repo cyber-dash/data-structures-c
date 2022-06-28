@@ -37,13 +37,14 @@ Status CreateSMatrix(sparse_matrix_t* sparse_matrix, int rows, int columns) {
  * @return 执行结果
  */
 Status TransposeSMatrix(sparse_matrix_t matrix, sparse_matrix_t* transposed_matrix) {
+
+    if (matrix.non_zero_count < 0 || matrix.column_num <= 0 || matrix.row_num <= 0) {
+        return ERROR;
+    }
+
     transposed_matrix->row_num = matrix.column_num;
     transposed_matrix->column_num = matrix.row_num;
     transposed_matrix->non_zero_count = matrix.non_zero_count;
-
-    if (transposed_matrix->non_zero_count < 0) {
-        return ERROR;
-    }
 
     if (transposed_matrix->non_zero_count == 0) {
         return OK;
@@ -72,51 +73,71 @@ Status TransposeSMatrix(sparse_matrix_t matrix, sparse_matrix_t* transposed_matr
 
 /*!
  * 稀疏矩阵快速转置
- * @param M 原矩阵
- * @param T 转置矩阵
+ * @param matrix 原矩阵
+ * @param transposed_matrix 转置矩阵
  * @return 是否成功
  * @note
  *  注意, 索引是从1开始(不是从0)
- *  **num**: 保存原矩阵各列分别有多少个元素, 对应转置矩阵的各行有多少个元素 \n
- *  **cpot**: 执行转置时, 原矩阵各列(转置矩阵各行)的每一列(转置矩阵每一行)的任务执行数组 \n
- *
- *  \n先初始化以上两个数组 \n\n
- *  遍历M.elements \n
- *  对原矩阵三元组第p个元素, 进行转置矩阵内三元组对应位置的赋值
- *  赋值结束后, 更新cpot[M.elements[p].column]的值(下一次转置矩阵数组执行的位置, 向后挪一位) \n
  */
-Status FastTransposeSMatrix(sparse_matrix_t M, sparse_matrix_t *T) {
-    T->row_num = M.column_num;
-    T->column_num = M.row_num;
-    T->non_zero_count = M.non_zero_count;
+Status FastTransposeSMatrix(sparse_matrix_t matrix, sparse_matrix_t* transposed_matrix) {
+
+    if (matrix.non_zero_count < 0 || matrix.column_num <= 0 || matrix.row_num <= 0) {
+        return ERROR;
+    }
+
+    transposed_matrix->row_num = matrix.column_num;
+    transposed_matrix->column_num = matrix.row_num;
+    transposed_matrix->non_zero_count = matrix.non_zero_count;
 
     // 如果矩阵非零元素为0个, 则不做其他操作
-    if (T->non_zero_count == 0) {
+    if (transposed_matrix->non_zero_count == 0) {
         return OK;
     }
 
-    int* num = (int*)malloc((M.column_num + 1) * sizeof(int));
-    int* cpot = (int*)malloc((M.column_num + 1) * sizeof(int));
+    // 转置矩阵每行的非零项数和数组
+    int* non_zero_count_per_row_array = (int*)malloc((transposed_matrix->row_num + 1) * sizeof(int));
+    // 转置矩阵每行的迭代器数组
+    int* iterator_per_row_array = (int*)malloc((transposed_matrix->row_num + 1) * sizeof(int));
 
-    if (T->non_zero_count) {
-        for (int col = 1; col <= M.column_num; ++col) {
-            num[col] = 0;
-        }
-        for (int t = 1; t <= M.non_zero_count; ++t) {
-            ++num[M.elements[t].column]; // 求M中每一列含非零元素个数(也就是转置数组每行多少个非零元素)
-        }
-        cpot[1] = 1;
-        for (int col = 2; col <=M.column_num; ++col) {
-            cpot[col] = cpot[col - 1] + num[col - 1];
-        }
-        for (int p = 1; p <= M.non_zero_count; ++p) {
-            int col = M.elements[p].column;
-            int q = cpot[col];
-            T->elements[q].row = M.elements[p].column;
-            T->elements[q].column = M.elements[p].row;
-            T->elements[q].elem = M.elements[p].elem;
-            ++cpot[col];
-        }
+    for (int row = 1; row <= transposed_matrix->row_num; row++) {
+        non_zero_count_per_row_array[row] = 0;
+    }
+
+    for (int i = 1; i <= transposed_matrix->non_zero_count; ++i) {
+        // 转置矩阵当前非零项的行号
+        int cur_transposed_matrix_elem_row = matrix.elements[i].column;
+        // 当前行的非零总项数+1
+        non_zero_count_per_row_array[cur_transposed_matrix_elem_row]++;
+    }
+
+    /// 构造转置数组的三元组数组elements的分布
+    ///
+    /// elements[ 0 第1行的首元素的位置   ...      第2行的首元素的位置      ...            第i行的首个元素的位置        ... ]
+    ///                    ^                           ^                                      ^
+    ///                    |                           |                                      |
+    ///      iterator_per_row_array[1]      iterator_per_row_array[2]               iterator_per_row_array[i]   ...
+    ///
+    /// 核心算法:
+    ///
+    ///    iterator_per_row_array[i] = iterator_per_row_array[i - 1] + non_zero_count_per_row_array[i - 1];
+    /// 即在三元组数组elements上, 转置矩阵每行首元素所在的位置, 等于上一行首个元素的位置 + 该行(上一行)的所有非零元素数
+
+    iterator_per_row_array[1] = 1;  // 表示转置数组的第1行首个元素将插入到elements[1]
+    for (int row = 2; row <= transposed_matrix->row_num; row++) {
+        iterator_per_row_array[row] = iterator_per_row_array[row - 1] + non_zero_count_per_row_array[row - 1];
+    }
+
+    for (int i = 1; i <= matrix.non_zero_count; i++) {
+        int cur_elem_row = matrix.elements[i].column;           //!< 当前转置矩阵元素的行号
+        int iterator = iterator_per_row_array[cur_elem_row];    //!< 当前转置矩阵元素在elements数组中对应的索引
+
+        // 赋值
+        transposed_matrix->elements[iterator].row = matrix.elements[i].column;
+        transposed_matrix->elements[iterator].column = matrix.elements[i].row;
+        transposed_matrix->elements[iterator].elem = matrix.elements[i].elem;
+
+        // 第cur_elem_row行的迭代器加1(指向后面一个位置), 代表转置矩阵第cur_elem_row行刚刚完成了1个非零项的插入elements数组
+        iterator_per_row_array[cur_elem_row]++;
     }
 
     return OK;
@@ -124,24 +145,31 @@ Status FastTransposeSMatrix(sparse_matrix_t M, sparse_matrix_t *T) {
 
 
 /*!
- *
- * @param M
- * @return
+ * 销毁稀疏矩阵
+ * @param sparse_matrix 稀疏矩阵
+ * @return 执行结果
  */
-Status DestroySMatrix(sparse_matrix_t* M) {
-    free(M->elements);
-    free(M);
+Status DestroySMatrix(sparse_matrix_t* sparse_matrix) {
+    free(sparse_matrix->elements);
+    free(sparse_matrix);
+
+    return OK;
 }
 
 
-Status PrintSMatrix(sparse_matrix_t M) {
-    printf("行数: %d\n", M.row_num);
-    printf("列数: %d\n", M.column_num);
-    printf("非零元素数: %d\n", M.non_zero_count);
+/**
+ * 打印稀疏矩阵
+ * @param sparse_matrix 稀疏矩阵
+ * @return 执行结果
+ */
+Status PrintSMatrix(sparse_matrix_t sparse_matrix) {
+    printf("行数: %d\n", sparse_matrix.row_num);
+    printf("列数: %d\n", sparse_matrix.column_num);
+    printf("非零元素数: %d\n", sparse_matrix.non_zero_count);
 
-    for (int i = 1; i <= M.non_zero_count; i++) {
-        printf("M[%d][%d]: %d\n",
-               M.elements[i].row, M.elements[i].column, M.elements[i].elem);
+    for (int i = 1; i <= sparse_matrix.non_zero_count; i++) {
+        printf("sparse_matrix[%d][%d]: %d\n",
+               sparse_matrix.elements[i].row, sparse_matrix.elements[i].column, sparse_matrix.elements[i].elem);
     }
 
     return OK;
@@ -163,7 +191,7 @@ void swap(triple_t* a, triple_t* b) {
  * @param elem
  * @return
  */
-Status AddAndReplaceElem(sparse_matrix_t *M, int row, int col, ElemType elem) {
+Status AddAndReplaceElem(sparse_matrix_t* M, int row, int col, ElemType elem) {
     if (row > M->row_num || col > M->column_num) {
         return ERROR;
     }

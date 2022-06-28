@@ -26,9 +26,9 @@ typedef struct {
 
 Status CreateSMatrix(sparse_matrix_t *sparse_matrix, int rows, int columns);
 
-Status DestroySMatrix(sparse_matrix_t *M);
+Status DestroySMatrix(sparse_matrix_t *sparse_matrix);
 
-Status PrintSMatrix(sparse_matrix_t M);
+Status PrintSMatrix(sparse_matrix_t sparse_matrix);
 
 Status CopySMatrix(sparse_matrix_t M, sparse_matrix_t *T);
 
@@ -40,7 +40,7 @@ Status MultSMatrix(sparse_matrix_t M, sparse_matrix_t N, sparse_matrix_t *Q);
 
 Status TransposeSMatrix(sparse_matrix_t matrix, sparse_matrix_t *transposed_matrix);
 
-Status FastTransposeSMatrix(sparse_matrix_t M, sparse_matrix_t *Q);
+Status FastTransposeSMatrix(sparse_matrix_t matrix, sparse_matrix_t *transposed_matrix);
 
 Status AddAndReplaceElem(sparse_matrix_t *M, int row, int col, ElemType elem);
 

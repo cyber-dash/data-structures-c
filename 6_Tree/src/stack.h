@@ -3,7 +3,7 @@
 //
 
 
-#include "tree.h"
+#include "type.h"
 #include "BinaryTreeNode.h"
 
 
@@ -26,7 +26,7 @@ typedef struct {
 Status StackInit(seq_stack_t *S); // 构造一个空栈S
 Status DestroyStack(seq_stack_t *S); // 销毁栈S, S不再存在
 Status ClearStack(seq_stack_t *S); // 把S置为空栈
-Status StackEmpty(seq_stack_t S); // 若栈S为空栈, 则返回TRUE, 否则返回FALSE
+int StackEmpty(seq_stack_t S); // 若栈S为空栈, 则返回TRUE, 否则返回FALSE
 int StackLength(seq_stack_t S); // 返回S的元素个数, 即栈的长度
 Status StackGetTop(seq_stack_t S, SElemType *e); //
 Status StackPush(seq_stack_t *S, binary_tree_node_t *e);

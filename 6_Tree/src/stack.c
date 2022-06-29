@@ -69,12 +69,12 @@ Status ClearStack(seq_stack_t *S) {
 
 
 // 若栈S为空栈, 则返回TRUE, 否则返回FALSE
-Status StackEmpty(seq_stack_t S) {
+int StackEmpty(seq_stack_t S) {
     if (S.top == S.elements) {
-        return OK;
+        return TRUE;
     }
 
-    return ERROR;
+    return FALSE;
 }
 
 

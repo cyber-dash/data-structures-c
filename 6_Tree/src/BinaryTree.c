@@ -87,7 +87,7 @@ Status CreateBiTreeByString(binary_tree_t *T, char *string, int *posPtr, int str
  * @return 是否遍历成功
  */
 Status PreOrderTraverse(binary_tree_t T, Status (*Visit)(TElemType e)) {
-    if (T != NULL) {
+    if (T == NULL) {
         return OK;
     }
 
@@ -100,7 +100,7 @@ Status PreOrderTraverse(binary_tree_t T, Status (*Visit)(TElemType e)) {
     if (PreOrderTraverse(T->rchild, Visit) != OK) {
         return ERROR;
     }
-} // PreOrderTraverse
+}
 
 
 /*!
@@ -119,18 +119,26 @@ Status InOrderTraverse(binary_tree_node_t* node, Status (*Visit)(TElemType e)) {
 
     while (!StackEmpty(stack)) {
         binary_tree_node_t* cur;
-        while (StackGetTop(stack, &cur) == OK && cur) {
-            StackPush(&stack, cur->lchild); // 向左走到尽头
-        }
-        Pop(&stack, &cur);
 
-        if (!StackEmpty(stack)) {
-            Pop(&stack, &cur);
-            if (Visit(cur->data) != OK) {
-                return ERROR;
-            }
-            StackPush(&stack, cur->rchild);
+        // 一直向左子树遍历
+        while (StackGetTop(stack, &cur) == OK && cur) {
+            StackPush(&stack, cur->lchild);
         }
+        StackPop(&stack, &cur); // 把栈顶的NULL结点pop出去, pop完后栈顶是树结点
+
+        // 如果栈空, 跳出循环, 中序遍历结束
+        if (StackEmpty(stack)) {
+            break;
+        }
+
+        // 栈顶出栈, 并打印
+        StackPop(&stack, &cur);
+        if (Visit(cur->data) != OK) {
+            return ERROR;
+        }
+
+        // cur的右孩子结点入栈
+        StackPush(&stack, cur->rchild);
     }
 
     return OK;
@@ -138,22 +146,27 @@ Status InOrderTraverse(binary_tree_node_t* node, Status (*Visit)(TElemType e)) {
 
 
 /*!
- * 算法6.3 中序遍历
+ * 中序遍历2
  * @param Visit 结点元素访问函数
  * @return 是否成功
  * @note
  * 第131页
  */
-Status InOrderTraverse2(binary_tree_t T, Status (*Visit)(TElemType e)) {
-    seq_stack_t S;
-    StackInit(&S);
+Status InOrderTraverse2(binary_tree_t node, Status (*Visit)(TElemType e)) {
+    seq_stack_t stack;
+    StackInit(&stack);
 
-    binary_tree_node_t *p = T;
-    while (p || !StackEmpty(S)) {
-        if (p) { StackPush(&S, p); p = p->lchild; }
-        else {
-            Pop(&S, &p);    if (!Visit(p->data)) return ERROR;
-            p = p->rchild;
+    binary_tree_node_t* cur = node;
+    while (cur || !StackEmpty(stack)) {
+        if (cur) {
+            StackPush(&stack, cur);
+            cur = cur->lchild;
+        } else {
+            StackPop(&stack, &cur);
+            if (!Visit(cur->data)) {
+                return ERROR;
+            }
+            cur = cur->rchild;
         }
     }
 

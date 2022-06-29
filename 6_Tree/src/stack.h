@@ -30,7 +30,7 @@ int StackEmpty(seq_stack_t S); // 若栈S为空栈, 则返回TRUE, 否则返回F
 int StackLength(seq_stack_t S); // 返回S的元素个数, 即栈的长度
 Status StackGetTop(seq_stack_t S, SElemType *e); //
 Status StackPush(seq_stack_t *S, binary_tree_node_t *e);
-Status Pop(seq_stack_t *S, SElemType *e);
+Status StackPop(seq_stack_t *S, SElemType *e);
 
 
 #endif // CYBER_DASH_STACK_H

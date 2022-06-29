@@ -40,12 +40,12 @@ Status StackPush(seq_stack_t* S, binary_tree_node_t *e) {
 } // StackPush
 
 
-Status Pop(seq_stack_t *S, SElemType *e) {
+Status StackPop(seq_stack_t *S, SElemType *e) {
     // 若栈不空, 则删除S的栈顶元素, 用e返回其值, 并返回OK; 否则返回ERROR
     if (S->top == S->elements) return ERROR;
     *e = *--S->top;
     return OK;
-} // Pop
+} // StackPop
 
 
 // 销毁栈S, S不再存在
@@ -61,7 +61,7 @@ Status DestroyStack(seq_stack_t *S) {
 Status ClearStack(seq_stack_t *S) {
     SElemType e;
     while (StackEmpty(*S) != OK) {
-        Pop(S, &e);
+        StackPop(S, &e);
     }
 
     return OK;

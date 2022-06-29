@@ -74,14 +74,14 @@ void TestBinaryTreeInOrderTraverse() {
     printf("|                           \\                               |\n");
     printf("|                            G                              |\n");
 
-    binary_tree_t* testTree = (binary_tree_t*)malloc(sizeof(binary_tree_t));
+    binary_tree_t* test_tree = (binary_tree_t*)malloc(sizeof(binary_tree_t));
 
     char treeString[] = "ABC  DE G  F   ";
     int pos = 0;
 
-    Status status = CreateBiTreeByString(testTree, treeString, &pos, strlen(treeString));
+    Status status = CreateBiTreeByString(test_tree, treeString, &pos, strlen(treeString));
 
-    status = InOrderTraverse(*testTree, VisitChar);
+    status = InOrderTraverse(*test_tree, VisitChar);
     if (status == OK) {
         printf("\n中序遍历结束\n");
     } else {

@@ -21,7 +21,7 @@ Status PreOrderTraverse(binary_tree_t T, Status (*Visit)(TElemType e));
 
 Status InOrderTraverse(binary_tree_t node, Status (*Visit)(TElemType e));
 
-Status InOrderTraverse2(binary_tree_t T, Status (*Visit)(TElemType e));
+Status InOrderTraverse2(binary_tree_t node, Status (*Visit)(TElemType e));
 
 Status PostOrderTraverse(binary_tree_t T, Status (*Visit)(TElemType e));
 

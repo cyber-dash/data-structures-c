@@ -48,7 +48,7 @@ void TestBinaryTreePreOrderTraverse() {
 
     Status status = CreateBiTreeByString(testTree, treeString, &pos, strlen(treeString));
 
-    status = PreOrderTraverse(*testTree, VisitChar);
+    status = BinaryTreePreOrderTraverseRecursive(*testTree, VisitChar);
     if (status == OK) {
         printf("\n前序遍历结束\n");
     } else {
@@ -81,7 +81,7 @@ void TestBinaryTreeInOrderTraverse() {
 
     Status status = CreateBiTreeByString(test_tree, treeString, &pos, strlen(treeString));
 
-    status = InOrderTraverse(*test_tree, VisitChar);
+    status = BinaryTreeInOrderTraverse(*test_tree, VisitChar);
     if (status == OK) {
         printf("\n中序遍历结束\n");
     } else {
@@ -114,7 +114,7 @@ void TestBinaryTreeInOrderTraverse2() {
 
     CreateBiTreeByString(testTree, treeString, &pos, strlen(treeString));
 
-    Status res = InOrderTraverse2(*testTree, VisitChar);
+    Status res = BinaryTreeInOrderTraverse2(*testTree, VisitChar);
     if (res == OK) {
         printf("\n中序遍历结束\n");
     } else {

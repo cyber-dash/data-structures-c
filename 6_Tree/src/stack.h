@@ -23,14 +23,14 @@ typedef struct {
 } seq_stack_t;
 
 //-----基本操作的函数原型说明-----
-Status StackInit(seq_stack_t *stack); // 构造一个空栈S
-Status DestroyStack(seq_stack_t *S); // 销毁栈S, S不再存在
-Status ClearStack(seq_stack_t *S); // 把S置为空栈
-int StackEmpty(seq_stack_t S); // 若栈S为空栈, 则返回TRUE, 否则返回FALSE
-int StackLength(seq_stack_t S); // 返回S的元素个数, 即栈的长度
-Status StackGetTop(seq_stack_t S, STACK_ELEM *e); //
-Status StackPush(seq_stack_t *S, binary_tree_node_t *e);
-Status StackPop(seq_stack_t *S, STACK_ELEM *e);
+Status SeqStackInit(seq_stack_t *seq_stack); // 构造一个空栈S
+Status SeqStackDestroy(seq_stack_t *seq_stack); // 销毁栈S, S不再存在
+Status ClearStack(seq_stack_t *seq_stack); // 把S置为空栈
+int SeqStackIsEmpty(seq_stack_t seq_stack); // 若栈S为空栈, 则返回TRUE, 否则返回FALSE
+int SeqStackLength(seq_stack_t seq_stack); // 返回S的元素个数, 即栈的长度
+Status SeqStackGetTop(seq_stack_t seq_stack, STACK_ELEM *elem); //
+Status SeqStackPush(seq_stack_t *seq_stack, binary_tree_node_t *node);
+Status SeqStackPop(seq_stack_t *seq_stack, STACK_ELEM *elem);
 
 
 #endif // CYBER_DASH_STACK_H

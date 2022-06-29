@@ -17,11 +17,11 @@ Status CreateBiTree(binary_tree_t *T);
 
 Status CreateBiTreeByString(binary_tree_t *T, char *string, int *pos, int strLen);
 
-Status PreOrderTraverse(binary_tree_t T, Status (*Visit)(TREE_NODE_DATA e));
+Status BinaryTreePreOrderTraverseRecursive(binary_tree_t node, Status (*Visit)(TREE_NODE_DATA e));
 
-Status InOrderTraverse(binary_tree_t node, Status (*Visit)(TREE_NODE_DATA e));
+Status BinaryTreeInOrderTraverse(binary_tree_t node, Status (*Visit)(TREE_NODE_DATA e));
 
-Status InOrderTraverse2(binary_tree_t node, Status (*Visit)(TREE_NODE_DATA e));
+Status BinaryTreeInOrderTraverse2(binary_tree_t node, Status (*Visit)(TREE_NODE_DATA e));
 
 Status PostOrderTraverse(binary_tree_t T, Status (*Visit)(TREE_NODE_DATA e));
 

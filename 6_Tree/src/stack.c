@@ -4,73 +4,118 @@
 
 #include "stack.h"
 #include "stdlib.h"
-#include "stdio.h"
 
 
-Status StackInit(seq_stack_t* stack) {
-    // 构造一个空栈S
-    stack->elements = (STACK_ELEM*)malloc(STACK_INIT_CAPACITY * sizeof(STACK_ELEM));
-    if (!stack->elements) exit(OVERFLOW);   // 存储分配失败
-    stack->top = stack->elements;
-    stack->capacity = STACK_INIT_CAPACITY;
+/*!
+ * 顺序栈初始化
+ * @param seq_stack 顺序栈(指针)
+ * @return 执行结果
+ */
+Status SeqStackInit(seq_stack_t* seq_stack) {
 
-    return OK;
-}
-
-
-Status StackGetTop(seq_stack_t S, STACK_ELEM *e) {
-    // 若栈不空, 则用e返回S的栈顶元素, 并返回OK; 否则返回ERROR
-    if (S.top == S.elements) return ERROR;
-    *e = *(S.top - 1);
-    return OK;
-} // StackGetTop
-
-
-Status StackPush(seq_stack_t* S, binary_tree_node_t *e) {
-    // 插入元素e为新的栈顶元素
-    if (S->top - S->elements >= S->capacity) { // 栈满, 追加存储空间
-        S->elements = (STACK_ELEM*)realloc(S->elements, (S->capacity + STACKINCREMENT) * sizeof(STACK_ELEM));
-        if (!S->elements) exit(OVERFLOW);   // 存储分配失败
-
-        S->top = S->elements + S->capacity;
-        S->capacity += STACKINCREMENT;
-    }
-    *S->top++ = e;
-    return OK;
-} // StackPush
-
-
-Status StackPop(seq_stack_t *S, STACK_ELEM *e) {
-    // 若栈不空, 则删除S的栈顶元素, 用e返回其值, 并返回OK; 否则返回ERROR
-    if (S->top == S->elements) return ERROR;
-    *e = *--S->top;
-    return OK;
-} // StackPop
-
-
-// 销毁栈S, S不再存在
-Status DestroyStack(seq_stack_t *S) {
-    free(S->elements);
-    free(S);
-
-    return OK;
-}
-
-
-// 把S置为空栈
-Status ClearStack(seq_stack_t *S) {
-    STACK_ELEM e;
-    while (StackEmpty(*S) != OK) {
-        StackPop(S, &e);
+    // 栈元素数组申请内存
+    seq_stack->elements = (STACK_ELEM*)malloc(STACK_INIT_CAPACITY * sizeof(STACK_ELEM));
+    if (!seq_stack->elements) {
+        return NON_ALLOCATED;   // 存储分配失败
     }
 
+    seq_stack->top = seq_stack->elements;       //!< top指针初始化
+    seq_stack->capacity = STACK_INIT_CAPACITY;  //!< 栈容量初始化
+
     return OK;
 }
 
 
-// 若栈S为空栈, 则返回TRUE, 否则返回FALSE
-int StackEmpty(seq_stack_t S) {
-    if (S.top == S.elements) {
+/*!
+ * @brief 获取栈顶元素
+ * @param seq_stack 顺序栈
+ * @param elem 栈顶元素保存变量
+ * @return 执行结果
+ */
+Status SeqStackGetTop(seq_stack_t seq_stack, STACK_ELEM* elem) {
+    if (SeqStackIsEmpty(seq_stack)){
+        return NON_EXISTENT;
+    }
+
+    *elem = *(seq_stack.top - 1);   // 使用栈顶元素赋值
+
+    return OK;
+}
+
+
+Status SeqStackPush(seq_stack_t* seq_stack, binary_tree_node_t* node) {
+    // 栈满, 追加存储空间
+    if (seq_stack->top - seq_stack->elements >= seq_stack->capacity) {
+        seq_stack->elements = (STACK_ELEM*)realloc(seq_stack->elements,
+                                                   (seq_stack->capacity + STACKINCREMENT) * sizeof(STACK_ELEM));
+        if (!seq_stack->elements) {
+            return NON_ALLOCATED;   // 存储分配失败
+        }
+
+        seq_stack->top = seq_stack->elements + seq_stack->capacity; // 调整top指向栈顶
+        seq_stack->capacity += STACKINCREMENT;  // 调整扩容数值
+    }
+
+    *seq_stack->top = node; // node赋值到top指向的位置
+    seq_stack->top++;       // top向后移一位
+
+    return OK;
+}
+
+
+/*!
+ * 出栈
+ * @param seq_stack 顺序栈(指针)
+ * @param elem 保存出栈元素的元素变量(指针)
+ * @return 执行结果
+ */
+Status SeqStackPop(seq_stack_t* seq_stack, STACK_ELEM* elem) {
+    if (seq_stack->top == seq_stack->elements) {
+        return NON_EXISTENT;
+    }
+
+    seq_stack->top--;           // top向前移一位
+    *elem = *seq_stack->top;    // top指向的元素值赋给elem
+
+    return OK;
+}
+
+
+/*!
+ * 栈销毁
+ * @param seq_stack 顺序栈(指针)
+ * @return
+ */
+Status SeqStackDestroy(seq_stack_t* seq_stack) {
+    free(seq_stack->elements);
+    free(seq_stack);
+
+    return OK;
+}
+
+
+/*!
+ * 栈清空
+ * @param seq_stack 顺序栈(指针)
+ * @return 执行结果
+ */
+Status ClearStack(seq_stack_t* seq_stack) {
+    STACK_ELEM elem;
+    while (SeqStackIsEmpty(*seq_stack) != OK) {
+        SeqStackPop(seq_stack, &elem);
+    }
+
+    return OK;
+}
+
+
+/*!
+ * 栈是否为空
+ * @param seq_stack 顺序栈
+ * @return 是否为空
+ */
+int SeqStackIsEmpty(seq_stack_t seq_stack) {
+    if (seq_stack.top == seq_stack.elements) {
         return TRUE;
     }
 
@@ -78,7 +123,11 @@ int StackEmpty(seq_stack_t S) {
 }
 
 
-// 返回S的元素个数, 即栈的长度
-int StackLength(seq_stack_t S) {
-    return S.top - S.elements;
+/*!
+ * 栈长度
+ * @param seq_stack 顺序栈
+ * @return 长度值
+ */
+int SeqStackLength(seq_stack_t seq_stack) {
+    return seq_stack.top - seq_stack.elements;
 }

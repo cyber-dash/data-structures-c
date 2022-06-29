@@ -81,45 +81,55 @@ Status CreateBiTreeByString(binary_tree_t *T, char *string, int *posPtr, int str
 
 
 /*!
- * @brief 前序遍历
- * @param T 二叉树节点指针
- * @param Visit 节点元素访问函数
- * @return 是否遍历成功
+ * @brief 二叉树前序遍历(递归)
+ * @param node 二叉树结点(指针)
+ * @param Visit 结点元素访问函数
+ * @return 执行结果
  */
-Status PreOrderTraverse(binary_tree_t T, Status (*Visit)(TREE_NODE_DATA e)) {
-    if (T == NULL) {
+Status BinaryTreePreOrderTraverseRecursive(binary_tree_node_t* node, Status (*Visit)(TREE_NODE_DATA)) {
+
+    // 结点如果为NULL, 返回OK, 正确情况下的递归终止
+    if (node == NULL) {
         return OK;
     }
 
-    Visit(T->data);
-
-    if (PreOrderTraverse(T->left_child, Visit) != OK) {
-        return ERROR;
+    // 访问结点, 如果访问失败, 返回失败原因, 错误情况下的递归终止
+    Status status = Visit(node->data);
+    if (status != OK) {
+        return status;
     }
 
-    if (PreOrderTraverse(T->right_child, Visit) != OK) {
-        return ERROR;
+    // 对node左孩子进行递归
+    status = BinaryTreePreOrderTraverseRecursive(node->left_child, Visit);
+    if (status != OK) {
+        return status;
     }
+
+    // 对node右孩子进行递归
+    status = BinaryTreePreOrderTraverseRecursive(node->right_child, Visit);
+
+    return status;
 }
 
 
 /*!
- * 中序遍历
+ * @brief 二叉树中序遍历
+ * @param node 二叉树结点(指针)
  * @param Visit 结点元素访问函数
- * @return 是否成功
- * @note
+ * @return 执行结果
  */
-Status InOrderTraverse(binary_tree_t node, Status (*Visit)(TREE_NODE_DATA)) {
+Status BinaryTreeInOrderTraverse(binary_tree_node_t* node, Status (*Visit)(TREE_NODE_DATA)) {
+
     seq_stack_t stack;
-    StackInit(&stack);
+    SeqStackInit(&stack);
 
     binary_tree_node_t* cur = node;
-    while (cur || !StackEmpty(stack)) {
+    while (cur || !SeqStackIsEmpty(stack)) {
         if (cur) {
-            StackPush(&stack, cur);
+            SeqStackPush(&stack, cur);
             cur = cur->left_child;
         } else {
-            StackPop(&stack, &cur);
+            SeqStackPop(&stack, &cur);
             if (Visit(cur->data) != OK) {
                 return ERROR;
             }
@@ -131,41 +141,44 @@ Status InOrderTraverse(binary_tree_t node, Status (*Visit)(TREE_NODE_DATA)) {
 }
 
 /*!
- * 中序遍历2
- * @param node 二叉树
+ * 二叉树中序遍历2
+ * @param node 二叉树结点(指针)
  * @param Visit 结点元素访问函数
- * @return 是否成功
+ * @return 执行结果
  * @note
  */
-Status InOrderTraverse2(binary_tree_node_t* node, Status (*Visit)(TREE_NODE_DATA)) {
+Status BinaryTreeInOrderTraverse2(binary_tree_node_t* node, Status (*Visit)(TREE_NODE_DATA)) {
 
     seq_stack_t stack;
-    StackInit(&stack);
+    SeqStackInit(&stack);
 
-    StackPush(&stack, node); // 根指针进栈
+    SeqStackPush(&stack, node); // 根指针进栈
 
-    while (!StackEmpty(stack)) {
+    while (!SeqStackIsEmpty(stack)) {
+
         binary_tree_node_t* cur;
 
         // 一直向左子树遍历
-        while (StackGetTop(stack, &cur) == OK && cur) {
-            StackPush(&stack, cur->left_child);
+        while (SeqStackGetTop(stack, &cur) == OK && cur) {
+            SeqStackPush(&stack, cur->left_child);
         }
-        StackPop(&stack, &cur); // 把栈顶的NULL结点pop出去, pop完后栈顶是树结点
+        SeqStackPop(&stack, &cur); // 把栈顶的NULL结点pop出去, pop完后栈顶是树结点
 
         // 如果栈空, 跳出循环, 中序遍历结束
-        if (StackEmpty(stack)) {
+        if (SeqStackIsEmpty(stack)) {
             break;
         }
 
-        // 栈顶出栈, 并打印
-        StackPop(&stack, &cur);
+        // 栈顶出栈, 赋给cur
+        SeqStackPop(&stack, &cur);
+
+        // 访问结点cur
         if (Visit(cur->data) != OK) {
             return ERROR;
         }
 
         // cur的右孩子结点入栈
-        StackPush(&stack, cur->right_child);
+        SeqStackPush(&stack, cur->right_child);
     }
 
     return OK;

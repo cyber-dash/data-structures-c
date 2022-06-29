@@ -22,15 +22,15 @@ void HuffmanCoding(HuffmanTree HT, HuffmanCode *HC, int *w, int n) {
     for (p = HT + 1, i = 1; i <= n; ++i, ++p, ++w) {    // 从数组索引1开始, 讲n个字符对应的节点初始化
         p->weight = *w;
         p->parent = 0;
-        p->lchild = 0;
-        p->rchild = 0;
+        p->left_child = 0;
+        p->right_child = 0;
     }
 
     for (; i <= m; ++i, ++p)  { // 讲剩余的节点初始化(权值设置为0)
         p->weight = 0;
         p->parent = 0;
-        p->lchild = 0;
-        p->rchild = 0;
+        p->left_child = 0;
+        p->right_child = 0;
     }
 
     for (i = n + 1; i <= m; ++i) {  // 建赫夫曼树
@@ -41,8 +41,8 @@ void HuffmanCoding(HuffmanTree HT, HuffmanCode *HC, int *w, int n) {
 
         HT[s1].parent = i;
         HT[s2].parent = i;
-        HT[i].lchild = s1;
-        HT[i].rchild = s2;
+        HT[i].left_child = s1;
+        HT[i].right_child = s2;
         HT[i].weight = HT[s1].weight + HT[s2].weight;
     }
 
@@ -54,7 +54,7 @@ void HuffmanCoding(HuffmanTree HT, HuffmanCode *HC, int *w, int n) {
     for (int i = 1; i <= n; ++i) {
         int start = n - 1;
         for (int c = i, f = HT[i].parent; f != 0; c = f, f = HT[f].parent) {    // 从叶子到根逆向求编码
-            if (HT[f].lchild == c)
+            if (HT[f].left_child == c)
                 cd[--start] = "0";
             else
                 cd[--start] = "1";

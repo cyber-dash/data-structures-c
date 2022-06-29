@@ -6,14 +6,11 @@
 #define CYBER_DASH_TREE_COMMON_H
 
 
-#define TElemType char
+#define TREE_NODE_DATA char
 #define TRUE    1
 #define FALSE   0
 #define MAX_TREE_SIZE 100           // 最大结点数
 
-typedef enum Status { OK, ERROR, OVERFLOW} Status;
-
-/*
 typedef enum Status {
     OK,
     NON_ALLOCATED,
@@ -21,7 +18,6 @@ typedef enum Status {
     ERROR,
     OVERFLOW
 } Status;
-*/
 
 
 #endif // CYBER_DASH_TREE_COMMON_H

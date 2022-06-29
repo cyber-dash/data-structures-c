@@ -8,9 +8,9 @@
 
 int main() {
 
-    // TestBinaryTreePreOrderTraverse();
+    TestBinaryTreePreOrderTraverse();
 
-    // TestBinaryTreeInOrderTraverse();
+    TestBinaryTreeInOrderTraverse();
 
     TestBinaryTreeInOrderTraverse2();
 

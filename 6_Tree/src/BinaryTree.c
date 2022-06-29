@@ -31,8 +31,8 @@ Status CreateBiTree(binary_tree_t *T) {
   else {
     if (!(*T = (binary_tree_node_t*)malloc(sizeof(binary_tree_node_t)))) exit(OVERFLOW);
     (*T)->data = ch;                    // 生成根节点
-    CreateBiTree(&(*T)->lchild);   // 构造左子树
-    CreateBiTree(&(*T)->rchild);   // 构造右子树
+    CreateBiTree(&(*T)->left_child);   // 构造左子树
+    CreateBiTree(&(*T)->right_child);   // 构造右子树
   }
 
   return OK;
@@ -65,12 +65,12 @@ Status CreateBiTreeByString(binary_tree_t *T, char *string, int *posPtr, int str
             return OVERFLOW;
         }
         (*T)->data = ch; // 子树根节点赋值
-        Status res = CreateBiTreeByString(&(*T)->lchild, string, posPtr, strLen);   // 构造左子树
+        Status res = CreateBiTreeByString(&(*T)->left_child, string, posPtr, strLen);   // 构造左子树
         if (res != OK) {
             return ERROR;
         }
 
-        res = CreateBiTreeByString(&(*T)->rchild, string, posPtr, strLen);   // 构造右子树
+        res = CreateBiTreeByString(&(*T)->right_child, string, posPtr, strLen);   // 构造右子树
         if (res != OK) {
             return ERROR;
         }
@@ -86,31 +86,58 @@ Status CreateBiTreeByString(binary_tree_t *T, char *string, int *posPtr, int str
  * @param Visit 节点元素访问函数
  * @return 是否遍历成功
  */
-Status PreOrderTraverse(binary_tree_t T, Status (*Visit)(TElemType e)) {
+Status PreOrderTraverse(binary_tree_t T, Status (*Visit)(TREE_NODE_DATA e)) {
     if (T == NULL) {
         return OK;
     }
 
     Visit(T->data);
 
-    if (PreOrderTraverse(T->lchild, Visit) != OK) {
+    if (PreOrderTraverse(T->left_child, Visit) != OK) {
         return ERROR;
     }
 
-    if (PreOrderTraverse(T->rchild, Visit) != OK) {
+    if (PreOrderTraverse(T->right_child, Visit) != OK) {
         return ERROR;
     }
 }
 
 
 /*!
- * 算法6.2 中序遍历
+ * 中序遍历
+ * @param Visit 结点元素访问函数
+ * @return 是否成功
+ * @note
+ */
+Status InOrderTraverse(binary_tree_t node, Status (*Visit)(TREE_NODE_DATA)) {
+    seq_stack_t stack;
+    StackInit(&stack);
+
+    binary_tree_node_t* cur = node;
+    while (cur || !StackEmpty(stack)) {
+        if (cur) {
+            StackPush(&stack, cur);
+            cur = cur->left_child;
+        } else {
+            StackPop(&stack, &cur);
+            if (Visit(cur->data) != OK) {
+                return ERROR;
+            }
+            cur = cur->right_child;
+        }
+    }
+
+    return OK;
+}
+
+/*!
+ * 中序遍历2
  * @param node 二叉树
  * @param Visit 结点元素访问函数
  * @return 是否成功
  * @note
  */
-Status InOrderTraverse(binary_tree_node_t* node, Status (*Visit)(TElemType e)) {
+Status InOrderTraverse2(binary_tree_node_t* node, Status (*Visit)(TREE_NODE_DATA)) {
 
     seq_stack_t stack;
     StackInit(&stack);
@@ -122,7 +149,7 @@ Status InOrderTraverse(binary_tree_node_t* node, Status (*Visit)(TElemType e)) {
 
         // 一直向左子树遍历
         while (StackGetTop(stack, &cur) == OK && cur) {
-            StackPush(&stack, cur->lchild);
+            StackPush(&stack, cur->left_child);
         }
         StackPop(&stack, &cur); // 把栈顶的NULL结点pop出去, pop完后栈顶是树结点
 
@@ -138,39 +165,12 @@ Status InOrderTraverse(binary_tree_node_t* node, Status (*Visit)(TElemType e)) {
         }
 
         // cur的右孩子结点入栈
-        StackPush(&stack, cur->rchild);
+        StackPush(&stack, cur->right_child);
     }
 
     return OK;
 }
 
 
-/*!
- * 中序遍历2
- * @param Visit 结点元素访问函数
- * @return 是否成功
- * @note
- * 第131页
- */
-Status InOrderTraverse2(binary_tree_t node, Status (*Visit)(TElemType e)) {
-    seq_stack_t stack;
-    StackInit(&stack);
-
-    binary_tree_node_t* cur = node;
-    while (cur || !StackEmpty(stack)) {
-        if (cur) {
-            StackPush(&stack, cur);
-            cur = cur->lchild;
-        } else {
-            StackPop(&stack, &cur);
-            if (!Visit(cur->data)) {
-                return ERROR;
-            }
-            cur = cur->rchild;
-        }
-    }
-
-    return OK;
-}
 
 

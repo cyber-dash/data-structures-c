@@ -8,7 +8,7 @@
 #include "test.h"
 
 
-Status VisitChar(TElemType e) { // 输出元素e的值
+Status VisitChar(TREE_NODE_DATA e) { // 输出元素e的值
   printf("%c", e);                 // 使用时, 加上格式串
   return OK;
 }

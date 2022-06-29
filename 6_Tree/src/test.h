@@ -8,7 +8,7 @@
 #include "BinaryTree.h"
 #include "HuffmanTree.h"
 
-Status VisitChar(TElemType e);
+Status VisitChar(TREE_NODE_DATA e);
 
 void TestBinaryTreeCreateBiTree();
 

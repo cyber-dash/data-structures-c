@@ -7,18 +7,18 @@
 #include "stdio.h"
 
 
-Status StackInit(seq_stack_t *S) {
+Status StackInit(seq_stack_t* stack) {
     // 构造一个空栈S
-    S->elements = (SElemType*)malloc(STACK_INIT_SIZE * sizeof(SElemType));
-    if (!S->elements) exit(OVERFLOW);   // 存储分配失败
-    S->top = S->elements;
-    S->size = STACK_INIT_SIZE;
+    stack->elements = (STACK_ELEM*)malloc(STACK_INIT_CAPACITY * sizeof(STACK_ELEM));
+    if (!stack->elements) exit(OVERFLOW);   // 存储分配失败
+    stack->top = stack->elements;
+    stack->capacity = STACK_INIT_CAPACITY;
 
     return OK;
 }
 
 
-Status StackGetTop(seq_stack_t S, SElemType *e) {
+Status StackGetTop(seq_stack_t S, STACK_ELEM *e) {
     // 若栈不空, 则用e返回S的栈顶元素, 并返回OK; 否则返回ERROR
     if (S.top == S.elements) return ERROR;
     *e = *(S.top - 1);
@@ -28,19 +28,19 @@ Status StackGetTop(seq_stack_t S, SElemType *e) {
 
 Status StackPush(seq_stack_t* S, binary_tree_node_t *e) {
     // 插入元素e为新的栈顶元素
-    if (S->top - S->elements >= S->size) { // 栈满, 追加存储空间
-        S->elements = (SElemType*)realloc(S->elements, (S->size + STACKINCREMENT) * sizeof(SElemType));
+    if (S->top - S->elements >= S->capacity) { // 栈满, 追加存储空间
+        S->elements = (STACK_ELEM*)realloc(S->elements, (S->capacity + STACKINCREMENT) * sizeof(STACK_ELEM));
         if (!S->elements) exit(OVERFLOW);   // 存储分配失败
 
-        S->top = S->elements + S->size;
-        S->size += STACKINCREMENT;
+        S->top = S->elements + S->capacity;
+        S->capacity += STACKINCREMENT;
     }
     *S->top++ = e;
     return OK;
 } // StackPush
 
 
-Status StackPop(seq_stack_t *S, SElemType *e) {
+Status StackPop(seq_stack_t *S, STACK_ELEM *e) {
     // 若栈不空, 则删除S的栈顶元素, 用e返回其值, 并返回OK; 否则返回ERROR
     if (S->top == S->elements) return ERROR;
     *e = *--S->top;
@@ -59,7 +59,7 @@ Status DestroyStack(seq_stack_t *S) {
 
 // 把S置为空栈
 Status ClearStack(seq_stack_t *S) {
-    SElemType e;
+    STACK_ELEM e;
     while (StackEmpty(*S) != OK) {
         StackPop(S, &e);
     }

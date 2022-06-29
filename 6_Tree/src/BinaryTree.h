@@ -10,22 +10,22 @@
 #include "BinaryTreeNode.h"
 
 
-typedef TElemType SqBiTree[MAX_TREE_SIZE]; // 0号单元存储根节点
+typedef TREE_NODE_DATA SqBiTree[MAX_TREE_SIZE]; // 0号单元存储根节点
 
 
 Status CreateBiTree(binary_tree_t *T);
 
 Status CreateBiTreeByString(binary_tree_t *T, char *string, int *pos, int strLen);
 
-Status PreOrderTraverse(binary_tree_t T, Status (*Visit)(TElemType e));
+Status PreOrderTraverse(binary_tree_t T, Status (*Visit)(TREE_NODE_DATA e));
 
-Status InOrderTraverse(binary_tree_t node, Status (*Visit)(TElemType e));
+Status InOrderTraverse(binary_tree_t node, Status (*Visit)(TREE_NODE_DATA e));
 
-Status InOrderTraverse2(binary_tree_t node, Status (*Visit)(TElemType e));
+Status InOrderTraverse2(binary_tree_t node, Status (*Visit)(TREE_NODE_DATA e));
 
-Status PostOrderTraverse(binary_tree_t T, Status (*Visit)(TElemType e));
+Status PostOrderTraverse(binary_tree_t T, Status (*Visit)(TREE_NODE_DATA e));
 
-Status LevelOrderTraverse(binary_tree_t T, Status (*Visit)(TElemType e));
+Status LevelOrderTraverse(binary_tree_t T, Status (*Visit)(TREE_NODE_DATA e));
 
 
 #endif // CYBER_DASH_BINARY_TREE_H

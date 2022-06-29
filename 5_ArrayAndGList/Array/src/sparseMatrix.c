@@ -5,6 +5,7 @@
 #include "sparseMatrix.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 
 /*!
@@ -52,9 +53,9 @@ Status TransposeSMatrix(sparse_matrix_t matrix, sparse_matrix_t* transposed_matr
 
     int index = 1;  // 三元组数组的索引, 初始化为1
 
-    // 遍历原数组的列(转置数组的行)
+    // 遍历原矩阵的列(转置矩阵的行)
     for (int column = 1; column <= matrix.column_num; column++) {
-        // 遍历原数组的三元组数组
+        // 遍历原矩阵的三元组数组
         for (int i = 1; i <= matrix.non_zero_count; i++) {
             // 如果当前元素的列号等于column, 将该元素对应的新数据, 插入到三元组数组index位置
             if (matrix.elements[i].column == column) {
@@ -94,23 +95,24 @@ Status FastTransposeSMatrix(sparse_matrix_t matrix, sparse_matrix_t* transposed_
         return OK;
     }
 
-    // 转置矩阵每行的非零项数和数组
+    // 转置矩阵每行的非零项数数组, 初始化每行0个非零项
     int* non_zero_count_per_row_array = (int*)malloc((transposed_matrix->row_num + 1) * sizeof(int));
-    // 转置矩阵每行的迭代器数组
-    int* iterator_per_row_array = (int*)malloc((transposed_matrix->row_num + 1) * sizeof(int));
-
     for (int row = 1; row <= transposed_matrix->row_num; row++) {
         non_zero_count_per_row_array[row] = 0;
     }
 
+    // 转置矩阵每行的迭代器数组
+    int* iterator_per_row_array = (int*)malloc((transposed_matrix->row_num + 1) * sizeof(int));
+
+    // 遍历原矩阵的三元组数组, 求出转置矩阵每行的非零项数
     for (int i = 1; i <= transposed_matrix->non_zero_count; ++i) {
         // 转置矩阵当前非零项的行号
         int cur_transposed_matrix_elem_row = matrix.elements[i].column;
-        // 当前行的非零总项数+1
+        // 当前行的非零项数+1
         non_zero_count_per_row_array[cur_transposed_matrix_elem_row]++;
     }
 
-    /// 构造转置数组的三元组数组elements的分布
+    /// 构造转置矩阵的三元组数组elements的分布
     ///
     /// elements[ 0 第1行的首元素的位置   ...      第2行的首元素的位置      ...            第i行的首个元素的位置        ... ]
     ///                    ^                           ^                                      ^
@@ -120,13 +122,14 @@ Status FastTransposeSMatrix(sparse_matrix_t matrix, sparse_matrix_t* transposed_
     /// 核心算法:
     ///
     ///    iterator_per_row_array[i] = iterator_per_row_array[i - 1] + non_zero_count_per_row_array[i - 1];
-    /// 即在三元组数组elements上, 转置矩阵每行首元素所在的位置, 等于上一行首个元素的位置 + 该行(上一行)的所有非零元素数
+    /// 即在三元组数组elements上, 转置矩阵每行首元素所在的位置, 等于上一行首个元素的位置 + 该行(上一行)的所有非零项数
 
-    iterator_per_row_array[1] = 1;  // 表示转置数组的第1行首个元素将插入到elements[1]
+    iterator_per_row_array[1] = 1;  // 表示转置矩阵的第1行首个元素将插入到elements[1]
     for (int row = 2; row <= transposed_matrix->row_num; row++) {
         iterator_per_row_array[row] = iterator_per_row_array[row - 1] + non_zero_count_per_row_array[row - 1];
     }
 
+    // 转置矩阵的三元组数组elements更新
     for (int i = 1; i <= matrix.non_zero_count; i++) {
         int cur_elem_row = matrix.elements[i].column;           //!< 当前转置矩阵元素的行号
         int iterator = iterator_per_row_array[cur_elem_row];    //!< 当前转置矩阵元素在elements数组中对应的索引

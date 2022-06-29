@@ -8,11 +8,11 @@
 
 int main() {
 
-    // TestBinaryTreePreOrderTraverse();
+    TestBinaryTreePreOrderTraverse();
 
     TestBinaryTreeInOrderTraverse();
 
-    // TestBinaryTreeInOrderTraverse2();
+    TestBinaryTreeInOrderTraverse2();
 
     return 0;
 }

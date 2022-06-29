@@ -7,7 +7,8 @@
 
 
 #define TElemType char
-
+#define TRUE    1
+#define FALSE   0
 #define MAX_TREE_SIZE 100           // 最大结点数
 
 typedef enum Status { OK, ERROR, OVERFLOW} Status;

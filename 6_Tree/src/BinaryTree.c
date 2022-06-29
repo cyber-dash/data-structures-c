@@ -58,9 +58,9 @@ Status CreateBiTreeByString(binary_tree_t *T, char *string, int *posPtr, int str
 
     char ch = string[pos];
     *posPtr = pos + 1;
-    if (ch == ' ')
+    if (ch == ' ') {
         *T = NULL;
-    else {
+    } else {
         if (!(*T = (binary_tree_node_t*)malloc(sizeof(binary_tree_node_t)))) {
             return OVERFLOW;
         }
@@ -87,15 +87,19 @@ Status CreateBiTreeByString(binary_tree_t *T, char *string, int *posPtr, int str
  * @return 是否遍历成功
  */
 Status PreOrderTraverse(binary_tree_t T, Status (*Visit)(TElemType e)) {
-  if (T) {
-    Visit(T->data);
-    if (PreOrderTraverse(T->lchild, Visit)) {
-      if (PreOrderTraverse(T->rchild, Visit)) {
+    if (T != NULL) {
         return OK;
-      }
     }
-    return ERROR;
-  }else return OK;
+
+    Visit(T->data);
+
+    if (PreOrderTraverse(T->lchild, Visit) != OK) {
+        return ERROR;
+    }
+
+    if (PreOrderTraverse(T->rchild, Visit) != OK) {
+        return ERROR;
+    }
 } // PreOrderTraverse
 
 
@@ -114,18 +118,18 @@ Status InOrderTraverse(binary_tree_node_t* node, Status (*Visit)(TElemType e)) {
     StackPush(&stack, node); // 根指针进栈
 
     while (!StackEmpty(stack)) {
-        binary_tree_node_t* p;
-        while (StackGetTop(stack, &p) && p) {
-            StackPush(&stack, p->lchild); // 向左走到尽头
+        binary_tree_node_t* cur;
+        while (StackGetTop(stack, &cur) == OK && cur) {
+            StackPush(&stack, cur->lchild); // 向左走到尽头
         }
-        Pop(&stack, &p);
+        Pop(&stack, &cur);
 
         if (!StackEmpty(stack)) {
-            Pop(&stack, &p);
-            if (!Visit(p->data)) {
+            Pop(&stack, &cur);
+            if (Visit(cur->data) != OK) {
                 return ERROR;
             }
-            StackPush(&stack, p->rchild);
+            StackPush(&stack, cur->rchild);
         }
     }
 

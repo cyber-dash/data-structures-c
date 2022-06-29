@@ -6,7 +6,7 @@
 #define CYBER_DASH_BINARY_TREE_H
 
 #include "stack.h"
-#include "tree.h"
+#include "type.h"
 #include "BinaryTreeNode.h"
 
 

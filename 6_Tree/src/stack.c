@@ -47,13 +47,13 @@ Status SeqStackPush(seq_stack_t* seq_stack, binary_tree_node_t* node) {
     // 栈满, 追加存储空间
     if (seq_stack->top - seq_stack->elements >= seq_stack->capacity) {
         seq_stack->elements = (STACK_ELEM*)realloc(seq_stack->elements,
-                                                   (seq_stack->capacity + STACKINCREMENT) * sizeof(STACK_ELEM));
+                                                   (seq_stack->capacity + STACK_INCREMENT) * sizeof(STACK_ELEM));
         if (!seq_stack->elements) {
             return NON_ALLOCATED;   // 存储分配失败
         }
 
         seq_stack->top = seq_stack->elements + seq_stack->capacity; // 调整top指向栈顶
-        seq_stack->capacity += STACKINCREMENT;  // 调整扩容数值
+        seq_stack->capacity += STACK_INCREMENT;  // 调整扩容数值
     }
 
     *seq_stack->top = node; // node赋值到top指向的位置
@@ -99,7 +99,7 @@ Status SeqStackDestroy(seq_stack_t* seq_stack) {
  * @param seq_stack 顺序栈(指针)
  * @return 执行结果
  */
-Status ClearStack(seq_stack_t* seq_stack) {
+Status SeqStackClear(seq_stack_t* seq_stack) {
     STACK_ELEM elem;
     while (SeqStackIsEmpty(*seq_stack) != OK) {
         SeqStackPop(seq_stack, &elem);

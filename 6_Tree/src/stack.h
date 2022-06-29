@@ -4,7 +4,7 @@
 
 
 #include "type.h"
-#include "BinaryTreeNode.h"
+#include "binary_tree_node.h"
 
 
 #ifndef CYBER_DASH_STACK_H

@@ -7,7 +7,7 @@
 
 #include "stack.h"
 #include "type.h"
-#include "BinaryTreeNode.h"
+#include "binary_tree_node.h"
 
 
 typedef TREE_NODE_DATA SqBiTree[MAX_TREE_SIZE]; // 0号单元存储根节点

@@ -5,7 +5,7 @@
 #ifndef CYBER_DASH_TREE_TEST_H
 #define CYBER_DASH_TREE_TEST_H
 
-#include "BinaryTree.h"
+#include "binary_tree.h"
 #include "HuffmanTree.h"
 
 Status VisitChar(TREE_NODE_DATA e);

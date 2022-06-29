@@ -6,8 +6,8 @@
 #define CYBER_DASH_GLIST_TEST_H
 
 
-#include "sq_queue.h"
-#include "gList.h"
+#include "seq_queue.h"
+#include "gen_list.h"
 
 
 void TestInitGList();

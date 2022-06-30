@@ -1,143 +1,136 @@
 
-#include <string.h>
 #include <malloc.h>
 #include "cyberdash_string.h"
 
-Status StrAssign(HString *T, char *chars)
-{
-	int i, len = 0;
 
-	if (T->ch) {
-		free(T->ch);
+Status StringAssign(cyber_dash_string_t* cyber_dash_string, char* src_str, unsigned int str_len) {
+
+	if (cyber_dash_string->str) {
+		free(cyber_dash_string->str);
 	}
 
-	for (len = 0; *(chars + len) != '\0'; ++len);
-
-	if (len == 0) {
-		T->ch = NULL;
-		T->length = 0;
-	} else {
-		if (!(T->ch = (char *) malloc(len))) {
-			return OVERFLOW;
-		}
-
-		for (i = 0; i < len; i++) {
-			T->ch[i] = chars[i];
-		}
-
-		T->length = len;
+	if (str_len == 0) {
+        cyber_dash_string->str = NULL;
+        cyber_dash_string->length = 0;
+        return OK;
 	}
+
+    if (!(cyber_dash_string->str = (char*)malloc(str_len))) {
+        return NON_ALLOCATED;
+    }
+
+    for (int i = 0; i < str_len; i++) {
+        cyber_dash_string->str[i] = src_str[i];
+    }
+
+    cyber_dash_string->length = str_len;
 
 	return OK;
 }
 
 
-Status StrCopy(HString *T, HString *S)
-{
-	int i = 0;
-
-	while (i < StrLength(T) && i < StrLength(S)) {
-		T->ch[i] = S->ch[i];
-		i++;
+Status StringCopy(cyber_dash_string_t* target_string, cyber_dash_string_t* src_string) {
+	for (int i = 0; i < StringLength(target_string) && i < StringLength(src_string); i++) {
+        target_string->str[i] = src_string->str[i];
 	}
 
-	T->length = S->length;
+    target_string->length = src_string->length;
 
 	return OK;
 }
 
-int StrEmpty(HString *S)
-{
-	return S->length == 0;
+
+int StringEmpty(cyber_dash_string_t* cyber_dash_string) {
+	return cyber_dash_string->length == 0;
 }
 
-int StrCompare(HString *S, HString *T)
-{
-	int i = 0;
 
-	for (i = 0; i < S->length && i < T->length; i++) {
-		if (S->ch[i] != T->ch[i]) {
-			return S->ch[i] - T->ch[i];
+int StringCompare(cyber_dash_string_t* string1, cyber_dash_string_t* string2) {
+	for (int i = 0; i < string1->length && i < string2->length; i++) {
+		if (string1->str[i] != string2->str[i]) {
+			return string1->str[i] - string2->str[i];
 		}
 	}
 
-	return S->length - T->length;
+	return string1->length - string2->length;
 }
 
-int StrLength(HString *S)
-{
-	return S->length;
+
+int StringLength(cyber_dash_string_t* cyber_dash_string) {
+	return cyber_dash_string->length;
 }
 
-Status ClearString(HString *S)
-{
-	if (S->ch) {
-		free(S->ch);
-		S->ch = NULL;
+
+Status StringClear(cyber_dash_string_t* cyber_dash_string) {
+	if (cyber_dash_string->str) {
+		free(cyber_dash_string->str);
+        cyber_dash_string->str = NULL;
 	}
 
-	S->length = 0;
+    cyber_dash_string->length = 0;
 
 	return OK;
 }
 
-Status ConCat(HString *T, HString *S1, HString *S2)
-{
-	int i;
 
-	if (T->ch) {
-		free(T->ch);
+Status StringConcat(cyber_dash_string_t* target_string,
+                    cyber_dash_string_t* src_string1,
+                    cyber_dash_string_t* src_string2)
+{
+	if (target_string->str) {
+		free(target_string->str);
 	}
 
-	if (!(T->ch = (char *) malloc(S1->length + S2->length))) {
+	if (!(target_string->str = (char *) malloc(src_string1->length + src_string2->length))) {
 		return OVERFLOW;
 	}
 
-	for (i = 0; i < S1->length; i++) {
-		T->ch[i] = S1->ch[i];
+	for (int i = 0; i < src_string1->length; i++) {
+        target_string->str[i] = src_string1->str[i];
 	}
 
-	for (i = 0; i < S2->length; i++) {
-		T->ch[S1->length + i] = S2->ch[i];
+	for (int i = 0; i < src_string2->length; i++) {
+        target_string->str[src_string1->length + i] = src_string2->str[i];
 	}
 
-	T->length = S1->length + S2->length;
+    target_string->length = src_string1->length + src_string2->length;
 
 	return OK;
 }
 
-Status SubString(HString *Sub, HString *S, int pos, int len)
-{
+
+// todo:
+Status StringSubString(cyber_dash_string_t* sub_string, cyber_dash_string_t* src_string, int pos, int len) {
 	int i;
 
-	if (pos < 1 || pos >= S->length || len < 0 || len > S->length - pos + 1) {
+	if (pos < 1 || pos >= src_string->length || len < 0 || len > src_string->length - pos + 1) {
 		return ERROR;
 	}
 
-	if (Sub->ch) {
-		free(Sub->ch);
+	if (sub_string->str) {
+		free(sub_string->str);
 	}
 
 	if (len == 0) {
-		Sub->ch = NULL;
-		Sub->length = 0;
+        sub_string->str = NULL;
+        sub_string->length = 0;
 	} else {
-		Sub->ch = (char *) malloc(len);
-		if (Sub->ch == NULL) {
+        sub_string->str = (char *) malloc(len);
+		if (sub_string->str == NULL) {
 			return OVERFLOW;
 		}
 
 		for (i = 0; i <= len; i++) {
-			Sub->ch[i] = S->ch[pos + i - 1];
+            sub_string->str[i] = src_string->str[pos + i - 1];
 		}
 
-		Sub->length = len;
+        sub_string->length = len;
 	}
 
 	return OK;
 }
 
-Status Insert(HString *S, int pos, HString *T)
+Status Insert(cyber_dash_string_t *S, int pos, cyber_dash_string_t *T)
 {
 	int i;
 
@@ -146,17 +139,17 @@ Status Insert(HString *S, int pos, HString *T)
     }
 
     if (T->length) {
-	    S->ch = (char *) realloc(S->ch, S->length + T->length);
-	    if (S->ch == NULL) {
+	    S->str = (char *) realloc(S->str, S->length + T->length);
+	    if (S->str == NULL) {
 		    return OVERFLOW;
 	    }
 
 	    for (i = S->length - 1; i >= pos - 1; --i) {
-		    S->ch[i + T->length] = S->ch[i];
+		    S->str[i + T->length] = S->str[i];
 	    }
 
 	    for (i = 0; i < T->length; i++) {
-		    S->ch[pos + i - 1] = T->ch[i];
+		    S->str[pos + i - 1] = T->str[i];
 	    }
 
 	    S->length += T->length;
@@ -165,15 +158,15 @@ Status Insert(HString *S, int pos, HString *T)
     return OK;
 }
 
-int Index(HString *S, HString *T, int pos)
+int BruteForce(cyber_dash_string_t *S, cyber_dash_string_t *T, int pos)
 {
     int i, j;
 
     i = pos;
     j = 0;
 
-    while (i < StrLength(S) && j <= StrLength(T)) {
-	    if (S->ch[i] == T->ch[j]) {
+    while (i < StringLength(S) && j <= StringLength(T)) {
+	    if (S->str[i] == T->str[j]) {
 		    i++; j++;
 	    } else {
 		    i = i - j + 1;
@@ -181,24 +174,25 @@ int Index(HString *S, HString *T, int pos)
 	    }
     }
 
-    if (j <= StrLength(T)) {
-	    return i - StrLength(T);
+    if (j <= StringLength(T)) {
+	    return i - StringLength(T);
     }
 
     return 0;
 }
 
-static void get_next(HString *T, int next[])
+static void get_next(cyber_dash_string_t *T, int next[])
 {
 	int i = 1;
 	int j = 0;
 
 	next[1] = 0;
 
-	while (i < StrLength(T)) {
-		if (j == 0 || T->ch[i] == T->ch[j]) {
-			i++; j++;
-			if (T->ch[i] != T->ch[j]) {
+	while (i < StringLength(T)) {
+		if (j == 0 || T->str[i] == T->str[j]) {
+			i++;
+            j++;
+			if (T->str[i] != T->str[j]) {
 				next[i] = j;
 			} else {
 				next[i] = next[j];
@@ -209,15 +203,16 @@ static void get_next(HString *T, int next[])
 	}
 }
 
-int Index_KMP(HString *S, HString *T, int pos)
+
+int KMP(cyber_dash_string_t *S, cyber_dash_string_t *T, int pos)
 {
 	int i = pos, j = 0;
-	int *next = malloc(StrLength(T));
+	int* next = malloc(StringLength(T));
 
 	get_next(T, next);
 
-	while (i < StrLength(S) && j <= StrLength(T)) {
-		if (j == 0 || S->ch[i] == T->ch[j]) {
+	while (i < StringLength(S) && j <= StringLength(T)) {
+		if (j == 0 || S->str[i] == T->str[j]) {
 			i++;
 			j++;
 		} else {
@@ -225,8 +220,8 @@ int Index_KMP(HString *S, HString *T, int pos)
 		}
 	}
 
-	if (j <= StrLength(T)) {
-		return i - StrLength(T);
+	if (j <= StringLength(T)) {
+		return i - StringLength(T);
 	}
 
 	return 0;

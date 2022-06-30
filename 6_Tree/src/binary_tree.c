@@ -10,8 +10,8 @@
 /*!
  * 使用前序遍历字符串(NULL结点使用空格)创建二叉树(递归)
  * @param node 二叉树结点(二级指针)
- * @param pre_order_str 字符串地址(前序遍历, 需要表示出叶子节点左右孩子为NULL)
- * @param traverse_index 字符位置指针(字符串数组的数组索引)
+ * @param pre_order_str 前序遍历字符串首地址(NULL结点使用空格)
+ * @param traverse_index 遍历索引
  * @param pre_order_str_len 前序遍历字符串(NULL结点使用空格)长度
  * @return 是否成功
  * @note
@@ -21,32 +21,37 @@ Status BinaryTreeCreateByPreOrderStringRecursive(binary_tree_node_t** node,
                                                  int* traverse_index,
                                                  int pre_order_str_len)
 {
-    int index = *traverse_index;
-    if (index >= pre_order_str_len) {
+    //!< 如果遍历索引>=字符串长度, 越界(即之后的字符串不参与create), 终止递归
+    if (*traverse_index >= pre_order_str_len) {
         return OK;
     }
 
-    char chr = pre_order_str[index];
-    *traverse_index = index + 1;
+    char chr = pre_order_str[*traverse_index];  // traverse_index位置的字符赋给chr
+    *traverse_index = *traverse_index + 1;      // traverse_index指向的位置+1
+
+    //!< 如果chr为空格, 则为NULL结点, 返回OK, 终止递归
     if (chr == ' ') {
         *node = NULL;
         return OK;
     }
 
+    //!< 内存分配失败, 返回NON_ALLOCATED, 终止递归
     if (!(*node = (binary_tree_node_t*)malloc(sizeof(binary_tree_node_t)))) {
         return NON_ALLOCATED;
     }
 
     (*node)->data = chr; // 节点数据项赋值
 
+    //!< 对左孩子执行递归
     Status status = BinaryTreeCreateByPreOrderStringRecursive(&(*node)->left_child,
                                                               pre_order_str,
                                                               traverse_index,
                                                               pre_order_str_len);
-    if (status != OK) {
+    if (status != OK) { //!< 如果错误, 返回status, 终止递归
         return status;
     }
 
+    //!< 对右孩子执行递归
     status = BinaryTreeCreateByPreOrderStringRecursive(&(*node)->right_child,
                                                        pre_order_str,
                                                        traverse_index,

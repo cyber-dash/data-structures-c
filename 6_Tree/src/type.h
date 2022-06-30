@@ -6,10 +6,10 @@
 #define CYBER_DASH_TREE_COMMON_H
 
 
-#define TREE_NODE_DATA char
+#define BINARY_TREE_NODE_DATA char //!< 二叉树结点数据类型
 #define TRUE    1
 #define FALSE   0
-#define MAX_TREE_SIZE 100           // 最大结点数
+#define MAX_TREE_SIZE 100   //!< 树最大结点数
 
 typedef enum Status {
     OK,

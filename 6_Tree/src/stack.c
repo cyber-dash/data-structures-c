@@ -33,31 +33,40 @@ Status SeqStackInit(seq_stack_t* seq_stack) {
  * @return 执行结果
  */
 Status SeqStackGetTop(seq_stack_t seq_stack, STACK_ELEM* elem) {
+
+    // 如果栈空, 返回NON_EXISTENT
     if (SeqStackIsEmpty(seq_stack)){
         return NON_EXISTENT;
     }
 
-    *elem = *(seq_stack.top - 1);   // 使用栈顶元素赋值
+    *elem = *(seq_stack.top - 1);   // 使用栈顶元素(top指针指向位置的前一位)赋值
 
     return OK;
 }
 
 
-Status SeqStackPush(seq_stack_t* seq_stack, binary_tree_node_t* node) {
-    // 栈满, 追加存储空间
+/*!
+ * 入栈
+ * @param seq_stack 顺序栈(指针)
+ * @param elem 入栈元素
+ * @return 执行结果
+ */
+Status SeqStackPush(seq_stack_t* seq_stack, binary_tree_node_t* elem) {
+    //!< 栈满, 追加存储空间
     if (seq_stack->top - seq_stack->elements >= seq_stack->capacity) {
+        //!< 调用realloc重新分配内存
         seq_stack->elements = (STACK_ELEM*)realloc(seq_stack->elements,
                                                    (seq_stack->capacity + STACK_INCREMENT) * sizeof(STACK_ELEM));
         if (!seq_stack->elements) {
-            return NON_ALLOCATED;   // 存储分配失败
+            return NON_ALLOCATED;   //!< 如果存储分配失败, 返回NON_ALLOCATED
         }
 
-        seq_stack->top = seq_stack->elements + seq_stack->capacity; // 调整top指向栈顶
-        seq_stack->capacity += STACK_INCREMENT;  // 调整扩容数值
+        seq_stack->top = seq_stack->elements + seq_stack->capacity; //!< 调整top指向
+        seq_stack->capacity += STACK_INCREMENT;  //!< 调整扩容数值
     }
 
-    *seq_stack->top = node; // node赋值到top指向的位置
-    seq_stack->top++;       // top向后移一位
+    *seq_stack->top = elem; //!< node赋值到top指向的位置
+    seq_stack->top++;       //!< top向后移一位
 
     return OK;
 }
@@ -70,12 +79,13 @@ Status SeqStackPush(seq_stack_t* seq_stack, binary_tree_node_t* node) {
  * @return 执行结果
  */
 Status SeqStackPop(seq_stack_t* seq_stack, STACK_ELEM* elem) {
+    //!< 如果栈空, 返回NON_EXISTENT
     if (seq_stack->top == seq_stack->elements) {
         return NON_EXISTENT;
     }
 
-    seq_stack->top--;           // top向前移一位
-    *elem = *seq_stack->top;    // top指向的元素值赋给elem
+    seq_stack->top--;           //!< top指向向前移一位
+    *elem = *seq_stack->top;    //!< top指向的元素值赋给*elem
 
     return OK;
 }
@@ -84,7 +94,7 @@ Status SeqStackPop(seq_stack_t* seq_stack, STACK_ELEM* elem) {
 /*!
  * 栈销毁
  * @param seq_stack 顺序栈(指针)
- * @return
+ * @return 执行结果
  */
 Status SeqStackDestroy(seq_stack_t* seq_stack) {
     free(seq_stack->elements);

@@ -40,43 +40,53 @@ Status CreateBiTree(binary_tree_t *T) {
 
 
 /*!
- * 使用(使用前序遍历)字符串创建二叉树
- * @param T 二叉树指针
- * @param string 字符串地址(前序遍历, 需要表示出叶子节点左右孩子为NULL)
- * @param posPtr 字符位置指针(字符串数组的数组索引)
- * @param strLen 字符串长度
+ * 使用前序遍历字符串(NULL结点使用空格)创建二叉树(递归)
+ * @param node 二叉树结点(二级指针)
+ * @param pre_order_str 字符串地址(前序遍历, 需要表示出叶子节点左右孩子为NULL)
+ * @param traverse_index 字符位置指针(字符串数组的数组索引)
+ * @param str_len 字符串长度
  * @return 是否成功
  * @note
  * 本函数在书中未出现, 是对CreateBiTree函数的改造
  * 避免在函数调用中手动输入, 改为传字符串参数, 更加灵活
  */
-Status CreateBiTreeByString(binary_tree_t *T, char *string, int *posPtr, int strLen) {
-    int pos = *posPtr;
-    if (pos >= strLen) {
+Status BinaryTreeCreateByPreOrderStringRecursive(binary_tree_node_t** node,
+                                                 char* pre_order_str,
+                                                 int* traverse_index,
+                                                 int str_len)
+{
+    int index = *traverse_index;
+    if (index >= str_len) {
         return OK;
     }
 
-    char ch = string[pos];
-    *posPtr = pos + 1;
-    if (ch == ' ') {
-        *T = NULL;
-    } else {
-        if (!(*T = (binary_tree_node_t*)malloc(sizeof(binary_tree_node_t)))) {
-            return OVERFLOW;
-        }
-        (*T)->data = ch; // 子树根节点赋值
-        Status res = CreateBiTreeByString(&(*T)->left_child, string, posPtr, strLen);   // 构造左子树
-        if (res != OK) {
-            return ERROR;
-        }
-
-        res = CreateBiTreeByString(&(*T)->right_child, string, posPtr, strLen);   // 构造右子树
-        if (res != OK) {
-            return ERROR;
-        }
+    char chr = pre_order_str[index];
+    *traverse_index = index + 1;
+    if (chr == ' ') {
+        *node = NULL;
+        return OK;
     }
 
-    return OK;
+    if (!(*node = (binary_tree_node_t*)malloc(sizeof(binary_tree_node_t)))) {
+        return NON_ALLOCATED;
+    }
+
+    (*node)->data = chr; // 节点数据项赋值
+
+    Status status = BinaryTreeCreateByPreOrderStringRecursive(&(*node)->left_child,
+                                                              pre_order_str,
+                                                              traverse_index,
+                                                              str_len);
+    if (status != OK) {
+        return status;
+    }
+
+    status = BinaryTreeCreateByPreOrderStringRecursive(&(*node)->right_child,
+                                                       pre_order_str,
+                                                       traverse_index,
+                                                       str_len);
+
+    return status;
 }
 
 
@@ -86,7 +96,7 @@ Status CreateBiTreeByString(binary_tree_t *T, char *string, int *posPtr, int str
  * @param Visit 结点元素访问函数
  * @return 执行结果
  */
-Status BinaryTreePreOrderTraverseRecursive(binary_tree_node_t* node, Status (*Visit)(TREE_NODE_DATA)) {
+Status BinaryTreePreOrderTraverseRecursive(binary_tree_node_t* node, Status (*Visit)(BINARY_TREE_NODE_DATA)) {
 
     // 结点如果为NULL, 返回OK, 正确情况下的递归终止
     if (node == NULL) {
@@ -118,7 +128,7 @@ Status BinaryTreePreOrderTraverseRecursive(binary_tree_node_t* node, Status (*Vi
  * @param Visit 结点元素访问函数
  * @return 执行结果
  */
-Status BinaryTreeInOrderTraverse(binary_tree_node_t* node, Status (*Visit)(TREE_NODE_DATA)) {
+Status BinaryTreeInOrderTraverse(binary_tree_node_t* node, Status (*Visit)(BINARY_TREE_NODE_DATA)) {
 
     seq_stack_t stack;
     SeqStackInit(&stack);
@@ -147,7 +157,7 @@ Status BinaryTreeInOrderTraverse(binary_tree_node_t* node, Status (*Visit)(TREE_
  * @return 执行结果
  * @note
  */
-Status BinaryTreeInOrderTraverse2(binary_tree_node_t* node, Status (*Visit)(TREE_NODE_DATA)) {
+Status BinaryTreeInOrderTraverse2(binary_tree_node_t* node, Status (*Visit)(BINARY_TREE_NODE_DATA)) {
 
     seq_stack_t stack;
     SeqStackInit(&stack);

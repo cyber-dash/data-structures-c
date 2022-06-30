@@ -10,22 +10,22 @@
 #include "binary_tree_node.h"
 
 
-typedef TREE_NODE_DATA SqBiTree[MAX_TREE_SIZE]; // 0号单元存储根节点
+typedef BINARY_TREE_NODE_DATA SqBiTree[MAX_TREE_SIZE]; // 0号单元存储根节点
 
 
 Status CreateBiTree(binary_tree_t *T);
 
-Status CreateBiTreeByString(binary_tree_t *T, char *string, int *pos, int strLen);
+Status BinaryTreeCreateByPreOrderStringRecursive(binary_tree_t *node, char *pre_order_str, int *traverse_index, int str_len);
 
-Status BinaryTreePreOrderTraverseRecursive(binary_tree_t node, Status (*Visit)(TREE_NODE_DATA e));
+Status BinaryTreePreOrderTraverseRecursive(binary_tree_t node, Status (*Visit)(BINARY_TREE_NODE_DATA e));
 
-Status BinaryTreeInOrderTraverse(binary_tree_t node, Status (*Visit)(TREE_NODE_DATA e));
+Status BinaryTreeInOrderTraverse(binary_tree_t node, Status (*Visit)(BINARY_TREE_NODE_DATA e));
 
-Status BinaryTreeInOrderTraverse2(binary_tree_t node, Status (*Visit)(TREE_NODE_DATA e));
+Status BinaryTreeInOrderTraverse2(binary_tree_t node, Status (*Visit)(BINARY_TREE_NODE_DATA e));
 
-Status PostOrderTraverse(binary_tree_t T, Status (*Visit)(TREE_NODE_DATA e));
+Status PostOrderTraverse(binary_tree_t T, Status (*Visit)(BINARY_TREE_NODE_DATA e));
 
-Status LevelOrderTraverse(binary_tree_t T, Status (*Visit)(TREE_NODE_DATA e));
+Status LevelOrderTraverse(binary_tree_t T, Status (*Visit)(BINARY_TREE_NODE_DATA e));
 
 
 #endif // CYBER_DASH_BINARY_TREE_H

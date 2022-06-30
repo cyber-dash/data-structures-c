@@ -29,7 +29,7 @@ Status SeqStackClear(seq_stack_t *seq_stack);
 int SeqStackIsEmpty(seq_stack_t seq_stack);
 int SeqStackLength(seq_stack_t seq_stack);
 Status SeqStackGetTop(seq_stack_t seq_stack, STACK_ELEM *elem);
-Status SeqStackPush(seq_stack_t *seq_stack, binary_tree_node_t *node);
+Status SeqStackPush(seq_stack_t *seq_stack, binary_tree_node_t *elem);
 Status SeqStackPop(seq_stack_t *seq_stack, STACK_ELEM *elem);
 
 

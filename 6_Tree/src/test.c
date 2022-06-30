@@ -8,7 +8,7 @@
 #include "test.h"
 
 
-Status VisitChar(TREE_NODE_DATA e) { // 输出元素e的值
+Status VisitChar(BINARY_TREE_NODE_DATA e) { // 输出元素e的值
   printf("%c", e);                 // 使用时, 加上格式串
   return OK;
 }
@@ -46,7 +46,7 @@ void TestBinaryTreePreOrderTraverse() {
     char treeString[] = "ABC  DE G  F   ";
     int pos = 0;
 
-    Status status = CreateBiTreeByString(testTree, treeString, &pos, strlen(treeString));
+    Status status = BinaryTreeCreateByPreOrderStringRecursive(testTree, treeString, &pos, strlen(treeString));
 
     status = BinaryTreePreOrderTraverseRecursive(*testTree, VisitChar);
     if (status == OK) {
@@ -79,7 +79,7 @@ void TestBinaryTreeInOrderTraverse() {
     char treeString[] = "ABC  DE G  F   ";
     int pos = 0;
 
-    Status status = CreateBiTreeByString(test_tree, treeString, &pos, strlen(treeString));
+    Status status = BinaryTreeCreateByPreOrderStringRecursive(test_tree, treeString, &pos, strlen(treeString));
 
     status = BinaryTreeInOrderTraverse(*test_tree, VisitChar);
     if (status == OK) {
@@ -112,7 +112,7 @@ void TestBinaryTreeInOrderTraverse2() {
     char treeString[] = "ABC  DE G  F   ";
     int pos = 0;
 
-    CreateBiTreeByString(testTree, treeString, &pos, strlen(treeString));
+    BinaryTreeCreateByPreOrderStringRecursive(testTree, treeString, &pos, strlen(treeString));
 
     Status res = BinaryTreeInOrderTraverse2(*testTree, VisitChar);
     if (res == OK) {

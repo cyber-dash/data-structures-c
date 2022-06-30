@@ -45,14 +45,17 @@ void TestBinaryTreePreOrderTraverse() {
     printf("|                           \\                               |\n");
     printf("|                            G                              |\n");
 
-    binary_tree_t *testTree = (binary_tree_t*)malloc(sizeof(binary_tree_t));
+    binary_tree_t* binary_tree = (binary_tree_t*)malloc(sizeof(binary_tree_t));
 
-    char treeString[] = "ABC  DE G  F   ";
-    int pos = 0;
+    char pre_order_str[] = "ABC  DE G  F   ";
+    int traverse_index = 0;
 
-    Status status = BinaryTreeCreateByPreOrderStringRecursive(testTree, treeString, &pos, strlen(treeString));
+    Status status = BinaryTreeCreateByPreOrderStringRecursive(binary_tree, pre_order_str, &traverse_index, strlen(pre_order_str));
+    if (status != OK) {
+        printf("\n建二叉树失败\n");
+    }
 
-    status = BinaryTreePreOrderTraverseRecursive(*testTree, VisitChar);
+    status = BinaryTreePreOrderTraverseRecursive(*binary_tree, VisitChar);
     if (status == OK) {
         printf("\n前序遍历结束\n");
     } else {
@@ -78,14 +81,17 @@ void TestBinaryTreeInOrderTraverse() {
     printf("|                           \\                               |\n");
     printf("|                            G                              |\n");
 
-    binary_tree_t* test_tree = (binary_tree_t*)malloc(sizeof(binary_tree_t));
+    binary_tree_t* binary_tree = (binary_tree_t*)malloc(sizeof(binary_tree_t));
 
-    char treeString[] = "ABC  DE G  F   ";
-    int pos = 0;
+    char pre_order_str[] = "ABC  DE G  F   ";
+    int traverse_index = 0;
 
-    Status status = BinaryTreeCreateByPreOrderStringRecursive(test_tree, treeString, &pos, strlen(treeString));
+    Status status = BinaryTreeCreateByPreOrderStringRecursive(binary_tree, pre_order_str, &traverse_index, strlen(pre_order_str));
+    if (status != OK) {
+        printf("\n建二叉树失败\n");
+    }
 
-    status = BinaryTreeInOrderTraverse(*test_tree, VisitChar);
+    status = BinaryTreeInOrderTraverse(*binary_tree, VisitChar);
     if (status == OK) {
         printf("\n中序遍历结束\n");
     } else {
@@ -111,14 +117,14 @@ void TestBinaryTreeInOrderTraverse2() {
     printf("|                           \\                               |\n");
     printf("|                            G                              |\n");
 
-    binary_tree_t* testTree = (binary_tree_t*)malloc(sizeof(binary_tree_t));
+    binary_tree_t* binary_tree = (binary_tree_t*)malloc(sizeof(binary_tree_t));
 
     char treeString[] = "ABC  DE G  F   ";
     int pos = 0;
 
-    BinaryTreeCreateByPreOrderStringRecursive(testTree, treeString, &pos, strlen(treeString));
+    BinaryTreeCreateByPreOrderStringRecursive(binary_tree, treeString, &pos, strlen(treeString));
 
-    Status res = BinaryTreeInOrderTraverse2(*testTree, VisitChar);
+    Status res = BinaryTreeInOrderTraverse2(*binary_tree, VisitChar);
     if (res == OK) {
         printf("\n中序遍历结束\n");
     } else {

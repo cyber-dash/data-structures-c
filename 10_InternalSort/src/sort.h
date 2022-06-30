@@ -7,7 +7,7 @@
 
 
 /*----顺序链表的数据类型----*/
-# define MAXSIZE 20     // 顺序表的最大长度
+# define MAX_SIZE 20     // 顺序表的最大长度
 
 
 typedef int key_t;    //定义关键字类型为整数类型
@@ -18,9 +18,13 @@ typedef struct {
     info_t info; //其他数据项
 } seq_list_node_t;
 
+
+/*!
+ * 顺序表
+ */
 typedef struct {
-    seq_list_node_t elements[MAXSIZE + 1]; // elements[0]闲置或用作哨兵单元
-    int length;         //顺序表长度
+    seq_list_node_t elements[MAX_SIZE + 1]; //!< elements[0]闲置或用作哨兵单元
+    int length;         //!< 顺序表长度
 } seq_list_t;
 /*----顺序链表的数据类型----*/
 
@@ -84,7 +88,7 @@ void SelectSort(seq_list_t* L);
 
 void BubbleSort(seq_list_t* seq_list);
 
-void QuickSort(seq_list_t* L);
+void QuickSort(seq_list_t* seq_list);
 
 void HeapSort(heap_t* heap);
 

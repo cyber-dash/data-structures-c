@@ -121,6 +121,7 @@ Status BinaryTreeInOrderTraverse(binary_tree_node_t* node, Status (*Visit)(BINAR
     return OK;
 }
 
+
 /*!
  * 二叉树中序遍历2
  * @param node 二叉树结点(指针)

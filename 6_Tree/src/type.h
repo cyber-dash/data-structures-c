@@ -12,11 +12,11 @@
 #define MAX_TREE_SIZE 100   //!< 树最大结点数
 
 typedef enum Status {
-    OK,
+    OK = 0,
     NON_ALLOCATED,
     NON_EXISTENT,
-    ERROR,
-    OVERFLOW
+    OVERFLOW,
+    ERROR
 } Status;
 
 

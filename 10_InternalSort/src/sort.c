@@ -154,21 +154,18 @@ void Arrange(SLinkListType *SL)
 {
   int q = 0;
   int i = 0;
-  //根据静态链表SL中各结点的指针值调整记录位置，使得SL中记录按关键字非递减
-  //减有序排列
-  int p = SL->elements[0].next;                          //p指示第一个记录的当前位置
+  int p = SL->elements[0].next;
 
-  for(i = 1; i < SL->length; ++i){                //SL.elements[1..i-1]中记录已按关键字有序排列
-                                                  //第i个记录的在SL中的当前位置应不小于i
+  for (i = 1; i < SL->length; ++i) {
     while(p < i){
-      p = SL->elements[p].next;                          //找到第i个记录，并用p指示其在SL中当前位置
+      p = SL->elements[p].next;
     }
-    q = SL->elements[p].next;                            //q指示尚未调整的表尾
+    q = SL->elements[p].next;
     if(p != i){
         Swap(&SL->elements[p], &SL->elements[i], sizeof(SL->elements[p]));//交换记录,使第i个记录到位
-      SL->elements[i].next = p;                          //指向被移走的记录,使得以后可由while循环找回
+      SL->elements[i].next = p;
     }
-    p = q;                                        //p指示尚未调整的表尾,为找第i+1个记录作准备
+    p = q;
   }
 }//Arrange
  */
@@ -233,95 +230,92 @@ void BubbleSort(seq_list_t* seq_list) {
 
 
 // @brief 快排 获取枢纽位置 算法10.6a 改良前
-// @param L 待排数组
+// @param seq_list 待排数组
 // @param low 表左端
 // @param high 表右端
 // @return 新的枢纽位置
-int Partition_a(seq_list_t* L, int low, int high) {
-    int pivotkey;
+int Partition(seq_list_t* seq_list, int low, int high) {
 
-    //变换顺序表L中子表r[low,high]的记录，枢轴记录到位，并返回其所在位置，此时
-    //在它之前（后）的记录均不大（小）于它。
-    pivotkey = L->elements[low].key;                   //用子表第一个记录作枢轴记录
+    int pivot_key = seq_list->elements[low].key;
 
-    while (low < high) {                            //从表的两端交替地向中间扫描
-        while (low < high && (*L).elements[high].key >= pivotkey) {
+    while (low < high) {
+        while (low < high && seq_list->elements[high].key >= pivot_key) {
             high--;
         }
 
-        // Swap(&(*L).elements[high], &(*L).elements[low], sizeof(&(*L).elements[high]));//将比枢轴记录小的记录交换到低端
-        Swap(&L->elements[high], &L->elements[low]);//将比枢轴记录小的记录交换到低端
+        Swap(seq_list->elements + high, seq_list->elements + low);
 
-        while (low < high && L->elements[low].key <= pivotkey) {
+        while (low < high && seq_list->elements[low].key <= pivot_key) {
             low++;
         }
 
-        // Swap(&(*L).elements[high], &(*L).elements[low], sizeof(&(*L).elements[high]));//将比枢轴记录大的记录交换到高端
-        Swap(&L->elements[high], &L->elements[low]);//将比枢轴记录大的记录交换到高端
+        Swap(seq_list->elements + high, seq_list->elements + low);
     }
 
-    return low;                                   //返回枢轴所在位置
-}//Partition
+    return low;
+}
+
 
 // @brief 快排 获取枢纽位置 算法10.6b 改良后
-// @param L 待排数组
+// @param seq_list 待排数组
 // @param low 表左端
 // @param high 表右端
 // @return 新的枢纽位置
-int Partition(seq_list_t* L, int low, int high)
-{
-    int pivotkey;
+int Partition2(seq_list_t* seq_list, int low, int high) {
+    int pivot_key;
 
     //变换顺序表L中子表r[low,high]的记录，枢轴记录到位，并返回其所在位置，此时
     //在它之前（后）的记录均不大（小）于它。
-    L->elements[0] = L->elements[low];                    //用子表第一个记录作枢轴记录
-    pivotkey = L->elements[low].key;                 //枢轴记录关键字
+    seq_list->elements[0] = seq_list->elements[low];                    //用子表第一个记录作枢轴记录
+    pivot_key = seq_list->elements[low].key;                 //枢轴记录关键字
 
     while (low < high)
     { //从表的两端交替地向中间扫描
-        while (low < high && L->elements[high].key > pivotkey)
+        while (low < high && seq_list->elements[high].key > pivot_key)
         {
             high--;
         }
 
-        L->elements[low] = L->elements[high];               //将比枢轴记录小的记录交换到低端
+        seq_list->elements[low] = seq_list->elements[high];               //将比枢轴记录小的记录交换到低端
 
-        while (low < high && L->elements[low].key <= pivotkey)
+        while (low < high && seq_list->elements[low].key <= pivot_key)
         {
             low++;
         }
 
-        L->elements[high] = L->elements[low];               //将比枢轴记录大的记录交换到高端
+        seq_list->elements[high] = seq_list->elements[low];               //将比枢轴记录大的记录交换到高端
     }
 
-    L->elements[low] = L->elements[0];                    //枢轴记录到位
+    seq_list->elements[low] = seq_list->elements[0];                    //枢轴记录到位
 
     return low;                                 //返回枢轴所在位置
-} // Partition
+}
 
-// @brief 递归形式的快速排序
-// @param L 待排数组
-// @param low 表左端
-// @param high 表右端
-void QSort(seq_list_t* L, int low, int high)
-{
-    int pivotloc;
 
-    if (low < high)
-    {                                          //长度大于1
-        pivotloc = Partition(L, low, high);      //将(*L).elements[row..high]一分为二
+/*!
+ * 快速排序(递归)
+ * @param seq_list 顺序表(指针)
+ * @param low 表左侧位置
+ * @param high 表右侧位置
+ */
+void QuickSortRecursive(seq_list_t* seq_list, int low, int high) {
+    if (low < high) {
+        int pivot = Partition2(seq_list, low, high);
 
-        QSort(L, 1, pivotloc - 1);              //对低子表递归排序，pivotloc是枢轴位置
-        QSort(L, pivotloc + 1, high);           //对高子表递归排序
+        QuickSortRecursive(seq_list, 1, pivot - 1);
+        QuickSortRecursive(seq_list, pivot + 1, high);
     }
-}// QSort
+}
 
-// @brief 快速排序入口
-// @param L 待排数组
-void QuickSort(seq_list_t* L)
-{
-    QSort(L, 1, (*L).length);
-}// QuickSort
+
+/*!
+ * 顺序表快速排序
+ * @param seq_list 顺序表(指针)
+ */
+void QuickSort(seq_list_t* seq_list) {
+    int starting_index = 1; // 顺序表的起始索引为1(区别于数组0)
+    QuickSortRecursive(seq_list, starting_index, seq_list->length);
+}
 
 
 // @brief 简单选择排序
@@ -423,7 +417,7 @@ void Merge(seq_list_node_t SR[], seq_list_node_t TR[], int i, int m, int n)
 void MSort(seq_list_node_t SR[], seq_list_node_t TR1[], int s, int t)
 {
     int m;
-    seq_list_node_t TR2[MAXSIZE + 1];
+    seq_list_node_t TR2[MAX_SIZE + 1];
     // 将SR[s..t]归并排序为TR1[s..t]
     if (s == t)
     {

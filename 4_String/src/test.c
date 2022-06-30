@@ -7,17 +7,18 @@
 #include "test.h"
 
 
-static void inline PrintStr(cyber_dash_string_t *S) {
-	if (S == NULL || S->length <= 0) {
+static void inline PrintStr(cyber_dash_string_t* cyber_dash_string) {
+	if (cyber_dash_string == NULL || cyber_dash_string->length <= 0) {
 		return;
 	}
 
-	printf("%.*s\n", S->length, S->str);
+	printf("%.*s\n", cyber_dash_string->length, cyber_dash_string->str);
 }
 
 
 void test_StringCopy() {
-	cyber_dash_string_t T, S;
+	cyber_dash_string_t T;
+    cyber_dash_string_t S;
 
     memset(&T, 0, sizeof(cyber_dash_string_t));
     memset(&S, 0, sizeof(cyber_dash_string_t));

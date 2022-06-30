@@ -6,7 +6,7 @@
 #define CYBER_DASH_TREE_BINARY_TREE_NODE_H
 
 typedef struct binary_tree_node_t {
-    BINARY_TREE_NODE_DATA  data;
+    BINARY_TREE_NODE_DATA  data;    //!< 数据项
     struct binary_tree_node_t*  left_child;   // 左孩子指针
     struct binary_tree_node_t*  right_child;   // 右孩子指针
 } binary_tree_node_t, *binary_tree_t;

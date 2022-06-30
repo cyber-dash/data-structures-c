@@ -8,9 +8,6 @@
 #include "binary_tree.h"
 #include "HuffmanTree.h"
 
-Status VisitChar(BINARY_TREE_NODE_DATA e);
-
-void TestBinaryTreeCreateBiTree();
 
 void TestBinaryTreePreOrderTraverse();
 

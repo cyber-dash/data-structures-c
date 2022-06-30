@@ -8,21 +8,25 @@
 #include "test.h"
 
 
-Status VisitChar(BINARY_TREE_NODE_DATA e) { // 输出元素e的值
-  printf("%c", e);                 // 使用时, 加上格式串
+/*!
+ * 字符访问函数
+ * @param chr 字符
+ * @return 执行结果
+ */
+Status VisitChar(BINARY_TREE_NODE_DATA chr) {
+  printf("%c", chr);
   return OK;
 }
 
 
-Status VisitBinaryTreeNode(binary_tree_node_t e) { // 输出元素e的值
-  printf("%c", e.data);                 // 使用时, 加上格式串
+/*!
+ * 二叉树结点访问函数
+ * @param node 二叉树结点
+ * @return 执行结果
+ */
+Status VisitBinaryTreeNode(binary_tree_node_t node) {
+  printf("%c", node.data);
   return OK;
-}
-
-
-void TestBinaryTreeCreateBiTree() {
-  binary_tree_t* testTree = (binary_tree_t*)malloc(sizeof(binary_tree_t));
-  CreateBiTree(testTree);
 }
 
 

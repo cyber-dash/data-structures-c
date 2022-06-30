@@ -13,9 +13,7 @@
 typedef BINARY_TREE_NODE_DATA SqBiTree[MAX_TREE_SIZE]; // 0号单元存储根节点
 
 
-Status CreateBiTree(binary_tree_t *T);
-
-Status BinaryTreeCreateByPreOrderStringRecursive(binary_tree_t *node, char *pre_order_str, int *traverse_index, int str_len);
+Status BinaryTreeCreateByPreOrderStringRecursive(binary_tree_t *node, char *pre_order_str, int *traverse_index, int pre_order_str_len);
 
 Status BinaryTreePreOrderTraverseRecursive(binary_tree_t node, Status (*Visit)(BINARY_TREE_NODE_DATA e));
 

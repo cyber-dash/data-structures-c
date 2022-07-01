@@ -50,7 +50,10 @@ void TestBinaryTreePreOrderTraverse() {
     char pre_order_str[] = "ABC  DE G  F   ";
     int traverse_index = 0;
 
-    Status status = BinaryTreeCreateByPreOrderStringRecursive(binary_tree, pre_order_str, &traverse_index, strlen(pre_order_str));
+    Status status = BinaryTreeCreateByPreOrderStringRecursive(binary_tree,
+                                                              pre_order_str,
+                                                              &traverse_index,
+                                                              strlen(pre_order_str));
     if (status != OK) {
         printf("\n建二叉树失败\n");
     }
@@ -120,9 +123,9 @@ void TestBinaryTreeInOrderTraverse2() {
     binary_tree_t* binary_tree = (binary_tree_t*)malloc(sizeof(binary_tree_t));
 
     char treeString[] = "ABC  DE G  F   ";
-    int pos = 0;
+    int traverse_index = 0;
 
-    BinaryTreeCreateByPreOrderStringRecursive(binary_tree, treeString, &pos, strlen(treeString));
+    BinaryTreeCreateByPreOrderStringRecursive(binary_tree, treeString, &traverse_index, strlen(treeString));
 
     Status res = BinaryTreeInOrderTraverse2(*binary_tree, VisitChar);
     if (res == OK) {

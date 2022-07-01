@@ -1,3 +1,5 @@
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -17,13 +19,16 @@ static void inline PrintStr(cyber_dash_string_t* cyber_dash_string) {
 
 
 void test_StringCopy() {
-	cyber_dash_string_t T;
-    cyber_dash_string_t S;
+    printf("\n");
+    printf("|------------------------ CyberDash ------------------------|\n");
+    printf("|                      Test StringCopy                      |\n");
+    printf("|                        测试字符串复制                       |\n");
 
-    memset(&T, 0, sizeof(cyber_dash_string_t));
-    memset(&S, 0, sizeof(cyber_dash_string_t));
+	cyber_dash_string_t T = { .str = NULL, .length = 0};
+    cyber_dash_string_t S = { .str = NULL, .length = 0};
 
-    char str[50] = "hello cyberdash!";
+    // char str[50] = "hello cyberdash!";
+    char str[50] = "你好";
     StringAssign(&S, str, strlen(str));
 
     T.str = malloc(128);
@@ -32,21 +37,27 @@ void test_StringCopy() {
     StringCopy(&T, &S);
 
 	PrintStr(&T);
+
+    printf("|-----------------------------------------------------------|\n\n");
 }
 
 
 void test_StringCompare() {
-	cyber_dash_string_t S1, S2, S3, S4;
+    printf("\n");
+    printf("|------------------------ CyberDash ------------------------|\n");
+    printf("|                    Test StringCompare                      |\n");
+    printf("|                        测试字符串比较                       |\n");
 
-    memset(&S1, 0, sizeof(cyber_dash_string_t));
-    memset(&S2, 0, sizeof(cyber_dash_string_t));
-    memset(&S3, 0, sizeof(cyber_dash_string_t));
-    memset(&S4, 0, sizeof(cyber_dash_string_t));
+	cyber_dash_string_t S1 = { .str = NULL, .length = 0};
+    cyber_dash_string_t S2 = { .str = NULL, .length = 0};
+    cyber_dash_string_t S3 = { .str = NULL, .length = 0};
+    cyber_dash_string_t S4 = { .str = NULL, .length = 0};
 
     char str1[50] = "hello cyberdash!";
     char str2[50] = "hello cyberdash!";
     char str3[50] = "hello cyberdash and hello Mr. Yuan";
     char str4[50] = "hi cyberdash";
+
     StringAssign(&S1, str1, strlen(str1));
     StringAssign(&S2, str2, strlen(str2));
     StringAssign(&S3, str3, strlen(str3));
@@ -56,6 +67,8 @@ void test_StringCompare() {
 	printf("S1 compare to S3: %d\n", StringCompare(&S1, &S3));
 	printf("S2 compare to S3: %d\n", StringCompare(&S2, &S3));
 	printf("S1 compare to S4: %d\n", StringCompare(&S1, &S4));
+
+    printf("|-----------------------------------------------------------|\n\n");
 }
 
 

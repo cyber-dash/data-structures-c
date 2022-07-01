@@ -6,6 +6,7 @@
 #define CYBER_DASH_BINARY_TREE_H
 
 #include "type.h"
+#include "stddef.h"
 #include "stack.h"
 #include "binary_tree_node.h"
 
@@ -13,7 +14,7 @@
 Status BinaryTreeCreateByPreOrderStringRecursive(binary_tree_t *node,
                                                  char* pre_order_str,
                                                  int* traverse_index,
-                                                 int pre_order_str_len);
+                                                 size_t pre_order_str_len);
 
 Status BinaryTreePreOrderTraverseRecursive(binary_tree_t node, Status (*Visit)(BINARY_TREE_NODE_DATA e));
 

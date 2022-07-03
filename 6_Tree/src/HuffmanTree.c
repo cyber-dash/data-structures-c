@@ -2,107 +2,155 @@
 // Created by cyberdash@163.com on 2022/1/19.
 //
 
+#include "stdio.h"
 #include "stdlib.h"
+#include "string.h"
 #include "HuffmanTree.h"
+#include "type.h"
 
 
-void Select(HuffmanTree HT, int lastIndex, int* s1, int* s2);
+int Select(huffman_tree_t items, int last_index, int* min_index, int* sec_min_index);
 
 
-//todo: temp
-/*
-void HuffmanCoding(HuffmanTree HT, HuffmanCode *HC, int *w, int n) {
+void HuffmanCoding(huffman_tree_node_t* huffman_tree_nodes,
+                   huffman_code_t* huffman_code_array,
+                   int* weight_array_ptr,
+                   int codeword_count)
+{
     // w存放n个字符的权值(均>0), 构造赫夫曼树HT, 并求出n个字符的赫夫曼编码HC.
-    if (n <= 1) return;
-    int m = 2 * n - 1;  // m个节点
-    HT = (HuffmanTree)malloc((m + 1)*sizeof(HTNode));      // 0号单元未用
-
-    int i;
-    HTNode *p;
-    for (p = HT + 1, i = 1; i <= n; ++i, ++p, ++w) {    // 从数组索引1开始, 讲n个字符对应的节点初始化
-        p->weight = *w;
-        p->parent = 0;
-        p->left_child = 0;
-        p->right_child = 0;
+    if (codeword_count <= 1) {
+        return;
     }
 
-    for (; i <= m; ++i, ++p)  { // 讲剩余的节点初始化(权值设置为0)
-        p->weight = 0;
-        p->parent = 0;
-        p->left_child = 0;
-        p->right_child = 0;
+    int huffman_tree_node_count = 2 * codeword_count - 1;  // m个节点
+    huffman_tree_nodes = (huffman_tree_t)malloc((huffman_tree_node_count + 1) * sizeof(huffman_tree_node_t));      // 0号单元未用
+
+    int i = 1;
+    huffman_tree_node_t* cur = huffman_tree_nodes + 1;
+
+    // 从数组索引1开始, 将n个codeword对应的节点初始化
+    for (; i <= codeword_count; i++, cur++, weight_array_ptr++) {
+        cur->weight = *weight_array_ptr;
+        cur->parent = 0;
+        cur->left_child = 0;
+        cur->right_child = 0;
     }
 
-    for (i = n + 1; i <= m; ++i) {  // 建赫夫曼树
-        // 在HT[1...i-1]选择parent为0且weight最小的两个结点, 其序号分别为s1和s2
-        int s1;
-        int s2;
-        Select(HT, i - 1, &s1, &s2);
-
-        HT[s1].parent = i;
-        HT[s2].parent = i;
-        HT[i].left_child = s1;
-        HT[i].right_child = s2;
-        HT[i].weight = HT[s1].weight + HT[s2].weight;
+    // huffman_tree_nodes数组的后面剩余节点初始化(权值设置为0)
+    for (; i <= huffman_tree_node_count; i++, cur++) {
+        cur->weight = 0;
+        cur->parent = 0;
+        cur->left_child = 0;
+        cur->right_child = 0;
     }
 
-    // ----从叶子到根逆向求每个字符的赫夫曼编码----
-    HC = (HuffmanCode)malloc((n+1)*sizeof(char*));  // todo:
-    char *cd = (char*)malloc(n*sizeof(char));       // 分配n个字符编码的头指针向量
-    cd[n - 1] = 0;
+    /// --- 建Huffman树 ---
 
-    for (int i = 1; i <= n; ++i) {
-        int start = n - 1;
-        for (int c = i, f = HT[i].parent; f != 0; c = f, f = HT[f].parent) {    // 从叶子到根逆向求编码
-            if (HT[f].left_child == c)
-                cd[--start] = "0";
-            else
-                cd[--start] = "1";
+    for (i = codeword_count; i <= huffman_tree_node_count; i++) {
+        // 在huffman_tree_nodes[1 ... huffman_tree_node_count]选择parent为0(未与其他结点构成子树)且weight最小的两个结点,
+        // 其数组索引分别为min_index和sec_min_index
+        int min_index;
+        int sec_min_index;
+        Select(huffman_tree_nodes, i, &min_index, &sec_min_index);
+
+        // 新子树parent为i + 1
+        huffman_tree_nodes[min_index].parent = i + 1;
+        huffman_tree_nodes[sec_min_index].parent = i + 1;
+
+        // 设置新子树的左右孩子
+        huffman_tree_nodes[i + 1].left_child = min_index;
+        huffman_tree_nodes[i + 1].right_child = sec_min_index;
+
+        // 新子树的权值
+        huffman_tree_nodes[i + 1].weight = huffman_tree_nodes[min_index].weight + huffman_tree_nodes[sec_min_index].weight;
+    }
+
+    // ---- 从叶子到根逆向求每个字符的赫夫曼编码 ----
+
+    huffman_code_array = (huffman_code_t*)malloc((codeword_count + 1) * sizeof(char*));
+
+    // n个字符编码的哈夫曼编码,
+    char* cur_huffman_code = (char*)malloc(codeword_count * sizeof(char));
+    cur_huffman_code[codeword_count - 1] = 0;
+
+    for (i = 1; i <= codeword_count; i++) {
+        // int cur_huffman_code_index = codeword_count - 1;    // 当前哈夫曼编码的数组索引位
+        int cur_huffman_code_index = codeword_count - 2;    // 当前哈夫曼编码的数组索引位
+
+        // 从叶子到根逆向求编码
+        for (int child = i, parent = huffman_tree_nodes[i].parent;  // 循环初始化的child/parent
+            parent != 0;                                            // 循环终止条件: parent != 0
+            child = parent, parent = huffman_tree_nodes[parent].parent)
+        {
+            /// 设置哈夫曼编码当前索引为的值
+            if (huffman_tree_nodes[parent].left_child == child) {   // 如果child索引是parent索引的左孩子, 设置为0
+                // cur_huffman_code[cur_huffman_code_index - 1] = '0';
+                cur_huffman_code[cur_huffman_code_index] = '0';
+            } else if (huffman_tree_nodes[parent].right_child == child) {   // 如果child索引是parent索引的右孩子, 设置为1
+                // cur_huffman_code[cur_huffman_code_index - 1] = '1';
+                cur_huffman_code[cur_huffman_code_index] = '1';
+            }
+            cur_huffman_code_index--;
         }
-        HC[i] = (char*)malloc((n - start) * sizeof(char));    // 为第i个字符编码分配空间
-        strcpy(HC[i], &cd[start]);          // 从cd复制编码(串)到HC
+
+        // *huffman_code_array[i] = (char*)malloc((codeword_count - cur_huffman_code_index) * sizeof(char));    // 为第i个字符编码分配空间
+        // strcpy_s(*huffman_code_array[i], codeword_count - cur_huffman_code_index, &cur_huffman_code[cur_huffman_code_index]);          // 从cd复制编码(串)到HC
+
+        int cur_huffman_code_length = codeword_count - cur_huffman_code_index - 1;
+        *huffman_code_array[i] = (char*)malloc(cur_huffman_code_length * sizeof(char));    // 为第i个字符编码分配空间
+        strcpy_s(*huffman_code_array[i], cur_huffman_code_length, &cur_huffman_code[cur_huffman_code_index]);          // 从cd复制编码(串)到HC
     }
 
-    printf("%s\n", cd);
+    printf("%s\n", cur_huffman_code);
 
-    free(cd);
+    free(cur_huffman_code);
 }
-*/
 
 
-void Select(HuffmanTree HT, int lastIndex, int* s1, int* s2) {
-    if (lastIndex < 2) {
-        return;
+/*!
+ *
+ * @param items
+ * @param last_index
+ * @param min_index
+ * @param sec_min_index
+ */
+int Select(huffman_tree_node_t* items, int last_index, int* min_index, int* sec_min_index) {
+    if (last_index < 2) {
+        return FALSE;
     }
-    int minWeight = 0;
-    int secMinWeight = 0;
 
-    if (HT[1].weight >= HT[2].weight) {
-        *s1 = 2;
-        *s2 = 1;
-        minWeight = HT[2].weight;
-        secMinWeight = HT[1].weight;
+    double min_weight = 0;
+    unsigned int sec_min_weight = 0;
+
+    if (items[1].weight >= items[2].weight) {
+        *min_index = 2;
+        *sec_min_index = 1;
+        min_weight = items[2].weight;
+        sec_min_weight = items[1].weight;
     } else {
-        *s1 = 1;
-        *s2 = 2;
-        minWeight = HT[1].weight;
-        secMinWeight = HT[2].weight;
+        *min_index = 1;
+        *sec_min_index = 2;
+        min_weight = items[1].weight;
+        sec_min_weight = items[2].weight;
     }
 
-    if (lastIndex == 2) {
-        return;
+    if (last_index == 2) {
+        return TRUE;
     }
 
-    for (int i = 3; i <= lastIndex; i++) {
-        int curWeight = HT[i].weight;
-        if (curWeight < minWeight) {
-            *s2 = *s1;
-            *s1 = i;
-            secMinWeight = minWeight;
-            minWeight = curWeight;
-        } else if (curWeight < secMinWeight) {
-            *s2 = i;
-            secMinWeight = curWeight;
+    for (int i = 3; i <= last_index; i++) {
+        int cur_weight = items[i].weight;
+        if (cur_weight < min_weight) {  // 如果cur_weight比之前最小的weight(min_weight)还小,
+            // 第二小item信息更新
+            *sec_min_index = *min_index;
+            sec_min_weight = min_weight;
+            // 最小item信息更新
+            *min_index = i;
+            min_weight = cur_weight;
+        } else if (cur_weight < sec_min_weight) {   // 如果min_weight < cur_weight < sec_min_weight
+            // 第二小item更新
+            *sec_min_index = i;
+            sec_min_weight = cur_weight;
         }
     }
 }

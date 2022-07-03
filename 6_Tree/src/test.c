@@ -139,6 +139,6 @@ void TestBinaryTreeInOrderTraverse2() {
 
 
 void TestHuffmanTree() {
-    HuffmanTree* huffmanTree = (HuffmanTree*)malloc(sizeof(HuffmanTree));
+    huffman_tree_t* huffmanTree = (huffman_tree_t*)malloc(sizeof(huffman_tree_t));
     // HuffmanCoding(huffmanTree,           );
 }

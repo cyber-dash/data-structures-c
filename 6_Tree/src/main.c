@@ -7,11 +7,15 @@
 
 int main() {
 
+    /*
     TestBinaryTreePreOrderTraverse();
 
     TestBinaryTreeInOrderTraverse();
 
     TestBinaryTreeInOrderTraverse2();
+     */
+
+    TestHuffmanTree();
 
     return 0;
 }

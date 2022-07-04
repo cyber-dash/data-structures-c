@@ -15,7 +15,10 @@ typedef struct {
 
 typedef char **huffman_code_t;   // 动态分配数组, 存储赫夫曼编码表
 
-void HuffmanCoding(huffman_tree_node_t* huffman_tree_nodes, huffman_code_t* huffman_code, int *weight_array_ptr, int codeword_count);
+void HuffmanCoding(huffman_tree_node_t* huffman_tree_nodes,
+                   huffman_code_t* huffman_code,
+                   double* weight_array_ptr,
+                   int codeword_count);
 
 
 #endif // CYBER_DASH_HUFFMAN_TREE_H

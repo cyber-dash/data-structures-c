@@ -139,6 +139,13 @@ void TestBinaryTreeInOrderTraverse2() {
 
 
 void TestHuffmanTree() {
-    huffman_tree_t* huffmanTree = (huffman_tree_t*)malloc(sizeof(huffman_tree_t));
-    // HuffmanCoding(huffmanTree,           );
+
+    char codewords[8] = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
+    double probabilities[8] = { 0.01, 0.02, 0.03, 0.04, 0.1, 0.2, 0.25, 0.35 };
+
+    huffman_tree_node_t huffman_tree_nodes[9];
+
+    huffman_code_t huffman_codes[9][9];
+
+    HuffmanCoding(huffman_tree_nodes, (huffman_code_t*)&huffman_codes, probabilities, 8);
 }

@@ -7,7 +7,7 @@
 
 
 #include "binary_tree.h"
-#include "HuffmanTree.h"
+#include "huffman_tree.h"
 
 
 void TestBinaryTreePreOrderTraverse();

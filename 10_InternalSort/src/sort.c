@@ -271,15 +271,13 @@ int Partition2(seq_list_t* seq_list, int low, int high) {
 
     while (low < high)
     { //从表的两端交替地向中间扫描
-        while (low < high && seq_list->elements[high].key > pivot_key)
-        {
+        while (low < high && seq_list->elements[high].key > pivot_key) {
             high--;
         }
 
         seq_list->elements[low] = seq_list->elements[high];               //将比枢轴记录小的记录交换到低端
 
-        while (low < high && seq_list->elements[low].key <= pivot_key)
-        {
+        while (low < high && seq_list->elements[low].key <= pivot_key) {
             low++;
         }
 
@@ -454,7 +452,7 @@ int ord(char* keys, int pos, int keyNum) {
 // @param f 队列头
 // @param e 队列尾
 // void Distribute(static_linked_list_node_t elements[], int i, ArrType f, ArrType e)
-void Distribute(static_linked_list_t* slList, int i, ArrType f, ArrType e)
+void Distribute(radix_static_linked_list_t* slList, int i, ArrType f, ArrType e)
 {
     static_linked_list_node_t* r = slList->elements;
 	//静态链表L的r域中记录已按(keys[0],...,keys[i-1])有序
@@ -468,7 +466,7 @@ void Distribute(static_linked_list_t* slList, int i, ArrType f, ArrType e)
 
 	for (int p = r[0].next; p; p = r[p].next)
 	{
-		int j = ord(r[p].keys, i, slList->key_cnt);         // ord将记录中第i个关键字映射到[0..RADIX-1]
+		int j = ord(r[p].keys, i, slList->key_count);         // ord将记录中第i个关键字映射到[0..RADIX-1]
 
 		if (!f[j])               // 如果对头元素为空, p入队, 为队头
 		    f[j] = p;                     
@@ -517,8 +515,7 @@ void Collect(static_linked_list_node_t r[], int i, ArrType f, ArrType e) {
 
 // @brief 基数排序
 // @param L 待排数组
-void RadixSort(static_linked_list_t *L)
-{
+void RadixSort(radix_static_linked_list_t *L) {
     ArrType f;
     ArrType e;
     //L是采用静态链表表示的顺序表
@@ -527,7 +524,7 @@ void RadixSort(static_linked_list_t *L)
         L->elements[i].next = i + 1;
     }
     L->elements[L->length].next = 0;           //将L改造为静态链表
-    for (int i = 0; i < L->key_cnt; ++i) //按最低位优先依次对各关键字进行分配和收集
+    for (int i = 0; i < L->key_count; ++i) //按最低位优先依次对各关键字进行分配和收集
     {
         Distribute(L, i, f, e);      //第i趟分配
         Collect(L->elements, i, f, e);      //第i趟收集

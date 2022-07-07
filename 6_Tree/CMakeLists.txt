@@ -8,12 +8,12 @@ add_executable(main
         src/type.h
         src/test.h
         src/binary_tree.h
-        src/HuffmanTree.h
+        src/huffman_tree.h
         
         src/stack.h
         src/test.c
         src/binary_tree.c
-        src/HuffmanTree.c
+        src/huffman_tree.c
         
         src/stack.c
         src/main.c

@@ -53,25 +53,28 @@ typedef seq_list_t heap_t; // 堆采用顺序表存储表示
 #define RADIX 10              //关键字基数，此时是十进制整数的基数 
 #define MAX_SPACE 10000
 
-typedef char KeysType;
+typedef char KEY_TYPE;
 
-typedef struct
-{
-    KeysType keys[MAX_NUM_OF_KEY];      //关键字 
-    info_t otherinfo;                 //其他数据项
+
+/*!
+ * 静态链表结点结构体
+ */
+typedef struct {
+    KEY_TYPE keys[MAX_NUM_OF_KEY];      //关键字
+    info_t info;                 //其他数据项
     int next;
-}static_linked_list_node_t;                                // 静态链表的结点类型
+} static_linked_list_node_t;                                // 静态链表的结点类型
 
-typedef struct
-{
-    static_linked_list_node_t elements[MAX_SPACE];                //静态链表的可利用空间，elements[0]为头结点
-    int key_cnt;                         //记录的当前关键字个数
-    int length;                         //静态链表当前长度
-} static_linked_list_t;                                //静态链表类型
+/*!
+ * 基数排序的静态链表
+ */
+typedef struct {
+    static_linked_list_node_t elements[MAX_SPACE];  //!< 元素的静态链表, elements[0]为头结点(不保存元素)
+    int key_count;                         //!< 当前关键字个数
+    int length;                             //!< 静态链表长度
+} radix_static_linked_list_t;
 
-typedef int ArrType[RADIX];             //指针数组类型 
-
-/*----基数排序链表的数据类型----*/
+typedef int ArrType[RADIX];             //指针数组类型
 
 
 void InsertSort(seq_list_t* L);
@@ -94,6 +97,6 @@ void HeapSort(heap_t* heap);
 
 void MergeSort(seq_list_t* L);
 
-void RadixSort(static_linked_list_t* L);
+void RadixSort(radix_static_linked_list_t* L);
 
 #endif //CYBER_DASH_SORT_H

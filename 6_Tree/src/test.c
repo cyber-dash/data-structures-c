@@ -145,7 +145,10 @@ void TestHuffmanTree() {
 
     huffman_tree_node_t huffman_tree_nodes[9];
 
-    huffman_code_t huffman_codes[9][9];
+    char huffman_codes[9][9];
 
-    HuffmanCoding(huffman_tree_nodes, (huffman_code_t*)&huffman_codes, probabilities, 8);
+    char** codes = (huffman_code_t)huffman_codes;
+
+    HuffmanCoding(huffman_tree_nodes, codes, probabilities, 8);
+    // HuffmanCoding(huffman_tree_nodes, (huffman_code_t*)&huffman_codes, probabilities, 8);
 }

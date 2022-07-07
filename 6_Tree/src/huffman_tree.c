@@ -1,11 +1,17 @@
-﻿//
-// Created by cyberdash@163.com on 2022/1/19.
-//
+﻿/*!
+ * @file huffman_tree.c
+ * @author CyberDash计算机考研, cyberdash@163.com(抖音id:cyberdash_yuan)
+ * @brief Huffman(哈夫曼)树
+ * @version 1.0.0
+ * @date 2022-07-04
+ * @copyright Copyright (c) 2021
+ *  CyberDash计算机考研
+ */
 
 #include "stdio.h"
 #include "stdlib.h"
 #include "string.h"
-#include "HuffmanTree.h"
+#include "huffman_tree.h"
 #include "type.h"
 
 
@@ -13,7 +19,7 @@ int SelectTwoMinItems(huffman_tree_t items, int last_index, int* min_index, int*
 
 
 void HuffmanCoding(huffman_tree_node_t* huffman_tree_nodes,
-                   huffman_code_t* huffman_code_array,
+                   huffman_code_t huffman_code_array,
                    double* weight_array_ptr,
                    int codeword_count)
 {
@@ -96,53 +102,61 @@ void HuffmanCoding(huffman_tree_node_t* huffman_tree_nodes,
 
         int cur_huffman_code_length = codeword_count - cur_huffman_code_index - 1;
 
-        /*
+        char* cur1 = (char*)huffman_code_array[i];
         for (int j = 0; j < cur_huffman_code_length; j++) {
-            (*huffman_code_array[i])[j] = cur_huffman_code[cur_huffman_code_index];
+            // ((*huffman_code_array)[i])[j] = cur_huffman_code[cur_huffman_code_index];
+            *cur1 = cur_huffman_code[cur_huffman_code_index];
         }
-
-        printf("%s\n", *huffman_code_array[i]);
-         */
     }
-
-    // printf("%s\n", cur_huffman_code);
 
     free(cur_huffman_code);
 }
 
 
 /*!
- *
- * @param items
- * @param last_index
- * @param min_index
- * @param sec_min_index
+ * 查找items中parent为0的weight最小的两个元素的索引
+ * @param items 哈夫曼树结点数组(指针)
+ * @param last_index 最后索引(划定查找范围)(起始索引为1)
+ * @param min_index 最小元素数组索引(指针)
+ * @param sec_min_index 第二小元素数组索引(指针)
  */
 int SelectTwoMinItems(huffman_tree_node_t* items, int last_index, int* min_index, int* sec_min_index) {
+
+    // 如果数组元素少于2, 返回FALSE
     if (last_index < 2) {
         return FALSE;
     }
 
-    double min_weight = -1;
-    double sec_min_weight = -1;
+    double min_weight = -1;     //!< 最小权值
+    double sec_min_weight = -1; // 第二小权值
 
+    // 从1到last_index遍历
     for (int i = 1; i <= last_index; i++) {
+
+        // parent大于0(已是某子树子节点), continue
         if (items[i].parent > 0) {
             continue;
         }
 
+        // min_weight未赋值
         if (min_weight < 0) {
             min_weight = items[i].weight;
             *min_index = i;
             continue;
         }
 
+        // sec_min_weight未赋值, min_weight已赋值
         if (sec_min_weight < 0) {
-            if (items[i].weight > min_weight) {
+            if (items[i].weight >= min_weight) {    // 当前项weight >= min_weight
                 sec_min_weight = items[i].weight;
                 *sec_min_index = i;
-                continue;
+            } else {    // 当前项weight < min_weight
+                sec_min_weight = min_weight;
+                min_weight = items[i].weight;
+                *sec_min_index = *min_index;
+                *min_index = i;
             }
+            continue;
         }
 
         if (items[i].weight < min_weight) {
@@ -158,40 +172,6 @@ int SelectTwoMinItems(huffman_tree_node_t* items, int last_index, int* min_index
             sec_min_weight = items[i].weight;
         }
     }
-
-    /*
-    if (items[1].weight >= items[2].weight) {
-        *min_index = 2;
-        *sec_min_index = 1;
-        min_weight = items[2].weight;
-        sec_min_weight = items[1].weight;
-    } else {
-        *min_index = 1;
-        *sec_min_index = 2;
-        min_weight = items[1].weight;
-        sec_min_weight = items[2].weight;
-    }
-
-    if (last_index == 2) {
-        return TRUE;
-    }
-
-    for (int i = 3; i <= last_index; i++) {
-        double cur_weight = items[i].weight;
-        if (cur_weight < min_weight) {  // 如果cur_weight比之前最小的weight(min_weight)还小,
-            // 第二小item信息更新
-            *sec_min_index = *min_index;
-            sec_min_weight = min_weight;
-            // 最小item信息更新
-            *min_index = i;
-            min_weight = cur_weight;
-        } else if (cur_weight < sec_min_weight) {   // 如果min_weight < cur_weight < sec_min_weight
-            // 第二小item更新
-            *sec_min_index = i;
-            sec_min_weight = cur_weight;
-        }
-    }
-     */
 
     return TRUE;
 }

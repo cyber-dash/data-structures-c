@@ -448,67 +448,60 @@ int ord(char* keys, int i) {
 }
 
 
-// @brief 基数排序 分配算法
-// @param elements 静态链表的结点域
-// @param i 第i趟
-// @param digit_queue_heads 队列头
-// @param digit_queue_tails 队列尾
 /*!
- *
- * @brief 基数排序分配入桶
+ * @brief 基数排序分配元素入桶
  * @param static_linked_list 静态链表(指针)
- * @param i
- * @param digit_queue_heads
- * @param digit_queue_tails
+ * @param place_of_digit 位数
+ * @param digit_bucket_heads 数位(0 - 9)桶的首元素(队头)
+ * @param digit_bucket_tails 数位(0 - 9)桶的尾元素(队尾)
+ * @note
+ * place_of_digit/位数, 个位: 1, 十位: 2, 百位: 3 ...
+ * 每个桶是一个队列,
+ * digit_bucket_heads[0 ... 9]和digit_queue_tails[0 ... 9]分别指向各桶(队列)的第一个元素(队头)和最后一个元素(队尾)
  */
 void DistributeIntoBuckets(radix_static_linked_list_t* static_linked_list,
-                           int i,
-                           BUCKETS digit_queue_heads,
-                           BUCKETS digit_queue_tails)
+                           int place_of_digit,
+                           BUCKETS digit_bucket_heads,
+                           BUCKETS digit_bucket_tails)
 {
     static_linked_list_node_t* elements = static_linked_list->elements;
-    int element_keys_index = static_linked_list->digit_number - i - 1;
+    int digit_index = static_linked_list->digit_number - place_of_digit;
 
-    //静态链表L的r域中记录已按(keys[0],...,keys[i-1])有序
-	//本算法按第i个关键字keys[i]建立RADIX个子表，使同一子表中记录的keys[i]相同
-	//digit_queue_heads[0..RADIX_10-1]和digit_queue_tails[0..RADIX_10-1]分别指向各子表中第一个和最后一个记录
 
     // 0 - 9对应的各子表初始化为空表
     for (int j = 0; j < RADIX_10; j++) {
-        digit_queue_heads[j] = 0;
-        digit_queue_tails[j] = 0;
+        digit_bucket_heads[j] = 0;
+        digit_bucket_tails[j] = 0;
 	}
 
 	for (int elements_index = elements[0].next; elements_index != 0; elements_index = elements[elements_index].next) {
 
         // 获取第i个关键字对应的数字
-        int digit = ord(static_linked_list->elements[elements_index].keys, element_keys_index);
+        int digit = ord(static_linked_list->elements[elements_index].keys, digit_index);
 
-        if (!digit_queue_heads[digit]) {    // 如果digit所在队列的队头元素为空, elements_index入队
-            digit_queue_heads[digit] = elements_index; // elements_index设为队头
+        if (!digit_bucket_heads[digit]) {    // 如果digit所在队列的队头元素为空, elements_index入队
+            digit_bucket_heads[digit] = elements_index; // elements_index设为队头
         } else {    // 如果digit所在队列的队头元素不为空, 队尾元素对应的elements数组元素的next, 指向elements_index(即加入队尾)
-            elements[digit_queue_tails[digit]].next = elements_index;    // 队尾增加元素
+            elements[digit_bucket_tails[digit]].next = elements_index;    // 队尾增加元素
         }
 
-        digit_queue_tails[digit] = elements_index;  // 更新队尾数组digit_queue_tails
+        digit_bucket_tails[digit] = elements_index;  // 更新队尾数组digit_queue_tails
 	}
 }
 
 
-int succ(idx) {
-    return idx + 1;
-}
-
-
-// @brief 基数排序 收集算法
-// @param elements 静态链表的结点域
-// @param i 第i趟
-// @param digit_bucket_heads 队列头
-// @param digit_bucket_tails 队列尾
-void Collect(static_linked_list_node_t* elements, BUCKETS digit_bucket_heads, BUCKETS digit_bucket_tails) {
-
-    // 本算法按keys[digit]自小至大地将digit_queue_heads[0 ... RADIX_10 - 1]所指各桶, 依次连接成一个链表
-    //digit_bucket_tails[0 ... RADIX_10 - 1]为各子表的尾指针
+/*!
+ * 基数排序收集桶
+ * @param elements 元素数组
+ * @param digit_bucket_heads 数位(0 - 9)桶的首元素(队头)
+ * @param digit_bucket_tails 数位(0 - 9)桶的尾元素(队尾)
+ * @note
+ * digit]自小至大, 将digit_queue_heads[0 ... 9]所指各桶, 依次连接成一个链表
+ */
+void CollectBuckets(static_linked_list_node_t* elements,
+                    BUCKETS digit_bucket_heads,
+                    BUCKETS digit_bucket_tails)
+{
 
     // 找第一个非空子表
     int digit = 0;
@@ -519,22 +512,24 @@ void Collect(static_linked_list_node_t* elements, BUCKETS digit_bucket_heads, BU
     elements[0].next = digit_bucket_heads[digit];       //!< elements[0].next指向第一个非空桶的第1个结点
     int digit_bucket_tail = digit_bucket_tails[digit];  //!< 第1个桶的最后1个元素的elements数组索引
 
-    // digit++;
-
     while (digit < RADIX_10) {
-        for (digit = digit + 1; digit < RADIX_10 && !digit_bucket_heads[digit]; digit++); //寻找下一个非空子表
 
+        // 寻找下一个非空桶
+        digit++;    // 第1个非空桶的下一个桶
+        while (digit < RADIX_10 && digit_bucket_heads[digit] == 0) {
+            digit++;
+        }
+
+        // 找不到非空桶, 退出
         if (digit == RADIX_10) {
             break;
         }
 
-        if (digit_bucket_heads[digit]) {                            //链接两个非空子表
-            elements[digit_bucket_tail].next = digit_bucket_heads[digit];
-            digit_bucket_tail = digit_bucket_tails[digit];
-        }
+        elements[digit_bucket_tail].next = digit_bucket_heads[digit];   // 上一个桶的最后一个元素的next, 指到下一个桶的head
+        digit_bucket_tail = digit_bucket_tails[digit];  // digit_bucket_tail指向新的非空桶的tail
     }
 
-    elements[digit_bucket_tail].next = 0;                                        // t指向最后一个非空子表中的最后一个结点
+    elements[digit_bucket_tail].next = 0;   // elements[digit_bucket_tail].next指向0(代表所有桶Collection结束)
 }
 
 
@@ -546,34 +541,20 @@ void RadixSort(radix_static_linked_list_t* static_linked_list) {
     int digit_queue_heads[10];
     int digit_queue_tails[10];
 
-    // static_linked_list是采用静态链表表示的顺序表
-    //对L作基数排序，使得L成为按关键字自小到大的有序静态链表，static_linked_list.elements[0]为头结点。
-
     // 初始化static_linked_list
     for (int i = 0; i < static_linked_list->length; ++i) {
         static_linked_list->elements[i].next = i + 1;
     }
 
-    static_linked_list->elements[static_linked_list->length].next = 0;
+    static_linked_list->elements[static_linked_list->length].next = 0; // 最后一个元素的next指向0
 
-    //按最低位优先依次对各关键字进行分配和收集
-    for (int i = 0; i < static_linked_list->digit_number; ++i) {
-        DistributeIntoBuckets(static_linked_list, i, digit_queue_heads, digit_queue_tails);      //第i趟分配
-        Collect(static_linked_list->elements, digit_queue_heads, digit_queue_tails);      //第i趟收集
+    // 按最低位优先(右侧起始), 依次对各关键字进行分桶和收集
+    for (int i = 1; i <= static_linked_list->digit_number; i++) {
+
+        //!< 以从右起第i位作为基数分桶
+        DistributeIntoBuckets(static_linked_list, i, digit_queue_heads, digit_queue_tails);
+
+        //!< 对分完的桶, 进行收集
+        CollectBuckets(static_linked_list->elements, digit_queue_heads, digit_queue_tails);
     }
 }
-
-
-/*
-void Swap(void *v1, void *v2, size_t size)
-{
-  void *v3 = malloc(size);
-  if (v3 != 0)
-  {
-    memmove(v3, v1, size);
-    memmove(v1, v2, size);
-    memmove(v2, v3, size);
-    free(v3);
-  }
-} // refer:https://stackoverflow.com/questions/50559106/universal-array-element-swap-in-c?noredirect=1&lq=1
-*/

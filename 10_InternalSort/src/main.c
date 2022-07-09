@@ -7,7 +7,6 @@
 
 int main() {
 
-    /*
 	// 测试冒泡排序
 	TestBubbleSort();
 
@@ -31,7 +30,6 @@ int main() {
 
 	// 测试堆排序
 	TestHeapSort();
-     */
 
     // 测试基数排序
     TestRadixSort();

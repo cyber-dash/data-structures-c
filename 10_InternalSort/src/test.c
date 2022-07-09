@@ -8,6 +8,7 @@
 #include "time.h"
 
 
+
 /*!
  * 顺序表打印函数
  * @param seq_list 顺序表(指针)
@@ -40,28 +41,31 @@ void RadixArrayOutput(static_linked_list_node_t* static_linked_list, int static_
 
 void TestBubbleSort() {
     printf("\n");
-    printf("------------------------- CyberDash -------------------------\n");
-    printf("                       Test Bubble Sort                      \n");
-    printf("                         测试冒泡排序                         \n\n\n");
+    printf("|------------------------- CyberDash -------------------------|\n");
+    printf("|                       Test Insert Sort                      |\n");
+    printf("|                          测试冒泡排序                         |\n\n");
 
-    key_t array[6] = {1, 4, 2, 8, 5, 7 };
+    key_t keys[8] = { 3, 1, 4, 1, 5, 9, 2, 6 };
+
+    // 长度为8的线性表seq_list
     seq_list_t seq_list;
-    seq_list.length = 6;
+    seq_list.length = 8;
+
+    // 将keys数组各项值赋值到线性表seq_list
     for (int i = 1; i <= seq_list.length; i++) {
-        seq_list_node_t seq_list_node;
-        seq_list_node.key = array[i - 1];
-        seq_list_node.info = '\0';
-        seq_list.elements[i] = seq_list_node;
+        seq_list.elements[i].key = keys[i - 1];
+        seq_list.elements[i].info = '\0';
     }
 
-    printf("排序前:\n");
-    SeqListOutput(seq_list.elements, 6);
+    printf("冒泡排序前:\n");
+    SeqListOutput(seq_list.elements, seq_list.length);
 
     BubbleSort(&seq_list);
 
-    printf("排序后:\n");
-    SeqListOutput(seq_list.elements, 6);
-    printf("|-------------------------------------------------------------|\n");
+    printf("冒泡排序后:\n");
+    SeqListOutput(seq_list.elements, seq_list.length);
+
+    printf("|-------------------------------------------------------------|\n\n");
 }
 
 
@@ -71,54 +75,59 @@ void TestInsertSort() {
     printf("|                       Test Insert Sort                      |\n");
     printf("|                          测试插入排序                         |\n\n\n");
 
-    key_t array[6] = {1, 4, 2, 8, 5, 7 };
+    key_t keys[8] = { 3, 1, 4, 1, 5, 9, 2, 6 };
+
+    // 长度为8的线性表seq_list
     seq_list_t seq_list;
-    seq_list.length = 6;
+    seq_list.length = 8;
+
+    // 将keys数组各项值赋值到线性表seq_list
     for (int i = 1; i <= seq_list.length; i++) {
-        seq_list_node_t seq_list_node;
-        seq_list_node.key = array[i - 1];
-        seq_list_node.info = '\0';
-        seq_list.elements[i] = seq_list_node;
+        seq_list.elements[i].key = keys[i - 1];
+        seq_list.elements[i].info = '\0';
     }
 
-    printf("排序前:\n");
-    SeqListOutput(seq_list.elements, 6);
+
+    printf("插入排序前:\n");
+    SeqListOutput(seq_list.elements, seq_list.length);
 
     InsertSort(&seq_list);
 
-    printf("排序后:\n");
-    SeqListOutput(seq_list.elements, 6);
+    printf("插入排序后:\n");
+    SeqListOutput(seq_list.elements, seq_list.length);
 
-    printf("|-------------------------------------------------------------|\n");
+    printf("|-------------------------------------------------------------|\n\n");
 }
 
 
-void TestBInsertSort() {
+void TestBinaryInsertSort() {
     printf("\n");
     printf("|------------------------- CyberDash -------------------------|\n");
-    printf("|                      Test BInsert Sort                      |\n");
-    printf("|                        测试折半插入排序                         |\n\n\n");
+    printf("|                    Test BinaryInsert Sort                   |\n");
+    printf("|                        测试折半插入排序                       |\n\n");
 
-    key_t array[6] = {1, 4, 2, 8, 5, 7 };
+    key_t keys[8] = { 3, 1, 4, 1, 5, 9, 2, 6 };
+
+    // 长度为8的线性表seq_list
     seq_list_t seq_list;
-    seq_list.length = 6;
+    seq_list.length = 8;
+
+    // 将keys数组各项值赋值到线性表seq_list
     for (int i = 1; i <= seq_list.length; i++) {
-        seq_list_node_t seq_list_node;
-        seq_list_node.key = array[i - 1];
-        seq_list_node.info = '\0';
-        seq_list.elements[i] = seq_list_node;
+        seq_list.elements[i].key = keys[i - 1];
+        seq_list.elements[i].info = '\0';
     }
 
-    printf("排序前:\n");
-    SeqListOutput(seq_list.elements, 6);
+    printf("折半插入排序前:\n");
+    SeqListOutput(seq_list.elements, seq_list.length);
 
-    BInsertSort(&seq_list);
+    BinaryInsertSort(&seq_list);
 
-    printf("排序后:\n");
-    SeqListOutput(seq_list.elements, 6);
+    printf("折半插入排序后:\n");
+    SeqListOutput(seq_list.elements, seq_list.length);
 
 
-    printf("|-------------------------------------------------------------|\n");
+    printf("|-------------------------------------------------------------|\n\n");
 }
 
 
@@ -126,27 +135,29 @@ void TestSelectSort() {
     printf("\n");
     printf("|------------------------- CyberDash -------------------------|\n");
     printf("|                       Test Select Sort                      |\n");
-    printf("|                          测试选择排序                         |\n\n\n");
+    printf("|                          测试选择排序                         |\n\n");
 
-    key_t array[6] = {1, 4, 2, 8, 5, 7 };
-    seq_list_t sqList;
-    sqList.length = 6;
-    for (int i = 1; i <= sqList.length; i++) {
-        seq_list_node_t redType;
-        redType.key = array[i - 1];
-        redType.info = '\0';
-        sqList.elements[i] = redType;
+    key_t keys[8] = { 3, 1, 4, 1, 5, 9, 2, 6 };
+
+    // 长度为8的线性表seq_list
+    seq_list_t seq_list;
+    seq_list.length = 8;
+
+    // 将keys数组各项值赋值到线性表seq_list
+    for (int i = 1; i <= seq_list.length; i++) {
+        seq_list.elements[i].key = keys[i - 1];
+        seq_list.elements[i].info = '\0';
     }
 
-    printf("排序前:\n");
-    SeqListOutput(sqList.elements, 6);
+    printf("选择排序前:\n");
+    SeqListOutput(seq_list.elements, seq_list.length);
 
-    SelectSort(&sqList);
+    SelectSort(&seq_list);
 
-    printf("排序后:\n");
-    SeqListOutput(sqList.elements, 6);
+    printf("选择排序后:\n");
+    SeqListOutput(seq_list.elements, seq_list.length);
 
-    printf("|-------------------------------------------------------------|\n");
+    printf("|-------------------------------------------------------------|\n\n");
 }
 
 
@@ -154,128 +165,134 @@ void TestShellSort() {
     printf("\n");
     printf("|------------------------- CyberDash -------------------------|\n");
     printf("|                       Test Select Sort                      |\n");
-    printf("|                          测试希尔排序                         |\n\n\n");
+    printf("|                          测试希尔排序                         |\n\n");
 
-    key_t array[8] = { 3, 1, 4, 1, 5, 9, 2, 6 };
+    key_t keys[8] = { 3, 1, 4, 1, 5, 9, 2, 6 };
+
+    // 长度为8的线性表seq_list
     seq_list_t seq_list;
     seq_list.length = 8;
+
+    // 将keys数组各项值赋值到线性表seq_list
     for (int i = 1; i <= seq_list.length; i++) {
-        seq_list_node_t elem;
-        elem.key = array[i - 1];
-        elem.info = '\0';
-        seq_list.elements[i] = elem;
+        seq_list.elements[i].key = keys[i - 1];
+        seq_list.elements[i].info = '\0';
     }
 
-    printf("排序前:\n");
+    int gaps[3] = { 3, 2, 1 };
+    int gaps_count = 3;
+
+    printf("希尔排序前:\n");
     SeqListOutput(seq_list.elements, 8);
 
-    int dlta[3] = { 3, 2, 1 };
-    ShellSort(&seq_list, dlta, 3);
+    ShellSort(&seq_list, gaps, gaps_count);
 
-    printf("排序后:\n");
+    printf("希尔排序后:\n");
     SeqListOutput(seq_list.elements, 8);
 
-    printf("|-------------------------------------------------------------|\n");
+    printf("|-------------------------------------------------------------|\n\n");
 }
 
 
 void TestQuickSort() {
     printf("\n");
-    printf("------------------------- CyberDash -------------------------\n");
-    printf("                       Test Quick Sort                       \n");
-    printf("                          测试快速排序                         \n\n\n");
-    key_t array[6] = {1, 4, 2, 8, 5, 7 };
+    printf("|------------------------- CyberDash -------------------------|\n");
+    printf("|                       Test Quick Sort                       |\n");
+    printf("|                          测试快速排序                         |\n\n");
 
-    seq_list_t sqList;
-    sqList.length = 6;
-    for (int i = 1; i <= sqList.length; i++) {
-        seq_list_node_t redType;
-        redType.key = array[i - 1];
-        redType.info = '\0';
-        sqList.elements[i] = redType;
+    key_t keys[8] = { 3, 1, 4, 1, 5, 9, 2, 6 };
+
+    // 长度为8的线性表seq_list
+    seq_list_t seq_list;
+    seq_list.length = 8;
+
+    // 将keys数组各项值赋值到线性表seq_list
+    for (int i = 1; i <= seq_list.length; i++) {
+        seq_list.elements[i].key = keys[i - 1];
+        seq_list.elements[i].info = '\0';
     }
 
-    printf("排序前:\n");
-    SeqListOutput(sqList.elements, 6);
+    printf("快速排序前:\n");
+    SeqListOutput(seq_list.elements, seq_list.length);
 
-    QuickSort(&sqList);
+    QuickSort(&seq_list);   // 执行快速排序
 
-    printf("排序后:\n");
-    SeqListOutput(sqList.elements, 6);
+    printf("快速排序后:\n");
+    SeqListOutput(seq_list.elements, seq_list.length);
 
-    printf("-------------------------------------------------------------\n");
+    printf("|-------------------------------------------------------------|\n\n");
 }
 
 
 void TestHeapSort() {
     printf("\n");
-    printf("------------------------- CyberDash -------------------------\n");
-    printf("                       Test Heap Sort                       \n");
-    printf("                          测试堆排序                         \n\n\n");
+    printf("|------------------------- CyberDash -------------------------|\n");
+    printf("|                       Test Heap Sort                        |\n");
+    printf("|                          测试堆排序                          |\n\n");
 
-    key_t array[8] = { 3, 1, 4, 1, 5, 9, 2, 6 };
+    key_t keys[8] = { 3, 1, 4, 1, 5, 9, 2, 6 };
 
+    // 长度为8的线性表seq_list
     seq_list_t seq_list;
     seq_list.length = 8;
 
+    // 将keys数组各项值赋值到线性表seq_list
     for (int i = 1; i <= seq_list.length; i++) {
-        seq_list_node_t seq_list_node;
-        seq_list_node.key = array[i - 1];
-        seq_list_node.info = '\0';
-        seq_list.elements[i] = seq_list_node;
+        seq_list.elements[i].key = keys[i - 1];
+        seq_list.elements[i].info = '\0';
     }
 
-    printf("排序前:\n");
+    printf("堆排序前:\n");
     SeqListOutput(seq_list.elements, seq_list.length);
 
     HeapSort(&seq_list);
 
-    printf("排序后:\n");
+    printf("堆排序后:\n");
     SeqListOutput(seq_list.elements, seq_list.length);
 
-    printf("-------------------------------------------------------------\n");
-
-    printf("-------------------------------------------------------------\n");
+    printf("|-------------------------------------------------------------|\n\n");
 }
 
 
 void TestMergeSort() {
     printf("\n");
-    printf("------------------------- CyberDash -------------------------\n");
-    printf("                       Test Merge Sort                       \n");
-    printf("                          测试归并排序                         \n\n\n");
-    key_t array[6] = {1, 4, 2, 8, 5, 7 };
+    printf("|------------------------- CyberDash -------------------------|\n");
+    printf("|                       Test Merge Sort                       |\n");
+    printf("|                          测试归并排序                         |\n\n");
 
-    seq_list_t sqList;
-    sqList.length = 6;
-    for (int i = 1; i <= sqList.length; i++) {
-        seq_list_node_t redType;
-        redType.key = array[i - 1];
-        redType.info = '\0';
-        sqList.elements[i] = redType;
+    key_t keys[8] = { 3, 1, 4, 1, 5, 9, 2, 6 };
+
+    // 长度为8的线性表seq_list
+    seq_list_t seq_list;
+    seq_list.length = 8;
+
+    // 将keys数组各项值赋值到线性表seq_list
+    for (int i = 1; i <= seq_list.length; i++) {
+        seq_list.elements[i].key = keys[i - 1];
+        seq_list.elements[i].info = '\0';
     }
 
     printf("排序前:\n");
-    SeqListOutput(sqList.elements, 6);
+    SeqListOutput(seq_list.elements, seq_list.length);
 
-    MergeSort(&sqList);
+    MergeSort(&seq_list);
 
     printf("排序后:\n");
-    SeqListOutput(sqList.elements, 6);
+    SeqListOutput(seq_list.elements, seq_list.length);
 
-    printf("-------------------------------------------------------------\n");
+    printf("|-------------------------------------------------------------|\n\n");
 }
 
 
 void TestRadixSort() {
     printf("\n");
-    printf("------------------------- CyberDash -------------------------\n");
-    printf("                       Test Radix Sort                       \n");
-    printf("                         测试基数排序                          \n\n\n");
+    printf("|------------------------- CyberDash -------------------------|\n");
+    printf("|                       Test Radix Sort                       |\n");
+    printf("|                          测试基数排序                         |\n\n");
 
     radix_static_linked_list_t radix_static_linked_list;
 
-    radix_static_linked_list.key_count = 5; // 元素位数
+    radix_static_linked_list.digit_number = 5; // 元素位数
     radix_static_linked_list.length = 10;   // 静态链表长度
 
     // radix_static_linked_list.elements[0]初始化
@@ -284,6 +301,7 @@ void TestRadixSort() {
     element_zero.keys[1] = 0;
     element_zero.keys[2] = 0;
     element_zero.keys[3] = 0;
+    element_zero.keys[4] = 0;
     element_zero.next = 1;
     radix_static_linked_list.elements[0] = element_zero;
 
@@ -291,33 +309,35 @@ void TestRadixSort() {
 
     // 构造基数排序静态链表
     for (int i = 1; i <= radix_static_linked_list.length; i++) {
-        static_linked_list_node_t static_linked_list_node;
-        for (int j = 0; j <= radix_static_linked_list.key_count; j++) {
-            if (j == 0) {
-                static_linked_list_node.keys[j] = 49 + (rand() % 9);       // 第一位, '1' - '9'
-            } else if (j == radix_static_linked_list.key_count) {
-                static_linked_list_node.keys[j] = 0;                       // 置零位, '\0'
+        static_linked_list_node_t node;
+        for (int j = 0; j <= radix_static_linked_list.digit_number; j++) {
+            if (j == 0) {   //!< 第1位, 0 - 9随机赋值
+                node.keys[j] = NUM_1_ASCII_CODE + (rand() % 9);   //!< 第一位, '1' - '9'
+            } else if (j == radix_static_linked_list.digit_number) {   //!<
+                node.keys[j] = 0;                                //!< 置零位, '\0'
             } else {
-                static_linked_list_node.keys[j] = 49 + (rand() % 10) - 1;  // 其他位, '0' - '9'
+                node.keys[j] = NUM_0_ASCII_CODE + (rand() % 10); //!< 其他位, '0' - '9'
             }
         }
 
         if (i != radix_static_linked_list.length) {
-            static_linked_list_node.next = i + 1;
+            node.next = i + 1;
         } else {
-            static_linked_list_node.next = 0;
+            node.next = 0;
         }
 
-        radix_static_linked_list.elements[i] = static_linked_list_node;
+        radix_static_linked_list.elements[i] = node;
     }
 
     printf("排序前:\n");
-    RadixArrayOutput(&radix_static_linked_list.elements, radix_static_linked_list.length);
+    RadixArrayOutput((static_linked_list_node_t*)&radix_static_linked_list.elements,
+                     radix_static_linked_list.length);
 
     RadixSort(&radix_static_linked_list);
 
     printf("排序后:\n");
-    RadixArrayOutput(&radix_static_linked_list.elements, radix_static_linked_list.length);
+    RadixArrayOutput((static_linked_list_node_t*)&radix_static_linked_list.elements,
+                     radix_static_linked_list.length);
 
-    printf("-------------------------------------------------------------\n");
+    printf("|-------------------------------------------------------------|\n\n");
 }

@@ -102,10 +102,10 @@ void HuffmanCoding(huffman_tree_node_t* huffman_tree_nodes,
 
         int cur_huffman_code_length = codeword_count - cur_huffman_code_index - 1;
 
-        char* cur1 = (char*)huffman_code_array[i];
+        // char* cur1 = (char*)huffman_code_array[i];
         for (int j = 0; j < cur_huffman_code_length; j++) {
             // ((*huffman_code_array)[i])[j] = cur_huffman_code[cur_huffman_code_index];
-            *cur1 = cur_huffman_code[cur_huffman_code_index];
+            huffman_code_array[i][j] = cur_huffman_code[cur_huffman_code_index];
         }
     }
 

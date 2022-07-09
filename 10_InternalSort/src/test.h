@@ -15,7 +15,7 @@ void TestBubbleSort();
 
 void TestInsertSort();
 
-void TestBInsertSort();
+void TestBinaryInsertSort();
 
 void TestSelectSort();
 

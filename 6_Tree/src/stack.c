@@ -1,6 +1,12 @@
-﻿//
-// Created by cyberdash@163.com on 2021/12/30.
-//
+﻿/*!
+ * @file stack.c
+ * @author CyberDash计算机考研, cyberdash@163.com(抖音id:cyberdash_yuan)
+ * @brief 顺序栈
+ * @version 1.0.0
+ * @date 2022-07-04
+ * @copyright Copyright (c) 2021
+ *  CyberDash计算机考研
+ */
 
 #include "stack.h"
 #include "stdlib.h"

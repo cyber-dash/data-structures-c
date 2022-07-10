@@ -1,7 +1,12 @@
-﻿//
-// Created by cyberdash@163.com on 2021/3/14.
-//
-
+﻿/*!
+ * @file test.c
+ * @author CyberDash计算机考研, cyberdash@163.com(抖音id:cyberdash_yuan)
+ * @brief 内部排序 测试用例
+ * @version 1.0.0
+ * @date 2022-07-04
+ * @copyright Copyright (c) 2021
+ *  CyberDash计算机考研
+ */
 #include "test.h"
 #include "stdio.h"
 #include "stdlib.h"

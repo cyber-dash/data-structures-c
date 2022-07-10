@@ -1,6 +1,12 @@
-﻿//
-// Created by cyberdash@163.com on 2022/3/24.
-//
+﻿/*!
+ * @file binary_tree_node.c
+ * @author CyberDash计算机考研, cyberdash@163.com(抖音id:cyberdash_yuan)
+ * @brief  二叉树 结点结构
+ * @version 1.0.0
+ * @date 2022-07-10
+ * @copyright Copyright (c) 2021
+ *  CyberDash计算机考研
+ */
 
 #ifndef CYBER_DASH_TREE_BINARY_TREE_NODE_H
 #define CYBER_DASH_TREE_BINARY_TREE_NODE_H

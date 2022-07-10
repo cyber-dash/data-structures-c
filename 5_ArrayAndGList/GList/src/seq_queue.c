@@ -1,6 +1,12 @@
-//
-// Created by cyberdash@163.com on 2022/2/16.
-//
+/*!
+ * @file seq_queue.c
+ * @author CyberDash计算机考研, cyberdash@163.com(抖音id:cyberdash_yuan)
+ * @brief  循环队列
+ * @version 1.0.0
+ * @date 2022-07-10
+ * @copyright Copyright (c) 2021
+ *  CyberDash计算机考研
+ */
 
 #include "seq_queue.h"
 #include "stdlib.h"

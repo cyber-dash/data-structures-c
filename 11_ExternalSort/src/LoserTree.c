@@ -1,7 +1,12 @@
-//
-// Created by cyberdash@163.com on 2022/4/6.
-//
-
+/*!
+ * @file loserTree.c
+ * @author CyberDash计算机考研, cyberdash@163.com(抖音id:cyberdash_yuan)
+ * @brief 外部排序 败者树
+ * @version 1.0.0
+ * @date 2022-07-04
+ * @copyright Copyright (c) 2021
+ *  CyberDash计算机考研
+ */
 #include "LoserTree.h"
 #include "limits.h"
 #include "stdio.h"

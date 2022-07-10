@@ -1,6 +1,12 @@
-﻿//
-// Created by cyberdash@163.com on 2022/1/23.
-//
+﻿/*!
+ * @file test.c
+ * @author CyberDash计算机考研, cyberdash@163.com(抖音id:cyberdash_yuan)
+ * @brief 二叉树 测试用例
+ * @version 1.0.0
+ * @date 2022-07-04
+ * @copyright Copyright (c) 2021
+ *  CyberDash计算机考研
+ */
 
 #include "stdio.h"
 #include "stdlib.h"
@@ -8,21 +14,25 @@
 #include "test.h"
 
 
-Status VisitChar(TElemType e) { // 输出元素e的值
-  printf("%c", e);                 // 使用时, 加上格式串
+/*!
+ * 字符访问函数
+ * @param chr 字符
+ * @return 执行结果
+ */
+Status VisitChar(BINARY_TREE_NODE_DATA chr) {
+  printf("%c", chr);
   return OK;
 }
 
 
-Status VisitBinaryTreeNode(BiTNode e) { // 输出元素e的值
-  printf("%c", e.data);                 // 使用时, 加上格式串
+/*!
+ * 二叉树结点访问函数
+ * @param node 二叉树结点
+ * @return 执行结果
+ */
+Status VisitBinaryTreeNode(binary_tree_node_t node) {
+  printf("%c", node.data);
   return OK;
-}
-
-
-void TestBinaryTreeCreateBiTree() {
-  BiTree* testTree = (BiTree*)malloc(sizeof(BiTree));
-  CreateBiTree(testTree);
 }
 
 
@@ -41,15 +51,21 @@ void TestBinaryTreePreOrderTraverse() {
     printf("|                           \\                               |\n");
     printf("|                            G                              |\n");
 
-    BiTree *testTree = (BiTree*)malloc(sizeof(BiTree));
+    binary_tree_t* binary_tree = (binary_tree_t*)malloc(sizeof(binary_tree_t));
 
-    char treeString[] = "ABC  DE G  F   ";
-    int pos = 0;
+    char pre_order_str[] = "ABC  DE G  F   ";
+    int traverse_index = 0;
 
-    CreateBiTreeByString(testTree, treeString, &pos, strlen(treeString));
+    Status status = BinaryTreeCreateByPreOrderStringRecursive(binary_tree,
+                                                              pre_order_str,
+                                                              &traverse_index,
+                                                              strlen(pre_order_str));
+    if (status != OK) {
+        printf("\n建二叉树失败\n");
+    }
 
-    Status res = PreOrderTraverse(*testTree, VisitChar);
-    if (res == OK) {
+    status = BinaryTreePreOrderTraverseRecursive(*binary_tree, VisitChar);
+    if (status == OK) {
         printf("\n前序遍历结束\n");
     } else {
         printf("\n前序遍历失败\n");
@@ -74,15 +90,18 @@ void TestBinaryTreeInOrderTraverse() {
     printf("|                           \\                               |\n");
     printf("|                            G                              |\n");
 
-    BiTree* testTree = (BiTree*)malloc(sizeof(BiTree));
+    binary_tree_t* binary_tree = (binary_tree_t*)malloc(sizeof(binary_tree_t));
 
-    char treeString[] = "ABC  DE G  F   ";
-    int pos = 0;
+    char pre_order_str[] = "ABC  DE G  F   ";
+    int traverse_index = 0;
 
-    CreateBiTreeByString(testTree, treeString, &pos, strlen(treeString));
+    Status status = BinaryTreeCreateByPreOrderStringRecursive(binary_tree, pre_order_str, &traverse_index, strlen(pre_order_str));
+    if (status != OK) {
+        printf("\n建二叉树失败\n");
+    }
 
-    Status res = InOrderTraverse(*testTree, VisitChar);
-    if (res == OK) {
+    status = BinaryTreeInOrderTraverse(*binary_tree, VisitChar);
+    if (status == OK) {
         printf("\n中序遍历结束\n");
     } else {
         printf("\n中序遍历失败\n");
@@ -107,14 +126,14 @@ void TestBinaryTreeInOrderTraverse2() {
     printf("|                           \\                               |\n");
     printf("|                            G                              |\n");
 
-    BiTree* testTree = (BiTree*)malloc(sizeof(BiTree));
+    binary_tree_t* binary_tree = (binary_tree_t*)malloc(sizeof(binary_tree_t));
 
     char treeString[] = "ABC  DE G  F   ";
-    int pos = 0;
+    int traverse_index = 0;
 
-    CreateBiTreeByString(testTree, treeString, &pos, strlen(treeString));
+    BinaryTreeCreateByPreOrderStringRecursive(binary_tree, treeString, &traverse_index, strlen(treeString));
 
-    Status res = InOrderTraverse2(*testTree, VisitChar);
+    Status res = BinaryTreeInOrderTraverse2(*binary_tree, VisitChar);
     if (res == OK) {
         printf("\n中序遍历结束\n");
     } else {
@@ -126,6 +145,24 @@ void TestBinaryTreeInOrderTraverse2() {
 
 
 void TestHuffmanTree() {
-    HuffmanTree* huffmanTree = (HuffmanTree*)malloc(sizeof(HuffmanTree));
-    // HuffmanCoding(huffmanTree,           );
+    printf("\n");
+    printf("|------------------------ CyberDash ------------------------|\n");
+    printf("|                     Test HuffmanTree                      |\n");
+    printf("|                        测试哈夫曼编码                       |\n");
+
+    char codewords[8] = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
+    double probabilities[8] = { 0.01, 0.02, 0.03, 0.04, 0.1, 0.2, 0.25, 0.35 };
+
+    huffman_tree_node_t huffman_tree_nodes[9];
+
+    huffman_code_t huffman_codes;
+
+
+    HuffmanCoding(huffman_tree_nodes, huffman_codes, probabilities, 8);
+
+    for (int i = 1; i <= 8; i++) {
+        printf("%s\n", huffman_codes[i]);
+    }
+
+    printf("|-----------------------------------------------------------|\n\n");
 }

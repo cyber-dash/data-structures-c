@@ -1,7 +1,12 @@
-﻿//
-// Created by cyberdash@163.com(抖音: cyberdash_yuan) on 2022/3/24.
-//
-
+﻿/*!
+ * @file matrix_graph.c
+ * @author CyberDash计算机考研, cyberdash@163.com(抖音id:cyberdash_yuan)
+ * @brief 邻接矩阵
+ * @version 1.0.0
+ * @date 2022-07-04
+ * @copyright Copyright (c) 2021
+ *  CyberDash计算机考研
+ */
 #include <stdio.h>
 #include <float.h>
 #include "matrix_graph.h"

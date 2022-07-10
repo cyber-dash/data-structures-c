@@ -1,44 +1,49 @@
-//
-// Created by cyberdash@163.com on 2022/4/8.
-//
-
-#include "gList.h"
+/*!
+ * @file gen_list.c
+ * @author CyberDash计算机考研, cyberdash@163.com(抖音id:cyberdash_yuan)
+ * @brief  广义表
+ * @version 1.0.0
+ * @date 2022-07-10
+ * @copyright Copyright (c) 2021
+ *  CyberDash计算机考研
+ */
+#include "gen_list.h"
 #include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
 
 
-Status InitListHeadNode(GLNode** node) {
-    *node = (GLNode*)malloc(sizeof(GLNode));
+Status InitListHeadNode(gen_list_node_t** node) {
+    *node = (gen_list_node_t*)malloc(sizeof(gen_list_node_t));
     if (!(*node)) {
         return ERROR;
     }
 
     (*node)->tag = LIST;
-    (*node)->info.head = NULL;
+    (*node)->item.head = NULL;
     (*node)->next = NULL;
 
     return OK;
 }
 
 
-Status InitAtomNode(GLNode** node, AtomType chr) {
-    *node = (GLNode*)malloc(sizeof(GLNode));
+Status InitAtomNode(gen_list_node_t** node, AtomType chr) {
+    *node = (gen_list_node_t*)malloc(sizeof(gen_list_node_t));
     if (!(*node)) {
         return ERROR;
     }
 
     (*node)->tag = ATOM;
-    (*node)->info.atom = chr;
+    (*node)->item.atom = chr;
     (*node)->next = NULL;
 
     return OK;
 }
 
 
-void CreateGenListByQueueRecursive(SqQueue* char_queue, GLNode** node) {
+void CreateGenListByQueueRecursive(seq_queue_t* char_queue, gen_list_node_t** node) {
 
-    QueueElem chr;
+    QUEUE_ELEM chr;
     if (GetLength(*char_queue) == 0) {
         return;
     }
@@ -47,7 +52,7 @@ void CreateGenListByQueueRecursive(SqQueue* char_queue, GLNode** node) {
 
     if (chr == '(') {
         InitListHeadNode(node);
-        CreateGenListByQueueRecursive(char_queue, &(*node)->info.head);
+        CreateGenListByQueueRecursive(char_queue, &(*node)->item.head);
         CreateGenListByQueueRecursive(char_queue, node);
     } else if (isalpha(chr)) {
         InitAtomNode(node, chr);
@@ -63,9 +68,9 @@ void CreateGenListByQueueRecursive(SqQueue* char_queue, GLNode** node) {
 }
 
 
-void CreateGenListByStr(GList* gList, char* str, int str_len) {
+void CreateGenListByStr(gen_list_t* gList, char* str, int str_len) {
 
-    SqQueue char_queue;
+    seq_queue_t char_queue;
     InitQueue(&char_queue);
     for (int i = 0; i < str_len; i++) {
         EnQueue(&char_queue, str[i]);
@@ -75,9 +80,9 @@ void CreateGenListByStr(GList* gList, char* str, int str_len) {
 }
 
 
-Status GenListToString(GList gList, char* gen_list_string) {
+Status GenListToString(gen_list_t gList, char* gen_list_string) {
 
-    SqQueue char_queue;
+    seq_queue_t char_queue;
     InitQueue(&char_queue);
 
     // char queue_str[200];
@@ -91,8 +96,8 @@ Status GenListToString(GList gList, char* gen_list_string) {
 }
 
 
-void SubGenListToStringRecursive(GList gList, SqQueue* char_queue) {
-    GLNode* cur_head = gList->info.head;
+void SubGenListToStringRecursive(gen_list_t gList, seq_queue_t* char_queue) {
+    gen_list_node_t* cur_head = gList->item.head;
 
     EnQueue(char_queue, '(');
 
@@ -100,7 +105,7 @@ void SubGenListToStringRecursive(GList gList, SqQueue* char_queue) {
         if (cur_head->tag == LIST) {
             SubGenListToStringRecursive(cur_head, char_queue);
         } else if (cur_head->tag == ATOM) {
-            EnQueue(char_queue, cur_head->info.atom);
+            EnQueue(char_queue, cur_head->item.atom);
         }
 
         if (cur_head->next != NULL) {
@@ -114,7 +119,7 @@ void SubGenListToStringRecursive(GList gList, SqQueue* char_queue) {
 }
 
 
-int GListDepth(GList gList) {
+int GListDepth(gen_list_t gList) {
     if (!gList) {
         return 1;
     }
@@ -124,7 +129,7 @@ int GListDepth(GList gList) {
     }
 
     int max_sub_gen_list_depth = 0; // 子表最大深度, 初始化为0
-    for (GList cur_gen_list = gList->info.head; cur_gen_list != NULL; cur_gen_list = cur_gen_list->next) {
+    for (gen_list_t cur_gen_list = gList->item.head; cur_gen_list != NULL; cur_gen_list = cur_gen_list->next) {
         int cur_sub_gen_list_depth = GListDepth(cur_gen_list);
         if (max_sub_gen_list_depth < cur_sub_gen_list_depth) {
             max_sub_gen_list_depth = cur_sub_gen_list_depth;
@@ -137,14 +142,14 @@ int GListDepth(GList gList) {
 }
 
 
-Status CopyGenList(GList* target_list, GList src_list) {
+Status CopyGenList(gen_list_t* target_list, gen_list_t src_list) {
 
     if (src_list == NULL) {
         *target_list = NULL;
         return OK;
     }
 
-    *target_list = (GList)malloc(sizeof(GLNode));
+    *target_list = (gen_list_t)malloc(sizeof(gen_list_node_t));
     if (*target_list == NULL) {
         return ALLOC_UNINITIALIZED;
     }
@@ -152,9 +157,9 @@ Status CopyGenList(GList* target_list, GList src_list) {
     (*target_list)->tag = src_list->tag;
 
     if (src_list->tag == ATOM) {
-        (*target_list)->info.atom = src_list->info.atom;
+        (*target_list)->item.atom = src_list->item.atom;
     } else {
-        CopyGenList(&(*target_list)->info.head, src_list->info.head);
+        CopyGenList(&(*target_list)->item.head, src_list->item.head);
     }
 
     CopyGenList(&(*target_list)->next, src_list->next);

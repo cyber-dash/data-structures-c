@@ -1,7 +1,12 @@
-﻿//
-// Created by cyberdash@163.com on 2022/5/12.
-//
-
+﻿/*!
+ * @file static_search_table.c
+ * @author CyberDash计算机考研, cyberdash@163.com(抖音id:cyberdash_yuan)
+ * @brief 查找 静态查找
+ * @version 1.0.0
+ * @date 2022-07-04
+ * @copyright Copyright (c) 2021
+ *  CyberDash计算机考研
+ */
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>

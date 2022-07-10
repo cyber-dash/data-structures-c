@@ -1,7 +1,12 @@
-//
-// Created by cyberdash@163.com on 2022/5/2.
-//
-
+/*!
+ * @file heap.h
+ * @author CyberDash计算机考研, cyberdash@163.com(抖音id:cyberdash_yuan)
+ * @brief 堆
+ * @version 1.0.0
+ * @date 2022-07-04
+ * @copyright Copyright (c) 2021
+ *  CyberDash计算机考研
+ */
 #ifndef CYBER_DASH_HEAP_H
 #define CYBER_DASH_HEAP_H
 

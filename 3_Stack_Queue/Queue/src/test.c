@@ -1,6 +1,12 @@
-﻿//
-// Created by cyberdash@163.com on 2022/4/20.
-//
+﻿/*!
+ * @file test.c
+ * @author CyberDash计算机考研, cyberdash@163.com(抖音id:cyberdash_yuan)
+ * @brief  队列 测试用例
+ * @version 1.0.0
+ * @date 2022-07-10
+ * @copyright Copyright (c) 2021
+ *  CyberDash计算机考研
+ */
 
 #include "test.h"
 #include <stdio.h>

@@ -1,6 +1,12 @@
-//
-// Created by cyberdash@163.com on 2022/4/20.
-//
+/*!
+ * @file queue.h
+ * @author CyberDash计算机考研, cyberdash@163.com(抖音id:cyberdash_yuan)
+ * @brief 队列
+ * @version 1.0.0
+ * @date 2022-07-04
+ * @copyright Copyright (c) 2021
+ *  CyberDash计算机考研
+ */
 
 #ifndef CYBER_DASH_GRAPH_QUEUE_H
 #define CYBER_DASH_GRAPH_QUEUE_H

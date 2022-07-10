@@ -1,6 +1,13 @@
-﻿//
-// Created by cyberdash@163.com on 2022/5/15.
-//
+﻿/*!
+ * @file test.c
+ * @author CyberDash计算机考研, cyberdash@163.com(抖音id:cyberdash_yuan)
+ * @brief  广义表 测试用例
+ * @version 1.0.0
+ * @date 2022-07-10
+ * @copyright Copyright (c) 2021
+ *  CyberDash计算机考研
+ */
+
 
 #include "test.h"
 #include <stdio.h>
@@ -14,7 +21,7 @@ void TestInitGList() {
     printf("                   Test CreateGenListByStr                   \n");
     printf("                      测试构造和打印广义表                       \n\n\n");
 
-    GList gList = NULL;
+    gen_list_t gList = NULL;
 
     char input_gen_list_str[100] = "(A,(),(B,(C)))";
     CreateGenListByStr(&gList, input_gen_list_str, strlen(input_gen_list_str));
@@ -35,7 +42,7 @@ void TestGListDepth() {
     printf("                        测试广义表的深度                        \n\n\n");
 
     // 构造广义表
-    GList gList = NULL;
+    gen_list_t gList = NULL;
 
     char input_gen_list_str[100] = "(A,(),(B,(C)))";
     CreateGenListByStr(&gList, input_gen_list_str, strlen(input_gen_list_str));
@@ -57,7 +64,7 @@ void TestGListCopy() {
     printf("                       Test GenListCopy                      \n");
     printf("                        测试广义表的复制                        \n\n\n");
 
-    GList gen_list = NULL;
+    gen_list_t gen_list = NULL;
     char input_gen_list_str[100] = "(A,(),(B,(C)))";
     CreateGenListByStr(&gen_list, input_gen_list_str, strlen(input_gen_list_str));
 
@@ -66,7 +73,7 @@ void TestGListCopy() {
     printf("广义表: %s\n\n", gen_list_str);
 
     // 调用CopyGenList将gen_list复制到new_gen_list
-    GList new_gen_list = NULL;
+    gen_list_t new_gen_list = NULL;
     CopyGenList(&new_gen_list, gen_list);
 
     char* new_gen_list_str = (char*)malloc(200 * sizeof(char));

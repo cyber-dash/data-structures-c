@@ -1,7 +1,12 @@
-﻿//
-// Created by cyberdash@163.com(抖音: cyberdash_yuan) on 2021/3/14.
-//
-
+﻿/*!
+ * @file test.h
+ * @author CyberDash计算机考研, cyberdash@163.com(抖音id:cyberdash_yuan)
+ * @brief 内部排序 测试用例 头文件
+ * @version 1.0.0
+ * @date 2022-07-04
+ * @copyright Copyright (c) 2021
+ *  CyberDash计算机考研
+ */
 #ifndef CYBER_DASH_SORT_TEST_H
 #define CYBER_DASH_SORT_TEST_H
 
@@ -15,7 +20,7 @@ void TestBubbleSort();
 
 void TestInsertSort();
 
-void TestBInsertSort();
+void TestBinaryInsertSort();
 
 void TestSelectSort();
 

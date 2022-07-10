@@ -1,6 +1,12 @@
-﻿//
-// Created by cyberdash@163.com(抖音: cyberdash_yuan) on 2021/3/10.
-//
+﻿/*!
+ * @file sort.c
+ * @author CyberDash计算机考研, cyberdash@163.com(抖音id:cyberdash_yuan)
+ * @brief 内部排序
+ * @version 1.0.0
+ * @date 2022-07-04
+ * @copyright Copyright (c) 2021
+ *  CyberDash计算机考研
+ */
 
 #include "sort.h"
 #include <stdio.h>
@@ -34,100 +40,103 @@ int LowerEqual(key_t key1, key_t key2) {
 }
 
 
+/*!
+ * 交换函数
+ * @param item1 元素1
+ * @param item2 元素2
+ */
 void Swap(seq_list_node_t* item1, seq_list_node_t* item2) {
-
     seq_list_node_t tmp = *item1;
     *item1 = *item2;
     *item2 = tmp;
 }
 
 
-//在L.elements[i..L.Length]中选择key最小的记录
-int SelectMinKey(seq_list_t* L, int i) {
-    if (i == L->length) {
-        return i;
+/*!
+ * 在线性表索引i(包含i)之后的元素中选出key最小的元素的索引
+ * @param seq_list 线性表
+ * @param index 索引
+ * @return 最小元素索引
+ */
+int SelectMinKey(seq_list_t* seq_list, int index) {
+    if (index == seq_list->length) {
+        return index;
     }
 
-    int minPos = i;
-    key_t minValue = L->elements[i].key;
-    for (int j = i + 1; j <= L->length; j++) {
-        if (L->elements[j].key < minValue) {
-            minPos = j;
-            minValue = L->elements[j].key;
+    // 索引index元素初始化min_key_index/min_key
+    int min_key_index = index;
+    key_t min_key = seq_list->elements[index].key;
+
+    for (int i = index + 1; i <= seq_list->length; i++) {
+
+        // 如果索引i元素key 小于 min_key, 更新min_key_index/min_key
+        if (seq_list->elements[i].key < min_key) {
+            min_key_index = i;
+            min_key = seq_list->elements[i].key;
         }
     }
 
-    return minPos;
+    return min_key_index;
 }
 
 
 /*!
- * @brief 直接插入排序
- * @param L 待排数组
+ * @brief 插入排序
+ * @param seq_list 待排线性表
  */
-void InsertSort(seq_list_t* L)
+void InsertSort(seq_list_t* seq_list)
 {
     //对顺序表L作直接插入排序
-    for (int i = 2; i <= L->length; ++i)
+    for (int i = 2; i <= seq_list->length; i++)
     {
-        if (LowerThan(L->elements[i].key, L->elements[i - 1].key)) { // ("<"，需将L.elements[i]插入有序子表)
+        if (LowerThan(seq_list->elements[i].key, seq_list->elements[i - 1].key)) { // ("<"，需将seq_list.elements[i]插入有序子表)
 
-            // 交换 L->elements[i]与L->elements[i - 1]
-            L->elements[0] = L->elements[i];                  // (复制为哨兵)
-            L->elements[i] = L->elements[i - 1];
+            // 交换 seq_list->elements[i]与seq_list->elements[i - 1]
+            seq_list->elements[0] = seq_list->elements[i];                  // (复制为哨兵)
+            seq_list->elements[i] = seq_list->elements[i - 1];
 
             int j;
-            for (j = i - 1; LowerThan(L->elements[0].key, L->elements[j].key); --j)
+            for (j = i - 1; LowerThan(seq_list->elements[0].key, seq_list->elements[j].key); --j)
             {
-                L->elements[j + 1] = L->elements[j];                //记录后移
+                seq_list->elements[j + 1] = seq_list->elements[j];                //记录后移
             }
-            L->elements[j + 1] = L->elements[0];                  //插入到正确位置
+            seq_list->elements[j + 1] = seq_list->elements[0];                  //插入到正确位置
         }
     }
-} // InsertSort
+}
 
 
-// @brief 折半插入排序
-// @param list 待排数组
-void BInsertSort(seq_list_t* list)
-{
-    for (int i = 2; i <= list->length; ++i)
-    {
-        list->elements[0] = list->elements[i];                        //将L->elements[i]暂存到L->elements[0]
+/*!
+ * \brief 折半插入排序
+ * \param seq_list 待排序线性表
+ */
+void BinaryInsertSort(seq_list_t* seq_list) {
+    for (int i = 2; i <= seq_list->length; i++) {
+        seq_list->elements[0] = seq_list->elements[i];  //将seq_list->elements[i]暂存到seq_list->elements[0]
 
         int low = 1;
         int high = i - 1;
 
-        while (low <= high)
-        {                                             //在r[low..high]中折半查找有序插入的位置
-            int m = (low + high) / 2;                       //折半
+        while (low <= high) {
+            int mid = (low + high) / 2;                       //折半
 
-            if (LowerThan(list->elements[0].key, list->elements[m].key)) {
-                high = m - 1;                             //插入点在低半区
+            if (LowerThan(seq_list->elements[0].key, seq_list->elements[mid].key)) {
+                high = mid - 1;                             //插入点在低半区
             } else {
-                low = m + 1;                              //插入点在高半区
+                low = mid + 1;                              //插入点在高半区
             }
         }
 
         for (int j = i - 1; j >= high + 1; --j) {
-            list->elements[j + 1] = list->elements[j];                  //记录后移
+            seq_list->elements[j + 1] = seq_list->elements[j];                  //记录后移
         }
-        list->elements[high + 1] = list->elements[0];                 //插入
+
+        seq_list->elements[high + 1] = seq_list->elements[0];                 //插入
     }
-} // BInsertSort
+}
 
 
 /*
-// @brief 2-路插入排序
-// @param SL 待排数组
-void TwoInsertSort(SLinkListType *SL){
-
-}
-*/
-
-
-// @brief 表插入排序
-// @param SL 待排数组
 void TableInsertSort(SLinkListType *SL)
 {
   SL->elements[0].rc.key = MAX;                          //0号位表头结点，存最大整数值MAX
@@ -146,79 +155,71 @@ void TableInsertSort(SLinkListType *SL)
     SL->elements[i].next = p;
   }
 }//TableInsertSort
+ */
 
-// @brief 重排记录过程
-// @param SL 待排数组
 /*
 void Arrange(SLinkListType *SL)
 {
   int q = 0;
   int i = 0;
-  //根据静态链表SL中各结点的指针值调整记录位置，使得SL中记录按关键字非递减
-  //减有序排列
-  int p = SL->elements[0].next;                          //p指示第一个记录的当前位置
+  int p = SL->elements[0].next;
 
-  for(i = 1; i < SL->length; ++i){                //SL.elements[1..i-1]中记录已按关键字有序排列
-                                                  //第i个记录的在SL中的当前位置应不小于i
+  for (i = 1; i < SL->length; ++i) {
     while(p < i){
-      p = SL->elements[p].next;                          //找到第i个记录，并用p指示其在SL中当前位置
+      p = SL->elements[p].next;
     }
-    q = SL->elements[p].next;                            //q指示尚未调整的表尾
+    q = SL->elements[p].next;
     if(p != i){
         Swap(&SL->elements[p], &SL->elements[i], sizeof(SL->elements[p]));//交换记录,使第i个记录到位
-      SL->elements[i].next = p;                          //指向被移走的记录,使得以后可由while循环找回
+      SL->elements[i].next = p;
     }
-    p = q;                                        //p指示尚未调整的表尾,为找第i+1个记录作准备
+    p = q;
   }
 }//Arrange
  */
 
 
-// @brief 希尔插入排序
-// @param L 待排数组
-// @param SL 增量
-void ShellInsert(seq_list_t *L, int dk)
-{
-  //对顺序表L作一趟希尔插入排序，本算法是和一趟直接插入排序相比，作了以下修改：
-  //    1，前后记录位置的增量是dk，而不是1；
-  //    2，elements[0]只是暂存单元，不是哨兵。当j<=0时，插入位置已找到。
-  for (int i = dk + 1; i <= L->length; ++i)
-  {
-    if (LowerThan(L->elements[i].key, L->elements[i - dk].key))    //需将L.elements[i]插入有序增量子表
-    {
-      L->elements[0] = L->elements[i];                      //暂存在L.elements[0]
-      int j;
-      for (j = i - dk; j > 0 && LowerThan(L->elements[0].key, L->elements[j].key); j -= dk)
-      {
-        L->elements[j + dk] = L->elements[j];               //记录后移，查找插入位置
-      }
-      L->elements[j + dk] = L->elements[0];                 //插入
+/*!
+ * 按照间隔gap进行希尔插入排序
+ * @param seq_list 顺序表
+ * @param gap 间隔
+ */
+void ShellInsert(seq_list_t* seq_list, int gap) {
+    for (int i = gap + 1; i <= seq_list->length; i++) {
+        if (LowerThan(seq_list->elements[i].key, seq_list->elements[i - gap].key)) {
+            seq_list->elements[0] = seq_list->elements[i];
+            int j;
+            for (j = i - gap; j > 0 && LowerThan(seq_list->elements[0].key, seq_list->elements[j].key); j -= gap) {
+                seq_list->elements[j + gap] = seq_list->elements[j];
+            }
+            seq_list->elements[j + gap] = seq_list->elements[0];
+        }
     }
-  }
-}// ShellInsert
+}
 
 
-// @brief 希尔排序
-// @param L 待排数组
-// @param dlta 排序增量序列
-// @param t 序列长度
-void ShellSort(seq_list_t *L, int dlta[], int t)
-{
-  int k;
-  // 按增量序列dlta[0..t-1]对顺序表L作希尔排序。
-  for (k = 0; k < t; ++k)
-  {
-    ShellInsert(L, dlta[k]);                    //一趟增量为dlta[k]的插入排序
-  }
-} // ShellSort
+/*!
+ * 希尔排序
+ * @param seq_list 线性表(指针)
+ * @param gaps 间隔数组
+ * @param gap_count 间隔数组长度
+ */
+void ShellSort(seq_list_t* seq_list, int* gaps, int gap_count) {
+    for (int i = 0; i < gap_count; ++i) {
+        ShellInsert(seq_list, gaps[i]);
+    }
+}
 
 
- // @brief 起泡排序(冒泡排序)
- // @param seq_list 待排数组
+/*!
+ * 冒泡排序
+ * @param seq_list 线性表(指针)
+ */
 void BubbleSort(seq_list_t* seq_list) {
     for (int i = 0; i < seq_list->length; i++) {
         bool is_sorted = true;
-        for (int j = 0; j < seq_list->length - i - 1; j++) {
+
+        for (int j = 1; j < seq_list->length - i; j++) {
             if (LowerThan(seq_list->elements[j + 1].key, seq_list->elements[j].key)) {
                 Swap(seq_list->elements + j + 1, seq_list->elements + j);
                 is_sorted = false;
@@ -232,135 +233,134 @@ void BubbleSort(seq_list_t* seq_list) {
 }
 
 
-// @brief 快排 获取枢纽位置 算法10.6a 改良前
-// @param L 待排数组
-// @param low 表左端
-// @param high 表右端
-// @return 新的枢纽位置
-int Partition_a(seq_list_t* L, int low, int high) {
-    int pivotkey;
+/*!
+ * 快速排序划分函数
+ * @param seq_list 线性表(指针)
+ * @param low 下界
+ * @param high 上界
+ * @return 划分位置
+ */
+int Partition(seq_list_t* seq_list, int low, int high) {
 
-    //变换顺序表L中子表r[low,high]的记录，枢轴记录到位，并返回其所在位置，此时
-    //在它之前（后）的记录均不大（小）于它。
-    pivotkey = L->elements[low].key;                   //用子表第一个记录作枢轴记录
+    int pivot_key = seq_list->elements[low].key;
 
-    while (low < high) {                            //从表的两端交替地向中间扫描
-        while (low < high && (*L).elements[high].key >= pivotkey) {
+    while (low < high) {
+        while (low < high && seq_list->elements[high].key >= pivot_key) {
             high--;
         }
 
-        // Swap(&(*L).elements[high], &(*L).elements[low], sizeof(&(*L).elements[high]));//将比枢轴记录小的记录交换到低端
-        Swap(&L->elements[high], &L->elements[low]);//将比枢轴记录小的记录交换到低端
+        Swap(seq_list->elements + high, seq_list->elements + low);
 
-        while (low < high && L->elements[low].key <= pivotkey) {
+        while (low < high && seq_list->elements[low].key <= pivot_key) {
             low++;
         }
 
-        // Swap(&(*L).elements[high], &(*L).elements[low], sizeof(&(*L).elements[high]));//将比枢轴记录大的记录交换到高端
-        Swap(&L->elements[high], &L->elements[low]);//将比枢轴记录大的记录交换到高端
+        Swap(seq_list->elements + high, seq_list->elements + low);
     }
 
-    return low;                                   //返回枢轴所在位置
-}//Partition
+    return low;
+}
 
-// @brief 快排 获取枢纽位置 算法10.6b 改良后
-// @param L 待排数组
-// @param low 表左端
-// @param high 表右端
-// @return 新的枢纽位置
-int Partition(seq_list_t* L, int low, int high)
-{
-    int pivotkey;
+
+/*!
+ * 快速排序划分函数
+ * @param seq_list 线性表(指针)
+ * @param low 下界
+ * @param high 上界
+ * @return 划分位置
+ */
+int Partition2(seq_list_t* seq_list, int low, int high) {
+    int pivot_key;
 
     //变换顺序表L中子表r[low,high]的记录，枢轴记录到位，并返回其所在位置，此时
     //在它之前（后）的记录均不大（小）于它。
-    L->elements[0] = L->elements[low];                    //用子表第一个记录作枢轴记录
-    pivotkey = L->elements[low].key;                 //枢轴记录关键字
+    seq_list->elements[0] = seq_list->elements[low];                    //用子表第一个记录作枢轴记录
+    pivot_key = seq_list->elements[low].key;                 //枢轴记录关键字
 
     while (low < high)
     { //从表的两端交替地向中间扫描
-        while (low < high && L->elements[high].key > pivotkey)
-        {
+        while (low < high && seq_list->elements[high].key > pivot_key) {
             high--;
         }
 
-        L->elements[low] = L->elements[high];               //将比枢轴记录小的记录交换到低端
+        seq_list->elements[low] = seq_list->elements[high];               //将比枢轴记录小的记录交换到低端
 
-        while (low < high && L->elements[low].key <= pivotkey)
-        {
+        while (low < high && seq_list->elements[low].key <= pivot_key) {
             low++;
         }
 
-        L->elements[high] = L->elements[low];               //将比枢轴记录大的记录交换到高端
+        seq_list->elements[high] = seq_list->elements[low];               //将比枢轴记录大的记录交换到高端
     }
 
-    L->elements[low] = L->elements[0];                    //枢轴记录到位
+    seq_list->elements[low] = seq_list->elements[0];                    //枢轴记录到位
 
     return low;                                 //返回枢轴所在位置
-} // Partition
+}
 
-// @brief 递归形式的快速排序
-// @param L 待排数组
-// @param low 表左端
-// @param high 表右端
-void QSort(seq_list_t* L, int low, int high)
-{
-    int pivotloc;
 
-    if (low < high)
-    {                                          //长度大于1
-        pivotloc = Partition(L, low, high);      //将(*L).elements[row..high]一分为二
-
-        QSort(L, 1, pivotloc - 1);              //对低子表递归排序，pivotloc是枢轴位置
-        QSort(L, pivotloc + 1, high);           //对高子表递归排序
+/*!
+ * 快速排序(递归)
+ * @param seq_list 顺序表(指针)
+ * @param left 表左侧位置
+ * @param right 表右侧位置
+ */
+void QuickSortRecursive(seq_list_t* seq_list, int left, int right) {
+    if (left >= right) {
+        return;
     }
-}// QSort
 
-// @brief 快速排序入口
-// @param L 待排数组
-void QuickSort(seq_list_t* L)
-{
-    QSort(L, 1, (*L).length);
-}// QuickSort
+    // 划分出分治点位置
+    int pivot = Partition2(seq_list, left, right);
+
+    QuickSortRecursive(seq_list, 1, pivot - 1);        //!< 左侧递归执行QuickSortRecursive
+    QuickSortRecursive(seq_list, pivot + 1, right);    //!< 右侧递归执行QuickSortRecursive
+}
 
 
-// @brief 简单选择排序
-// @param L 待排数组
-void SelectSort(seq_list_t* L)
-{
-    int i;
-    int j;
+/*!
+ * @brief 顺序表快速排序
+ * @param seq_list 顺序表(指针)
+ */
+void QuickSort(seq_list_t* seq_list) {
+    int starting_index = 1; //!< 顺序表的起始索引为1(区别于数组0)
 
-    //对顺序表L作简单选择排序
-    for (i = 1; i < L->length; ++i) {           //选择第i小的记录，并交换到位
-        j = SelectMinKey(L, i);                   //在L.elements[i..L.Length]中选择key最小的记录
+    QuickSortRecursive(seq_list, starting_index, seq_list->length);
+}
 
-        if (i != j)
-        {
-            Swap(&(L->elements[i]), &(L->elements[j])); //与第i个记录交换
+
+/*!
+ * @brief 简单选择排序
+ * @param seq_list 待排数组
+ */
+void SelectSort(seq_list_t* seq_list) {
+    for (int i = 1; i < seq_list->length; i++) {
+        int j = SelectMinKey(seq_list, i);  //!< 在seq_list->elements[ i ... seq_list->length ]中选择key最小的记录
+
+        if (i != j) {
+            Swap(seq_list->elements + i, seq_list->elements + j); //与第i个记录交换
         }
     }
-} // SelectSort
+}
 
 
 /*!
  * 大顶堆SiftDown
  * @param heap 顺序表结构(通常可以是数组)
- * @param idx 位置索引
+ * @param index 位置索引
  * @param heap_size 堆size
  */
-void MaxHeapSiftDown(heap_t* heap, int idx, int heap_size)
+void MaxHeapSiftDown(seq_list_t* heap, int index, int heap_size)
 {
-    for (int child_idx = 2 * idx; child_idx <= heap_size; idx = child_idx, child_idx *= 2) {
-        if (child_idx < heap_size && LowerThan(heap->elements[child_idx].key, heap->elements[child_idx + 1].key)) {
-            child_idx++;
+    for (int child_index = 2 * index; child_index <= heap_size; index = child_index, child_index *= 2) {
+        if (child_index < heap_size && LowerThan(heap->elements[child_index].key, heap->elements[child_index + 1].key)) {
+            child_index++;
         }
 
-        if (!LowerThan(heap->elements[idx].key, heap->elements[child_idx].key)) {
+        if (!LowerThan(heap->elements[index].key, heap->elements[child_index].key)) {
             break;
         }
 
-        Swap(heap->elements + idx, heap->elements + child_idx);
+        Swap(heap->elements + index, heap->elements + child_index);
     }
 }
 
@@ -413,144 +413,154 @@ void Merge(seq_list_node_t SR[], seq_list_node_t TR[], int i, int m, int n)
     while (j <= n) {                                         //将剩余的SR[j..n]复制到TR
         TR[k++] = SR[j++];
     }
-} // Merge
+}
 
-// @brief 归并排序
-// @param SR 有序表
-// @param TR1 返回的有序表
-// @param s SR起始位置
-// @param t SR终止位置
-void MSort(seq_list_node_t SR[], seq_list_node_t TR1[], int s, int t)
+
+// todo: 写的不太好, 重写
+void MergeSortRecursive(seq_list_node_t* SR, seq_list_node_t* TR1, int left, int right)
 {
-    int m;
-    seq_list_node_t TR2[MAXSIZE + 1];
-    // 将SR[s..t]归并排序为TR1[s..t]
-    if (s == t)
-    {
-        TR1[s] = SR[s];
+    seq_list_node_t TR2[MAX_SIZE + 1];
+    // 将SR[left..right]归并排序为TR1[left..right]
+    if (left == right) {
+        TR1[left] = SR[left];
+    } else {
+        int mid = (left + right) / 2;                                      //将SR[left..right]平分为SR[left..mid]和SR[mid+1..right]
+        MergeSortRecursive(SR, TR2, left, mid);                                 //递归地将SR[left..mid]归并为有序的TR2[left..mid]
+        MergeSortRecursive(SR, TR2, mid + 1, right);                             //递归地将SR[mid+1..right]归并为有序的TR2[mid+1..right]
+        Merge(TR2, TR1, left, mid, right);                             //将R[left..mid]和TR2[mid+1..right]归并到TR1[left..right]
     }
-    else
-    {
-        m = (s + t) / 2;                                      //将SR[s..t]平分为SR[s..m]和SR[m+1..t]
-        MSort(SR, TR2, s, m);                                 //递归地将SR[s..m]归并为有序的TR2[s..m]
-        MSort(SR, TR2, m + 1, t);                             //递归地将SR[m+1..t]归并为有序的TR2[m+1..t]
-        Merge(TR2, TR1, s, m, t);                             //将R[s..m]和TR2[m+1..t]归并到TR1[s..t]
-    }
-} // MSort
+}
 
-// @brief 归并排序入口
-// @param L 待排数组
+
 void MergeSort(seq_list_t* L)
 {
     //对顺序表L作归并排序
-    MSort(L->elements, L->elements, 1, L->length);
-} // MergeSort
+    MergeSortRecursive(L->elements, L->elements, 1, L->length);
+}
 
 
-int ord(char* keys, int pos, int keyNum) {
-    int idx = keyNum - pos - 1;
-    int num = (int)keys[idx] - 48;
+/*!
+ * 获取keys第
+ * @param keys
+ * @param i
+ * @param digit_num
+ * @return
+ */
+int ord(char* keys, int i) {
+    // int index = digit_num - i - 1;
+    int num = (int)keys[i] - NUM_0_ASCII_CODE;
+
     return num;
 }
 
 
-// @brief 基数排序 分配算法
-// @param elements 静态链表的结点域
-// @param i 第i趟
-// @param f 队列头
-// @param e 队列尾
-// void Distribute(static_linked_list_node_t elements[], int i, ArrType f, ArrType e)
-void Distribute(static_linked_list_t* slList, int i, ArrType f, ArrType e)
+/*!
+ * @brief 基数排序分配元素入桶
+ * @param static_linked_list 静态链表(指针)
+ * @param place_of_digit 位数
+ * @param digit_bucket_heads 数位(0 - 9)桶的首元素(队头)
+ * @param digit_bucket_tails 数位(0 - 9)桶的尾元素(队尾)
+ * @note
+ * place_of_digit/位数, 个位: 1, 十位: 2, 百位: 3 ...
+ * 每个桶是一个队列,
+ * digit_bucket_heads[0 ... 9]和digit_queue_tails[0 ... 9]分别指向各桶(队列)的第一个元素(队头)和最后一个元素(队尾)
+ */
+void DistributeIntoBuckets(radix_static_linked_list_t* static_linked_list,
+                           int place_of_digit,
+                           BUCKETS digit_bucket_heads,
+                           BUCKETS digit_bucket_tails)
 {
-    static_linked_list_node_t* r = slList->elements;
-	//静态链表L的r域中记录已按(keys[0],...,keys[i-1])有序
-	//本算法按第i个关键字keys[i]建立RADIX个子表，使同一子表中记录的keys[i]相同
-	//f[0..RADIX-1]和e[0..RADIX-1]分别指向各子表中第一个和最后一个记录
-	for (int j = 0; j < RADIX; j++)                              //各子表初始化为空表
-	{
-		f[j] = 0;
-		e[j] = 0;
+    static_linked_list_node_t* elements = static_linked_list->elements;
+    int digit_index = static_linked_list->digit_number - place_of_digit;
+
+
+    // 0 - 9对应的各子表初始化为空表
+    for (int j = 0; j < RADIX_10; j++) {
+        digit_bucket_heads[j] = 0;
+        digit_bucket_tails[j] = 0;
 	}
 
-	for (int p = r[0].next; p; p = r[p].next)
-	{
-		int j = ord(r[p].keys, i, slList->key_cnt);         // ord将记录中第i个关键字映射到[0..RADIX-1]
+	for (int elements_index = elements[0].next; elements_index != 0; elements_index = elements[elements_index].next) {
 
-		if (!f[j])               // 如果对头元素为空, p入队, 为队头
-		    f[j] = p;                     
-		else
-		    r[e[j]].next = p;    // 队尾增加元素
+        // 获取第i个关键字对应的数字
+        int digit = ord(static_linked_list->elements[elements_index].keys, digit_index);
 
-		e[j] = p;                // 将p所指的结点插入第j个子表中
+        if (!digit_bucket_heads[digit]) {    // 如果digit所在队列的队头元素为空, elements_index入队
+            digit_bucket_heads[digit] = elements_index; // elements_index设为队头
+        } else {    // 如果digit所在队列的队头元素不为空, 队尾元素对应的elements数组元素的next, 指向elements_index(即加入队尾)
+            elements[digit_bucket_tails[digit]].next = elements_index;    // 队尾增加元素
+        }
+
+        digit_bucket_tails[digit] = elements_index;  // 更新队尾数组digit_queue_tails
 	}
-}//Distribute
-
-
-int succ(idx) {
-    return idx + 1;
 }
 
 
-// @brief 基数排序 收集算法
-// @param elements 静态链表的结点域
-// @param i 第i趟
-// @param f 队列头
-// @param e 队列尾
-void Collect(static_linked_list_node_t r[], int i, ArrType f, ArrType e) {
-    int j;
-    // 本算法按keys[i]自小至大地将f[0..RADIX-1]所指各子表依次连接成一个链表
-    //e[0..RADIX-1]为各子表的尾指针
-    for (j = 0; !f[j]; j = succ(j));           //找第一个非空子表，succ为求后继函数
+/*!
+ * 基数排序收集桶
+ * @param elements 元素数组
+ * @param digit_bucket_heads 数位(0 - 9)桶的首元素(队头)
+ * @param digit_bucket_tails 数位(0 - 9)桶的尾元素(队尾)
+ * @note
+ * digit]自小至大, 将digit_queue_heads[0 ... 9]所指各桶, 依次连接成一个链表
+ */
+void CollectBuckets(static_linked_list_node_t* elements,
+                    BUCKETS digit_bucket_heads,
+                    BUCKETS digit_bucket_tails)
+{
 
-    r[0].next = f[j];                                           // elements[0].next指向第一个非空子表中第一个结点
-    int t = e[j];
+    // 找第一个非空子表
+    int digit = 0;
+    while (digit_bucket_heads[digit] == 0) {
+        digit++;
+    }
 
-    while (j < RADIX) {
-        for (j = succ(j); j < RADIX && !f[j]; j = succ(j)); //寻找下一个非空子表
-        if (j == RADIX) {   // todo: 验证书上有错
+    elements[0].next = digit_bucket_heads[digit];       //!< elements[0].next指向第一个非空桶的第1个结点
+    int digit_bucket_tail = digit_bucket_tails[digit];  //!< 第1个桶的最后1个元素的elements数组索引
+
+    while (digit < RADIX_10) {
+
+        // 寻找下一个非空桶
+        digit++;    // 第1个非空桶的下一个桶
+        while (digit < RADIX_10 && digit_bucket_heads[digit] == 0) {
+            digit++;
+        }
+
+        // 找不到非空桶, 退出
+        if (digit == RADIX_10) {
             break;
         }
 
-        if (f[j]) {                            //链接两个非空子表
-            r[t].next = f[j];
-            t = e[j];
-        }
+        elements[digit_bucket_tail].next = digit_bucket_heads[digit];   // 上一个桶的最后一个元素的next, 指到下一个桶的head
+        digit_bucket_tail = digit_bucket_tails[digit];  // digit_bucket_tail指向新的非空桶的tail
     }
 
-    r[t].next = 0;                                        // t指向最后一个非空子表中的最后一个结点
-}//Collect
-
-
-// @brief 基数排序
-// @param L 待排数组
-void RadixSort(static_linked_list_t *L)
-{
-    ArrType f;
-    ArrType e;
-    //L是采用静态链表表示的顺序表
-    //对L作基数排序，使得L成为按关键字自小到大的有序静态链表，L.elements[0]为头结点。
-    for (int i = 0; i < L->length; ++i) {
-        L->elements[i].next = i + 1;
-    }
-    L->elements[L->length].next = 0;           //将L改造为静态链表
-    for (int i = 0; i < L->key_cnt; ++i) //按最低位优先依次对各关键字进行分配和收集
-    {
-        Distribute(L, i, f, e);      //第i趟分配
-        Collect(L->elements, i, f, e);      //第i趟收集
-    }
+    elements[digit_bucket_tail].next = 0;   // elements[digit_bucket_tail].next指向0(代表所有桶Collection结束)
 }
 
 
-/*
-void Swap(void *v1, void *v2, size_t size)
-{
-  void *v3 = malloc(size);
-  if (v3 != 0)
-  {
-    memmove(v3, v1, size);
-    memmove(v1, v2, size);
-    memmove(v2, v3, size);
-    free(v3);
-  }
-} // refer:https://stackoverflow.com/questions/50559106/universal-array-element-swap-in-c?noredirect=1&lq=1
-*/
+/*!
+ * 基数排序
+ * @param static_linked_list 待排序静态链表
+ */
+void RadixSort(radix_static_linked_list_t* static_linked_list) {
+    int digit_queue_heads[10];
+    int digit_queue_tails[10];
+
+    // 初始化static_linked_list
+    for (int i = 0; i < static_linked_list->length; ++i) {
+        static_linked_list->elements[i].next = i + 1;
+    }
+
+    static_linked_list->elements[static_linked_list->length].next = 0; // 最后一个元素的next指向0
+
+    // 按最低位优先(右侧起始), 依次对各关键字进行分桶和收集
+    for (int i = 1; i <= static_linked_list->digit_number; i++) {
+
+        //!< 以从右起第i位作为基数分桶
+        DistributeIntoBuckets(static_linked_list, i, digit_queue_heads, digit_queue_tails);
+
+        //!< 对分完的桶, 进行收集
+        CollectBuckets(static_linked_list->elements, digit_queue_heads, digit_queue_tails);
+    }
+}

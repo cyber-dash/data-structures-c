@@ -1,7 +1,7 @@
 ﻿/*!
  * @file stack.c
  * @author CyberDash计算机考研, cyberdash@163.com(抖音id:cyberdash_yuan)
- * @brief 顺序栈
+ * @brief 栈源文件
  * @version 1.0.0
  * @date 2022-07-04
  * @copyright Copyright (c) 2021

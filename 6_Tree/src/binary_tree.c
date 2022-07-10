@@ -1,7 +1,7 @@
 ﻿/*!
  * @file binary_tree.c
  * @author CyberDash计算机考研, cyberdash@163.com(抖音id:cyberdash_yuan)
- * @brief  二叉树
+ * @brief 二叉树源文件
  * @version 1.0.0
  * @date 2022-07-10
  * @copyright Copyright (c) 2021

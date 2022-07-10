@@ -1,7 +1,7 @@
 ﻿/*!
  * @file binary_tree_node.c
  * @author CyberDash计算机考研, cyberdash@163.com(抖音id:cyberdash_yuan)
- * @brief  二叉树 结点结构
+ * @brief 二叉树结点头文件
  * @version 1.0.0
  * @date 2022-07-10
  * @copyright Copyright (c) 2021

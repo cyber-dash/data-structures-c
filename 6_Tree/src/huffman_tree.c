@@ -1,7 +1,7 @@
 ﻿/*!
  * @file huffman_tree.c
  * @author CyberDash计算机考研, cyberdash@163.com(抖音id:cyberdash_yuan)
- * @brief  二叉树 Huffman(哈夫曼)树
+ * @brief Huffman(哈夫曼)树源文件
  * @version 1.0.0
  * @date 2022-07-04
  * @copyright Copyright (c) 2021
@@ -73,14 +73,11 @@ void HuffmanCoding(huffman_tree_node_t* huffman_tree_nodes,
 
     // ---- 从叶子到根逆向求每个字符的赫夫曼编码 ----
 
-    huffman_code_array = (huffman_code_t*)malloc((codeword_count + 1) * sizeof(char*));
-
     // n个字符编码的哈夫曼编码,
     char* cur_huffman_code = (char*)malloc(codeword_count * sizeof(char));
     cur_huffman_code[codeword_count - 1] = 0;
 
     for (i = 1; i <= codeword_count; i++) {
-        // int cur_huffman_code_index = codeword_count - 1;    // 当前哈夫曼编码的数组索引位
         int cur_huffman_code_index = codeword_count - 2;    // 当前哈夫曼编码的数组索引位
 
         // 从叶子到根逆向求编码
@@ -90,26 +87,22 @@ void HuffmanCoding(huffman_tree_node_t* huffman_tree_nodes,
         {
             /// 设置哈夫曼编码当前索引为的值
             if (huffman_tree_nodes[parent].left_child == child) {   // 如果child索引是parent索引的左孩子, 设置为0
-                // cur_huffman_code[cur_huffman_code_index - 1] = '0';
                 cur_huffman_code[cur_huffman_code_index] = '0';
             } else if (huffman_tree_nodes[parent].right_child == child) {   // 如果child索引是parent索引的右孩子, 设置为1
-                // cur_huffman_code[cur_huffman_code_index - 1] = '1';
                 cur_huffman_code[cur_huffman_code_index] = '1';
             }
             cur_huffman_code_index--;
         }
-        printf("%s\n", &cur_huffman_code[cur_huffman_code_index + 1]);
 
         int cur_huffman_code_length = codeword_count - cur_huffman_code_index - 1;
 
-        // char* cur1 = (char*)huffman_code_array[i];
-        for (int j = 0; j < cur_huffman_code_length; j++) {
-            // ((*huffman_code_array)[i])[j] = cur_huffman_code[cur_huffman_code_index];
-            huffman_code_array[i][j] = cur_huffman_code[cur_huffman_code_index];
+        for (int j = 0; j < cur_huffman_code_length; j++, cur_huffman_code_index++) {
+            huffman_code_array[i][j] = cur_huffman_code[cur_huffman_code_index + 1];
         }
     }
 
     free(cur_huffman_code);
+    cur_huffman_code = NULL;
 }
 
 

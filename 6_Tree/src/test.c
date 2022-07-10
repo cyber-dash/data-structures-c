@@ -145,16 +145,24 @@ void TestBinaryTreeInOrderTraverse2() {
 
 
 void TestHuffmanTree() {
+    printf("\n");
+    printf("|------------------------ CyberDash ------------------------|\n");
+    printf("|                     Test HuffmanTree                      |\n");
+    printf("|                        测试哈夫曼编码                       |\n");
 
     char codewords[8] = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
     double probabilities[8] = { 0.01, 0.02, 0.03, 0.04, 0.1, 0.2, 0.25, 0.35 };
 
     huffman_tree_node_t huffman_tree_nodes[9];
 
-    char huffman_codes[9][9];
+    huffman_code_t huffman_codes;
 
-    char** codes = (huffman_code_t)huffman_codes;
 
-    HuffmanCoding(huffman_tree_nodes, codes, probabilities, 8);
-    // HuffmanCoding(huffman_tree_nodes, (huffman_code_t*)&huffman_codes, probabilities, 8);
+    HuffmanCoding(huffman_tree_nodes, huffman_codes, probabilities, 8);
+
+    for (int i = 1; i <= 8; i++) {
+        printf("%s\n", huffman_codes[i]);
+    }
+
+    printf("|-----------------------------------------------------------|\n\n");
 }

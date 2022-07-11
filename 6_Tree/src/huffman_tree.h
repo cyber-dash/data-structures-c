@@ -18,11 +18,12 @@ typedef struct {
     unsigned int  right_child;
 } huffman_tree_node_t, *huffman_tree_t;        // 动态分配数组存储赫夫曼树
 
-typedef char huffman_code_t[9][9];   // 动态分配数组, 存储赫夫曼编码表
+typedef char huffman_code_t[20][100];   // 动态分配数组, 存储赫夫曼编码表
 
-void HuffmanCoding(huffman_tree_node_t* huffman_tree_nodes,
-                   huffman_code_t huffman_code,
-                   double* weight_array_ptr,
+// 哈夫曼(Huffman)编码
+void HuffmanCoding(huffman_tree_node_t* huffman_tree,
+                   huffman_code_t huffman_codes,
+                   double* weights,
                    int codeword_count);
 
 

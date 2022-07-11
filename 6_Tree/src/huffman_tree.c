@@ -15,28 +15,35 @@
 #include "type.h"
 
 
+// 查找items中parent为0的weight最小的两个元素的索引
 int SelectTwoMinItems(huffman_tree_t items, int last_index, int* min_index, int* sec_min_index);
 
 
-void HuffmanCoding(huffman_tree_node_t* huffman_tree_nodes,
-                   huffman_code_t huffman_code_array,
-                   double* weight_array_ptr,
+/*!
+ * 哈夫曼(Huffman)编码
+ * @param huffman_tree 哈夫曼(Huffman)树
+ * @param huffman_codes 哈夫曼(Huffman)编码
+ * @param weights 码字权重的数组
+ * @param codeword_count 码字数量
+ */
+void HuffmanCoding(huffman_tree_node_t* huffman_tree,
+                   huffman_code_t huffman_codes,
+                   double* weights,
                    int codeword_count)
 {
-    // w存放n个字符的权值(均>0), 构造赫夫曼树HT, 并求出n个字符的赫夫曼编码HC.
     if (codeword_count <= 1) {
         return;
     }
 
     int huffman_tree_node_count = 2 * codeword_count - 1;  // m个节点
-    huffman_tree_nodes = (huffman_tree_t)malloc((huffman_tree_node_count + 1) * sizeof(huffman_tree_node_t));      // 0号单元未用
+    huffman_tree = (huffman_tree_t)malloc((huffman_tree_node_count + 1) * sizeof(huffman_tree_node_t));      // 0号单元未用
 
     int i = 1;
-    huffman_tree_node_t* cur = huffman_tree_nodes + 1;
+    huffman_tree_node_t* cur = huffman_tree + 1;
 
     // 从数组索引1开始, 将n个codeword对应的节点初始化
-    for (; i <= codeword_count; i++, cur++, weight_array_ptr++) {
-        cur->weight = *weight_array_ptr;
+    for (; i <= codeword_count; i++, cur++, weights++) {
+        cur->weight = *weights;
         cur->parent = 0;
         cur->left_child = 0;
         cur->right_child = 0;
@@ -57,18 +64,18 @@ void HuffmanCoding(huffman_tree_node_t* huffman_tree_nodes,
         // 其数组索引分别为min_index和sec_min_index
         int min_index;
         int sec_min_index;
-        SelectTwoMinItems(huffman_tree_nodes, i, &min_index, &sec_min_index);
+        SelectTwoMinItems(huffman_tree, i, &min_index, &sec_min_index);
 
         // 新子树parent为i + 1
-        huffman_tree_nodes[min_index].parent = i + 1;
-        huffman_tree_nodes[sec_min_index].parent = i + 1;
+        huffman_tree[min_index].parent = i + 1;
+        huffman_tree[sec_min_index].parent = i + 1;
 
         // 设置新子树的左右孩子
-        huffman_tree_nodes[i + 1].left_child = min_index;
-        huffman_tree_nodes[i + 1].right_child = sec_min_index;
+        huffman_tree[i + 1].left_child = min_index;
+        huffman_tree[i + 1].right_child = sec_min_index;
 
         // 新子树的权值
-        huffman_tree_nodes[i + 1].weight = huffman_tree_nodes[min_index].weight + huffman_tree_nodes[sec_min_index].weight;
+        huffman_tree[i + 1].weight = huffman_tree[min_index].weight + huffman_tree[sec_min_index].weight;
     }
 
     // ---- 从叶子到根逆向求每个字符的赫夫曼编码 ----
@@ -81,14 +88,14 @@ void HuffmanCoding(huffman_tree_node_t* huffman_tree_nodes,
         int cur_huffman_code_index = codeword_count - 2;    // 当前哈夫曼编码的数组索引位
 
         // 从叶子到根逆向求编码
-        for (int child = i, parent = huffman_tree_nodes[i].parent;  // 循环初始化的child/parent
+        for (int child = i, parent = huffman_tree[i].parent;  // 循环初始化的child/parent
             parent != 0;                                            // 循环终止条件: parent != 0
-            child = parent, parent = huffman_tree_nodes[parent].parent)
+            child = parent, parent = huffman_tree[parent].parent)
         {
             /// 设置哈夫曼编码当前索引为的值
-            if (huffman_tree_nodes[parent].left_child == child) {   // 如果child索引是parent索引的左孩子, 设置为0
+            if (huffman_tree[parent].left_child == child) {   // 如果child索引是parent索引的左孩子, 设置为0
                 cur_huffman_code[cur_huffman_code_index] = '0';
-            } else if (huffman_tree_nodes[parent].right_child == child) {   // 如果child索引是parent索引的右孩子, 设置为1
+            } else if (huffman_tree[parent].right_child == child) {   // 如果child索引是parent索引的右孩子, 设置为1
                 cur_huffman_code[cur_huffman_code_index] = '1';
             }
             cur_huffman_code_index--;
@@ -97,7 +104,7 @@ void HuffmanCoding(huffman_tree_node_t* huffman_tree_nodes,
         int cur_huffman_code_length = codeword_count - cur_huffman_code_index - 1;
 
         for (int j = 0; j < cur_huffman_code_length; j++, cur_huffman_code_index++) {
-            huffman_code_array[i][j] = cur_huffman_code[cur_huffman_code_index + 1];
+            huffman_codes[i][j] = cur_huffman_code[cur_huffman_code_index + 1];
         }
     }
 

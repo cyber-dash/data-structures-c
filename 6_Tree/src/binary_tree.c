@@ -28,7 +28,7 @@ Status BinaryTreeCreateByPreOrderStringRecursive(binary_tree_node_t** node,
                                                  size_t pre_order_str_len)
 {
     //!< 如果遍历索引>=字符串长度, 越界(即之后的字符串不参与create), 终止递归
-    if (*traverse_index >= pre_order_str_len) {
+    if (*traverse_index >= (int)pre_order_str_len) {
         return OK;
     }
 

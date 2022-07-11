@@ -35,8 +35,10 @@ void HuffmanCoding(huffman_tree_node_t* huffman_tree,
         return;
     }
 
-    int huffman_tree_node_count = 2 * codeword_count - 1;  // m个节点
-    huffman_tree = (huffman_tree_t)malloc((huffman_tree_node_count + 1) * sizeof(huffman_tree_node_t));      // 0号单元未用
+    //!< Huffman树的结点数
+    int huffman_tree_node_count = 2 * codeword_count - 1;
+    // 0号单元未用
+    huffman_tree = (huffman_tree_t)malloc((huffman_tree_node_count + 1) * sizeof(huffman_tree_node_t));
 
     int i = 1;
     huffman_tree_node_t* cur = huffman_tree + 1;

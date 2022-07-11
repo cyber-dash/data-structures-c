@@ -10,26 +10,32 @@
 #ifndef CYBER_DASH_BINARY_TREE_H
 #define CYBER_DASH_BINARY_TREE_H
 
+
 #include "type.h"
 #include "stddef.h"
 #include "stack.h"
 #include "binary_tree_node.h"
 
 
-Status BinaryTreeCreateByPreOrderStringRecursive(binary_tree_t *node,
+// 使用前序遍历字符串(NULL结点使用空格)创建二叉树(递归)
+Status BinaryTreeCreateByPreOrderStringRecursive(binary_tree_node_t** node,
                                                  char* pre_order_str,
                                                  int* traverse_index,
                                                  size_t pre_order_str_len);
 
-Status BinaryTreePreOrderTraverseRecursive(binary_tree_t node, Status (*Visit)(BINARY_TREE_NODE_DATA e));
+// 二叉树前序遍历(递归)
+Status BinaryTreePreOrderTraverseRecursive(binary_tree_node_t* node, Status (*Visit)(BINARY_TREE_NODE_DATA data));
 
-Status BinaryTreeInOrderTraverse(binary_tree_t node, Status (*Visit)(BINARY_TREE_NODE_DATA e));
+// 二叉树中序遍历
+Status BinaryTreeInOrderTraverse(binary_tree_node_t* node, Status (*Visit)(BINARY_TREE_NODE_DATA data));
 
-Status BinaryTreeInOrderTraverse2(binary_tree_t node, Status (*Visit)(BINARY_TREE_NODE_DATA e));
+// 二叉树中序遍历2
+Status BinaryTreeInOrderTraverse2(binary_tree_node_t* node, Status (*Visit)(BINARY_TREE_NODE_DATA data));
 
-Status PostOrderTraverse(binary_tree_t binary_tree, Status (*Visit)(BINARY_TREE_NODE_DATA e));
+//
+Status PostOrderTraverse(binary_tree_node_t* binary_tree, Status (*Visit)(BINARY_TREE_NODE_DATA data));
 
-Status LevelOrderTraverse(binary_tree_t binary_tree, Status (*Visit)(BINARY_TREE_NODE_DATA e));
+Status LevelOrderTraverse(binary_tree_node_t* binary_tree, Status (*Visit)(BINARY_TREE_NODE_DATA data));
 
 
 #endif // CYBER_DASH_BINARY_TREE_H

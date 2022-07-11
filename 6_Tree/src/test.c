@@ -148,20 +148,20 @@ void TestHuffmanTree() {
     printf("\n");
     printf("|------------------------ CyberDash ------------------------|\n");
     printf("|                     Test HuffmanTree                      |\n");
-    printf("|                        测试哈夫曼编码                       |\n");
+    printf("|                        测试哈夫曼编码                       |\n\n");
 
-    char codewords[8] = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
-    double probabilities[8] = { 0.01, 0.02, 0.03, 0.04, 0.1, 0.2, 0.25, 0.35 };
+    char codewords[8] = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};                //!< 码字(数组)
+    double probabilities[8] = { 0.01, 0.02, 0.03, 0.04, 0.1, 0.2, 0.25, 0.35 };   //!< 码字权重(数组)
 
-    huffman_tree_node_t huffman_tree_nodes[9];
+    huffman_tree_node_t huffman_tree[9];    // 哈夫曼树
+    huffman_code_t      huffman_codes;      // 哈夫曼编码
 
-    huffman_code_t huffman_codes;
+    // 构造哈夫曼编码
+    HuffmanCoding(huffman_tree, huffman_codes, probabilities, 8);
 
-
-    HuffmanCoding(huffman_tree_nodes, huffman_codes, probabilities, 8);
-
+    // 打印哈夫曼编码
     for (int i = 1; i <= 8; i++) {
-        printf("%s\n", huffman_codes[i]);
+        printf("码字:%c|概率:%.2lf, 哈夫曼(Huffman)编码: %s\n", codewords[i - 1], probabilities[i - 1], huffman_codes[i]);
     }
 
     printf("|-----------------------------------------------------------|\n\n");

@@ -7,18 +7,24 @@
  * @copyright Copyright (c) 2021
  *  CyberDash计算机考研
  */
+
 #ifndef CYBER_DASH_HUFFMAN_TREE_H
 #define CYBER_DASH_HUFFMAN_TREE_H
 
 
-typedef struct {
-    double weight;
-    int  parent;
-    unsigned int  left_child;
-    unsigned int  right_child;
-} huffman_tree_node_t, *huffman_tree_t;        // 动态分配数组存储赫夫曼树
+/*!
+ * 哈夫曼(Huffman)树结点
+ */
+typedef struct huffman_tree_node {
+    int parent;                 //!< 父结点索引
+    unsigned int  left_child;   //!< 左孩子结点索引
+    unsigned int  right_child;  //!< 右孩子结点索引
+    double weight;              //!< 权重
+} huffman_tree_node_t;
 
-typedef char huffman_code_t[20][100];   // 动态分配数组, 存储赫夫曼编码表
+typedef huffman_tree_node_t* huffman_tree_t;    //!< 哈夫曼(Huffman)树
+
+typedef char huffman_code_t[100][1000];   //! 哈夫曼编码表
 
 // 哈夫曼(Huffman)编码
 void HuffmanCoding(huffman_tree_node_t* huffman_tree,

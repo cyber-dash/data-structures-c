@@ -20,11 +20,11 @@ int SelectTwoMinItems(huffman_tree_t items, int last_index, int* min_index, int*
 
 
 /*!
- * 哈夫曼(Huffman)编码
- * @param huffman_tree 哈夫曼(Huffman)树
- * @param huffman_codes 哈夫曼(Huffman)编码
- * @param weights 码字权重的数组
- * @param codeword_count 码字数量
+ * @brief <h1>哈夫曼(Huffman)编码</h1>
+ * @param huffman_tree **哈夫曼(Huffman)树**
+ * @param huffman_codes **哈夫曼(Huffman)编码**
+ * @param weights **码字权重的数组**
+ * @param codeword_count **码字数量**
  */
 void HuffmanCoding(huffman_tree_node_t* huffman_tree,
                    huffman_code_t huffman_codes,
@@ -35,7 +35,9 @@ void HuffmanCoding(huffman_tree_node_t* huffman_tree,
         return;
     }
 
-    //!< Huffman树的结点数
+    /// ## 1 分配内存 ##
+    /// &emsp;&emsp; Huffman树的结点数 = 2 * 码字数 - 1 \n
+    /// &emsp;&emsp; Huffman树结点数组huffman_tree分配内存, **索引0元素不使用**
     int huffman_tree_node_count = 2 * codeword_count - 1;
     // 0号单元未用
     huffman_tree = (huffman_tree_t)malloc((huffman_tree_node_count + 1) * sizeof(huffman_tree_node_t));
@@ -43,7 +45,11 @@ void HuffmanCoding(huffman_tree_node_t* huffman_tree,
     int i = 1;
     huffman_tree_node_t* cur = huffman_tree + 1;
 
-    // 从数组索引1开始, 将n个codeword对应的节点初始化
+    /// ##2 初始化Huffman树##
+    /// &emsp;&emsp; 索引[1 - codeword_count]数组元素, parent/left_child/right_child初始化为0, weight为对应码字的权重\n
+
+    /// ###2.1 数组索引[1 - codeword_count]元素赋值(不包括索引0)###
+    /// &emsp;&emsp; huffman_tree数组索引[1 - codeword_count], codeword_count个元素(**对应原始码字**)初始化
     for (; i <= codeword_count; i++, cur++, weights++) {
         cur->weight = *weights;
         cur->parent = 0;
@@ -51,7 +57,8 @@ void HuffmanCoding(huffman_tree_node_t* huffman_tree,
         cur->right_child = 0;
     }
 
-    // huffman_tree_nodes数组的后面剩余节点初始化(权值设置为0)
+    /// ###2.2 数组后codeword_count - 2个元素赋值###
+    /// &emsp;&emsp; huffman_tree数组的后面codeword_count - 2个结点初始化(权值weight设置为0)
     for (; i <= huffman_tree_node_count; i++, cur++) {
         cur->weight = 0;
         cur->parent = 0;
@@ -59,7 +66,7 @@ void HuffmanCoding(huffman_tree_node_t* huffman_tree,
         cur->right_child = 0;
     }
 
-    /// --- 建Huffman树 ---
+    /// ##3 建Huffman树##
 
     for (i = codeword_count; i < huffman_tree_node_count; i++) {
         // 在huffman_tree_nodes[1 ... huffman_tree_node_count]选择parent为0(未与其他结点构成子树)且weight最小的两个结点,
@@ -80,10 +87,9 @@ void HuffmanCoding(huffman_tree_node_t* huffman_tree,
         huffman_tree[i + 1].weight = huffman_tree[min_index].weight + huffman_tree[sec_min_index].weight;
     }
 
-    // ---- 从叶子到根逆向求每个字符的赫夫曼编码 ----
+    /// ##4 从叶子到根逆向求每个字符的赫夫曼编码##
 
-    // n个字符编码的哈夫曼编码,
-    char* cur_huffman_code = (char*)malloc(codeword_count * sizeof(char));
+    char* cur_huffman_code = (char*)malloc(codeword_count * sizeof(char));  // 用于每趟构造哈夫曼编码
     cur_huffman_code[codeword_count - 1] = 0;
 
     for (i = 1; i <= codeword_count; i++) {
@@ -94,7 +100,7 @@ void HuffmanCoding(huffman_tree_node_t* huffman_tree,
             parent != 0;                                            // 循环终止条件: parent != 0
             child = parent, parent = huffman_tree[parent].parent)
         {
-            /// 设置哈夫曼编码当前索引为的值
+            // 设置哈夫曼编码当前索引为的值
             if (huffman_tree[parent].left_child == child) {   // 如果child索引是parent索引的左孩子, 设置为0
                 cur_huffman_code[cur_huffman_code_index] = '0';
             } else if (huffman_tree[parent].right_child == child) {   // 如果child索引是parent索引的右孩子, 设置为1

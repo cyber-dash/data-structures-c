@@ -7,9 +7,9 @@
 
 int main() {
 
-  TestSearchSeq();
+    TestStaticSearchTableSeqSearch();
 
-  TestSearchBin();
+    TestStaticSearchTableBinarySearch();
 
-  return 0;
+    return 0;
 }

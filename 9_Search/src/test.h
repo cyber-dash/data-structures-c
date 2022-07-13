@@ -12,12 +12,12 @@
 #define CYBER_DASH_SEARCH_TEST_H
 
 
-#include "static_search_table.h"
+#include "static_search_table_t.h"
 
 
-void TestSearchSeq();
+void TestStaticSearchTableSeqSearch();
 
-void TestSearchBin();
+void TestStaticSearchTableBinarySearch();
 
 
 #endif // CYBER_DASH_SEARCH_TEST_H

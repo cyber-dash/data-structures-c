@@ -10,13 +10,13 @@
 
 #include "test.h"
 #include "stdio.h"
-#include "LoserTree.h"
+#include "loser_tree.h"
 
 
 void TestLoserTree() {
     printf("\n");
     printf("|------------------------- CyberDash -------------------------|\n");
-    printf("|                      Test LoserTree Sort                    |\n");
+    printf("|                      Test loser_tree_t Sort                    |\n");
     printf("|                         测试败者树排序                        |\n\n\n");
 
 
@@ -39,8 +39,8 @@ void TestLoserTree() {
     int arr4[] = { 20, 22, 40 };
     int* array[] = { arr0, arr1, arr2, arr3, arr4 };
 
-    LoserTree loserTree;
-    LeafArr leafArr;
+    loser_tree_t loserTree;
+    leaves_t leafArr;
 
     K_Merge(loserTree, leafArr, array, 3);
 

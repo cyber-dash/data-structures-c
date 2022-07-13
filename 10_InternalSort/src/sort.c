@@ -17,12 +17,12 @@
 
 
 /*!
- * 小于
- * @param key1
- * @param key2
- * @return
+ * <h1>小于</h1>
+ * @param key1 关键字1
+ * @param key2 关键字2
+ * @return 结果
  */
-int LowerThan(key_t key1, key_t key2) {
+int LessThan(key_t key1, key_t key2) {
     if (key1 < key2) {
         return 1;
     }
@@ -31,7 +31,13 @@ int LowerThan(key_t key1, key_t key2) {
 }
 
 
-int LowerEqual(key_t key1, key_t key2) {
+/*!
+ * <h1>小于等于</h1>
+ * @param key1 关键字1
+ * @param key2 关键字2
+ * @return 结果
+ */
+int LessThanOrEqual(key_t key1, key_t key2) {
     if (key1 <= key2) {
         return 1;
     }
@@ -41,7 +47,7 @@ int LowerEqual(key_t key1, key_t key2) {
 
 
 /*!
- * 交换函数
+ * <h1>交换函数</h1>
  * @param item1 元素1
  * @param item2 元素2
  */
@@ -53,7 +59,7 @@ void Swap(seq_list_node_t* item1, seq_list_node_t* item2) {
 
 
 /*!
- * 在线性表索引i(包含i)之后的元素中选出key最小的元素的索引
+ * <h1>在线性表索引i(包含i)之后的元素中选出key最小的元素的索引</h1>
  * @param seq_list 线性表
  * @param index 索引
  * @return 最小元素索引
@@ -81,7 +87,7 @@ int SelectMinKey(seq_list_t* seq_list, int index) {
 
 
 /*!
- * @brief 插入排序
+ * @brief <h1>插入排序</h1>
  * @param seq_list 待排线性表
  */
 void InsertSort(seq_list_t* seq_list)
@@ -89,14 +95,14 @@ void InsertSort(seq_list_t* seq_list)
     //对顺序表L作直接插入排序
     for (int i = 2; i <= seq_list->length; i++)
     {
-        if (LowerThan(seq_list->elements[i].key, seq_list->elements[i - 1].key)) { // ("<"，需将seq_list.elements[i]插入有序子表)
+        if (LessThan(seq_list->elements[i].key, seq_list->elements[i - 1].key)) { // ("<"，需将seq_list.elements[i]插入有序子表)
 
             // 交换 seq_list->elements[i]与seq_list->elements[i - 1]
             seq_list->elements[0] = seq_list->elements[i];                  // (复制为哨兵)
             seq_list->elements[i] = seq_list->elements[i - 1];
 
             int j;
-            for (j = i - 1; LowerThan(seq_list->elements[0].key, seq_list->elements[j].key); --j)
+            for (j = i - 1; LessThan(seq_list->elements[0].key, seq_list->elements[j].key); --j)
             {
                 seq_list->elements[j + 1] = seq_list->elements[j];                //记录后移
             }
@@ -107,7 +113,7 @@ void InsertSort(seq_list_t* seq_list)
 
 
 /*!
- * \brief 折半插入排序
+ * \brief <h1>折半插入排序<h1>
  * \param seq_list 待排序线性表
  */
 void BinaryInsertSort(seq_list_t* seq_list) {
@@ -120,7 +126,7 @@ void BinaryInsertSort(seq_list_t* seq_list) {
         while (low <= high) {
             int mid = (low + high) / 2;                       //折半
 
-            if (LowerThan(seq_list->elements[0].key, seq_list->elements[mid].key)) {
+            if (LessThan(seq_list->elements[0].key, seq_list->elements[mid].key)) {
                 high = mid - 1;                             //插入点在低半区
             } else {
                 low = mid + 1;                              //插入点在高半区
@@ -147,7 +153,7 @@ void TableInsertSort(SLinkListType *SL)
   for(i=2; i<=SL->length; i++){
     q = 0;
     p = SL->elements[q].next;
-    while(LowerEqual(SL->elements[p].rc.key, SL->elements[i].rc.key)){
+    while(LessThanOrEqual(SL->elements[p].rc.key, SL->elements[i].rc.key)){
       q = p;
       p = SL->elements[q].next;
     }
@@ -186,10 +192,10 @@ void Arrange(SLinkListType *SL)
  */
 void ShellInsert(seq_list_t* seq_list, int gap) {
     for (int i = gap + 1; i <= seq_list->length; i++) {
-        if (LowerThan(seq_list->elements[i].key, seq_list->elements[i - gap].key)) {
+        if (LessThan(seq_list->elements[i].key, seq_list->elements[i - gap].key)) {
             seq_list->elements[0] = seq_list->elements[i];
             int j;
-            for (j = i - gap; j > 0 && LowerThan(seq_list->elements[0].key, seq_list->elements[j].key); j -= gap) {
+            for (j = i - gap; j > 0 && LessThan(seq_list->elements[0].key, seq_list->elements[j].key); j -= gap) {
                 seq_list->elements[j + gap] = seq_list->elements[j];
             }
             seq_list->elements[j + gap] = seq_list->elements[0];
@@ -220,7 +226,7 @@ void BubbleSort(seq_list_t* seq_list) {
         bool is_sorted = true;
 
         for (int j = 1; j < seq_list->length - i; j++) {
-            if (LowerThan(seq_list->elements[j + 1].key, seq_list->elements[j].key)) {
+            if (LessThan(seq_list->elements[j + 1].key, seq_list->elements[j].key)) {
                 Swap(seq_list->elements + j + 1, seq_list->elements + j);
                 is_sorted = false;
             }
@@ -352,11 +358,11 @@ void SelectSort(seq_list_t* seq_list) {
 void MaxHeapSiftDown(seq_list_t* heap, int index, int heap_size)
 {
     for (int child_index = 2 * index; child_index <= heap_size; index = child_index, child_index *= 2) {
-        if (child_index < heap_size && LowerThan(heap->elements[child_index].key, heap->elements[child_index + 1].key)) {
+        if (child_index < heap_size && LessThan(heap->elements[child_index].key, heap->elements[child_index + 1].key)) {
             child_index++;
         }
 
-        if (!LowerThan(heap->elements[index].key, heap->elements[child_index].key)) {
+        if (!LessThan(heap->elements[index].key, heap->elements[child_index].key)) {
             break;
         }
 
@@ -397,7 +403,7 @@ void Merge(seq_list_node_t SR[], seq_list_node_t TR[], int i, int m, int n)
     int k;
     //将有序的SR[i..m]和SR[m+1..n]归并为有序的TR[i..n]
     for (j = m + 1, k = i; i <= m && j <= n; ++k) {            //将SR中记录由小到大地并入TR
-        if (LowerEqual(SR[i].key, SR[j].key))
+        if (LessThanOrEqual(SR[i].key, SR[j].key))
         {
             TR[k] = SR[i++];
         }

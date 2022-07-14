@@ -8,7 +8,7 @@
  *  CyberDash计算机考研
  */
 
-#include "type.h"
+#include "common.h"
 #include "binary_tree_node.h"
 
 
@@ -19,10 +19,13 @@
 #define STACK_INCREMENT  10               //!< 存储空间分配增量
 #define STACK_ELEM binary_tree_node_t*    //!< 栈元素类型(二叉树结点指针)
 
+/*!
+ * @brief 顺序栈
+ */
 typedef struct {
-    STACK_ELEM* elements;
-    STACK_ELEM* top;
-    int capacity;
+    STACK_ELEM* elements;   //!< 栈元素数组
+    STACK_ELEM* top;        //!< 栈顶指针
+    int capacity;           //!< 容量
 } seq_stack_t;
 
 

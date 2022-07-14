@@ -13,7 +13,7 @@
 
 
 /*!
- * 顺序栈初始化
+ * @brief 顺序栈初始化
  * @param seq_stack 顺序栈(指针)
  * @return 执行结果
  */
@@ -52,34 +52,34 @@ Status SeqStackGetTop(seq_stack_t seq_stack, STACK_ELEM* elem) {
 
 
 /*!
- * 入栈
+ * @brief 入栈
  * @param seq_stack 顺序栈(指针)
  * @param elem 入栈元素
  * @return 执行结果
  */
 Status SeqStackPush(seq_stack_t* seq_stack, binary_tree_node_t* elem) {
-    //!< 栈满, 追加存储空间
+    // 栈满, 追加存储空间
     if (seq_stack->top - seq_stack->elements >= seq_stack->capacity) {
-        //!< 调用realloc重新分配内存
+        // 调用realloc重新分配内存
         seq_stack->elements = (STACK_ELEM*)realloc(seq_stack->elements,
                                                    (seq_stack->capacity + STACK_INCREMENT) * sizeof(STACK_ELEM));
         if (!seq_stack->elements) {
-            return NON_ALLOCATED;   //!< 如果存储分配失败, 返回NON_ALLOCATED
+            return NON_ALLOCATED;   // 如果存储分配失败, 返回NON_ALLOCATED
         }
 
-        seq_stack->top = seq_stack->elements + seq_stack->capacity; //!< 调整top指向
-        seq_stack->capacity += STACK_INCREMENT;  //!< 调整扩容数值
+        seq_stack->top = seq_stack->elements + seq_stack->capacity; // 调整top指向
+        seq_stack->capacity += STACK_INCREMENT;  // 调整扩容数值
     }
 
-    *seq_stack->top = elem; //!< node赋值到top指向的位置
-    seq_stack->top++;       //!< top向后移一位
+    *seq_stack->top = elem; // node赋值到top指向的位置
+    seq_stack->top++;       // top向后移一位
 
     return OK;
 }
 
 
 /*!
- * 出栈
+ * @brief 出栈
  * @param seq_stack 顺序栈(指针)
  * @param elem 保存出栈元素的元素变量(指针)
  * @return 执行结果
@@ -98,7 +98,7 @@ Status SeqStackPop(seq_stack_t* seq_stack, STACK_ELEM* elem) {
 
 
 /*!
- * 栈销毁
+ * @brief 栈销毁
  * @param seq_stack 顺序栈(指针)
  * @return 执行结果
  */
@@ -111,7 +111,7 @@ Status SeqStackDestroy(seq_stack_t* seq_stack) {
 
 
 /*!
- * 栈清空
+ * @brief 栈清空
  * @param seq_stack 顺序栈(指针)
  * @return 执行结果
  */
@@ -126,7 +126,7 @@ Status SeqStackClear(seq_stack_t* seq_stack) {
 
 
 /*!
- * 栈是否为空
+ * @brief 栈是否为空
  * @param seq_stack 顺序栈
  * @return 是否为空
  */
@@ -140,9 +140,9 @@ int SeqStackIsEmpty(seq_stack_t seq_stack) {
 
 
 /*!
- * 栈长度
+ * @brief 栈长度
  * @param seq_stack 顺序栈
- * @return 长度值
+ * @return 长度
  */
 int SeqStackLength(seq_stack_t seq_stack) {
     return seq_stack.top - seq_stack.elements;

@@ -200,7 +200,7 @@ void swap(triple_t* a, triple_t* b) {
  * @param elem
  * @return
  */
-Status AddAndReplaceElem(sparse_matrix_t* M, int row, int col, ElemType elem) {
+Status AddAndReplaceElem(sparse_matrix_t* M, int row, int col, ELEM elem) {
     if (row > M->row_num || col > M->column_num) {
         return ERROR;
     }

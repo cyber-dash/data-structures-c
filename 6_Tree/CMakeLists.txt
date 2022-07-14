@@ -5,7 +5,7 @@ project(main)
 include_directories("./*")
 
 add_executable(main
-        src/type.h
+        src/common.h
         src/test.h
         src/binary_tree.h
         src/huffman_tree.h

@@ -12,7 +12,7 @@
 #include "stdlib.h"
 #include "string.h"
 #include "huffman_tree.h"
-#include "type.h"
+#include "common.h"
 
 
 /*!
@@ -146,7 +146,6 @@ void HuffmanCoding(huffman_tree_node_t* huffman_tree,
     }
 
     /// ##4 从叶子到根逆向求每个字符的赫夫曼编码##
-
     /// ###4.1 暂存变量cur_huffman_code###
     char* cur_huffman_code = (char*)malloc(codeword_count * sizeof(char));
     cur_huffman_code[codeword_count - 1] = '\0';

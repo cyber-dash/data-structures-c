@@ -17,7 +17,7 @@ typedef struct {
     // 该非零元的行下标和列下标
 	int	row;
     int column;
-	ElemType	elem;
+	ELEM	elem;
 } triple_t;
 
 typedef struct {
@@ -48,6 +48,6 @@ Status TransposeSMatrix(sparse_matrix_t matrix, sparse_matrix_t *transposed_matr
 
 Status FastTransposeSMatrix(sparse_matrix_t matrix, sparse_matrix_t *transposed_matrix);
 
-Status AddAndReplaceElem(sparse_matrix_t *M, int row, int col, ElemType elem);
+Status AddAndReplaceElem(sparse_matrix_t *M, int row, int col, ELEM elem);
 
-Status RemoveElemFromSMatrix(sparse_matrix_t *M, int row, int col, ElemType *elem);
+Status RemoveElemFromSMatrix(sparse_matrix_t *M, int row, int col, ELEM *elem);

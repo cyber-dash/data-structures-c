@@ -21,14 +21,14 @@ typedef struct huffman_tree_node {
 } huffman_tree_node_t;
 
 /*!
- * 哈夫曼(Huffman)树
+ * @brief 哈夫曼(Huffman)树
  * @note
  * 使用huffman_tree_node_t类型的数组, 实现哈夫曼(Huffman)树
  */
 typedef huffman_tree_node_t* huffman_tree_t;
 
 /*!
- * 哈夫曼编码表
+ * @brief 哈夫曼编码表
  * @note
  * 支持最多100个码字\n 编码长度最多999个char类型字符
  */

@@ -19,6 +19,8 @@ int main() {
 
     TestBinaryTreeInOrderTraverse2();
 
+    TestBinaryTreePostOrderTraverse();
+
     TestHuffmanTree();
 
     return 0;

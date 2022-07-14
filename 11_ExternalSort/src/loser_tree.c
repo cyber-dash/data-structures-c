@@ -19,10 +19,9 @@ void swap(int* item1, int* item2) {
 }
 
 
-void Adjust(loser_tree_t loser_tree, leaves_t leaves, int index)
-{
+void Adjust(loser_tree_t loser_tree, leaves_t leaves, int index) {
     //沿从叶子结点b[s]到根结点ls[0]的路径调整败者树
-    for (int parent = (index + SIZE) / 2; parent > 0; parent = parent/2) {
+    for (int parent = (index + SIZE) / 2; parent > 0; parent = parent / 2) {
 		if(leaves[index].key > leaves[loser_tree[parent]].key) {		//s指示新的胜利者（小为胜，向上比较，大为败，留在双亲结点）
             swap(&index, &loser_tree[parent]);
 		}
@@ -33,18 +32,18 @@ void Adjust(loser_tree_t loser_tree, leaves_t leaves, int index)
 
 /*!
  * 构造败者树
- * @param loserTree
- * @param leafArr
+ * @param loser_tree
+ * @param leaves
  * @note
  * 败者树数组构成非叶子结点, 其中loserTree[0]为根节点, 用来保存最小值
  */
-void CreateLoserTree(loser_tree_t loserTree, leaves_t leafArr) {
-    leafArr[SIZE].key = INT_MIN;                // 设INT_MIN为关键字可能的最小值
+void CreateLoserTree(loser_tree_t loser_tree, leaves_t leaves) {
+    leaves[SIZE].key = INT_MIN;                // 设INT_MIN为关键字可能的最小值
     for (int i = 0; i < SIZE; ++i) {
-        loserTree[i] = SIZE;                    // 设置loserTree中"败者"的初值
+        loser_tree[i] = SIZE;                    // 设置loserTree中"败者"的初值
     }
     for (int i = SIZE - 1; i >= 0; --i) {
-        Adjust(loserTree, leafArr, i);  // 依次从leafArr[SIZE - 1], leafArr[SIZE - 2] ... leafArr[0]出发调整败者
+        Adjust(loser_tree, leaves, i);  // 依次从leafArr[SIZE - 1], leaves[SIZE - 2] ... leaves[0]出发调整败者
     }
 }
 
@@ -58,19 +57,19 @@ void K_Merge(loser_tree_t loser_tree, leaves_t leaves, int* array[], int limit_l
     }
 
     CreateLoserTree(loser_tree, leaves);
-    int everyQueueWorkingIdx[SIZE] = {1, 1, 1, 1, 1};
+    int everyQueueWorkingIdx[SIZE] = { 1, 1, 1, 1, 1 };
 
     while (leaves[loser_tree[0]].key != INT_MAX) {
-        int queueIdx = loser_tree[0];
+        int queue_idx = loser_tree[0];
         printf("%d  ", leaves[loser_tree[0]].key);
 
-        if (everyQueueWorkingIdx[queueIdx] < limit_length) { // 如果queueIdx归并段, 还有元素, 赋值
-            leaves[queueIdx].key = array[queueIdx][everyQueueWorkingIdx[queueIdx]];
-            everyQueueWorkingIdx[queueIdx]++;
+        if (everyQueueWorkingIdx[queue_idx] < limit_length) { // 如果queueIdx归并段, 还有元素, 赋值
+            leaves[queue_idx].key = array[queue_idx][everyQueueWorkingIdx[queue_idx]];
+            everyQueueWorkingIdx[queue_idx]++;
         } else { // 如果已经全部执行完
-            leaves[queueIdx].key = INT_MAX;
+            leaves[queue_idx].key = INT_MAX;
         }
-        Adjust(loser_tree, leaves, queueIdx);
+        Adjust(loser_tree, leaves, queue_idx);
     }
 
     printf("\n");

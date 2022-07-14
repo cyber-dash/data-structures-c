@@ -7,11 +7,12 @@
  * @copyright Copyright (c) 2021
  *  CyberDash计算机考研
  */
+
 #ifndef CYBER_DASH_BINARY_TREE_H
 #define CYBER_DASH_BINARY_TREE_H
 
 
-#include "type.h"
+#include "common.h"
 #include "stddef.h"
 #include "stack.h"
 #include "binary_tree_node.h"
@@ -32,8 +33,8 @@ Status BinaryTreeInOrderTraverse(binary_tree_node_t* node, Status (*Visit)(BINAR
 // 二叉树中序遍历2
 Status BinaryTreeInOrderTraverse2(binary_tree_node_t* node, Status (*Visit)(BINARY_TREE_NODE_DATA data));
 
-//
-Status PostOrderTraverse(binary_tree_node_t* binary_tree, Status (*Visit)(BINARY_TREE_NODE_DATA data));
+// 二叉树后序遍历(递归)
+Status BinaryTreePostOrderTraverseRecursive(binary_tree_node_t* binary_tree, Status (*Visit)(BINARY_TREE_NODE_DATA data));
 
 Status LevelOrderTraverse(binary_tree_node_t* binary_tree, Status (*Visit)(BINARY_TREE_NODE_DATA data));
 

@@ -14,11 +14,11 @@
 
 
 /*!
- * 使用前序遍历字符串(NULL结点使用空格)创建二叉树(递归)
- * @param node 二叉树结点(二级指针)
- * @param pre_order_str 前序遍历字符串首地址(NULL结点使用空格)
- * @param traverse_index 遍历字符的索引
- * @param pre_order_str_len 前序遍历字符串(NULL结点使用空格)长度
+ * <h1>使用前序遍历字符串(NULL结点使用空格)创建二叉树(递归)</h1>
+ * @param node **二叉树结点(二级指针)**
+ * @param pre_order_str **前序遍历字符串首地址(NULL结点使用空格)**
+ * @param traverse_index **遍历字符的索引**
+ * @param pre_order_str_len **前序遍历字符串(NULL结点使用空格)长度**
  * @return 是否成功
  * @note
  * NULL结点使用空格表示
@@ -28,37 +28,37 @@ Status BinaryTreeCreateByPreOrderStringRecursive(binary_tree_node_t** node,
                                                  int* traverse_index,
                                                  size_t pre_order_str_len)
 {
-    //!< 如果遍历字符的索引>=字符串长度, 越界(即之后的字符串不参与create), 终止递归
+    // 如果遍历字符的索引>=字符串长度, 越界(即之后的字符串不参与create), 终止递归
     if (*traverse_index >= (int)pre_order_str_len) {
         return OK;
     }
 
-    char chr = pre_order_str[*traverse_index];  //!< 遍历索引的字符赋给chr
-    *traverse_index = *traverse_index + 1;      //!< 遍历字符的索引指向的位置, 向后挪1位(指向下一字符)
+    char chr = pre_order_str[*traverse_index];  // 遍历索引的字符赋给chr
+    *traverse_index = *traverse_index + 1;      // 遍历字符的索引指向的位置, 向后挪1位(指向下一字符)
 
-    //!< 如果chr为空格, 则为NULL结点, 返回OK, 终止递归
+    // 如果chr为空格, 则为NULL结点, 返回OK, 终止递归
     if (chr == ' ') {
         *node = NULL;
         return OK;
     }
 
-    //!< 内存分配失败, 返回错误码NON_ALLOCATED, 终止递归
+    // 内存分配失败, 返回错误码NON_ALLOCATED, 终止递归
     if (!(*node = (binary_tree_node_t*)malloc(sizeof(binary_tree_node_t)))) {
         return NON_ALLOCATED;
     }
 
     (*node)->data = chr; // 节点数据项赋值
 
-    //!< 对左孩子结点执行递归, 构造左孩子结点为根结点的子树
+    // 对左孩子结点执行递归, 构造左孩子结点为根结点的子树
     Status status = BinaryTreeCreateByPreOrderStringRecursive(&(*node)->left_child,
                                                               pre_order_str,
                                                               traverse_index,
                                                               pre_order_str_len);
-    if (status != OK) { //!< 如果错误, 返回错误码
+    if (status != OK) { // 如果错误, 返回错误码
         return status;
     }
 
-    //!< 对右孩子结点执行递归, 构造左孩子结点为根结点的子树
+    // 对右孩子结点执行递归, 构造左孩子结点为根结点的子树
     status = BinaryTreeCreateByPreOrderStringRecursive(&(*node)->right_child,
                                                        pre_order_str,
                                                        traverse_index,
@@ -69,31 +69,32 @@ Status BinaryTreeCreateByPreOrderStringRecursive(binary_tree_node_t** node,
 
 
 /*!
- * @brief 二叉树前序遍历(递归)
- * @param node 二叉树结点(指针)
- * @param Visit 结点元素访问函数
- * @return 执行结果
+ * @brief <h1>二叉树前序遍历(递归)</h1>
+ * @param node **二叉树结点(指针)**
+ * @param Visit **结点元素访问函数**
+ * @return **执行结果**
  */
 Status BinaryTreePreOrderTraverseRecursive(binary_tree_node_t* node, Status (*Visit)(BINARY_TREE_NODE_DATA)) {
 
-    //!< NULL结点, 返回OK, 正确情况下的递归终止
+    /// ##1 NULL结点, 返回OK, 正确情况下的递归终止##
     if (node == NULL) {
         return OK;
     }
 
-    //!< 访问结点, 如果访问失败, 返回错误码, 错误情况下的递归终止
+    /// ##2 访问结点, 如果访问失败, 返回错误码, 错误情况下的递归终止##
     Status status = Visit(node->data);
     if (status != OK) {
         return status;
     }
 
-    //!< 对node左孩子结点(为根结点的子树)进行递归
+    /// ##3 递归##
+    /// ###3.1 对node左孩子结点(为根结点的子树)进行递归
     status = BinaryTreePreOrderTraverseRecursive(node->left_child, Visit);
-    if (status != OK) { //!< 如果遍历失败, 返回错误码
+    if (status != OK) { // 如果遍历失败, 返回错误码
         return status;
     }
 
-    //!< 对node右孩子结点(为根结点的子树)进行递归
+    /// ###3.2 对node右孩子结点(为根结点的子树)进行递归
     status = BinaryTreePreOrderTraverseRecursive(node->right_child, Visit);
 
     return status;
@@ -176,5 +177,27 @@ Status BinaryTreeInOrderTraverse2(binary_tree_node_t* node, Status (*Visit)(BINA
 }
 
 
+// 二叉树后序遍历(递归)
+Status BinaryTreePostOrderTraverseRecursive(binary_tree_node_t* node, Status (*Visit)(BINARY_TREE_NODE_DATA data)) {
 
+    /// ##1 NULL结点, 返回OK, 正确情况下的递归终止##
+    if (node == NULL) {
+        return OK;
+    }
+
+    /// ###3.1 对node左孩子结点(为根结点的子树)进行递归
+    Status status = BinaryTreePostOrderTraverseRecursive(node->left_child, Visit);
+    if (status != OK) { // 如果遍历失败, 返回错误码
+        return status;
+    }
+
+    status = BinaryTreePostOrderTraverseRecursive(node->right_child, Visit);
+    if (status != OK) { // 如果遍历失败, 返回错误码
+        return status;
+    }
+
+    status = Visit(node->data);
+
+    return status;
+}
 

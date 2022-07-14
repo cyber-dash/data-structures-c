@@ -13,7 +13,7 @@
 #include <stdarg.h>
 
 
-Status InitArray(Array* A, int dim, ...) {
+Status ArrayInit(Array* A, int dim, ...) {
     va_list ap;
 	if (dim < 1 || dim > MAX_ARRAY_DIM) {
 		return ERROR;
@@ -32,8 +32,8 @@ Status InitArray(Array* A, int dim, ...) {
 	}
 	va_end(ap);
 
-	A->base = (ElemType*)malloc(elemtotal * sizeof(ElemType));
-	if (!A->base) {
+	A->elements = (ELEM*)malloc(elemtotal * sizeof(ELEM));
+	if (!A->elements) {
 		return OVERFLOW;
 	}
 

@@ -144,6 +144,41 @@ void TestBinaryTreeInOrderTraverse2() {
 }
 
 
+void TestBinaryTreePostOrderTraverse() {
+    printf("\n");
+    printf("|------------------------ CyberDash ------------------------|\n");
+    printf("|                    Test Post Traverse                      |\n");
+    printf("|                      测试二叉树后序遍历                   |\n");
+    printf("|                            A                              |\n");
+    printf("|                           /                               |\n");
+    printf("|                          B                                |\n");
+    printf("|                         / \\                               |\n");
+    printf("|                        C   D                              |\n");
+    printf("|                           / \\                             |\n");
+    printf("|                          E   F                            |\n");
+    printf("|                           \\                               |\n");
+    printf("|                            G                              |\n");
+
+    binary_tree_t* binary_tree = (binary_tree_t*)malloc(sizeof(binary_tree_t));
+
+    char pre_order_str[] = "ABC  DE G  F   ";
+    int traverse_index = 0;
+
+    Status status = BinaryTreeCreateByPreOrderStringRecursive(binary_tree, pre_order_str, &traverse_index, strlen(pre_order_str));
+    if (status != OK) {
+        printf("\n建二叉树失败\n");
+    }
+
+    status = BinaryTreePostOrderTraverseRecursive(*binary_tree, VisitChar);
+    if (status == OK) {
+        printf("\n后序遍历结束\n");
+    } else {
+        printf("\n后序遍历失败\n");
+    }
+
+    printf("|-----------------------------------------------------------|\n\n");
+}
+
 void TestHuffmanTree() {
     printf("\n");
     printf("|------------------------ CyberDash ------------------------|\n");
@@ -153,8 +188,8 @@ void TestHuffmanTree() {
     char codewords[8] = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};                //!< 码字(数组)
     double probabilities[8] = { 0.01, 0.02, 0.03, 0.04, 0.1, 0.2, 0.25, 0.35 };   //!< 码字权重(数组)
 
-    huffman_tree_node_t huffman_tree[9];    // 哈夫曼树
-    huffman_code_t      huffman_codes;      // 哈夫曼编码
+    huffman_tree_t huffman_tree = NULL; // 哈夫曼树
+    huffman_code_t huffman_codes;       // 哈夫曼编码
 
     // 构造哈夫曼编码
     HuffmanCoding(huffman_tree, huffman_codes, probabilities, 8);

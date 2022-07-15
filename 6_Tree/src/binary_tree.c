@@ -10,11 +10,13 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include "stack.h"
+#include "queue.h"
 #include "binary_tree.h"
 
 
 /*!
- * <h1>使用前序遍历字符串(NULL结点使用空格)创建二叉树(递归)</h1>
+ * @brief <h1>使用前序遍历字符串(NULL结点使用空格)创建二叉树(递归)</h1>
  * @param node **二叉树结点(二级指针)**
  * @param pre_order_str **前序遍历字符串首地址(NULL结点使用空格)**
  * @param traverse_index **遍历字符的索引**
@@ -131,45 +133,86 @@ Status BinaryTreeInOrderTraverse(binary_tree_node_t* node, Status (*Visit)(BINAR
 
 
 /*!
- * 二叉树中序遍历2
- * @param node 二叉树结点(指针)
- * @param Visit 结点元素访问函数
- * @return 执行结果
+ * @brief <h1>二叉树中序遍历2</h1>
+ * @param node **二叉树结点(指针)**
+ * @param Visit **结点元素访问函数**
+ * @return **执行结果**
  * @note
  */
 Status BinaryTreeInOrderTraverse2(binary_tree_node_t* node, Status (*Visit)(BINARY_TREE_NODE_DATA)) {
 
-    //!< 初始化栈
+    /// ##1 初始化栈##
     seq_stack_t stack;
     SeqStackInit(&stack);
 
-    SeqStackPush(&stack, node); //!< 根结点入栈
+    /// &emsp; 根结点入栈
+    SeqStackPush(&stack, node);
 
+    /// ##2 处理栈结点
+    /// &emsp; **WHILE:** 栈不为空
     while (!SeqStackIsEmpty(stack)) {
 
-        binary_tree_node_t* cur;    //!< 遍历结点
+        binary_tree_node_t* cur;    // 遍历结点
 
-        //!< 一直向左子树遍历, 过程中结点入栈
+        /// &emsp;&emsp;**2.1 找到栈顶结点的最左子孙结点**\n
+        /// &emsp;&emsp;&emsp; 栈顶出栈, 赋给遍历节点cur\n
+        /// &emsp;&emsp;&emsp; 从cur的左孩子结点开始, 一直向子孙的左孩子结点遍历\n
+        /// &emsp;&emsp;&emsp; 过程中的所有结点入栈\n
+        /// ```
+        ///                  *  <-- cur结点
+        ///                 /
+        ///                *                 -
+        ///               /                  |
+        ///             ...             这些结点依次入栈
+        ///             /                    |
+        /// 遍历至 ->  *                     _
+        ///             \
+        ///              *
+        /// ```
         while (SeqStackGetTop(stack, &cur) == OK && cur) {
             SeqStackPush(&stack, cur->left_child);
         }
 
-        SeqStackPop(&stack, &cur); //!< 栈顶的NULL出栈, 使栈顶是树结点
+        SeqStackPop(&stack, &cur); // 栈顶的NULL出栈, 使栈顶是树结点
 
-        //!< 如果栈空, 跳出循环, 中序遍历结束
+        /// &emsp;&emsp;**2.2 如果栈空, 中序遍历结束**\n
         if (SeqStackIsEmpty(stack)) {
             break;
         }
 
-        //!< 栈顶出栈, 赋给遍历结点cur
+        /// &emsp;&emsp;**2.3 栈顶出栈并访问**\n
+        /// &emsp;&emsp;&emsp; 栈顶出栈, 赋给节点cur\n
+        /// &emsp;&emsp;&emsp; 访问节点cur\n
+        /// ```
+        ///                  *
+        ///                 /
+        ///                *
+        ///               /
+        ///             ...
+        ///             /
+        ///            *  --> cur
+        ///             \
+        ///              *
+        /// ```
         SeqStackPop(&stack, &cur);
 
-        //!< 访问遍历结点结点cur
+        // 访问遍历结点结点cur
         if (Visit(cur->data) != OK) {
             return ERROR;
         }
 
-        //!< 遍历节点cur的右孩子结点入栈
+        /// &emsp;&emsp;**2.4 结点cur的右孩子结点入栈**\n
+        /// ```
+        ///                  *
+        ///                 /
+        ///                *
+        ///               /
+        ///             ...
+        ///             /
+        ///            *
+        ///             \
+        ///              *  <- 入栈
+        /// ```
         SeqStackPush(&stack, cur->right_child);
     }
 
@@ -178,7 +221,7 @@ Status BinaryTreeInOrderTraverse2(binary_tree_node_t* node, Status (*Visit)(BINA
 
 
 // 二叉树后序遍历(递归)
-Status BinaryTreePostOrderTraverseRecursive(binary_tree_node_t* node, Status (*Visit)(BINARY_TREE_NODE_DATA data)) {
+Status BinaryTreePostOrderTraverseRecursive(binary_tree_node_t* node, Status (*Visit)(BINARY_TREE_NODE_DATA)) {
 
     /// ##1 NULL结点, 返回OK, 正确情况下的递归终止##
     if (node == NULL) {
@@ -201,3 +244,24 @@ Status BinaryTreePostOrderTraverseRecursive(binary_tree_node_t* node, Status (*V
     return status;
 }
 
+/*!
+ * @brief <h1>二叉树后序遍历</h1>
+ * @note
+ * 见 CyberDash团队 数据结构(C++模板实现)
+ * https://gitee.com/cyberdash/data-structure-cpp/blob/master/Tree/BinaryTree/src/binary_tree.h
+ */
+Status BinaryTreePostOrderTraverse(binary_tree_node_t* binary_tree, Status (*Visit)(BINARY_TREE_NODE_DATA)) {
+    // todo: 见note, 有兴趣者参照C++代码自行实现:-)
+    return OK;
+}
+
+/*!
+ * @brief 层序遍历
+ * @param binary_tree
+ * @param Visit
+ * @return
+ */
+Status LevelOrderTraverse(binary_tree_node_t* binary_tree, Status (*Visit)(BINARY_TREE_NODE_DATA)) {
+
+    return OK;
+}

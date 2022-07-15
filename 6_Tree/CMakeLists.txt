@@ -17,4 +17,4 @@ add_executable(main
         
         src/stack.c
         src/main.c
-        )
+        src/queue.c src/queue.h)

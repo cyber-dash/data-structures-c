@@ -22,7 +22,8 @@ typedef struct binary_tree_node {
     binary_tree_node_t*    right_child;    //!< 右孩子指针
 } binary_tree_node_t;
 
-typedef binary_tree_node_t* binary_tree_t;  //!< 二叉树
+/*! @brief 二叉树 */
+typedef binary_tree_node_t* binary_tree_t;
 
 
 #endif //CYBER_DASH_TREE_BINARY_TREE_NODE_H

@@ -17,41 +17,54 @@
 
 /*!
  * @brief <h1>使用前序遍历字符串(NULL结点使用空格)创建二叉树(递归)</h1>
- * @param node **二叉树结点(二级指针)**
- * @param pre_order_str **前序遍历字符串首地址(NULL结点使用空格)**
+ * @param node **二叉树结点**(结点二级指针)
+ * @param pre_order_str **前序遍历字符串**(NULL结点使用空格)
  * @param traverse_index **遍历字符的索引**
  * @param pre_order_str_len **前序遍历字符串(NULL结点使用空格)长度**
- * @return 是否成功
+ * @return **是否成功**
  * @note
- * NULL结点使用空格表示
  */
 Status BinaryTreeCreateByPreOrderStringRecursive(binary_tree_node_t** node,
                                                  char* pre_order_str,
                                                  int* traverse_index,
                                                  size_t pre_order_str_len)
 {
-    // 如果遍历字符的索引>=字符串长度, 越界(即之后的字符串不参与create), 终止递归
+    /// ###1 检查是否终止递归###
+    /// &emsp; 如果遍历字符的索引>=字符串长度, 越界(即之后的字符串不参与create), **终止递归**\n
     if (*traverse_index >= (int)pre_order_str_len) {
         return OK;
     }
 
-    char chr = pre_order_str[*traverse_index];  // 遍历索引的字符赋给chr
-    *traverse_index = *traverse_index + 1;      // 遍历字符的索引指向的位置, 向后挪1位(指向下一字符)
+    /// ###2 遍历位置字符处理###
+    /// + 遍历索引所指向的字符, 赋给chr\n
+    char chr = pre_order_str[*traverse_index];
 
-    // 如果chr为空格, 则为NULL结点, 返回OK, 终止递归
+    /// + 遍历索引向后挪1位(**指向下一字符**)\n
+    *traverse_index = *traverse_index + 1;
+
+    /// + NULL结点处理\n
+    ///
+    /// **if** chr为空格:
     if (chr == ' ') {
+        /// &emsp;&emsp;&emsp;&emsp; 则当前构造结点为NULL
         *node = NULL;
+        /// &emsp;&emsp;&emsp;&emsp; 返回OK, **终止递归**
         return OK;
     }
 
-    // 内存分配失败, 返回错误码NON_ALLOCATED, 终止递归
+    /// ###3 构造新结点###
+    /// + 分配结点内存\n
+    /// **if** 内存分配失败:\n
     if (!(*node = (binary_tree_node_t*)malloc(sizeof(binary_tree_node_t)))) {
+        /// &emsp;&emsp;&emsp;&emsp; 返回错误码NON_ALLOCATED, **终止递归**\n
         return NON_ALLOCATED;
     }
 
-    (*node)->data = chr; // 节点数据项赋值
+    /// + 节点数据项赋值
+    (*node)->data = chr;
 
-    // 对左孩子结点执行递归, 构造左孩子结点为根结点的子树
+    /// ###4 对孩子结点进行递归###
+    /// * 对左孩子结点执行递归
     Status status = BinaryTreeCreateByPreOrderStringRecursive(&(*node)->left_child,
                                                               pre_order_str,
                                                               traverse_index,
@@ -60,7 +73,7 @@ Status BinaryTreeCreateByPreOrderStringRecursive(binary_tree_node_t** node,
         return status;
     }
 
-    // 对右孩子结点执行递归, 构造左孩子结点为根结点的子树
+    /// * 对右孩子结点执行递归
     status = BinaryTreeCreateByPreOrderStringRecursive(&(*node)->right_child,
                                                        pre_order_str,
                                                        traverse_index,
@@ -75,6 +88,7 @@ Status BinaryTreeCreateByPreOrderStringRecursive(binary_tree_node_t** node,
  * @param node **二叉树结点**(指针)
  * @param Visit **结点元素访问函数**
  * @return **执行结果**
+ * @note
  */
 Status BinaryTreePreOrderTraverseRecursive(binary_tree_node_t* node, Status (*Visit)(BINARY_TREE_NODE_DATA)) {
 
@@ -110,6 +124,7 @@ Status BinaryTreePreOrderTraverseRecursive(binary_tree_node_t* node, Status (*Vi
  * @param node 二叉树结点(指针)
  * @param Visit 结点元素访问函数
  * @return 执行结果
+ * @note
  */
 Status BinaryTreeInOrderTraverse(binary_tree_node_t* node, Status (*Visit)(BINARY_TREE_NODE_DATA)) {
 
@@ -150,13 +165,13 @@ Status BinaryTreeInOrderTraverse2(binary_tree_node_t* node, Status (*Visit)(BINA
     /// &emsp; 根结点入栈
     SeqStackPush(&stack, node);
 
-    /// ###2 处理栈结点###
+    /// ###2 栈相关结点###
     /// &emsp; **WHILE:** 栈不为空
     while (!SeqStackIsEmpty(stack)) {
 
         binary_tree_node_t* cur;    // 遍历结点
 
-        /// &emsp;&emsp;**2.1 找到栈顶结点的最左子孙结点**\n
+        /// * 2.1 找到栈顶结点的最左子孙结点**\n
         /// &emsp;&emsp;&emsp; 栈顶出栈, 赋给遍历节点cur\n
         /// &emsp;&emsp;&emsp; 从cur的左孩子结点开始, 一直向子孙的左孩子结点遍历\n
         /// &emsp;&emsp;&emsp; 过程中的所有结点入栈\n
@@ -264,6 +279,7 @@ Status BinaryTreePostOrderTraverse(binary_tree_node_t* binary_tree, Status (*Vis
  * @param binary_tree **二叉树**(结点指针)
  * @param Visit **访问函数**
  * @return **执行结果**
+ * @note
  */
 Status BinaryTreeLevelOrderTraverse(binary_tree_node_t* binary_tree, Status (*Visit)(BINARY_TREE_NODE_DATA)) {
 

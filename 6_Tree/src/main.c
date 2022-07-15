@@ -13,6 +13,7 @@
 
 int main() {
 
+    /*
     TestBinaryTreePreOrderTraverse();
 
     TestBinaryTreeInOrderTraverse();
@@ -20,6 +21,9 @@ int main() {
     TestBinaryTreeInOrderTraverse2();
 
     TestBinaryTreePostOrderTraverse();
+     */
+
+    TestBinaryTreeLevelOrderTraverse();
 
     TestHuffmanTree();
 

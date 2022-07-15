@@ -39,7 +39,7 @@ Status BinaryTreePostOrderTraverseRecursive(binary_tree_node_t* binary_tree, Sta
 Status BinaryTreePostOrderTraverse(binary_tree_node_t* binary_tree, Status (*Visit)(BINARY_TREE_NODE_DATA));
 
 
-Status LevelOrderTraverse(binary_tree_node_t* binary_tree, Status (*Visit)(BINARY_TREE_NODE_DATA));
+Status BinaryTreeLevelOrderTraverse(binary_tree_node_t* binary_tree, Status (*Visit)(BINARY_TREE_NODE_DATA));
 
 
 #endif // CYBER_DASH_BINARY_TREE_H

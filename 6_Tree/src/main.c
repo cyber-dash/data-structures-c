@@ -13,19 +13,17 @@
 
 int main() {
 
-    /*
-    TestBinaryTreePreOrderTraverse();
+    TestBinaryTreePreOrderTraverse();   // 测试二叉树前序遍历
 
-    TestBinaryTreeInOrderTraverse();
+    TestBinaryTreeInOrderTraverse();    // 测试二叉树中序遍历
 
-    TestBinaryTreeInOrderTraverse2();
+    TestBinaryTreeInOrderTraverse2();   // 测试二叉树中序遍历2
 
-    TestBinaryTreePostOrderTraverse();
-     */
+    TestBinaryTreePostOrderTraverse();  // 测试二叉树后序遍历
 
-    TestBinaryTreeLevelOrderTraverse();
+    TestBinaryTreeLevelOrderTraverse(); // 测试二叉树层序遍历
 
-    TestHuffmanTree();
+    TestHuffmanTree();                  // 测试哈夫曼(Huffman)编码
 
     return 0;
 }

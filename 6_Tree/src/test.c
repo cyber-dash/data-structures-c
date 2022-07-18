@@ -128,6 +128,38 @@ void TestBinaryTreeInOrderTraverse2() {
     printf("|-----------------------------------------------------------|\n\n");
 }
 
+void TestBinaryTreePostOrderTraverse() {
+    printf("\n");
+    printf("|------------------------ CyberDash ------------------------|\n");
+    printf("|                     Test Post Traverse                    |\n");
+    printf("|                      测试二叉树后序遍历                      |\n");
+    printf("|                            A                              |\n");
+    printf("|                           / \\                            |\n");
+    printf("|                          B   E                            |\n");
+    printf("|                         / \\   \\                         |\n");
+    printf("|                        C   D   F                          |\n");
+    printf("|                                                           |\n");
+    printf("|                                                           |\n");
+    printf("|                                                           |\n");
+    printf("|                                                           |\n");
+
+    binary_tree_t* testTree = (binary_tree_t*)malloc(sizeof(binary_tree_t));
+
+    char treeString[] = "ABC  D  E F   ";
+    int pos = 0;
+
+    BinaryTreeCreateByPreOrderStringRecursive(testTree, treeString, &pos, strlen(treeString));
+
+    Status res = BinaryTreePostOrderTraverseRecursive(*testTree, VisitChar);
+    if (res == OK) {
+        printf("\n后序遍历结束\n");
+    } else {
+        printf("\n后序遍历失败\n");
+    }
+
+    printf("|-----------------------------------------------------------|\n\n");
+}
+
 
 void TestHuffmanTree() {
     HuffmanTree* huffmanTree = (HuffmanTree*)malloc(sizeof(HuffmanTree));

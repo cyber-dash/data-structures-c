@@ -15,6 +15,8 @@ void TestBinaryTreeInOrderTraverse();
 
 void TestBinaryTreeInOrderTraverse2();
 
+void TestBinaryTreePostOrderTraverse();
+
 void TestHuffmanTree();
 
 

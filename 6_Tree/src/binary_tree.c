@@ -167,4 +167,33 @@ Status BinaryTreeInOrderTraverse2(binary_tree_node_t* node, Status (*Visit)(BINA
 
 
 
+/*!
+ * @brief 二叉树后序遍历(递归)
+ * @param node 二叉树结点(指针)
+ * @param Visit 结点元素访问函数
+ * @return 执行结果
+ */
+Status BinaryTreePostOrderTraverseRecursive(binary_tree_node_t* node, Status (*Visit)(BINARY_TREE_NODE_DATA)) {
 
+    // 结点如果为NULL, 返回OK, 正确情况下的递归终止
+    if (node == NULL) {
+        return OK;
+    }
+
+    // 对node左孩子进行递归
+    Status status = BinaryTreePostOrderTraverseRecursive(node->left_child, Visit);
+    if (status != OK) {
+        return status;
+    }
+
+    // 对node右孩子进行递归
+    status = BinaryTreePostOrderTraverseRecursive(node->right_child, Visit);
+    if (status != OK) {
+        return status;
+    }
+
+    // 访问结点, 如果访问失败, 返回失败原因, 错误情况下的递归终止
+    status = Visit(node->data);
+
+    return status;
+}

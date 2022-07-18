@@ -14,5 +14,7 @@ int main() {
 
     TestBinaryTreeInOrderTraverse2();
 
+    TestBinaryTreePostOrderTraverse();
+
     return 0;
 }

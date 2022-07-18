@@ -21,6 +21,8 @@ Status BinaryTreeInOrderTraverse(binary_tree_t node, Status (*Visit)(BINARY_TREE
 
 Status BinaryTreeInOrderTraverse2(binary_tree_t node, Status (*Visit)(BINARY_TREE_NODE_DATA e));
 
+Status BinaryTreePostOrderTraverseRecursive(binary_tree_t node, Status (*Visit)(BINARY_TREE_NODE_DATA e));
+
 Status PostOrderTraverse(binary_tree_t T, Status (*Visit)(BINARY_TREE_NODE_DATA e));
 
 Status LevelOrderTraverse(binary_tree_t T, Status (*Visit)(BINARY_TREE_NODE_DATA e));

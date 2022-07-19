@@ -160,7 +160,7 @@ Status GenListToString(gen_list_t gen_list, char* gen_list_str, int str_len_limi
     memset(gen_list_str, 0, str_len_limit * sizeof(char));
 
     /// ###2 调用GenListToStringRecursive, 生成字符串###
-    GenListToStringRecursive(gen_list, &char_queue);
+    GenListToCharQueueRecursive(gen_list, &char_queue);
 
     /// ###3 将字符队列转换成
     SeqQueueToString(&char_queue, gen_list_str, str_len_limit);
@@ -169,26 +169,48 @@ Status GenListToString(gen_list_t gen_list, char* gen_list_str, int str_len_limi
 }
 
 
-// todo: 应该加个str_len限制, 防止溢出
-void GenListToStringRecursive(gen_list_t gList, seq_queue_t* char_queue) {
-    gen_list_node_t* cur_head = gList->item.head;
+/*!
+ * @brief <h1>广义表转换成字符队列</h1>
+ * @param gen_list **广义表**
+ * @param char_queue **字符队列**
+ * @note
+ */
+void GenListToCharQueueRecursive(gen_list_t gen_list, seq_queue_t* char_queue) {
 
+    /// ###1 初始化cur结点指针###
+    /// &emsp; 指向当前(子)广义表表头
+    gen_list_node_t* cur = gen_list->item.head;
+
+    /// ###2 字符‘(’入队###
     SeqQueueEnQueue(char_queue, '(');
 
-    while (cur_head) {
-        if (cur_head->tag == LIST) {
-            GenListToStringRecursive(cur_head, char_queue);
-        } else if (cur_head->tag == ATOM) {
-            SeqQueueEnQueue(char_queue, cur_head->item.atom);
+    /// ###3 构造表内元素###
+    /// &emsp; **while** cur指向结点不为NULL :\n
+    /// - **I**&nbsp;&nbsp; LIST类型结点\n
+    /// &emsp;&emsp; **if** tag为LIST类型 :\n
+    /// &emsp;&emsp;&emsp; 对cur进行递归\n
+    /// - **II**&nbsp; ATOM类型结点\n
+    /// &emsp;&emsp; **if** tag为ATOM类型 :\n
+    /// &emsp;&emsp;&emsp; cur->item.atom入队\n
+    /// - **III** ATOM类型结点\n
+    /// &emsp;&emsp; **if** cur->next不为NULL :\n
+    /// &emsp;&emsp;&emsp; ','入队\n
+    while (cur) {
+        if (cur->tag == LIST) {
+            GenListToCharQueueRecursive(cur, char_queue);
+        } else if (cur->tag == ATOM) {
+            SeqQueueEnQueue(char_queue, cur->item.atom);
         }
 
-        if (cur_head->next != NULL) {
+        if (cur->next != NULL) {
             SeqQueueEnQueue(char_queue, ',');
         }
 
-        cur_head = cur_head->next;
+        cur = cur->next;
     }
 
+    /// ###3 子表遍历结束处理###
+    /// &emsp; ')'入队\n
     SeqQueueEnQueue(char_queue, ')');
 }
 

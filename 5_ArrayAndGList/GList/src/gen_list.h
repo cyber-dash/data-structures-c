@@ -38,7 +38,7 @@ void GenListCreateByStr(gen_list_node_t** gen_list, char* str, int str_len);
 
 Status GenListToString(gen_list_node_t* gen_list, char* gen_list_str, int str_len_limit);
 
-void GenListToStringRecursive(gen_list_t gList, seq_queue_t* char_queue);
+void GenListToCharQueueRecursive(gen_list_t gen_list, seq_queue_t* char_queue);
 
 int GenListDepthRecursive(gen_list_t gen_list);
 

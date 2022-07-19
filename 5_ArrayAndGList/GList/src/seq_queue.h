@@ -13,7 +13,7 @@
 #define CYBER_DASH_SEQ_QUEUE_H
 
 
-#include "type.h"
+#include "common.h"
 
 #define QUEUE_ELEM char
 #define MAX_SIZE 100         // 最大队列长度
@@ -25,19 +25,19 @@ typedef struct seq_queue_t {
 } seq_queue_t;
 
 
-Status InitQueue(seq_queue_t* Q);
+Status SeqQueueInit(seq_queue_t* seq_queue);
 
-int GetLength(seq_queue_t Q);
+int SeqQueueGetLength(seq_queue_t seq_queue);
 
-Status EnQueue(seq_queue_t* Q, QUEUE_ELEM e);
+Status SeqQueueEnQueue(seq_queue_t* seq_queue, QUEUE_ELEM e);
 
-Status DeQueue(seq_queue_t* Q, QUEUE_ELEM *e);
+Status SeqQueueDeQueue(seq_queue_t* seq_queue, QUEUE_ELEM *e);
 
 Status GetTop(seq_queue_t* Q, QUEUE_ELEM *e);
 
-Status ToString(seq_queue_t* Q, char* queue_str);
+Status SeqQueueToString(seq_queue_t* seq_queue, char* str, int str_len_limit);
 
-void PrintQueue(seq_queue_t *Q);
+void SeqQueuePrint(seq_queue_t *Q);
 
 
 #endif // CYBER_DASH_SEQ_QUEUE_H

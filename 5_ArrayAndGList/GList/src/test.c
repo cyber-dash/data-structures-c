@@ -18,16 +18,16 @@
 void TestInitGList() {
     printf("\n");
     printf("------------------------- CyberDash -------------------------\n");
-    printf("                   Test CreateGenListByStr                   \n");
+    printf("                   Test GenListCreateByStr                   \n");
     printf("                      测试构造和打印广义表                       \n\n\n");
 
     gen_list_t gList = NULL;
 
     char input_gen_list_str[100] = "(A,(),(B,(C)))";
-    CreateGenListByStr(&gList, input_gen_list_str, strlen(input_gen_list_str));
+    GenListCreateByStr(&gList, input_gen_list_str, strlen(input_gen_list_str));
 
-    char* gen_list_str = (char*)malloc(200 * sizeof(char));
-    GenListToString(gList, gen_list_str);
+    char* gen_list_str = (char*)malloc(100 * sizeof(char));
+    GenListToString(gList, gen_list_str, 100);
 
     printf("打印广义表: %s\n", gen_list_str);
 
@@ -45,12 +45,12 @@ void TestGListDepth() {
     gen_list_t gList = NULL;
 
     char input_gen_list_str[100] = "(A,(),(B,(C)))";
-    CreateGenListByStr(&gList, input_gen_list_str, strlen(input_gen_list_str));
+    GenListCreateByStr(&gList, input_gen_list_str, strlen(input_gen_list_str));
 
-    char* gen_list_str = (char*)malloc(200 * sizeof(char));
-    GenListToString(gList, gen_list_str);
+    char* gen_list_str = (char*)malloc(100 * sizeof(char));
+    GenListToString(gList, gen_list_str, 100);
 
-    int depth = GListDepth(gList);
+    int depth = GenListDepthRecursive(gList);
 
     printf("广义表%s的深度: %d\n", gen_list_str, depth);
 
@@ -66,18 +66,18 @@ void TestGListCopy() {
 
     gen_list_t gen_list = NULL;
     char input_gen_list_str[100] = "(A,(),(B,(C)))";
-    CreateGenListByStr(&gen_list, input_gen_list_str, strlen(input_gen_list_str));
+    GenListCreateByStr(&gen_list, input_gen_list_str, strlen(input_gen_list_str));
 
-    char* gen_list_str = (char*)malloc(200 * sizeof(char));
-    GenListToString(gen_list, gen_list_str);
+    char* gen_list_str = (char*)malloc(100 * sizeof(char));
+    GenListToString(gen_list, gen_list_str, 100);
     printf("广义表: %s\n\n", gen_list_str);
 
     // 调用CopyGenList将gen_list复制到new_gen_list
     gen_list_t new_gen_list = NULL;
     CopyGenList(&new_gen_list, gen_list);
 
-    char* new_gen_list_str = (char*)malloc(200 * sizeof(char));
-    GenListToString(new_gen_list, new_gen_list_str);
+    char* new_gen_list_str = (char*)malloc(100 * sizeof(char));
+    GenListToString(new_gen_list, new_gen_list_str, 100);
     printf("复制的广义表: %s\n", new_gen_list_str);
 
     printf("-------------------- 抖音: cyberdash_yuan --------------------\n");

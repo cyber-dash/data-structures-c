@@ -7,18 +7,32 @@
  * @copyright Copyright (c) 2021
  *  CyberDash计算机考研
  */
-#include "gen_list.h"
+
 #include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
+#include "gen_list.h"
 
 
-Status InitListHeadNode(gen_list_node_t** node) {
+/*!
+ * @brief <h1>广义表子表头结点初始化</h1>
+ * @param node **结点**(广义表结点二级指针)
+ * @return 执行结果
+ * @note
+ */
+Status GenListInitListHeadNode(gen_list_node_t** node) {
+    /// ###1 结点分配内存###
+    /// &emsp; **if** 如果malloc失败 :\n
+    /// &emsp;&emsp; 返回NON_ALLOCATED\n
     *node = (gen_list_node_t*)malloc(sizeof(gen_list_node_t));
     if (!(*node)) {
         return ERROR;
     }
 
+    /// ###2 字表头结点元素赋值###
+    /// - **I**&nbsp;&nbsp; tag为LIST类型\n
+    /// - **II**&nbsp; item.head为NULL(初始化时为空表)\n
+    /// - **III** next为NULL\n
     (*node)->tag = LIST;
     (*node)->item.head = NULL;
     (*node)->next = NULL;
@@ -27,12 +41,26 @@ Status InitListHeadNode(gen_list_node_t** node) {
 }
 
 
-Status InitAtomNode(gen_list_node_t** node, AtomType chr) {
+/*!
+ * <h1>广义表原子结点初始化</h1>
+ * @param node **结点**(指针)
+ * @param chr **原子结点字符**
+ * @return 执行结果
+ * @note
+ */
+Status GenListInitAtomNode(gen_list_node_t** node, ATOM_TYPE chr) {
+    /// ###1 结点分配内存###
+    /// &emsp; **if** 如果malloc失败 :\n
+    /// &emsp;&emsp; 返回NON_ALLOCATED\n
     *node = (gen_list_node_t*)malloc(sizeof(gen_list_node_t));
     if (!(*node)) {
         return ERROR;
     }
 
+    /// ###2 原子结点元素赋值###
+    /// - **I**&nbsp;&nbsp; tag为ATOM类型\n
+    /// - **II**&nbsp; item.atom为char(原子结点名)\n
+    /// - **III** next为NULL\n
     (*node)->tag = ATOM;
     (*node)->item.atom = chr;
     (*node)->next = NULL;
@@ -41,26 +69,49 @@ Status InitAtomNode(gen_list_node_t** node, AtomType chr) {
 }
 
 
-void CreateGenListByQueueRecursive(seq_queue_t* char_queue, gen_list_node_t** node) {
+/*!
+ * <h1>广义表使用队列建表(递归)</h1>
+ * @param char_queue **字符队列**(指针)
+ * @param node **结点**(广义表结点二级指针)
+ * @note
+ */
+void GenListCreateByQueueRecursive(seq_queue_t* char_queue, gen_list_node_t** node) {
 
-    QUEUE_ELEM chr;
-    if (GetLength(*char_queue) == 0) {
+    /// ###1 空队判断###
+    /// &emsp; **if** 队列为空 :\n
+    /// &emsp;&emsp; 返回, **递归结束**\n
+    if (SeqQueueGetLength(*char_queue) == 0) {
         return;
     }
 
-    DeQueue(char_queue, &chr);
+    /// ###2 出队, 字符值赋给chr###
+    QUEUE_ELEM chr;
+    SeqQueueDeQueue(char_queue, &chr);
 
+    /// ###3 各类型chr分别处理###
+    /// - **I**&nbsp;&nbsp; chr为'('\n
+    ///  + 对node构造子表头结点\n
+    ///  + 对&(*node)->item.head执行递归\n
+    ///  + 对node执行递归\n
+    /// - **II**&nbsp; chr为小写字母(原子结点名称)\n
+    ///  + 对node构造原子结点\n
+    ///  + 对node执行递归\n
+    /// - **III** chr为','\n
+    ///  + 对&(*node)->next执行递归\n
+    /// - **IV**&nbsp; chr为')'\n
+    /// &emsp;&emsp;&emsp;&emsp; **if** *node不为NULL\n
+    /// &emsp;&emsp;&emsp;&emsp;&emsp; (*node)->next设置为NULL\n
+    /// &emsp;&emsp;&emsp;&emsp; (如果*node为NULL, 则表示当前子表为空表, 字符串为"()")\n
     if (chr == '(') {
-        InitListHeadNode(node);
-        CreateGenListByQueueRecursive(char_queue, &(*node)->item.head);
-        CreateGenListByQueueRecursive(char_queue, node);
+        GenListInitListHeadNode(node);
+        GenListCreateByQueueRecursive(char_queue, &(*node)->item.head);
+        GenListCreateByQueueRecursive(char_queue, node);
     } else if (isalpha(chr)) {
-        InitAtomNode(node, chr);
-        CreateGenListByQueueRecursive(char_queue, node);
+        GenListInitAtomNode(node, chr);
+        GenListCreateByQueueRecursive(char_queue, node);
     } else if (chr == ',') {
-        CreateGenListByQueueRecursive(char_queue, &(*node)->next);
+        GenListCreateByQueueRecursive(char_queue, &(*node)->next);
     } else if (chr == ')') {
-        // 如果*node为NULL, 则为"()"形式, 否则为"(...)"形式
         if (*node) {
             (*node)->next = NULL;
         }
@@ -68,69 +119,92 @@ void CreateGenListByQueueRecursive(seq_queue_t* char_queue, gen_list_node_t** no
 }
 
 
-void CreateGenListByStr(gen_list_t* gList, char* str, int str_len) {
+/*!
+ * @brief <h1>广义表使用字符串建表</h1>
+ * @param gen_list **广义表**(指针)
+ * @param str **字符串**
+ * @param str_len **字符串长度**
+ * @note
+ */
+void GenListCreateByStr(gen_list_t* gen_list, char* str, int str_len) {
 
+    /// ###1 初始化队列###
     seq_queue_t char_queue;
-    InitQueue(&char_queue);
+    SeqQueueInit(&char_queue);
+
+    /// ###2 字符串的每个字符入队###
     for (int i = 0; i < str_len; i++) {
-        EnQueue(&char_queue, str[i]);
+        SeqQueueEnQueue(&char_queue, str[i]);
     }
 
-    CreateGenListByQueueRecursive(&char_queue, gList);
+    /// ###3 调用GenListCreateByQueueRecursive建表###
+    GenListCreateByQueueRecursive(&char_queue, gen_list);
 }
 
 
-Status GenListToString(gen_list_t gList, char* gen_list_string) {
+/*!
+ * @brief <h1>广义表转换成字符串</h1>
+ * @param gen_list **广义表**(指针)
+ * @param gen_list_str **广义表字符串**(用于转换)
+ * @param str_len_limit **字符串长度限制**
+ * @return **执行结果**
+ */
+Status GenListToString(gen_list_t gen_list, char* gen_list_str, int str_len_limit) {
 
+    /// ###1 初始化队列和字符串###
+    /// - **I**&nbsp;&nbsp; 初始化字符队列
     seq_queue_t char_queue;
-    InitQueue(&char_queue);
+    SeqQueueInit(&char_queue);
 
-    // char queue_str[200];
-    memset(gen_list_string, 0, 200 * sizeof(char));
+    /// - **II**&nbsp; 初始化字符串
+    memset(gen_list_str, 0, str_len_limit * sizeof(char));
 
-    SubGenListToStringRecursive(gList, &char_queue);
+    /// ###2 调用GenListToStringRecursive, 生成字符串###
+    GenListToStringRecursive(gen_list, &char_queue);
 
-    ToString(&char_queue, gen_list_string);
+    /// ###3 将字符队列转换成
+    SeqQueueToString(&char_queue, gen_list_str, str_len_limit);
 
     return OK;
 }
 
 
-void SubGenListToStringRecursive(gen_list_t gList, seq_queue_t* char_queue) {
+// todo: 应该加个str_len限制, 防止溢出
+void GenListToStringRecursive(gen_list_t gList, seq_queue_t* char_queue) {
     gen_list_node_t* cur_head = gList->item.head;
 
-    EnQueue(char_queue, '(');
+    SeqQueueEnQueue(char_queue, '(');
 
     while (cur_head) {
         if (cur_head->tag == LIST) {
-            SubGenListToStringRecursive(cur_head, char_queue);
+            GenListToStringRecursive(cur_head, char_queue);
         } else if (cur_head->tag == ATOM) {
-            EnQueue(char_queue, cur_head->item.atom);
+            SeqQueueEnQueue(char_queue, cur_head->item.atom);
         }
 
         if (cur_head->next != NULL) {
-            EnQueue(char_queue, ',');
+            SeqQueueEnQueue(char_queue, ',');
         }
 
         cur_head = cur_head->next;
     }
 
-    EnQueue(char_queue, ')');
+    SeqQueueEnQueue(char_queue, ')');
 }
 
 
-int GListDepth(gen_list_t gList) {
-    if (!gList) {
+int GenListDepthRecursive(gen_list_t gen_list) {
+    if (!gen_list) {
         return 1;
     }
 
-    if (gList->tag == ATOM) {
+    if (gen_list->tag == ATOM) {
         return 0;
     }
 
     int max_sub_gen_list_depth = 0; // 子表最大深度, 初始化为0
-    for (gen_list_t cur_gen_list = gList->item.head; cur_gen_list != NULL; cur_gen_list = cur_gen_list->next) {
-        int cur_sub_gen_list_depth = GListDepth(cur_gen_list);
+    for (gen_list_t cur_gen_list = gen_list->item.head; cur_gen_list != NULL; cur_gen_list = cur_gen_list->next) {
+        int cur_sub_gen_list_depth = GenListDepthRecursive(cur_gen_list);
         if (max_sub_gen_list_depth < cur_sub_gen_list_depth) {
             max_sub_gen_list_depth = cur_sub_gen_list_depth;
         }
@@ -151,7 +225,7 @@ Status CopyGenList(gen_list_t* target_list, gen_list_t src_list) {
 
     *target_list = (gen_list_t)malloc(sizeof(gen_list_node_t));
     if (*target_list == NULL) {
-        return ALLOC_UNINITIALIZED;
+        return NON_ALLOCATED;
     }
 
     (*target_list)->tag = src_list->tag;

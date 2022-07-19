@@ -113,7 +113,7 @@ Status BinaryTreePreOrderTraverseRecursive(binary_tree_node_t* node, Status (*Vi
         return status;
     }
 
-    /// - **II**&nbsp;&nbsp; 对node右孩子结点进行递归
+    /// - **II**&nbsp; 对node右孩子结点进行递归
     status = BinaryTreePreOrderTraverseRecursive(node->right_child, Visit);
 
     return status;
@@ -242,7 +242,7 @@ Status BinaryTreeInOrderTraverse2(binary_tree_node_t* node, Status (*Visit)(BINA
 
 
 /*!
- * @brief **二叉树后序遍历**(递归)
+ * @brief <h1>二叉树后序遍历(递归)</h1>
  * @param node **二叉树结点**(指针)
  * @param Visit **结点访问函数**
  * @return **执行结果**
@@ -280,8 +280,7 @@ Status BinaryTreePostOrderTraverseRecursive(binary_tree_node_t* node, Status (*V
 /*!
  * @brief <h1>二叉树后序遍历</h1>
  * @note
- * 见 CyberDash团队 数据结构(C++模板实现)
- * https://gitee.com/cyberdash/data-structure-cpp/blob/master/Tree/BinaryTree/src/binary_tree.h
+ * 见 [CyberDash团队 数据结构(C++模板实现)](https://gitee.com/cyberdash/data-structure-cpp/blob/master/Tree/BinaryTree/src/binary_tree.h)
  */
 Status BinaryTreePostOrderTraverse(binary_tree_node_t* binary_tree, Status (*Visit)(BINARY_TREE_NODE_DATA)) {
     // todo: 见note, 有兴趣者参照C++代码自行实现:-)
@@ -306,7 +305,7 @@ Status BinaryTreeLevelOrderTraverse(binary_tree_node_t* binary_tree, Status (*Vi
     SeqQueueEnQueue(&queue, binary_tree);
 
     /// ###2 使用队列进行遍历###
-    /// &emsp; **while** 队列不为空 :\n
+    /// &emsp; **while** 队列不为空 :
     while (SeqQueueLength(queue)) {
         /// - **I**&nbsp;&nbsp; 队头出队\n
         binary_tree_node_t* cur = NULL;
@@ -316,8 +315,8 @@ Status BinaryTreeLevelOrderTraverse(binary_tree_node_t* binary_tree, Status (*Vi
         Visit(cur->data);
 
         /// - **III** 孩子结点入队\n
-        ///  + 如果左孩子不为NULL, 左孩子结点入队\n
-        ///  + 如果右孩子不为NULL, 右孩子结点入队\n
+        ///  + **if** 左孩子不为NULL: 左孩子结点入队\n
+        ///  + **if** 右孩子不为NULL: 右孩子结点入队\n
         if (cur->left_child) {
             SeqQueueEnQueue(&queue, cur->left_child);
         }

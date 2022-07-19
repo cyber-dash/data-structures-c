@@ -50,10 +50,10 @@ void TestSeqQueueDeQueue() {
 void TestLinkQueueEnQueueAndDeQueue() {
     printf("\n");
     printf("------------------------- CyberDash -------------------------\n");
-    printf("                Test link_queue_t EnQueue/DeQueue               \n");
+    printf("                Test linked_queue_t EnQueue/DeQueue               \n");
     printf("                      测试链式队列入队/出队                     \n\n\n");
 
-    link_queue_t link_queue;
+    linked_queue_t link_queue;
     Status status = LinkQueueInit(&link_queue);
 
     QUEUE_ELEM elements[8] = { 3, 1, 4, 1, 5, 9, 2, 6 };

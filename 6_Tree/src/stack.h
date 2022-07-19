@@ -29,13 +29,19 @@ typedef struct {
 } seq_stack_t;
 
 
+// 顺序栈初始化
 Status SeqStackInit(seq_stack_t* seq_stack);
-Status SeqStackDestroy(seq_stack_t* seq_stack);
-Status SeqStackClear(seq_stack_t* seq_stack);
+
+// 顺序栈是否为空
 int SeqStackIsEmpty(seq_stack_t seq_stack);
-int SeqStackLength(seq_stack_t seq_stack);
+
+// 顺序栈获取栈顶元素
 Status SeqStackGetTop(seq_stack_t seq_stack, STACK_ELEM* elem);
+
+// 顺序栈入栈
 Status SeqStackPush(seq_stack_t* seq_stack, binary_tree_node_t* elem);
+
+// 顺序栈出栈
 Status SeqStackPop(seq_stack_t* seq_stack, STACK_ELEM* elem);
 
 

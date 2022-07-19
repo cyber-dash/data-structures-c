@@ -11,6 +11,7 @@
 #ifndef CYBER_DASH_TREE_BINARY_TREE_NODE_H
 #define CYBER_DASH_TREE_BINARY_TREE_NODE_H
 
+/*! @brief <h1>二叉树结点</h1> */
 typedef struct binary_tree_node binary_tree_node_t;
 
 /*!

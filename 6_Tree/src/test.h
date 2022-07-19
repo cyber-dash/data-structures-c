@@ -25,7 +25,7 @@ void TestBinaryTreePostOrderTraverse();
 
 void TestBinaryTreeLevelOrderTraverse();
 
-void TestHuffmanTree();
+void TestHuffmanCoding();
 
 
 #endif // CYBER_DASH_TREE_TEST_H

@@ -1,6 +1,12 @@
-//
-// Created by EDY on 2022/7/15.
-//
+/*!
+ * @file queue.h
+ * @author CyberDash计算机考研, cyberdash@163.com(抖音id:cyberdash_yuan)
+ * @brief 队列头文件
+ * @version 1.0.0
+ * @date 2022-07-15
+ * @copyright Copyright (c) 2021
+ *  CyberDash计算机考研
+ */
 
 #ifndef CYBER_DASH_TREE_QUEUE_H
 #define CYBER_DASH_TREE_QUEUE_H
@@ -9,7 +15,7 @@
 #include "binary_tree_node.h"
 
 
-#define MAX_SIZE    100 //!< 队列最大长度
+#define MAX_SIZE    100                    //!< 队列最大长度
 #define QUEUE_ELEM  binary_tree_node_t*    //!< 队列元素类型(二叉树结点指针)
 
 

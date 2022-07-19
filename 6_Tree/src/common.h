@@ -15,13 +15,11 @@
 /*! @brief 二叉树结点数据类型 */
 typedef char BINARY_TREE_NODE_DATA;
 
-#define TRUE    1
-#define FALSE   0
+#define TRUE    1   //!< 逻辑是
+#define FALSE   0   //!< 逻辑非
 #define MAX_TREE_SIZE 100   //!< 树最大结点数
 
-/*!
- * 函数返回值枚举
- */
+/*! @brief 函数返回值枚举 */
 typedef enum Status {
     OK = 0,             //!< 正确
     NON_ALLOCATED = 1,  //!< 内存分配失败

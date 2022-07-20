@@ -18,28 +18,28 @@
 
 
 // 使用前序遍历字符串(NULL结点使用空格)创建二叉树(递归)
-Status BinaryTreeCreateByPreOrderStringRecursive(binary_tree_node_t** node,
-                                                 char* pre_order_str,
-                                                 int* traverse_index,
-                                                 size_t pre_order_str_len);
+status_t BinaryTreeCreateByPreOrderStringRecursive(binary_tree_node_t** node,
+                                                   char* pre_order_str,
+                                                   int* traverse_index,
+                                                   size_t pre_order_str_len);
 
 // 二叉树前序遍历(递归)
-Status BinaryTreePreOrderTraverseRecursive(binary_tree_node_t* node, Status (*Visit)(BINARY_TREE_NODE_DATA));
+status_t BinaryTreePreOrderTraverseRecursive(binary_tree_node_t* node, status_t (*Visit)(BINARY_TREE_NODE_DATA));
 
 // 二叉树中序遍历
-Status BinaryTreeInOrderTraverse(binary_tree_node_t* node, Status (*Visit)(BINARY_TREE_NODE_DATA));
+status_t BinaryTreeInOrderTraverse(binary_tree_node_t* node, status_t (*Visit)(BINARY_TREE_NODE_DATA));
 
 // 二叉树中序遍历2
-Status BinaryTreeInOrderTraverse2(binary_tree_node_t* node, Status (*Visit)(BINARY_TREE_NODE_DATA));
+status_t BinaryTreeInOrderTraverse2(binary_tree_node_t* node, status_t (*Visit)(BINARY_TREE_NODE_DATA));
 
 // 二叉树后序遍历(递归)
-Status BinaryTreePostOrderTraverseRecursive(binary_tree_node_t* binary_tree, Status (*Visit)(BINARY_TREE_NODE_DATA));
+status_t BinaryTreePostOrderTraverseRecursive(binary_tree_node_t* binary_tree, status_t (*Visit)(BINARY_TREE_NODE_DATA));
 
 // 二叉树后序遍历
-Status BinaryTreePostOrderTraverse(binary_tree_node_t* binary_tree, Status (*Visit)(BINARY_TREE_NODE_DATA));
+status_t BinaryTreePostOrderTraverse(binary_tree_node_t* binary_tree, status_t (*Visit)(BINARY_TREE_NODE_DATA));
 
 
-Status BinaryTreeLevelOrderTraverse(binary_tree_node_t* binary_tree, Status (*Visit)(BINARY_TREE_NODE_DATA));
+status_t BinaryTreeLevelOrderTraverse(binary_tree_node_t* binary_tree, status_t (*Visit)(BINARY_TREE_NODE_DATA));
 
 
 #endif // CYBER_DASH_BINARY_TREE_H

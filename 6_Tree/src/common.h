@@ -20,13 +20,13 @@ typedef char BINARY_TREE_NODE_DATA;
 #define MAX_TREE_SIZE 100   //!< 树最大结点数
 
 /*! @brief 函数返回值枚举 */
-typedef enum Status {
+typedef enum {
     OK = 0,             //!< 正确
     NON_ALLOCATED = 1,  //!< 内存分配失败
     NON_EXISTENT = 2,   //!< 不存在
     OVERFLOW = 3,       //!< 溢出
     ERROR = 4           //!< 其他类型错误
-} Status;
+} status_t;
 
 
 #endif // CYBER_DASH_TREE_TYPE_H

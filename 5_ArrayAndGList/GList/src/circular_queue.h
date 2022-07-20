@@ -1,4 +1,4 @@
-/*!
+﻿/*!
  * @file circular_queue.h
  * @author CyberDash计算机考研, cyberdash@163.com(抖音id:cyberdash_yuan)
  * @brief  循环队列

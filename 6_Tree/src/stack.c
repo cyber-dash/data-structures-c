@@ -18,7 +18,7 @@
  * @return **执行结果**
  * @note
  */
-Status SeqStackInit(seq_stack_t* seq_stack) {
+status_t SeqStackInit(seq_stack_t* seq_stack) {
 
     /// ###1 顺序栈数组分配内存###
     /// &emsp; **if** 如果malloc失败 :\n
@@ -44,7 +44,7 @@ Status SeqStackInit(seq_stack_t* seq_stack) {
  * @return **执行结果**
  * @note
  */
-Status SeqStackGetTop(seq_stack_t seq_stack, STACK_ELEM* elem) {
+status_t SeqStackGetTop(seq_stack_t seq_stack, STACK_ELEM* elem) {
 
     /// ###1 空栈判断###
     /// &emsp; **if** 空栈 : \n
@@ -68,7 +68,7 @@ Status SeqStackGetTop(seq_stack_t seq_stack, STACK_ELEM* elem) {
  * @return **执行结果**
  * @note
  */
-Status SeqStackPush(seq_stack_t* seq_stack, binary_tree_node_t* elem) {
+status_t SeqStackPush(seq_stack_t* seq_stack, binary_tree_node_t* elem) {
     /// ###1 判断是否栈满(以追加存储空间) ###
     /// &emsp; **if** top - elements >= capacity :
     if (seq_stack->top - seq_stack->elements >= seq_stack->capacity) {
@@ -105,7 +105,7 @@ Status SeqStackPush(seq_stack_t* seq_stack, binary_tree_node_t* elem) {
  * @return **执行结果**
  * @note
  */
-Status SeqStackPop(seq_stack_t* seq_stack, STACK_ELEM* elem) {
+status_t SeqStackPop(seq_stack_t* seq_stack, STACK_ELEM* elem) {
     /// ###1 空栈判断###
     /// &emsp; **if** top指向elements数组首地址 :\n
     /// &emsp;&emsp; 返回NON_EXISTENT\n

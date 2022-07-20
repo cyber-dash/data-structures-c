@@ -30,19 +30,19 @@ typedef struct {
 
 
 // 顺序栈初始化
-Status SeqStackInit(seq_stack_t* seq_stack);
+status_t SeqStackInit(seq_stack_t* seq_stack);
 
 // 顺序栈是否为空
 int SeqStackIsEmpty(seq_stack_t seq_stack);
 
 // 顺序栈获取栈顶元素
-Status SeqStackGetTop(seq_stack_t seq_stack, STACK_ELEM* elem);
+status_t SeqStackGetTop(seq_stack_t seq_stack, STACK_ELEM* elem);
 
 // 顺序栈入栈
-Status SeqStackPush(seq_stack_t* seq_stack, binary_tree_node_t* elem);
+status_t SeqStackPush(seq_stack_t* seq_stack, binary_tree_node_t* elem);
 
 // 顺序栈出栈
-Status SeqStackPop(seq_stack_t* seq_stack, STACK_ELEM* elem);
+status_t SeqStackPop(seq_stack_t* seq_stack, STACK_ELEM* elem);
 
 
 #endif // CYBER_DASH_TREE_STACK_H

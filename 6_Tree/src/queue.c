@@ -9,92 +9,95 @@
  */
 
 
+#include <stdlib.h>
+#include <string.h>
 #include "queue.h"
-#include "stdlib.h"
 
 
 /*!
- * @brief <h1>顺序队列初始化</h1>
- * @param seq_queue **顺序队列**(指针)
+ * @brief <h1>循环队列初始化</h1>
+ * @param circular_queue **循环队列**(指针)
  * @return **执行结果**
  * @note
  */
-Status SeqQueueInit(seq_queue_t* seq_queue) {
-    /// ###1 顺序队列数组分配内存###
+status_t CircularQueueInit(circular_queue_t* circular_queue) {
+    /// ###1 循环队列数组分配内存###
     /// &emsp; **if** 如果malloc失败 :\n
     /// &emsp;&emsp; 返回NON_ALLOCATED
-    seq_queue->elements = (QUEUE_ELEM*)malloc(MAX_SIZE * sizeof(QUEUE_ELEM));
-    if (!seq_queue->elements) {
+    circular_queue->elements = (QUEUE_ELEM*)malloc(MAX_SIZE * sizeof(QUEUE_ELEM));
+    if (!circular_queue->elements) {
         return NON_ALLOCATED;
     }
 
+    memset(circular_queue->elements, 0, MAX_SIZE * sizeof(QUEUE_ELEM));
+
     /// ###2 队头队尾初始化###
     /// &emsp; front和rear都为0\n
-    seq_queue->front = 0;
-    seq_queue->rear = 0;
+    circular_queue->front = 0;
+    circular_queue->rear = 0;
 
     return OK;
 }
 
 
 /*!
- * @brief <h1>顺序队列长度</h1>
- * @param seq_queue **顺序队列**
+ * @brief <h1>循环队列长度</h1>
+ * @param circular_queue **循环队列**
  * @return **长度**
  * @note
  */
-int SeqQueueLength(seq_queue_t seq_queue) {
+int CircularQueueGetLength(circular_queue_t circular_queue) {
     /// &emsp; 长度等于(rear - front + MAX_SIZE) % MAX_SIZE\n
-    return (seq_queue.rear - seq_queue.front + MAX_SIZE) % MAX_SIZE;
+    return (circular_queue.rear - circular_queue.front + MAX_SIZE) % MAX_SIZE;
 }
 
 
 /*!
- * @brief <h1>顺序队列入队</h1>
- * @param seq_queue **顺序队列**(指针)
+ * @brief <h1>循环队列入队</h1>
+ * @param circular_queue **循环队列**(指针)
  * @param elem **入队元素**
  * @return **执行结果**
  * @note
  */
-Status SeqQueueEnQueue(seq_queue_t* seq_queue, QUEUE_ELEM elem) {
+status_t CircularQueueEnQueue(circular_queue_t* circular_queue, QUEUE_ELEM elem) {
 
     /// ###1 判断队列是否满###
     /// &emsp; **if** 队列满 :\n
     /// &emsp;&emsp; 返回OVERFLOW\n
-    if ((seq_queue->rear + 1) % MAX_SIZE == seq_queue->front) {
+    if ((circular_queue->rear + 1) % MAX_SIZE == circular_queue->front) {
         return OVERFLOW;
     }
 
     /// ###2 元素elem插入到队尾###
     /// - **I**&nbsp;&nbsp; elements数组rear索引位置赋值
     /// - **II**&nbsp; rear调整数值
-    seq_queue->elements[seq_queue->rear] = elem;
-    seq_queue->rear = (seq_queue->rear + 1) % MAX_SIZE;
+    circular_queue->elements[circular_queue->rear] = elem;
+    circular_queue->rear = (circular_queue->rear + 1) % MAX_SIZE;
 
     return OK;
 }
 
 
 /*!
- * <h1>顺序队列出队</h1>
- * @param seq_queue **顺序队列**(指针)
+ * <h1>循环队列出队</h1>
+ * @param circular_queue **循环队列**(指针)
  * @param elem **出队元素保存变量**(指针)
  * @return **执行结果**
  * @note
  */
-Status SeqQueueDeQueue(seq_queue_t* seq_queue, QUEUE_ELEM* elem) {
+status_t CircularQueueDeQueue(circular_queue_t* circular_queue, QUEUE_ELEM* elem) {
     /// ###1 空队判断###
     /// &emsp; **if** front等于rear : \n
     /// &emsp;&emsp; 空队, 返回NON_EXISTENT\n
-    if (seq_queue->front == seq_queue->rear) {
+    if (circular_queue->front == circular_queue->rear) {
         return NON_EXISTENT;
     }
 
     /// ###2 出队###
     /// - **I**&nbsp;&nbsp; elements数组front索引位置元素赋给*elem
     /// - **II**&nbsp; front调整数值
-    *elem = seq_queue->elements[seq_queue->front];
-    seq_queue->front = (seq_queue->front + 1) % MAX_SIZE;
+    *elem = circular_queue->elements[circular_queue->front];
+    circular_queue->front = (circular_queue->front + 1) % MAX_SIZE;
 
     return OK;
 }

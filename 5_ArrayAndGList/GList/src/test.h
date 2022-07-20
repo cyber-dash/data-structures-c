@@ -12,7 +12,7 @@
 #define CYBER_DASH_GLIST_TEST_H
 
 
-#include "seq_queue.h"
+#include "circular_queue.h"
 #include "gen_list.h"
 
 

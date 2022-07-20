@@ -74,7 +74,7 @@ void TestGListCopy() {
 
     // 调用CopyGenList将gen_list复制到new_gen_list
     gen_list_t new_gen_list = NULL;
-    CopyGenList(&new_gen_list, gen_list);
+    GenListCopyRecursive(&new_gen_list, gen_list);
 
     char* new_gen_list_str = (char*)malloc(100 * sizeof(char));
     GenListToString(new_gen_list, new_gen_list_str, 100);

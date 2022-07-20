@@ -1,4 +1,4 @@
-/*!
+﻿/*!
  * @file queue.c
  * @author CyberDash计算机考研, cyberdash@163.com(抖音id:cyberdash_yuan)
  * @brief 队列源文件
@@ -7,6 +7,7 @@
  * @copyright Copyright (c) 2021
  *  CyberDash计算机考研
  */
+
 
 #include "queue.h"
 #include "stdlib.h"

@@ -1,6 +1,12 @@
-//
-// Created by cyberdash@163.com on 2022/5/14.
-//
+/*!
+ * @file common.h
+ * @author CyberDash计算机考研, cyberdash@163.com(抖音id:cyberdash_yuan)
+ * @brief  广义表common头文件
+ * @version 1.0.0
+ * @date 2022-07-10
+ * @copyright Copyright (c) 2021
+ *  CyberDash计算机考研
+ */
 
 #ifndef CYBER_DASH_GEN_LIST_COMMON_H
 #define CYBER_DASH_GEN_LIST_COMMON_H
@@ -16,5 +22,6 @@ typedef enum {
     OVERFLOW,       //!< 溢出
     ERROR,          //!< 其他错误
 } status_t;
+
 
 #endif // CYBER_DASH_GEN_LIST_COMMON_H

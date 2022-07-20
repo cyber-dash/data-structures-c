@@ -34,23 +34,29 @@ typedef union {
 } gen_list_node_item_t;
 
 /*! @brief 广义表 */
-struct gen_list_node {
+typedef struct gen_list_node {
     ELEM_TAG    tag;              //!< 节点类型
     gen_list_node_item_t item;    //!< 结点数据项
     gen_list_node_t*    next;     //!< 下一个结点(指针)
-};
+} gen_list_node_t;
 
 
+// 广义表使用队列建表(递归)
 void GenListCreateByQueueRecursive(circular_queue_t* char_queue, gen_list_node_t** node);
 
+// 广义表使用字符串建表
 void GenListCreateByStr(gen_list_node_t** gen_list, char* str, int str_len);
 
+// 广义表转换成字符串
 status_t GenListToString(gen_list_node_t* gen_list, char* gen_list_str, int str_len_limit);
 
+// 广义表转换成字符队列
 void GenListToCharQueueRecursive(gen_list_t gen_list, circular_queue_t* char_queue);
 
+// 广义表深度(递归)
 int GenListDepthRecursive(gen_list_t gen_list_node);
 
+// 广义表复制(递归)
 status_t GenListCopyRecursive(gen_list_t* target_list_node, gen_list_t src_list_node);
 
 

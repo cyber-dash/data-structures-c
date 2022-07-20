@@ -218,7 +218,7 @@ void GenListToCharQueueRecursive(gen_list_t gen_list, circular_queue_t* char_que
 /*!
  * <h1>广义表深度(递归)</h1>
  * @param gen_list_node **广义表结点**
- * @return 深度值
+ * @return **深度值**
  * @note
  */
 int GenListDepthRecursive(gen_list_node_t* gen_list_node) {
@@ -229,17 +229,17 @@ int GenListDepthRecursive(gen_list_node_t* gen_list_node) {
         return 1;
     }
 
-    // ###2 原子结点处理###
+    /// ###2 原子结点处理###
     /// &emsp; 返回0\n
     if (gen_list_node->tag == ATOM) {
         return 0;
     }
 
     /// ###3 非空表处理###
-    /// **while** 表内有未遍历结点 :\n
-    /// &emsp; 对当前结点, 递归求该结点对应的子表深度\n
-    /// &emsp; 更新最大子表深度\n
     int max_sub_gen_list_depth = 0; // 子表最大深度, 初始化为0
+    /// &emsp; **while** 表内有未遍历结点 :\n
+    /// &emsp;&emsp; 对当前结点, 递归求该结点对应的子表深度\n
+    /// &emsp;&emsp; 更新最大子表深度\n
     for (gen_list_t cur_gen_list = gen_list_node->item.head; cur_gen_list != NULL; cur_gen_list = cur_gen_list->next) {
         int cur_sub_gen_list_depth = GenListDepthRecursive(cur_gen_list);
         if (max_sub_gen_list_depth < cur_sub_gen_list_depth) {

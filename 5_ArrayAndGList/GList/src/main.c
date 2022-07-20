@@ -13,7 +13,7 @@
 
 int main() {
 
-    TestGListDepth();
+    TestGenListDepth();
 
     TestGListCopy();
 

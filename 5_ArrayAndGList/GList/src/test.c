@@ -1,7 +1,7 @@
 ﻿/*!
  * @file test.c
  * @author CyberDash计算机考研, cyberdash@163.com(抖音id:cyberdash_yuan)
- * @brief  广义表 测试用例
+ * @brief  广义表测试源代码
  * @version 1.0.0
  * @date 2022-07-10
  * @copyright Copyright (c) 2021
@@ -15,42 +15,28 @@
 #include <string.h>
 
 
-void TestInitGList() {
-    printf("\n");
-    printf("------------------------- CyberDash -------------------------\n");
-    printf("                   Test GenListCreateByStr                   \n");
-    printf("                      测试构造和打印广义表                       \n\n\n");
-
-    gen_list_t gList = NULL;
-
-    char input_gen_list_str[100] = "(A,(),(B,(C)))";
-    GenListCreateByStr(&gList, input_gen_list_str, strlen(input_gen_list_str));
-
-    char* gen_list_str = (char*)malloc(100 * sizeof(char));
-    GenListToString(gList, gen_list_str, 100);
-
-    printf("打印广义表: %s\n", gen_list_str);
-
-    printf("-------------------- 抖音: cyberdash_yuan --------------------\n");
-}
-
-
-void TestGListDepth() {
+/*!
+ * @brief 广义表深度测试
+ * @note
+ */
+void TestGenListDepth() {
     printf("\n");
     printf("------------------------- CyberDash -------------------------\n");
     printf("                      Test GenListDepth                      \n");
     printf("                        测试广义表的深度                        \n\n\n");
 
-    // 构造广义表
-    gen_list_t gList = NULL;
+    ///1 构造广义表###
+    ///&emsp; 使用字符串"(A,(),(B,(C)))", 调用GenLIstCreateByStr构造广义表
+    gen_list_t gen_list = NULL;
 
     char input_gen_list_str[100] = "(A,(),(B,(C)))";
-    GenListCreateByStr(&gList, input_gen_list_str, strlen(input_gen_list_str));
+    GenListCreateByStr(&gen_list, input_gen_list_str, strlen(input_gen_list_str));
 
     char* gen_list_str = (char*)malloc(100 * sizeof(char));
-    GenListToString(gList, gen_list_str, 100);
+    GenListToString(gen_list, gen_list_str, 100);
 
-    int depth = GenListDepthRecursive(gList);
+    ///2 求广义表的深度###
+    int depth = GenListDepthRecursive(gen_list);
 
     printf("广义表%s的深度: %d\n", gen_list_str, depth);
 
@@ -58,12 +44,17 @@ void TestGListDepth() {
 }
 
 
+/*!
+ * @brief 广义表复制测试
+ */
 void TestGListCopy() {
     printf("\n");
     printf("------------------------- CyberDash -------------------------\n");
     printf("                       Test GenListCopy                      \n");
     printf("                        测试广义表的复制                        \n\n\n");
 
+    ///###1 构造广义表###
+    ///&emsp; 使用字符串"(A,(),(B,(C)))", 调用GenLIstCreateByStr构造广义表
     gen_list_t gen_list = NULL;
     char input_gen_list_str[100] = "(A,(),(B,(C)))";
     GenListCreateByStr(&gen_list, input_gen_list_str, strlen(input_gen_list_str));
@@ -72,7 +63,8 @@ void TestGListCopy() {
     GenListToString(gen_list, gen_list_str, 100);
     printf("广义表: %s\n\n", gen_list_str);
 
-    // 调用CopyGenList将gen_list复制到new_gen_list
+    /// ###2 复制广义表###
+    /// &emsp; 调用CopyGenList将gen_list复制到new_gen_list
     gen_list_t new_gen_list = NULL;
     GenListCopyRecursive(&new_gen_list, gen_list);
 

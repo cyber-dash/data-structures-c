@@ -8,21 +8,17 @@
  *  CyberDash计算机考研
  */
 
-#ifndef CYBER_DASH_GLIST_TEST_H
-#define CYBER_DASH_GLIST_TEST_H
+#ifndef CYBER_DASH_GEN_LIST_TEST_H
+#define CYBER_DASH_GEN_LIST_TEST_H
 
 
 #include "circular_queue.h"
 #include "gen_list.h"
 
 
-void TestInitGList();
-
-void TestGListToString();
-
-void TestGListDepth();
+void TestGenListDepth();
 
 void TestGListCopy();
 
 
-#endif // CYBER_DASH_GLIST_TEST_H
+#endif // CYBER_DASH_GEN_LIST_TEST_H

@@ -57,17 +57,14 @@ Status SeqQueueDeQueue(seq_queue_t* seq_queue, QUEUE_ELEM *e) {
 }
 
 
-/*
-Status GetTop(seq_queue_t *Q, QUEUE_ELEM *e) {
-    // 若队列不空, 则删除Q的队头元素, 用e返回其值, 并返回OK;
-    // 否则返回ERROR
-    if (Q->front == Q->rear) return ERROR;
-    *e = Q->elements[Q->front];
-    return OK;
-}
+/*!
+ * <h1>顺序表转换成字符串</h1>
+ * @param seq_queue **顺序表**(指针)
+ * @param str **字符串**
+ * @param str_len_limit **字符串长度限制**
+ * @return 执行结果
+ * @note
  */
-
-
 Status SeqQueueToString(seq_queue_t* seq_queue, char* str, int str_len_limit) {
 
     if (seq_queue->front == seq_queue->rear) {
@@ -93,22 +90,3 @@ Status SeqQueueToString(seq_queue_t* seq_queue, char* str, int str_len_limit) {
 
     return OK;
 }
-
-
-/*!
- * @brief 打印顺序队列
- * @param Q
- */
- /*
-void SeqQueuePrint(seq_queue_t *Q) {
-    printf("从队头向队尾打印元素(队头 ... 队尾):\n");
-
-    int cur = Q->front;
-    while (cur < Q->rear) {
-        printf("%d ", Q->elements[cur]);
-        cur++;
-    }
-
-    printf("\n");
-}
-  */

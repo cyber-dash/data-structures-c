@@ -162,7 +162,7 @@ Status GenListToString(gen_list_t gen_list, char* gen_list_str, int str_len_limi
     /// ###2 调用GenListToStringRecursive, 生成字符串###
     GenListToCharQueueRecursive(gen_list, &char_queue);
 
-    /// ###3 将字符队列转换成
+    /// ###3 将字符队列转换成字符串
     SeqQueueToString(&char_queue, gen_list_str, str_len_limit);
 
     return OK;
@@ -209,21 +209,36 @@ void GenListToCharQueueRecursive(gen_list_t gen_list, seq_queue_t* char_queue) {
         cur = cur->next;
     }
 
-    /// ###3 子表遍历结束处理###
+    /// ###4 子表遍历结束处理###
     /// &emsp; ')'入队\n
     SeqQueueEnQueue(char_queue, ')');
 }
 
 
+/*!
+ * <h1>广义表深度(递归)</h1>
+ * @param gen_list **广义表**
+ * @return 深度值
+ * @note
+ */
 int GenListDepthRecursive(gen_list_t gen_list) {
+
+    /// ###1 空表处理###
+    /// &emsp; 返回1\n
     if (!gen_list) {
         return 1;
     }
 
+    // ###2 原子结点处理###
+    /// &emsp; 返回0\n
     if (gen_list->tag == ATOM) {
         return 0;
     }
 
+    /// ###3 非空表处理###
+    /// **while** 表内有未遍历结点 :\n
+    /// &emsp; 对当前结点, 递归求该结点对应的子表深度\n
+    /// &emsp; 更新最大子表深度\n
     int max_sub_gen_list_depth = 0; // 子表最大深度, 初始化为0
     for (gen_list_t cur_gen_list = gen_list->item.head; cur_gen_list != NULL; cur_gen_list = cur_gen_list->next) {
         int cur_sub_gen_list_depth = GenListDepthRecursive(cur_gen_list);
@@ -232,6 +247,8 @@ int GenListDepthRecursive(gen_list_t gen_list) {
         }
     }
 
+    /// ###4 深度更新###
+    /// &emsp; 子表最大深度 + 1\n
     max_sub_gen_list_depth++;
 
     return max_sub_gen_list_depth;

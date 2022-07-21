@@ -20,32 +20,32 @@ typedef enum Status {
 } Status;
 
 typedef struct {
-    char* str;
-    unsigned int length;
-} cyber_dash_string_t;
+    char* buffer;
+    int length;
+} string_t;
 
-Status StringAssign(cyber_dash_string_t* cyber_dash_string, char* src_str, unsigned int str_len);
+Status StringAssign(string_t* str, const char* src_chars, int str_len);
 
-int StringLength(cyber_dash_string_t* cyber_dash_string);
+int StringLength(string_t* str);
 
-int StringCompare(cyber_dash_string_t* string1, cyber_dash_string_t* string2);
+int StringCompare(string_t* string1, string_t* string2);
 
-Status StringClear(cyber_dash_string_t* cyber_dash_string);
+Status StringClear(string_t* str);
 
-Status StringConcat(cyber_dash_string_t* target_string, cyber_dash_string_t* src_string1, cyber_dash_string_t* src_string2);
+Status StringConcat(string_t* target_string, string_t* src_string1, string_t* src_string2);
 
 // todo:
-Status StringSubString(cyber_dash_string_t* sub_string, cyber_dash_string_t *src_string, int pos, int len);
+Status StringSubString(string_t* sub_string, string_t *src_string, int pos, int len);
 
-int BruteForce(cyber_dash_string_t *S, cyber_dash_string_t *T, int pos);
+int BruteForce(string_t *S, string_t *T, int pos);
 
-int KMP(cyber_dash_string_t *S, cyber_dash_string_t *T, int pos);
+int KMP(string_t *S, string_t *T, int pos);
 
-Status StringCopy(cyber_dash_string_t *target_string, cyber_dash_string_t *src_string);
+Status StringCopy(string_t *target_string, string_t *src_string);
 
-int StringEmpty(cyber_dash_string_t *cyber_dash_string);
+int StringEmpty(string_t *str);
 
-Status Insert(cyber_dash_string_t *S, int pos, cyber_dash_string_t *T);
+Status Insert(string_t *S, int pos, string_t *T);
 
 
 #endif //CYBER_DASH_STRING_H

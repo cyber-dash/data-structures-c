@@ -17,12 +17,12 @@
 #include "test.h"
 
 
-static void inline PrintStr(cyber_dash_string_t* cyber_dash_string) {
+static void inline PrintStr(string_t* cyber_dash_string) {
 	if (cyber_dash_string == NULL || cyber_dash_string->length <= 0) {
 		return;
 	}
 
-	printf("%.*s\n", cyber_dash_string->length, cyber_dash_string->str);
+	printf("%.*s\n", cyber_dash_string->length, cyber_dash_string->buffer);
 }
 
 
@@ -32,14 +32,14 @@ void test_StringCopy() {
     printf("|                      Test StringCopy                      |\n");
     printf("|                        测试字符串复制                       |\n");
 
-	cyber_dash_string_t T = { .str = NULL, .length = 0};
-    cyber_dash_string_t S = { .str = NULL, .length = 0};
+	string_t T = { .buffer = NULL, .length = 0};
+    string_t S = { .buffer = NULL, .length = 0};
 
-    // char str[50] = "hello cyberdash!";
+    // char buffer[50] = "hello cyberdash!";
     char str[50] = "你好";
     StringAssign(&S, str, strlen(str));
 
-    T.str = malloc(128);
+    T.buffer = malloc(128);
     T.length = 128;
 
     StringCopy(&T, &S);
@@ -56,10 +56,10 @@ void test_StringCompare() {
     printf("|                    Test StringCompare                      |\n");
     printf("|                        测试字符串比较                       |\n");
 
-	cyber_dash_string_t S1 = { .str = NULL, .length = 0};
-    cyber_dash_string_t S2 = { .str = NULL, .length = 0};
-    cyber_dash_string_t S3 = { .str = NULL, .length = 0};
-    cyber_dash_string_t S4 = { .str = NULL, .length = 0};
+	string_t S1 = { .buffer = NULL, .length = 0};
+    string_t S2 = { .buffer = NULL, .length = 0};
+    string_t S3 = { .buffer = NULL, .length = 0};
+    string_t S4 = { .buffer = NULL, .length = 0};
 
     char str1[50] = "hello cyberdash!";
     char str2[50] = "hello cyberdash!";
@@ -81,11 +81,11 @@ void test_StringCompare() {
 
 
 void test_StringConCat() {
-	cyber_dash_string_t S1, S2, T;
+	string_t S1, S2, T;
 
-    memset(&S1, 0, sizeof(cyber_dash_string_t));
-    memset(&S2, 0, sizeof(cyber_dash_string_t));
-    memset(&T, 0, sizeof(cyber_dash_string_t));
+    memset(&S1, 0, sizeof(string_t));
+    memset(&S2, 0, sizeof(string_t));
+    memset(&T, 0, sizeof(string_t));
 
     char str1[50] = "hello cyberdash,";
     char str2[50] = "hello Mr. Yuan.";
@@ -99,10 +99,10 @@ void test_StringConCat() {
 
 
 void test_SubString() {
-	cyber_dash_string_t Sub, S;
+	string_t Sub, S;
 
-    memset(&S, 0, sizeof(cyber_dash_string_t));
-    memset(&Sub, 0, sizeof(cyber_dash_string_t));
+    memset(&S, 0, sizeof(string_t));
+    memset(&Sub, 0, sizeof(string_t));
 
     char str[50] = "hello cyberdash,";
     StringAssign(&S, str, strlen(str));
@@ -114,10 +114,10 @@ void test_SubString() {
 
 
 void test_Insert() {
-	cyber_dash_string_t S, T;
+	string_t S, T;
 
-    memset(&S, 0, sizeof(cyber_dash_string_t));
-    memset(&T, 0, sizeof(cyber_dash_string_t));
+    memset(&S, 0, sizeof(string_t));
+    memset(&T, 0, sizeof(string_t));
 
     char str1[50] = "hello dash";
     char str2[50] = "cyber";
@@ -131,10 +131,10 @@ void test_Insert() {
 
 
 void test_Index() {
-	cyber_dash_string_t S, T;
+	string_t S, T;
 
-    memset(&S, 0, sizeof(cyber_dash_string_t));
-    memset(&T, 0, sizeof(cyber_dash_string_t));
+    memset(&S, 0, sizeof(string_t));
+    memset(&T, 0, sizeof(string_t));
 
     char str1[50] = "hello cyberdash";
     char str2[50] = "cyberdash";

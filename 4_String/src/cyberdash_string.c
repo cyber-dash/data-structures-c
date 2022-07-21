@@ -11,35 +11,35 @@
 #include "cyberdash_string.h"
 
 
-Status StringAssign(cyber_dash_string_t* cyber_dash_string, char* src_str, unsigned int str_len) {
+Status StringAssign(string_t* str, const char* src_chars, int str_len) {
 
-	if (cyber_dash_string->str) {
-		free(cyber_dash_string->str);
+	if (str->buffer) {
+		free(str->buffer);
 	}
 
 	if (str_len == 0) {
-        cyber_dash_string->str = NULL;
-        cyber_dash_string->length = 0;
+        str->buffer = NULL;
+        str->length = 0;
         return OK;
 	}
 
-    if (!(cyber_dash_string->str = (char*)malloc(str_len))) {
+    if (!(str->buffer = (char*)malloc(str_len))) {
         return NON_ALLOCATED;
     }
 
     for (int i = 0; i < str_len; i++) {
-        cyber_dash_string->str[i] = src_str[i];
+        str->buffer[i] = src_chars[i];
     }
 
-    cyber_dash_string->length = str_len;
+    str->length = str_len;
 
 	return OK;
 }
 
 
-Status StringCopy(cyber_dash_string_t* target_string, cyber_dash_string_t* src_string) {
+Status StringCopy(string_t* target_string, string_t* src_string) {
 	for (int i = 0; i < StringLength(target_string) && i < StringLength(src_string); i++) {
-        target_string->str[i] = src_string->str[i];
+        target_string->buffer[i] = src_string->buffer[i];
 	}
 
     target_string->length = src_string->length;
@@ -48,15 +48,15 @@ Status StringCopy(cyber_dash_string_t* target_string, cyber_dash_string_t* src_s
 }
 
 
-int StringEmpty(cyber_dash_string_t* cyber_dash_string) {
-	return cyber_dash_string->length == 0;
+int StringEmpty(string_t* str) {
+	return str->length == 0;
 }
 
 
-int StringCompare(cyber_dash_string_t* string1, cyber_dash_string_t* string2) {
+int StringCompare(string_t* string1, string_t* string2) {
 	for (int i = 0; i < string1->length && i < string2->length; i++) {
-		if (string1->str[i] != string2->str[i]) {
-			return string1->str[i] - string2->str[i];
+		if (string1->buffer[i] != string2->buffer[i]) {
+			return string1->buffer[i] - string2->buffer[i];
 		}
 	}
 
@@ -64,41 +64,41 @@ int StringCompare(cyber_dash_string_t* string1, cyber_dash_string_t* string2) {
 }
 
 
-int StringLength(cyber_dash_string_t* cyber_dash_string) {
-	return cyber_dash_string->length;
+int StringLength(string_t* str) {
+	return str->length;
 }
 
 
-Status StringClear(cyber_dash_string_t* cyber_dash_string) {
-	if (cyber_dash_string->str) {
-		free(cyber_dash_string->str);
-        cyber_dash_string->str = NULL;
+Status StringClear(string_t* str) {
+	if (str->buffer) {
+		free(str->buffer);
+        str->buffer = NULL;
 	}
 
-    cyber_dash_string->length = 0;
+    str->length = 0;
 
 	return OK;
 }
 
 
-Status StringConcat(cyber_dash_string_t* target_string,
-                    cyber_dash_string_t* src_string1,
-                    cyber_dash_string_t* src_string2)
+Status StringConcat(string_t* target_string,
+                    string_t* src_string1,
+                    string_t* src_string2)
 {
-	if (target_string->str) {
-		free(target_string->str);
+	if (target_string->buffer) {
+		free(target_string->buffer);
 	}
 
-	if (!(target_string->str = (char *) malloc(src_string1->length + src_string2->length))) {
+	if (!(target_string->buffer = (char *) malloc(src_string1->length + src_string2->length))) {
 		return OVERFLOW;
 	}
 
 	for (int i = 0; i < src_string1->length; i++) {
-        target_string->str[i] = src_string1->str[i];
+        target_string->buffer[i] = src_string1->buffer[i];
 	}
 
 	for (int i = 0; i < src_string2->length; i++) {
-        target_string->str[src_string1->length + i] = src_string2->str[i];
+        target_string->buffer[src_string1->length + i] = src_string2->buffer[i];
 	}
 
     target_string->length = src_string1->length + src_string2->length;
@@ -108,28 +108,28 @@ Status StringConcat(cyber_dash_string_t* target_string,
 
 
 // todo:
-Status StringSubString(cyber_dash_string_t* sub_string, cyber_dash_string_t* src_string, int pos, int len) {
+Status StringSubString(string_t* sub_string, string_t* src_string, int pos, int len) {
 	int i;
 
 	if (pos < 1 || pos >= src_string->length || len < 0 || len > src_string->length - pos + 1) {
 		return ERROR;
 	}
 
-	if (sub_string->str) {
-		free(sub_string->str);
+	if (sub_string->buffer) {
+		free(sub_string->buffer);
 	}
 
 	if (len == 0) {
-        sub_string->str = NULL;
+        sub_string->buffer = NULL;
         sub_string->length = 0;
 	} else {
-        sub_string->str = (char *) malloc(len);
-		if (sub_string->str == NULL) {
+        sub_string->buffer = (char *) malloc(len);
+		if (sub_string->buffer == NULL) {
 			return OVERFLOW;
 		}
 
 		for (i = 0; i <= len; i++) {
-            sub_string->str[i] = src_string->str[pos + i - 1];
+            sub_string->buffer[i] = src_string->buffer[pos + i - 1];
 		}
 
         sub_string->length = len;
@@ -138,7 +138,7 @@ Status StringSubString(cyber_dash_string_t* sub_string, cyber_dash_string_t* src
 	return OK;
 }
 
-Status Insert(cyber_dash_string_t *S, int pos, cyber_dash_string_t *T)
+Status Insert(string_t *S, int pos, string_t *T)
 {
 	int i;
 
@@ -147,17 +147,17 @@ Status Insert(cyber_dash_string_t *S, int pos, cyber_dash_string_t *T)
     }
 
     if (T->length) {
-	    S->str = (char *) realloc(S->str, S->length + T->length);
-	    if (S->str == NULL) {
+	    S->buffer = (char *) realloc(S->buffer, S->length + T->length);
+	    if (S->buffer == NULL) {
 		    return OVERFLOW;
 	    }
 
 	    for (i = S->length - 1; i >= pos - 1; --i) {
-		    S->str[i + T->length] = S->str[i];
+		    S->buffer[i + T->length] = S->buffer[i];
 	    }
 
 	    for (i = 0; i < T->length; i++) {
-		    S->str[pos + i - 1] = T->str[i];
+		    S->buffer[pos + i - 1] = T->buffer[i];
 	    }
 
 	    S->length += T->length;
@@ -166,7 +166,7 @@ Status Insert(cyber_dash_string_t *S, int pos, cyber_dash_string_t *T)
     return OK;
 }
 
-int BruteForce(cyber_dash_string_t *S, cyber_dash_string_t *T, int pos)
+int BruteForce(string_t *S, string_t *T, int pos)
 {
     int i, j;
 
@@ -174,7 +174,7 @@ int BruteForce(cyber_dash_string_t *S, cyber_dash_string_t *T, int pos)
     j = 0;
 
     while (i < StringLength(S) && j <= StringLength(T)) {
-	    if (S->str[i] == T->str[j]) {
+	    if (S->buffer[i] == T->buffer[j]) {
 		    i++; j++;
 	    } else {
 		    i = i - j + 1;
@@ -189,7 +189,7 @@ int BruteForce(cyber_dash_string_t *S, cyber_dash_string_t *T, int pos)
     return 0;
 }
 
-static void get_next(cyber_dash_string_t *T, int next[])
+static void get_next(string_t *T, int next[])
 {
 	int i = 1;
 	int j = 0;
@@ -197,10 +197,10 @@ static void get_next(cyber_dash_string_t *T, int next[])
 	next[1] = 0;
 
 	while (i < StringLength(T)) {
-		if (j == 0 || T->str[i] == T->str[j]) {
+		if (j == 0 || T->buffer[i] == T->buffer[j]) {
 			i++;
             j++;
-			if (T->str[i] != T->str[j]) {
+			if (T->buffer[i] != T->buffer[j]) {
 				next[i] = j;
 			} else {
 				next[i] = next[j];
@@ -212,7 +212,7 @@ static void get_next(cyber_dash_string_t *T, int next[])
 }
 
 
-int KMP(cyber_dash_string_t *S, cyber_dash_string_t *T, int pos)
+int KMP(string_t *S, string_t *T, int pos)
 {
 	int i = pos, j = 0;
 	int* next = malloc(StringLength(T));
@@ -220,7 +220,7 @@ int KMP(cyber_dash_string_t *S, cyber_dash_string_t *T, int pos)
 	get_next(T, next);
 
 	while (i < StringLength(S) && j <= StringLength(T)) {
-		if (j == 0 || S->str[i] == T->str[j]) {
+		if (j == 0 || S->buffer[i] == T->buffer[j]) {
 			i++;
 			j++;
 		} else {

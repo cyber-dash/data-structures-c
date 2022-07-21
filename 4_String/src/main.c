@@ -9,13 +9,13 @@ int main()
 {
 	test_StringCopy();
 
-	test_StringCompare();
+    TestStringCompare();
 
 	test_StringConCat();
 
 	test_SubString();
 
-	test_Insert();
+    TestStringInsert();
 
-	test_Index();
+    TestStringSearch();
 }

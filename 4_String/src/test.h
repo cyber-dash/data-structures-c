@@ -14,15 +14,15 @@
 
 void test_StringCopy();
 
-void test_StringCompare();
+void TestStringCompare();
 
 void test_StringConCat();
 
 void test_SubString();
 
-void test_Insert();
+void TestStringInsert();
 
-void test_Index();
+void TestStringSearch();
 
 
 #endif //CYBER_DASH_STRING_TEST_H

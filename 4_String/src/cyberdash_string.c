@@ -7,28 +7,44 @@
  * @copyright Copyright (c) 2021
  *  CyberDash计算机考研
  */
+
 #include <malloc.h>
 #include "cyberdash_string.h"
 
 
-Status StringAssign(string_t* str, const char* src_chars, int str_len) {
+/*!
+ * <h1>字符串赋值</h1>
+ * @param str **字符串**
+ * @param chars **char数组**
+ * @param str_len **字符串长度**
+ * @return 执行结果
+ * @note
+ */
+status_t StringAssign(string_t* str, const char* chars, int str_len) {
 
+    /// ### 1 释放str->buffer###
 	if (str->buffer) {
 		free(str->buffer);
 	}
 
+    /// ### 2 处理str_len等于0###
+    /// &emsp; **if** str_len为0 :\n
+    /// &emsp;&emsp; str->buffer设置为NULL\n
+    /// &emsp;&emsp; str->length设置为0\n
+    /// &emsp;&emsp; 返回OK\n
 	if (str_len == 0) {
         str->buffer = NULL;
         str->length = 0;
         return OK;
 	}
 
+    /// ### 3 str->buffer分配内存###
     if (!(str->buffer = (char*)malloc(str_len))) {
         return NON_ALLOCATED;
     }
 
     for (int i = 0; i < str_len; i++) {
-        str->buffer[i] = src_chars[i];
+        str->buffer[i] = chars[i];
     }
 
     str->length = str_len;
@@ -37,12 +53,18 @@ Status StringAssign(string_t* str, const char* src_chars, int str_len) {
 }
 
 
-Status StringCopy(string_t* target_string, string_t* src_string) {
-	for (int i = 0; i < StringLength(target_string) && i < StringLength(src_string); i++) {
-        target_string->buffer[i] = src_string->buffer[i];
+/*!
+ * 字符串复制
+ * @param dest_str
+ * @param src_str
+ * @return
+ */
+status_t StringCopy(string_t* dest_str, string_t* src_str) {
+	for (int i = 0; i < StringLength(dest_str) && i < StringLength(src_str); i++) {
+        dest_str->buffer[i] = src_str->buffer[i];
 	}
 
-    target_string->length = src_string->length;
+    dest_str->length = src_str->length;
 
 	return OK;
 }
@@ -69,7 +91,7 @@ int StringLength(string_t* str) {
 }
 
 
-Status StringClear(string_t* str) {
+status_t StringClear(string_t* str) {
 	if (str->buffer) {
 		free(str->buffer);
         str->buffer = NULL;
@@ -81,9 +103,9 @@ Status StringClear(string_t* str) {
 }
 
 
-Status StringConcat(string_t* target_string,
-                    string_t* src_string1,
-                    string_t* src_string2)
+status_t StringConcat(string_t* target_string,
+                      string_t* src_string1,
+                      string_t* src_string2)
 {
 	if (target_string->buffer) {
 		free(target_string->buffer);
@@ -108,7 +130,7 @@ Status StringConcat(string_t* target_string,
 
 
 // todo:
-Status StringSubString(string_t* sub_string, string_t* src_string, int pos, int len) {
+status_t StringSubString(string_t* sub_string, string_t* src_string, int pos, int len) {
 	int i;
 
 	if (pos < 1 || pos >= src_string->length || len < 0 || len > src_string->length - pos + 1) {
@@ -138,55 +160,64 @@ Status StringSubString(string_t* sub_string, string_t* src_string, int pos, int 
 	return OK;
 }
 
-Status Insert(string_t *S, int pos, string_t *T)
-{
-	int i;
 
-    if (pos < 1 || pos > S->length + 1) {
-	    return ERROR;
+/*!
+ * 字符串插入
+ * @param str
+ * @param pos
+ * @param insert_str
+ * @return
+ */
+status_t Insert(string_t* str, int index, string_t* insert_str) {
+
+    if (index < 0 || index > str->length) {
+	    return OVERFLOW;
     }
 
-    if (T->length) {
-	    S->buffer = (char *) realloc(S->buffer, S->length + T->length);
-	    if (S->buffer == NULL) {
-		    return OVERFLOW;
-	    }
-
-	    for (i = S->length - 1; i >= pos - 1; --i) {
-		    S->buffer[i + T->length] = S->buffer[i];
-	    }
-
-	    for (i = 0; i < T->length; i++) {
-		    S->buffer[pos + i - 1] = T->buffer[i];
-	    }
-
-	    S->length += T->length;
+    if (insert_str->length == 0) {
+        return OK;
     }
+
+    str->buffer = (char *) realloc(str->buffer, str->length + insert_str->length);
+    if (str->buffer == NULL) {
+        return NON_ALLOCATED;
+    }
+
+    int i = str->length - 1;
+    for (; i >= index; i--) {
+        str->buffer[i + insert_str->length] = str->buffer[i];
+    }
+
+    for (i = 0; i < insert_str->length; i++) {
+        str->buffer[index + i] = insert_str->buffer[i];
+    }
+
+    str->length += insert_str->length;
 
     return OK;
 }
 
-int BruteForce(string_t *S, string_t *T, int pos)
-{
-    int i, j;
 
-    i = pos;
-    j = 0;
+int BruteForce(string_t* str, string_t* pattern, int offset) {
 
-    while (i < StringLength(S) && j <= StringLength(T)) {
-	    if (S->buffer[i] == T->buffer[j]) {
-		    i++; j++;
+    int str_index = offset;
+    int pattern_index = 0;
+
+    while (str_index < str->length && pattern_index <= pattern->length) {
+	    if (str->buffer[str_index] == pattern->buffer[pattern_index]) {
+		    str_index++;
+            pattern_index++;
 	    } else {
-		    i = i - j + 1;
-		    j = 0;
+            str_index = str_index - pattern_index + 1;
+            pattern_index = 0;
 	    }
     }
 
-    if (j <= StringLength(T)) {
-	    return i - StringLength(T);
+    if (pattern_index <= pattern->length) {
+	    return str_index - pattern->length;
     }
 
-    return 0;
+    return -1;
 }
 
 static void get_next(string_t *T, int next[])

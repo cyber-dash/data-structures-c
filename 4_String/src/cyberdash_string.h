@@ -17,35 +17,35 @@ typedef enum Status {
     NON_EXISTENT,
     OVERFLOW,
     ERROR,
-} Status;
+} status_t;
 
 typedef struct {
     char* buffer;
     int length;
 } string_t;
 
-Status StringAssign(string_t* str, const char* src_chars, int str_len);
+status_t StringAssign(string_t* str, const char* chars, int str_len);
 
 int StringLength(string_t* str);
 
-int StringCompare(string_t* string1, string_t* string2);
+int StringCompare(string_t* str1, string_t* str2);
 
-Status StringClear(string_t* str);
+status_t StringClear(string_t* str);
 
-Status StringConcat(string_t* target_string, string_t* src_string1, string_t* src_string2);
+status_t StringConcat(string_t* resulting_str, string_t* str1, string_t* str2);
 
 // todo:
-Status StringSubString(string_t* sub_string, string_t *src_string, int pos, int len);
+status_t StringSubString(string_t* sub_str, string_t* str, int pos, int str_len);
 
-int BruteForce(string_t *S, string_t *T, int pos);
+int BruteForce(string_t* str, string_t *pattern, int offset);
 
 int KMP(string_t *S, string_t *T, int pos);
 
-Status StringCopy(string_t *target_string, string_t *src_string);
+status_t StringCopy(string_t *dest_str, string_t *src_str);
 
-int StringEmpty(string_t *str);
+int StringEmpty(string_t* str);
 
-Status Insert(string_t *S, int pos, string_t *T);
+status_t Insert(string_t* str, int pos, string_t* insert_str);
 
 
 #endif //CYBER_DASH_STRING_H

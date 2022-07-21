@@ -11,9 +11,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
 #include "cyberdash_string.h"
-
 #include "test.h"
 
 
@@ -32,25 +30,25 @@ void test_StringCopy() {
     printf("|                      Test StringCopy                      |\n");
     printf("|                        测试字符串复制                       |\n");
 
-	string_t T = { .buffer = NULL, .length = 0};
-    string_t S = { .buffer = NULL, .length = 0};
+	string_t dest_str = { .buffer = NULL, .length = 0};
+    string_t src_str = { .buffer = NULL, .length = 0};
 
     // char buffer[50] = "hello cyberdash!";
     char str[50] = "你好";
-    StringAssign(&S, str, strlen(str));
+    StringAssign(&src_str, str, strlen(str));
 
-    T.buffer = malloc(128);
-    T.length = 128;
+    dest_str.buffer = malloc(128);
+    dest_str.length = 128;
 
-    StringCopy(&T, &S);
+    StringCopy(&dest_str, &src_str);
 
-	PrintStr(&T);
+	PrintStr(&dest_str);
 
     printf("|-----------------------------------------------------------|\n\n");
 }
 
 
-void test_StringCompare() {
+void TestStringCompare() {
     printf("\n");
     printf("|------------------------ CyberDash ------------------------|\n");
     printf("|                    Test StringCompare                      |\n");
@@ -113,39 +111,48 @@ void test_SubString() {
 }
 
 
-void test_Insert() {
-	string_t S, T;
+void TestStringInsert() {
+    printf("\n");
+    printf("|------------------------ CyberDash ------------------------|\n");
+    printf("|                    Test StringCompare                     |\n");
+    printf("|                        测试字符串比较                       |\n");
 
-    memset(&S, 0, sizeof(string_t));
-    memset(&T, 0, sizeof(string_t));
+	string_t str;
+    string_t insert_str;
 
-    char str1[50] = "hello dash";
-    char str2[50] = "cyber";
-    StringAssign(&S, str1, strlen(str1));
-    StringAssign(&T, str2, strlen(str2));
+    memset(&str, 0, sizeof(string_t));
+    memset(&insert_str, 0, sizeof(string_t));
 
-	Insert(&S, 7, &T);
+    char str1[50] = "Hello Dash";
+    char str2[50] = "Cyber";
 
-	PrintStr(&S);
+    StringAssign(&str, str1, strlen(str1));
+    StringAssign(&insert_str, str2, strlen(str2));
+
+	Insert(&str, 6, &insert_str);
+
+	PrintStr(&str);
 }
 
 
-void test_Index() {
-	string_t S, T;
+void TestStringSearch() {
+	string_t str;
+    string_t pattern;
 
-    memset(&S, 0, sizeof(string_t));
-    memset(&T, 0, sizeof(string_t));
+    memset(&str, 0, sizeof(string_t));
+    memset(&pattern, 0, sizeof(string_t));
 
-    char str1[50] = "hello cyberdash";
-    char str2[50] = "cyberdash";
-    StringAssign(&S, str1, strlen(str1));
-    StringAssign(&T, str2, strlen(str2));
+    char str_chars[50] = "hello cyberdash";
+    char pattern_chars[50] = "cyberdash";
 
-	printf("S: ");
-	PrintStr(&S);
-	printf("T: ");
-	PrintStr(&T);
+    StringAssign(&str, str_chars, strlen(str_chars));
+    StringAssign(&pattern, pattern_chars, strlen(pattern_chars));
 
-	printf("index: %d\n", BruteForce(&S, &T, 2));
-	printf("index find by kmp: %d\n", KMP(&S, &T, 2));
+	printf("str: ");
+	PrintStr(&str);
+	printf("pattern: ");
+	PrintStr(&pattern);
+
+	printf("index: %d\n", BruteForce(&str, &pattern, 2));
+	printf("index find by kmp: %d\n", KMP(&str, &pattern, 2));
 }

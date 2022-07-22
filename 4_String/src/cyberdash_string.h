@@ -37,7 +37,7 @@ status_t StringConcat(string_t* resulting_str, string_t* str1, string_t* str2);
 // todo:
 status_t StringSubString(string_t* sub_str, string_t* str, int pos, int str_len);
 
-int BruteForce(string_t* str, string_t *pattern, int offset);
+int StringBruteForceSearch(string_t* str, string_t *pattern, int offset);
 
 int KMP(string_t *S, string_t *T, int pos);
 

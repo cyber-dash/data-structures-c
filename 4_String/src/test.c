@@ -33,9 +33,8 @@ void test_StringCopy() {
 	string_t dest_str = { .buffer = NULL, .length = 0};
     string_t src_str = { .buffer = NULL, .length = 0};
 
-    // char buffer[50] = "hello cyberdash!";
-    char str[50] = "你好";
-    StringAssign(&src_str, str, strlen(str));
+    char buffer[50] = "hello cyberdash!";
+    StringAssign(&src_str, buffer, strlen(buffer));
 
     dest_str.buffer = malloc(128);
     dest_str.length = 128;
@@ -160,7 +159,7 @@ void TestStringSearch() {
 	printf("pattern: ");
 	PrintStr(&pattern);
 
-	printf("index: %d\n", BruteForce(&str, &pattern, 2));
+	printf("index: %d\n", StringBruteForceSearch(&str, &pattern, 2));
 	printf("index find by kmp: %d\n", KMP(&str, &pattern, 2));
 
     printf("|-----------------------------------------------------------|\n\n");

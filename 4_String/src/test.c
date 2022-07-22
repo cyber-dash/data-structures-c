@@ -132,17 +132,24 @@ void TestStringInsert() {
 	Insert(&str, 6, &insert_str);
 
 	PrintStr(&str);
+
+    printf("|-----------------------------------------------------------|\n\n");
 }
 
 
 void TestStringSearch() {
+    printf("\n");
+    printf("|------------------------ CyberDash ------------------------|\n");
+    printf("|                 Test StringSearch BF & KMP                |\n");
+    printf("|                   测试字符串搜索BF & KMP算法                 |\n");
+
 	string_t str;
     string_t pattern;
 
     memset(&str, 0, sizeof(string_t));
     memset(&pattern, 0, sizeof(string_t));
 
-    char str_chars[50] = "hello cyberdash";
+    char str_chars[50] = "123 cyberdash 456";
     char pattern_chars[50] = "cyberdash";
 
     StringAssign(&str, str_chars, strlen(str_chars));
@@ -155,4 +162,6 @@ void TestStringSearch() {
 
 	printf("index: %d\n", BruteForce(&str, &pattern, 2));
 	printf("index find by kmp: %d\n", KMP(&str, &pattern, 2));
+
+    printf("|-----------------------------------------------------------|\n\n");
 }

@@ -9,6 +9,7 @@
  */
 
 #include <malloc.h>
+#include <string.h>
 #include "cyberdash_string.h"
 
 
@@ -200,26 +201,27 @@ status_t Insert(string_t* str, int index, string_t* insert_str) {
 
 int BruteForce(string_t* str, string_t* pattern, int offset) {
 
-    int str_index = offset;
-    int pattern_index = 0;
+    int match_offset = -1;
+    int pattern_index;
 
-    while (str_index < str->length && pattern_index <= pattern->length) {
-	    if (str->buffer[str_index] == pattern->buffer[pattern_index]) {
-		    str_index++;
-            pattern_index++;
-	    } else {
-            str_index = str_index - pattern_index + 1;
-            pattern_index = 0;
-	    }
+    for (int i = offset; i <= str->length - pattern->length; i++) {
+        for (pattern_index = 0; pattern_index < pattern->length; pattern_index++) {
+            if (str->buffer[i + pattern_index] != pattern->buffer[pattern_index]) {
+                break;
+            }
+        }
+
+        if (pattern_index == pattern->length) {
+            match_offset = i;
+            break;
+        }
     }
 
-    if (pattern_index <= pattern->length) {
-	    return str_index - pattern->length;
-    }
-
-    return -1;
+    return match_offset;
 }
 
+
+/*
 static void get_next(string_t *T, int next[])
 {
 	int i = 1;
@@ -241,8 +243,81 @@ static void get_next(string_t *T, int next[])
 		}
 	}
 }
+ */
 
 
+status_t KMPNext(const char* pattern, int pattern_len, int** next) {
+
+    // 分配next数组内存
+    *next = (int*)malloc((pattern_len + 1) * sizeof(int));
+    if (*next == NULL) {
+        return NON_ALLOCATED;
+    }
+
+    memset(*next, 0, pattern_len +1);
+
+    /// 设置next[0] = -1
+    int i = 0;
+    int starting_index = -1;
+
+    (*next)[0] = starting_index;
+
+    while (i < pattern_len) {
+
+        /// 使用next[0]处理next[1]
+        /// 当模式串字符pattern[1]失配时, 必然从pattern[0]开始重新进行匹配, 因此next[1] = 0
+        /// 此处逻辑可以和下面的pattern[i] == pattern[starting_index]分支逻辑合并
+        /// 因此next[0] = -1
+        /// 其余部分则相同(代码可以合并)
+        if (starting_index == -1) {
+            i++;
+            starting_index++;
+            (*next)[i] = starting_index;
+        }
+            /// 使用next[i]求next[i + 1]
+        else
+        {
+            /// 如果pattern[i]和pattern[starting_index]相同, 则左右两侧的相同字符串区域扩展
+            /// 示例
+            ///  a b c d 5 6 a b c d 7
+            ///  a b
+            ///              a b
+            ///                  ^
+            ///                  |
+            ///
+            ///
+            /// i == 8, starting_index == 2
+            /// pattern[8] == pattern[2] == 'c', 走if( == )分支:
+            ///     8++ -> 9,
+            ///     starting_index++ -> 3
+            ///     next[9] == pattern[3]
+            ///
+            ///
+            ///  a b c d 5 6 a b c d 7
+            ///  a b c
+            ///              a b c
+            ///                    ^
+            ///                    |
+            ///
+            if (pattern[i] == pattern[starting_index]) {
+                i++;
+                starting_index++;
+                (*next)[i] = starting_index;
+            }
+                /// 如果pattern[i]和pattern[starting_index]不同, 则使用next数组进行递归, 逐步验证
+            else
+            {
+                starting_index = (*next)[starting_index];
+            }
+        }
+    }
+
+    return OK;
+}
+
+
+
+/*
 int KMP(string_t *S, string_t *T, int pos)
 {
 	int i = pos, j = 0;
@@ -265,4 +340,55 @@ int KMP(string_t *S, string_t *T, int pos)
 
 	return 0;
 }
+ */
+
+int KMP(string_t* str, string_t* pattern, int offset) {
+
+    int pattern_len = pattern->length;
+    int* next;
+    status_t status = KMPNext(pattern->buffer, pattern_len, &next);
+    if (status != OK) {
+        return status;
+    }
+
+    // cout<<"模式串: "<<pattern<<endl<<"对应的next数组: ";
+    // PrintNextArray(next, pattern_len); // show the next array
+
+    int pattern_str_i = 0;      // 模式串起始位置
+    int target_str_i = offset;  // 目标串起始位置
+
+    while (pattern_str_i < pattern_len && target_str_i < str->length) {
+        /// 如果模式串字符(位置pattern_str_i)和目标串字符(位置target_str_i)相同, 则向后移位
+        if (pattern->buffer[pattern_str_i] == str->buffer[target_str_i]) {
+            pattern_str_i++;
+            target_str_i++;
+        }
+        /// 如果模式串字符(位置pattern_str_i)和目标串字符(位置target_str_i)不同
+        else
+        {
+            // 如果是模式串第1个字符不匹配, 则目标串向后移位
+            if (pattern_str_i == 0) {
+                target_str_i++;
+            }
+            // 如果不是模式串第1个字符不匹配, 则从模式串的next[pattern_str_i]开始执行下一趟匹配
+            else
+            {
+                pattern_str_i = next[pattern_str_i];
+            }
+        }
+    }
+
+    free(next);
+
+    int match_pos;
+
+    if (pattern_str_i < pattern_len) {
+        match_pos = -1; // 不匹配
+    } else {
+        match_pos = target_str_i - pattern_len; // 算出目标串中匹配的第一个字符的(在目标串中的)位置
+    }
+
+    return match_pos;
+}
+
 

@@ -294,19 +294,9 @@ status_t KMPNext(const char* pattern, int pattern_len, int** next) {
     /// &emsp; **while** 遍历模式串 :\n
     while (pattern_index < pattern_len) {
 
-        /// 使用next[0]处理next[1]
-        /// 当模式串字符pattern[1]失配时, 必然从pattern[0]开始重新进行匹配, 因此next[1] = 0
-        /// 此处逻辑可以和下面的pattern[pattern_index] == pattern[starting_index]分支逻辑合并
-        /// 因此next[0] = -1
-        /// 其余部分则相同(代码可以合并)
-        if (starting_index == -1) {
-            pattern_index++;
-            starting_index++;
-            (*next)[pattern_index] = starting_index;
-        }
-        /// 使用next[pattern_index]求next[pattern_index + 1]
-        else
-        {
+        /// - **使用next[pattern_index]求next[pattern_index + 1]**\n
+        if (starting_index != -1) {
+            /// ```
             /// 如果pattern[pattern_index]和pattern[starting_index]相同, 则左右两侧的相同字符串区域扩展
             /// 示例
             ///  a b c d 5 6 a b c d 7
@@ -329,16 +319,27 @@ status_t KMPNext(const char* pattern, int pattern_len, int** next) {
             ///                    ^
             ///                    |
             ///
+            /// ```
             if (pattern[pattern_index] == pattern[starting_index]) {
                 pattern_index++;
                 starting_index++;
                 (*next)[pattern_index] = starting_index;
-            }
-            /// 如果pattern[pattern_index]和pattern[starting_index]不同, 则使用next数组进行递归, 逐步验证
-            else
-            {
+            } else {
+                /// - **next数组递归**
+                /// &emsp; **if** pattern[pattern_index]和pattern[starting_index]不同(失配) :\n
+                /// &emsp;&emsp; 令starting_index = next[starting_index]
+                /// &emsp;&emsp; (即starting_index退回到前一匹配点)
                 starting_index = (*next)[starting_index];
             }
+        } else {
+        /// 当模式串字符pattern[1]失配时, 必然从pattern[0]开始重新进行匹配, 因此next[1] = 0
+        /// 使用next[0]处理next[1]
+        /// 此处逻辑可以和下面的pattern[pattern_index] == pattern[starting_index]分支逻辑合并
+        /// 因此next[0] = -1
+        /// 其余部分则相同(代码可以合并)
+            pattern_index++;
+            starting_index++;
+            (*next)[pattern_index] = starting_index;
         }
     }
 

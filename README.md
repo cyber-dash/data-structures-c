@@ -34,17 +34,17 @@ cmake -G "Makefiles"
 ```
 
 # 🌵 项目结构
-| 编号 | 章节                              | 重点内容                                                                                                                                        |
-| ---- | --------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
-| 2    | [线性表](/2_LinearList/)          | [线性表的顺序表示](/2_LinearList/SeqList/src/seq_list.c)  [线性表的链式表示](/2_LinearList/LinkedList/src/linked_list.c)                        |
-| 3    | [栈和队列](/3_Stack_Queue/)       | [栈](/3_Stack_Queue/Stack/src/seq_stack.c)  [顺序队列](/3_Stack_Queue/Queue/src/seq_queue.c)  [链式队列](/3_Stack_Queue/Queue/src/link_queue.c) |
-| 4    | [串](/4_String/)                  |                                                                                                                                                 |
-| 5    | [数组和广义表](/5_ArrayAndGList/) | [数组的表示与实现](/5_ArrayAndGList/Array/src/array.c)  [广义表的表示与实现](/5_ArrayAndGList/GList/src/gen_list.c)                             |
-| 6    | [树和二叉树](/6_Tree/)            | [二叉树](/6_Tree/src/binary_tree.c) [赫夫曼树](/6_Tree/src/huffman_tree.c)                                                                      |
-| 7    | [图](/7_Graph/)                   | [搜索算法](/7_Graph/src/algorithm.c) [并查集](/7_Graph/src/disjoint_set.c)   [邻接矩阵](/7_Graph/src/matrix_graph.c)                            |
-| 9    | [查找](/9_Search/)                | [静态查找](/9_Search/src/static_search_table_t.c)                                                                                               |
-| 10   | [内部排序](/10_InternalSort/)     |                                                                                                                                                 |
-| 11     |[外部排序](/11_ExternalSort/)                                   |[败者树](/11_ExternalSort/src/loser_tree.c)                                                                                                                                                 |
+| 编号 | 章节 | 重点内容 |
+| ---- | ---- | ------- |
+| 2    | [线性表](/2_LinearList/) | [线性表的顺序表示](/2_LinearList/SeqList/src/seq_list.c)  [线性表的链式表示](/2_LinearList/LinkedList/src/linked_list.c) |
+| 3    | [栈和队列](/3_Stack_Queue/) | [栈](/3_Stack_Queue/Stack/src/seq_stack.c)  [顺序队列](/3_Stack_Queue/Queue/src/seq_queue.c)  [链式队列](/3_Stack_Queue/Queue/src/link_queue.c) |
+| 4    | [串](/4_String/)         |                |
+| 5    | [数组和广义表](/5_ArrayAndGList/) | [数组的表示与实现](/5_ArrayAndGList/Array/src/array.c)  [广义表的表示与实现](/5_ArrayAndGList/GList/src/gen_list.c) |
+| 6    | [树和二叉树](/6_Tree/)            | [二叉树](/6_Tree/src/binary_tree.c) [赫夫曼树](/6_Tree/src/huffman_tree.c)                                         |
+| 7    | [图](/7_Graph/)                  | [搜索算法](/7_Graph/src/algorithm.c) [并查集](/7_Graph/src/disjoint_set.c)   [邻接矩阵](/7_Graph/src/matrix_graph.c) |
+| 9    | [查找](/9_Search/)               | [静态查找](/9_Search/src/static_search_table_t.c)                                                                 |
+| 10   | [内部排序](/10_InternalSort/)    |                                                                                                                 |
+| 11     |[外部排序](/11_ExternalSort/)   |[败者树](/11_ExternalSort/src/loser_tree.c#L10)                                                                      |
 
 
 # 👨‍👩‍👦‍👦 关于我们

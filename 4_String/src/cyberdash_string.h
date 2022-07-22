@@ -39,7 +39,7 @@ status_t StringSubString(string_t* sub_str, string_t* str, int pos, int str_len)
 
 int StringBruteForceSearch(string_t* str, string_t *pattern, int offset);
 
-int KMP(string_t *S, string_t *T, int pos);
+int StringKMPSearch(string_t *str, string_t *pattern, int offset);
 
 status_t StringCopy(string_t *dest_str, string_t *src_str);
 

@@ -139,7 +139,7 @@ void TestStringInsert() {
 void TestStringSearch() {
     printf("\n");
     printf("|------------------------ CyberDash ------------------------|\n");
-    printf("|                 Test StringSearch BF & KMP                |\n");
+    printf("|                 Test StringSearch BF & StringKMPSearch                |\n");
     printf("|                   测试字符串搜索BF & KMP算法                 |\n");
 
 	string_t str;
@@ -160,7 +160,7 @@ void TestStringSearch() {
 	PrintStr(&pattern);
 
 	printf("index: %d\n", StringBruteForceSearch(&str, &pattern, 2));
-	printf("index find by kmp: %d\n", KMP(&str, &pattern, 2));
+	printf("index find by kmp: %d\n", StringKMPSearch(&str, &pattern, 2));
 
     printf("|-----------------------------------------------------------|\n\n");
 }

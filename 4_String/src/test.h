@@ -12,13 +12,13 @@
 #define CYBER_DASH_STRING_TEST_H
 
 
-void test_StringCopy();
+void TestStringCopy();
 
 void TestStringCompare();
 
-void test_StringConCat();
+void TestStringConcat();
 
-void test_SubString();
+void TestStringSubStr();
 
 void TestStringInsert();
 

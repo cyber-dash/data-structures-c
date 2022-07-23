@@ -7,13 +7,13 @@
 
 int main()
 {
-	test_StringCopy();
+    TestStringCopy();
 
     TestStringCompare();
 
-	test_StringConCat();
+    TestStringConcat();
 
-	test_SubString();
+	TestStringSubStr();
 
     TestStringInsert();
 

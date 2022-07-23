@@ -127,33 +127,61 @@ status_t StringConcat(string_t* target_string, string_t* str1, string_t* str2) {
 }
 
 
-// todo:
-status_t StringSubString(string_t* sub_string, string_t* src_string, int pos, int len) {
-	int i;
+/*!
+ * <h1>字符串子串</h1>
+ * @param str **字符串**
+ * @param sub_str **子串**
+ * @param offset **字符串偏移量**
+ * @param sub_str_len **子串长度**
+ * @return **执行结果**
+ * @note
+ */
+status_t StringSubStr(string_t* str, string_t* sub_str, int offset, int sub_str_len) {
 
-	if (pos < 1 || pos >= src_string->length || len < 0 || len > src_string->length - pos + 1) {
-		return ERROR;
+    /// ###1 边界条件判断###
+    /// &emsp; **if** 若干边界条件错误 :\n
+    /// &emsp;&emsp; 返回OVERFLOW
+	if (offset < 0 || offset > str->length ||
+        sub_str_len < 0 || sub_str_len > str->length - offset + 1)
+    {
+		return OVERFLOW;
 	}
 
-	if (sub_string->buffer) {
-		free(sub_string->buffer);
+    /// ###2 释放子串sub_str->buffer###
+    /// - 释放sub_str->buffer
+	if (sub_str->buffer) {
+		free(sub_str->buffer);
 	}
 
-	if (len == 0) {
-        sub_string->buffer = NULL;
-        sub_string->length = 0;
-	} else {
-        sub_string->buffer = (char *) malloc(len);
-		if (sub_string->buffer == NULL) {
-			return OVERFLOW;
-		}
+    /// ###3 空子串处理###
+    /// &emsp; **if** 子串长度为0
+    /// &emsp;&emsp; buffer为NULL, length为0
+    /// &emsp;&emsp; 返回OK
+	if (sub_str_len == 0) {
+        sub_str->buffer = NULL;
+        sub_str->length = 0;
 
-		for (i = 0; i <= len; i++) {
-            sub_string->buffer[i] = src_string->buffer[pos + i - 1];
-		}
-
-        sub_string->length = len;
+        return OK;
 	}
+
+    /// ###4 构造子串###
+    /// - 分配子串buffer内存
+    /// &emsp; **if** 内存分配失败 :\n
+    /// &emsp;&emsp; 返回OVERFLOW
+    sub_str->buffer = (char*) malloc(sub_str_len);
+    if (sub_str->buffer == NULL) {
+        return OVERFLOW;
+    }
+
+    /// - 子串buffer每个字符赋值\n
+    /// &emsp; **for loop** 字符串buffer[offset ... offset + sub_str_len - 1] :\n
+    for (int i = 0; i < sub_str_len; i++) {
+        /// &emsp; sub_str->buffer[i] <= str->buffer[offset + i]
+        sub_str->buffer[i] = str->buffer[offset + i];
+    }
+
+    /// - 更新子串length\n
+    sub_str->length = sub_str_len;
 
 	return OK;
 }
@@ -167,7 +195,7 @@ status_t StringSubString(string_t* sub_string, string_t* src_string, int pos, in
  * @return 执行结果
  * @note
  */
-status_t Insert(string_t* str, int index, string_t* insert_str) {
+status_t StringInsert(string_t* str, int index, string_t* insert_str) {
 
     /// ###1 非法插入位置处理###
     /// &emsp; 返回OVERFLOW

@@ -11,18 +11,18 @@
 #define CYBER_DASH_LOSER_TREE_H
 
 
-#define SIZE 5
+#define SEQ_QUEUE_COUNT 5
 
 typedef int KEY;        // 定义关键字类型为整数类型
-typedef int loser_tree_t[SIZE];
+typedef int loser_tree_t[SEQ_QUEUE_COUNT];
 
 typedef struct leaf_t {
     KEY key;
-} leaf_t;// , leaves_t[SIZE + 1];   // 外结点, 只存放待归并记录的关键字
+} leaf_t;
 
-typedef leaf_t leaves_t[SIZE + 1];   // 外结点, 只存放待归并记录的关键字
+typedef leaf_t leaves_t[SEQ_QUEUE_COUNT + 1];   // 外结点, 只存放待归并记录的关键字
 
-void K_Merge(loser_tree_t loser_tree, leaves_t leaves, int* array[], int limit_length);
+void KWayMerge(loser_tree_t loser_tree, leaves_t leaves, int* array[], int limit_length);
 
 
 #endif // CYBER_DASH_LOSER_TREE_H

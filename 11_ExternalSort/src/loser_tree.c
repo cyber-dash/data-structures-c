@@ -1,7 +1,7 @@
 /*!
  * @file loser_tree_t.c
  * @author CyberDash计算机考研, cyberdash@163.com(抖音id:cyberdash_yuan)
- * @brief 外部排序败者树源文件
+ * @brief 败者树源文件
  * @version 1.0.0
  * @date 2022-07-04
  * @copyright Copyright (c) 2021
@@ -12,6 +12,11 @@
 #include "stdio.h"
 
 
+/*!
+ * <h1>交换函数</h1>
+ * @param item1 **元素1**(指针)
+ * @param item2 **元素2**(指针)
+ */
 void swap(int* item1, int* item2) {
     int tmp = *item1;
     *item1 = *item2;
@@ -19,9 +24,15 @@ void swap(int* item1, int* item2) {
 }
 
 
-void Adjust(loser_tree_t loser_tree, leaves_t leaves, int index) {
+/*!
+ * <h1>调整败者树</h1>
+ * @param loser_tree
+ * @param leaves
+ * @param index
+ */
+void LoserTreeAdjust(loser_tree_t loser_tree, leaves_t leaves, int index) {
     //沿从叶子结点b[s]到根结点ls[0]的路径调整败者树
-    for (int parent = (index + SIZE) / 2; parent > 0; parent = parent / 2) {
+    for (int parent = (index + SEQ_QUEUE_COUNT) / 2; parent > 0; parent = parent / 2) {
 		if(leaves[index].key > leaves[loser_tree[parent]].key) {		//s指示新的胜利者（小为胜，向上比较，大为败，留在双亲结点）
             swap(&index, &loser_tree[parent]);
 		}
@@ -30,34 +41,43 @@ void Adjust(loser_tree_t loser_tree, leaves_t leaves, int index) {
     loser_tree[0] = index;							//顶部结点为最小值
 }
 
+
 /*!
- * 构造败者树
+ * <h1>构造败者树</h1>
  * @param loser_tree
  * @param leaves
  * @note
  * 败者树数组构成非叶子结点, 其中loserTree[0]为根节点, 用来保存最小值
  */
 void CreateLoserTree(loser_tree_t loser_tree, leaves_t leaves) {
-    leaves[SIZE].key = INT_MIN;                // 设INT_MIN为关键字可能的最小值
-    for (int i = 0; i < SIZE; ++i) {
-        loser_tree[i] = SIZE;                    // 设置loserTree中"败者"的初值
+    leaves[SEQ_QUEUE_COUNT].key = INT_MIN;                // 设INT_MIN为关键字可能的最小值
+    for (int i = 0; i < SEQ_QUEUE_COUNT; ++i) {
+        loser_tree[i] = SEQ_QUEUE_COUNT;                    // 设置loserTree中"败者"的初值
     }
-    for (int i = SIZE - 1; i >= 0; --i) {
-        Adjust(loser_tree, leaves, i);  // 依次从leafArr[SIZE - 1], leaves[SIZE - 2] ... leaves[0]出发调整败者
+    for (int i = SEQ_QUEUE_COUNT - 1; i >= 0; --i) {
+        LoserTreeAdjust(loser_tree, leaves, i);  // 依次从leafArr[SEQ_QUEUE_COUNT - 1], leaves[SEQ_QUEUE_COUNT - 2] ... leaves[0]出发调整败者
     }
 }
 
 
-void K_Merge(loser_tree_t loser_tree, leaves_t leaves, int* array[], int limit_length) {
+/*!
+ * <h1>K路合并</h1>
+ * @param loser_tree **败者树数组**
+ * @param leaves **叶子数组**
+ * @param array **K组待排序数组**
+ * @param limit_length **有序数组的最大长度**
+ * @note
+ */
+void KWayMerge(loser_tree_t loser_tree, leaves_t leaves, int* array[], int limit_length) {
     // 利用败者树ls将编号从0到k - 1的k个输入归并段中的记录归并到输出归并段
 
     // 分别从k个输入归并段读入该段当前第一个记录的关键字到外结点
-    for (int i = 0; i < SIZE; ++i) {
+    for (int i = 0; i < SEQ_QUEUE_COUNT; ++i) {
         leaves[i].key = array[i][0];
     }
 
     CreateLoserTree(loser_tree, leaves);
-    int everyQueueWorkingIdx[SIZE] = { 1, 1, 1, 1, 1 };
+    int everyQueueWorkingIdx[SEQ_QUEUE_COUNT] = {1, 1, 1, 1, 1 };
 
     while (leaves[loser_tree[0]].key != INT_MAX) {
         int queue_idx = loser_tree[0];
@@ -69,7 +89,7 @@ void K_Merge(loser_tree_t loser_tree, leaves_t leaves, int* array[], int limit_l
         } else { // 如果已经全部执行完
             leaves[queue_idx].key = INT_MAX;
         }
-        Adjust(loser_tree, leaves, queue_idx);
+        LoserTreeAdjust(loser_tree, leaves, queue_idx);
     }
 
     printf("\n");

@@ -41,7 +41,7 @@ void TestLoserTree() {
     loser_tree_t loserTree;
     leaves_t leafArr;
 
-    KWayMerge(loserTree, leafArr, array, 3);
+    KWayMerge(loserTree, leafArr, array, 5, 3);
 
     printf("|-------------------------------------------------------------|\n");
 }

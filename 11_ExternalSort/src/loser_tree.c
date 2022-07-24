@@ -7,9 +7,11 @@
  * @copyright Copyright (c) 2021
  *  CyberDash计算机考研
  */
+
+#include <stdio.h>
+#include <stdlib.h>
 #include "loser_tree.h"
 #include "limits.h"
-#include "stdio.h"
 
 
 /*!
@@ -64,27 +66,30 @@ void CreateLoserTree(loser_tree_t loser_tree, leaves_t leaves) {
  * <h1>K路合并</h1>
  * @param loser_tree **败者树数组**
  * @param leaves **叶子数组**
- * @param array **K组待排序数组**
+ * @param K_way_sorted_lists **K组待排序数组**
  * @param limit_length **有序数组的最大长度**
  * @note
  */
-void KWayMerge(loser_tree_t loser_tree, leaves_t leaves, int* array[], int limit_length) {
+void KWayMerge(loser_tree_t loser_tree, leaves_t leaves, int* K_way_sorted_lists[], int K, int limit_length) {
     // 利用败者树ls将编号从0到k - 1的k个输入归并段中的记录归并到输出归并段
 
     // 分别从k个输入归并段读入该段当前第一个记录的关键字到外结点
-    for (int i = 0; i < SEQ_QUEUE_COUNT; ++i) {
-        leaves[i].key = array[i][0];
+    for (int i = 0; i < K; ++i) {
+        leaves[i].key = K_way_sorted_lists[i][0];
     }
 
     CreateLoserTree(loser_tree, leaves);
-    int everyQueueWorkingIdx[SEQ_QUEUE_COUNT] = {1, 1, 1, 1, 1 };
+    int* everyQueueWorkingIdx = (int*)malloc(sizeof(int) * K);
+    for (int i = 0; i < K; i++) {
+        everyQueueWorkingIdx[i] = 1;
+    }
 
     while (leaves[loser_tree[0]].key != INT_MAX) {
         int queue_idx = loser_tree[0];
         printf("%d  ", leaves[loser_tree[0]].key);
 
         if (everyQueueWorkingIdx[queue_idx] < limit_length) { // 如果queueIdx归并段, 还有元素, 赋值
-            leaves[queue_idx].key = array[queue_idx][everyQueueWorkingIdx[queue_idx]];
+            leaves[queue_idx].key = K_way_sorted_lists[queue_idx][everyQueueWorkingIdx[queue_idx]];
             everyQueueWorkingIdx[queue_idx]++;
         } else { // 如果已经全部执行完
             leaves[queue_idx].key = INT_MAX;

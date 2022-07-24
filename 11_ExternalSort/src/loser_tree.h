@@ -22,7 +22,7 @@ typedef struct leaf_t {
 
 typedef leaf_t leaves_t[SEQ_QUEUE_COUNT + 1];   // 外结点, 只存放待归并记录的关键字
 
-void KWayMerge(loser_tree_t loser_tree, leaves_t leaves, int* array[], int limit_length);
+void KWayMerge(loser_tree_t loser_tree, leaves_t leaves, int* K_way_sorted_lists[], int K, int limit_length);
 
 
 #endif // CYBER_DASH_LOSER_TREE_H

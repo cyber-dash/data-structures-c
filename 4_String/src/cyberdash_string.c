@@ -301,23 +301,23 @@ int StringBruteForceSearch(string_t* str, string_t* pattern, int offset) {
 status_t KMPNext(const char* pattern, int pattern_len, int** next) {
 
     /// ###1 初始化pattern_index/starting_index/next[0]###
-    /// &emsp; pattern_index为模式串的索引, 初始化为0\n
-    /// &emsp; starting_index为目标串失配后的起始匹配索引, 初始化为-1\n
+    /// &emsp; pattern_index为模式串进行匹配的索引, 初始化为0\n
+    /// &emsp; starting_index为目标串在失配后, 重新进行匹配的索引, 初始化为-1\n
     /// &emsp; next[0]设置为-1\n
     int pattern_index = 0;
     int starting_index = -1;
 
     (*next)[0] = starting_index;
 
-    /// ###3 递归构造nest数组 ###
+    /// ###2 递归构造nest数组 ###
     /// &emsp; **while** 遍历模式串 :\n
     while (pattern_index < pattern_len) {
 
         /// &emsp;&emsp; **if** starting_index != -1 :\n
         if (starting_index != -1) {
             /// &emsp;&emsp;&emsp; **if** pattern[pattern_index]和pattern[starting_index]不同(失配) :\n
-            /// &emsp;&emsp;&emsp;&emsp; pattern_index++;\n
-            /// &emsp;&emsp;&emsp;&emsp; starting_index++;\n
+            /// &emsp;&emsp;&emsp;&emsp; pattern_index加1(向后移动1位);\n
+            /// &emsp;&emsp;&emsp;&emsp; starting_index加1(向后移动1位);\n
             /// &emsp;&emsp;&emsp;&emsp; (*next)[pattern_index] = starting_index;\n
             /// ```
             /// 如果pattern[pattern_index]和str[starting_index]相同,
@@ -348,7 +348,7 @@ status_t KMPNext(const char* pattern, int pattern_len, int** next) {
             /// ```
             /// &emsp;&emsp;&emsp; **else**\n
             /// &emsp;&emsp;&emsp;&emsp; 令starting_index = next[starting_index]\n
-            /// &emsp;&emsp;&emsp;&emsp; (即starting_index退回到前一匹配点)\n
+            /// &emsp;&emsp;&emsp;&emsp; (即starting_index回退)\n
             if (pattern[pattern_index] == pattern[starting_index]) {
                 pattern_index++;
                 starting_index++;
@@ -387,34 +387,32 @@ status_t KMPNext(const char* pattern, int pattern_len, int** next) {
  */
 int StringKMPSearch(string_t* str, string_t* pattern, int offset) {
 
-    /// ###1 求模式串next数组###
-    /// &emsp; 调用KMPNext函数求next数组\n
-    /// &emsp; **if** 调用失败 :\n
-    /// &emsp;&emsp; 返回错误码\n
-    int pattern_len = pattern->length;
-
     /// ###1 分配next数组内存###
     /// &emsp; **if** 分配内存失败 :\n
     /// &emsp;&emsp; 返回NON_ALLOCATED\n
-    int* next = (int*)malloc((pattern_len + 1) * sizeof(int));
+    int* next = (int*)malloc((pattern->length + 1) * sizeof(int));
     if (next == NULL) {
         return NON_ALLOCATED;
     }
 
     /// &emsp; memset置0\n
-    memset(next, 0, sizeof(int) * (pattern_len + 1));
+    memset(next, 0, sizeof(int) * (pattern->length + 1));
 
-    status_t status = KMPNext(pattern->buffer, pattern_len, &next);
+    /// ###2 求模式串next数组###
+    /// &emsp; 调用KMPNext函数求next数组\n
+    /// &emsp; **if** 调用失败 :\n
+    /// &emsp;&emsp; 返回错误码\n
+    status_t status = KMPNext(pattern->buffer, pattern->length, &next);
     if (status != OK) {
         return status;
     }
 
-    /// ###2 使用next数组找模式串的匹配位置(的索引)###
+    /// ###3 使用next数组找模式串的匹配位置(的索引)###
     int pattern_index = 0;  // 模式串索引
     int str_index = offset; // 目标串索引
 
     /// &emsp; **while** 目标串和模式串中, 某个串未遍历完 :\n
-    while (pattern_index < pattern_len && str_index < str->length) {
+    while (pattern_index < pattern->length && str_index < str->length) {
         /// &emsp;&emsp; **if** 模式串索引字符 == 目标串索引的字符\n
         /// &emsp;&emsp;&emsp; 模式串索引and目标串索引, 则向后移1位\n
         if (pattern->buffer[pattern_index] == str->buffer[str_index]) {
@@ -443,10 +441,10 @@ int StringKMPSearch(string_t* str, string_t* pattern, int offset) {
     ///&emsp;&emsp; 匹配索引为-1(没有匹配点)\n
     ///&emsp; **else**\n
     ///&emsp;&emsp; 匹配索引为str_index - pattern_len\n
-    if (pattern_index < pattern_len) {
+    if (pattern_index < pattern->length) {
         match_pos = -1; // 不匹配
     } else {
-        match_pos = str_index - pattern_len; // 算出目标串中匹配的第一个字符的(在目标串中的)位置
+        match_pos = str_index - pattern->length; // 算出目标串中匹配的第一个字符的(在目标串中的)位置
     }
 
     return match_pos;

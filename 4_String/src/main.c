@@ -5,8 +5,7 @@
 
 #include "test.h"
 
-int main()
-{
+int main() {
     TestStringCopy();
 
     TestStringCompare();
@@ -18,4 +17,6 @@ int main()
     TestStringInsert();
 
     TestStringSearch();
+
+    return 0;
 }

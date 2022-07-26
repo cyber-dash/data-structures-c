@@ -44,6 +44,8 @@ status_t StringAssign(string_t* str, const char* chars, int str_len) {
         return NON_ALLOCATED;
     }
 
+    memset(str->buffer, 0, sizeof(char) * (str_len + 1));
+
     for (int i = 0; i < str_len; i++) {
         str->buffer[i] = chars[i];
     }
@@ -298,18 +300,7 @@ int StringBruteForceSearch(string_t* str, string_t* pattern, int offset) {
  */
 status_t KMPNext(const char* pattern, int pattern_len, int** next) {
 
-    /// ###1 分配next数组内存###
-    /// &emsp; **if** 分配内存失败 :\n
-    /// &emsp;&emsp; 返回NON_ALLOCATED\n
-    *next = (int*)malloc((pattern_len + 1) * sizeof(int));
-    if (*next == NULL) {
-        return NON_ALLOCATED;
-    }
-
-    /// &emsp; memset置0\n
-    memset(*next, 0, sizeof(int) * (pattern_len + 1));
-
-    /// ###2 初始化pattern_index/starting_index/next[0]###
+    /// ###1 初始化pattern_index/starting_index/next[0]###
     /// &emsp; pattern_index为模式串的索引, 初始化为0\n
     /// &emsp; starting_index为目标串失配后的起始匹配索引, 初始化为-1\n
     /// &emsp; next[0]设置为-1\n
@@ -401,7 +392,18 @@ int StringKMPSearch(string_t* str, string_t* pattern, int offset) {
     /// &emsp; **if** 调用失败 :\n
     /// &emsp;&emsp; 返回错误码\n
     int pattern_len = pattern->length;
-    int* next;
+
+    /// ###1 分配next数组内存###
+    /// &emsp; **if** 分配内存失败 :\n
+    /// &emsp;&emsp; 返回NON_ALLOCATED\n
+    int* next = (int*)malloc((pattern_len + 1) * sizeof(int));
+    if (next == NULL) {
+        return NON_ALLOCATED;
+    }
+
+    /// &emsp; memset置0\n
+    memset(next, 0, sizeof(int) * (pattern_len + 1));
+
     status_t status = KMPNext(pattern->buffer, pattern_len, &next);
     if (status != OK) {
         return status;

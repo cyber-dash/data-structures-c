@@ -1,7 +1,7 @@
 /*!
  * @file test.c
  * @author CyberDash计算机考研, cyberdash@163.com(抖音id:cyberdash_yuan)
- * @brief  串 测试用例
+ * @brief 字符串测试源文件
  * @version 1.0.0
  * @date 2022-07-10
  * @copyright Copyright (c) 2021
@@ -42,15 +42,15 @@ void TestStringCopy() {
     printf("|                      Test StringCopy                      |\n");
     printf("|                        测试字符串复制                       |\n");
 
+    /// ###1 被复制串和复制串初始化###
 	string_t dest_str = { .buffer = NULL, .length = 0};
     string_t src_str = { .buffer = NULL, .length = 0};
 
-    char buffer[50] = "hello cyberdash!";
-    StringAssign(&src_str, buffer, strlen(buffer));
+    /// &emsp; 被复制串"Hello cyberdash!"
+    char chars[50] = "Hello cyberdash!";
+    StringAssign(&src_str, chars, (int)strlen(chars));
 
-    dest_str.buffer = malloc(128);
-    dest_str.length = 128;
-
+    /// ###2 执行复制###
     StringCopy(&dest_str, &src_str);
 
     StringPrint(&dest_str);
@@ -69,25 +69,25 @@ void TestStringCompare() {
     printf("|                    Test StringCompare                      |\n");
     printf("|                        测试字符串比较                       |\n");
 
-	string_t S1 = { .buffer = NULL, .length = 0};
-    string_t S2 = { .buffer = NULL, .length = 0};
-    string_t S3 = { .buffer = NULL, .length = 0};
-    string_t S4 = { .buffer = NULL, .length = 0};
+	string_t str1 = { .buffer = NULL, .length = 0};
+    string_t str2 = { .buffer = NULL, .length = 0};
+    string_t str3 = { .buffer = NULL, .length = 0};
+    string_t str4 = { .buffer = NULL, .length = 0};
 
-    char str1[50] = "hello cyberdash!";
-    char str2[50] = "hello cyberdash!";
-    char str3[50] = "hello cyberdash and hello Mr. Yuan";
-    char str4[50] = "hi cyberdash";
+    char chars1[50] = "hello cyberdash!";
+    char chars2[50] = "hello cyberdash!";
+    char chars3[50] = "hello cyberdash and hello Mr. Yuan";
+    char chars4[50] = "hi cyberdash";
 
-    StringAssign(&S1, str1, strlen(str1));
-    StringAssign(&S2, str2, strlen(str2));
-    StringAssign(&S3, str3, strlen(str3));
-    StringAssign(&S4, str4, strlen(str4));
+    StringAssign(&str1, chars1, strlen(chars1));
+    StringAssign(&str2, chars2, strlen(chars2));
+    StringAssign(&str3, chars3, strlen(chars3));
+    StringAssign(&str4, chars4, strlen(chars4));
 
-	printf("S1 compare to S2: %d\n", StringCompare(&S1, &S2));
-	printf("S1 compare to S3: %d\n", StringCompare(&S1, &S3));
-	printf("S2 compare to S3: %d\n", StringCompare(&S2, &S3));
-	printf("S1 compare to S4: %d\n", StringCompare(&S1, &S4));
+	printf("str1 compare to str2: %d\n", StringCompare(&str1, &str2));
+	printf("str1 compare to str3: %d\n", StringCompare(&str1, &str3));
+	printf("str2 compare to str3: %d\n", StringCompare(&str2, &str3));
+	printf("str1 compare to str4: %d\n", StringCompare(&str1, &str4));
 
     printf("|-----------------------------------------------------------|\n\n");
 }

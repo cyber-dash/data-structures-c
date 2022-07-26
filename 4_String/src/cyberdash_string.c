@@ -1,7 +1,7 @@
 /*!
  * @file cyberdash_string.c
  * @author CyberDash计算机考研, cyberdash@163.com(抖音id:cyberdash_yuan)
- * @brief  串
+ * @brief 字符串源文件
  * @version 1.0.0
  * @date 2022-07-10
  * @copyright Copyright (c) 2021
@@ -44,8 +44,10 @@ status_t StringAssign(string_t* str, const char* chars, int str_len) {
         return NON_ALLOCATED;
     }
 
+    /// &emsp; 字符串buffer置0\n
     memset(str->buffer, 0, sizeof(char) * (str_len + 1));
 
+    /// ###4 填充buffer内容, 设置length###
     for (int i = 0; i < str_len; i++) {
         str->buffer[i] = chars[i];
     }
@@ -58,72 +60,129 @@ status_t StringAssign(string_t* str, const char* chars, int str_len) {
 
 /*!
  * 字符串复制
- * @param dest_str
- * @param src_str
- * @return
+ * @param dest_str 目标串
+ * @param src_str 被复制串
+ * @return 执行结果
+ * @note
  */
 status_t StringCopy(string_t* dest_str, string_t* src_str) {
-	for (int i = 0; i < StringLength(dest_str) && i < StringLength(src_str); i++) {
+    /// ### 1 释放目标串的buffer###
+    if (dest_str->buffer) {
+        free(dest_str->buffer);
+    }
+
+    /// ### 2 目标串的buffer分配内存###
+    if (!(dest_str->buffer = (char*)malloc(src_str->length + 1))) {
+        return NON_ALLOCATED;
+    }
+
+    /// &emsp; 目标串buffer置0\n
+    memset(dest_str->buffer, 0, sizeof(char) * (src_str->length + 1));
+
+    /// ###3 填充buffer内容, 设置length###
+    dest_str->length = src_str->length;
+
+	for (int i = 0; i < dest_str->length && i < src_str->length; i++) {
         dest_str->buffer[i] = src_str->buffer[i];
 	}
 
-    dest_str->length = src_str->length;
 
 	return OK;
 }
 
 
+/*!
+ * <h1>是否为空字符串</h1>
+ * @param str 字符串
+ * @return 结果
+ */
 int StringEmpty(string_t* str) {
 	return str->length == 0;
 }
 
 
-int StringCompare(string_t* string1, string_t* string2) {
-	for (int i = 0; i < string1->length && i < string2->length; i++) {
-		if (string1->buffer[i] != string2->buffer[i]) {
-			return string1->buffer[i] - string2->buffer[i];
+/*!
+ * <h1>字符串比较</h1>
+ * @param str1 **字符串1**
+ * @param str2 **字符串2**
+ * @return 比较结果
+ * @note
+ */
+int StringCompare(string_t* str1, string_t* str2) {
+    /// ### 1 依次遍历两个字符串每个字符进行比较###
+	for (int i = 0; i < str1->length && i < str2->length; i++) {
+		if (str1->buffer[i] != str2->buffer[i]) {
+			return str1->buffer[i] - str2->buffer[i];
 		}
 	}
 
-	return string1->length - string2->length;
+    /// ### 2 如果过程1没有得出结果, 比较长度###
+	return str1->length - str2->length;
 }
 
 
+/*!
+ * <h1>字符串长度</h1>
+ * @param str 字符串
+ * @return 长度
+ */
 int StringLength(string_t* str) {
 	return str->length;
 }
 
 
+/*!
+ * <h1>字符串清空</h1>
+ * @param str **字符串**
+ * @return **执行结果**
+ */
 status_t StringClear(string_t* str) {
+    /// ###1 释放buffer###
 	if (str->buffer) {
 		free(str->buffer);
         str->buffer = NULL;
 	}
 
+    /// ###2 length置0###
     str->length = 0;
 
 	return OK;
 }
 
 
-status_t StringConcat(string_t* target_string, string_t* str1, string_t* str2) {
-	if (target_string->buffer) {
-		free(target_string->buffer);
+/*!
+ * <h1>字符串拼接</h1>
+ * @param resulting_string **结果串**
+ * @param str1 **字符串1**
+ * @param str2 **字符串2**
+ * @return 执行结果
+ * @note
+ */
+status_t StringConcat(string_t* resulting_string, string_t* str1, string_t* str2) {
+
+    /// ### 1 释放结果串的buffer###
+	if (resulting_string->buffer) {
+		free(resulting_string->buffer);
 	}
 
-	if (!(target_string->buffer = (char *) malloc(str1->length + str2->length))) {
-		return OVERFLOW;
+    /// ### 2 结果串的buffer分配内存###
+	if (!(resulting_string->buffer = (char *) malloc(str1->length + str2->length + 1))) {
+		return NON_ALLOCATED;
 	}
 
+    memset(resulting_string->buffer, 0, sizeof(char) * (str1->length + str2->length + 1));
+
+    /// ###3 对结果串依次填充两个字符串###
 	for (int i = 0; i < str1->length; i++) {
-        target_string->buffer[i] = str1->buffer[i];
+        resulting_string->buffer[i] = str1->buffer[i];
 	}
 
 	for (int i = 0; i < str2->length; i++) {
-        target_string->buffer[str1->length + i] = str2->buffer[i];
+        resulting_string->buffer[str1->length + i] = str2->buffer[i];
 	}
 
-    target_string->length = str1->length + str2->length;
+    /// &emsp; 设置结果串的length
+    resulting_string->length = str1->length + str2->length;
 
 	return OK;
 }
@@ -150,15 +209,15 @@ status_t StringSubStr(string_t* str, string_t* sub_str, int offset, int sub_str_
 	}
 
     /// ###2 释放子串sub_str->buffer###
-    /// - 释放sub_str->buffer
+    /// &emsp; 释放sub_str->buffer
 	if (sub_str->buffer) {
 		free(sub_str->buffer);
 	}
 
     /// ###3 空子串处理###
-    /// &emsp; **if** 子串长度为0
-    /// &emsp;&emsp; buffer为NULL, length为0
-    /// &emsp;&emsp; 返回OK
+    /// &emsp; **if** 子串长度为0\n
+    /// &emsp;&emsp; buffer为NULL, length为0\n
+    /// &emsp;&emsp; 返回OK\n
 	if (sub_str_len == 0) {
         sub_str->buffer = NULL;
         sub_str->length = 0;
@@ -177,8 +236,8 @@ status_t StringSubStr(string_t* str, string_t* sub_str, int offset, int sub_str_
 
     /// - 子串buffer每个字符赋值\n
     /// &emsp; **for loop** 字符串buffer[offset ... offset + sub_str_len - 1] :\n
+    /// &emsp;&emsp; sub_str->buffer[i] <= str->buffer[offset + i]\n
     for (int i = 0; i < sub_str_len; i++) {
-        /// &emsp; sub_str->buffer[i] <= str->buffer[offset + i]
         sub_str->buffer[i] = str->buffer[offset + i];
     }
 
@@ -272,7 +331,7 @@ int StringBruteForceSearch(string_t* str, string_t* pattern, int offset) {
                 break;
             }
 
-            /// &emsp;&emsp;&emsp; 模式串索引向后挪1位
+            /// &emsp;&emsp;&emsp; 模式串索引加1(向后移动1位)
             pattern_index++;
         }
 
@@ -316,9 +375,9 @@ status_t KMPNext(const char* pattern, int pattern_len, int** next) {
         /// &emsp;&emsp; **if** starting_index != -1 :\n
         if (starting_index != -1) {
             /// &emsp;&emsp;&emsp; **if** pattern[pattern_index]和pattern[starting_index]不同(失配) :\n
-            /// &emsp;&emsp;&emsp;&emsp; pattern_index加1(向后移动1位);\n
-            /// &emsp;&emsp;&emsp;&emsp; starting_index加1(向后移动1位);\n
-            /// &emsp;&emsp;&emsp;&emsp; (*next)[pattern_index] = starting_index;\n
+            /// &emsp;&emsp;&emsp;&emsp; pattern_index加1(向后移动1位)\n
+            /// &emsp;&emsp;&emsp;&emsp; starting_index加1(向后移动1位)\n
+            /// &emsp;&emsp;&emsp;&emsp; 更新next数组pattern_index索引位置的值为starting_index\n
             /// ```
             /// 如果pattern[pattern_index]和str[starting_index]相同,
             /// 则左右两侧的相同字符串区域扩展
@@ -358,14 +417,13 @@ status_t KMPNext(const char* pattern, int pattern_len, int** next) {
             }
         } else {
             /// &emsp;&emsp; **else**(starting_index == -1) \n
-            /// &emsp;&emsp;&emsp; pattern_index++;\n
-            /// &emsp;&emsp;&emsp; starting_index++;\n
-            /// &emsp;&emsp;&emsp; (*next)[pattern_index] = starting_index;\n
+            /// &emsp;&emsp;&emsp; pattern_index加1(向后移动1位)\n
+            /// &emsp;&emsp;&emsp; starting_index加1(向后移动1位)\n
+            /// &emsp;&emsp;&emsp; 更新next数组pattern_index索引位置的值为starting_index\n
             /// ```
-            /// 当模式串字符pattern[1]失配时, 必然从pattern[0]开始重新进行匹配, 因此next[1] = 0
-            /// 令使用next[0]处理next[1] => 因此next[0] = -1
-            /// 此处逻辑可以和下面的pattern[pattern_index] == pattern[starting_index]分支逻辑合并
-            /// 其余部分则相同(代码可以合并)
+            /// 当模式串字符pattern[1]失配时, 必然从pattern[0]开始重新进行匹配, 因此可确定next[1] = 0
+            /// 令next[0] = X; next[1] = 0; next[1] = next[0] + 1 => 得next[0] = -1
+            /// 此处逻辑可以和上面的pattern[pattern_index] == pattern[starting_index]分支逻辑做代码合并
             /// ```
             pattern_index++;
             starting_index++;

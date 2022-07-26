@@ -202,8 +202,8 @@ void TestStringSearch() {
     memset(&str, 0, sizeof(string_t));
     memset(&pattern, 0, sizeof(string_t));
 
-    char str_chars[50] = "123 cyberdash 456";
-    char pattern_chars[50] = "cyberdash";
+    char str_chars[50] = "123 cyberdash cyber 456";
+    char pattern_chars[50] = "cyberdash cyber";
 
     StringAssign(&str, str_chars, strlen(str_chars));
     StringAssign(&pattern, pattern_chars, strlen(pattern_chars));

@@ -301,13 +301,13 @@ status_t KMPNext(const char* pattern, int pattern_len, int** next) {
     /// ###1 分配next数组内存###
     /// &emsp; **if** 分配内存失败 :\n
     /// &emsp;&emsp; 返回NON_ALLOCATED\n
-    *next = (int*)malloc((pattern_len) * sizeof(int));
+    *next = (int*)malloc((pattern_len + 1) * sizeof(int));
     if (*next == NULL) {
         return NON_ALLOCATED;
     }
 
     /// &emsp; memset置0\n
-    memset(*next, 0, pattern_len);
+    memset(*next, 0, sizeof(int) * (pattern_len + 1));
 
     /// ###2 初始化pattern_index/starting_index/next[0]###
     /// &emsp; pattern_index为模式串的索引, 初始化为0\n
@@ -407,25 +407,26 @@ int StringKMPSearch(string_t* str, string_t* pattern, int offset) {
         return status;
     }
 
+    /// ###2 使用next数组找模式串的匹配位置(的索引)###
     int pattern_index = 0;  // 模式串索引
     int str_index = offset; // 目标串索引
 
-    /// ###2 使用next数组找模式串的匹配位置(的索引)###
+    /// &emsp; **while** 目标串和模式串中, 某个串未遍历完 :\n
     while (pattern_index < pattern_len && str_index < str->length) {
-        /// &emsp; **if** 模式串索引字符 == 目标串索引的字符\n
-        /// &emsp;&emsp; 模式串索引and目标串索引, 则向后移1位\n
+        /// &emsp;&emsp; **if** 模式串索引字符 == 目标串索引的字符\n
+        /// &emsp;&emsp;&emsp; 模式串索引and目标串索引, 则向后移1位\n
         if (pattern->buffer[pattern_index] == str->buffer[str_index]) {
             pattern_index++;
             str_index++;
         } else {
-        /// &emsp; **else**(模式串索引字符 != 目标串索引的字符): \n
-            /// &emsp;&emsp; **if** 模式串索引0字符失配 :\n
-            /// &emsp;&emsp;&emsp; 目标串索引向后移1位\n
+            /// &emsp;&emsp; **else**(模式串索引字符 != 目标串索引的字符): \n
+            /// &emsp;&emsp;&emsp; **if** 模式串索引0字符失配 :\n
+            /// &emsp;&emsp;&emsp;&emsp; 目标串索引向后移1位\n
             if (pattern_index == 0) {
                 str_index++;
             } else {
-                /// &emsp;&emsp; **else**(模式串索引非0字符失配) :\n
-                /// &emsp;&emsp;&emsp; 从模式串的next[pattern_index]开始执行下一趟匹配\n
+                /// &emsp;&emsp;&emsp; **else**(模式串索引非0字符失配) :\n
+                /// &emsp;&emsp;&emsp;&emsp; 从模式串的next[pattern_index]开始执行下一趟匹配\n
                 pattern_index = next[pattern_index];
             }
         }

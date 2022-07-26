@@ -10,24 +10,30 @@
 
 #include "test.h"
 
+
+/*!
+ * main函数
+ * @return 0
+ * @note
+ */
 int main() {
 
-    // 测试字符串复制
+    /// - 测试字符串复制
     TestStringCopy();
 
-    // 测试字符串比较
+    /// - 测试字符串比较
     TestStringCompare();
 
-    // 测试字符串拼接
+    /// - 测试字符串拼接
     TestStringConcat();
 
-    // 测试字符串子串
+    /// - 测试字符串子串
 	TestStringSubStr();
 
-    // 测试字符串插入
+    /// - 测试字符串插入
     TestStringInsert();
 
-    // 测试字符串匹配(BF和KMP)
+    /// - 测试字符串匹配(BF和KMP)
     TestStringSearch();
 
     return 0;

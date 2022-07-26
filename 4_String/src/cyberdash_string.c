@@ -59,7 +59,7 @@ status_t StringAssign(string_t* str, const char* chars, int str_len) {
 
 
 /*!
- * 字符串复制
+ * <h1>字符串复制</h1>
  * @param dest_str 目标串
  * @param src_str 被复制串
  * @return 执行结果

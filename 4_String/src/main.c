@@ -11,16 +11,23 @@
 #include "test.h"
 
 int main() {
+
+    // 测试字符串复制
     TestStringCopy();
 
+    // 测试字符串比较
     TestStringCompare();
 
+    // 测试字符串拼接
     TestStringConcat();
 
+    // 测试字符串子串
 	TestStringSubStr();
 
+    // 测试字符串插入
     TestStringInsert();
 
+    // 测试字符串匹配(BF和KMP)
     TestStringSearch();
 
     return 0;

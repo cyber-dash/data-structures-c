@@ -9,7 +9,6 @@
  */
 
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 #include "cyberdash_string.h"
 #include "test.h"
@@ -33,7 +32,7 @@ static void inline StringPrint(string_t* str) {
 
 
 /*!
- * @brief 测试字符串复制
+ * @brief <h1>测试字符串复制</h1>
  * @note
  */
 void TestStringCopy() {
@@ -69,21 +68,23 @@ void TestStringCompare() {
     printf("|                    Test StringCompare                      |\n");
     printf("|                        测试字符串比较                       |\n");
 
+    /// ###1 初始化4个字符串###
 	string_t str1 = { .buffer = NULL, .length = 0};
     string_t str2 = { .buffer = NULL, .length = 0};
     string_t str3 = { .buffer = NULL, .length = 0};
     string_t str4 = { .buffer = NULL, .length = 0};
 
-    char chars1[50] = "hello cyberdash!";
-    char chars2[50] = "hello cyberdash!";
-    char chars3[50] = "hello cyberdash and hello Mr. Yuan";
-    char chars4[50] = "hi cyberdash";
+    char chars1[50] = "Hello cyberdash!";
+    char chars2[50] = "Hello cyberdash!";
+    char chars3[50] = "Hello cyberdash and hello Mr. Yuan";
+    char chars4[50] = "Hi cyberdash";
 
     StringAssign(&str1, chars1, strlen(chars1));
     StringAssign(&str2, chars2, strlen(chars2));
     StringAssign(&str3, chars3, strlen(chars3));
     StringAssign(&str4, chars4, strlen(chars4));
 
+    /// ###2 做比较并打印结果###
 	printf("str1 compare to str2: %d\n", StringCompare(&str1, &str2));
 	printf("str1 compare to str3: %d\n", StringCompare(&str1, &str3));
 	printf("str2 compare to str3: %d\n", StringCompare(&str2, &str3));
@@ -103,6 +104,7 @@ void TestStringConcat() {
     printf("|                     Test StringConcat                     |\n");
     printf("|                        测试字符串拼接                       |\n");
 
+    /// ###1 初始化2个字符串###
 	string_t str1;
     string_t str2;
     string_t resulting_str;
@@ -116,6 +118,7 @@ void TestStringConcat() {
     StringAssign(&str1, chars1, strlen(chars1));
     StringAssign(&str2, chars2, strlen(chars2));
 
+    /// ###2 执行拼接###
     StringConcat(&resulting_str, &str1, &str2);
 
     StringPrint(&resulting_str);
@@ -140,12 +143,16 @@ void TestStringSubStr() {
     memset(&str, 0, sizeof(string_t));
     memset(&sub_str, 0, sizeof(string_t));
 
+    /// ###1 初始化字符串###
+    /// &emsp; "hello cyberdash,"
     char chars[50] = "hello cyberdash,";
     StringAssign(&str, chars, strlen(chars));
 
     int offset = 6;
     int sub_str_len = 9;
 
+    /// ###2 求子串###
+    /// &emsp; 原始字符串偏移量6, 子串长度9
     StringSubStr(&str, &sub_str, offset, sub_str_len);
 
     StringPrint(&sub_str);
@@ -164,7 +171,7 @@ void TestStringInsert() {
     printf("|                     Test StringInsert                     |\n");
     printf("|                        测试字符串插入                       |\n");
 
-    //###1 初始化字符串&待插入字符串 ###
+    /// ###1 初始化字符串&待插入字符串 ###
 	string_t str;
     string_t insert_str;
 
@@ -177,7 +184,7 @@ void TestStringInsert() {
     StringAssign(&str, chars, strlen(chars));
     StringAssign(&insert_str, insert_chars, strlen(insert_chars));
 
-    // ###2 调用StringInsert执行插入###
+    /// ###2 调用StringInsert执行插入###
     StringInsert(&str, 6, &insert_str);
 
     StringPrint(&str);
@@ -202,6 +209,9 @@ void TestStringSearch() {
     memset(&str, 0, sizeof(string_t));
     memset(&pattern, 0, sizeof(string_t));
 
+    /// ###1 初始化目标串和模式串###
+    /// &emsp; 目标串: "123 cyberdash cyber 456"\n
+    /// &emsp; 模式串: "cyberdash cyber"\n
     char str_chars[50] = "123 cyberdash cyber 456";
     char pattern_chars[50] = "cyberdash cyber";
 
@@ -213,6 +223,9 @@ void TestStringSearch() {
 	printf("pattern: ");
     StringPrint(&pattern);
 
+    /// ###2 使用BF和KMP进行匹配###
+    /// - BF匹配, 目标串偏移量2\n
+    /// - KMP匹配, 目标串偏移量2\n
 	printf("index: %d\n", StringBruteForceSearch(&str, &pattern, 2));
 	printf("index find by kmp: %d\n", StringKMPSearch(&str, &pattern, 2));
 

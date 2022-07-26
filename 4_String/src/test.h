@@ -12,16 +12,22 @@
 #define CYBER_DASH_STRING_TEST_H
 
 
+// 测试字符串复制
 void TestStringCopy();
 
+// 测试字符串比较
 void TestStringCompare();
 
+// 测试字符串拼接
 void TestStringConcat();
 
+// 测试字符串子串
 void TestStringSubStr();
 
+// 测试字符串插入
 void TestStringInsert();
 
+// 测试字符串匹配(BF算法 & KMP算法)
 void TestStringSearch();
 
 

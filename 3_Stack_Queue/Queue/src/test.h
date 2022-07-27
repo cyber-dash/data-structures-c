@@ -13,7 +13,7 @@
 
 
 #include "link_queue.h"
-#include "seq_queue.h"
+#include "circular_queue.h"
 
 
 void TestSeqQueueEnQueueAndDeQueue();

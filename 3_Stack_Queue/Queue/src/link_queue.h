@@ -11,7 +11,7 @@
 #ifndef CYBER_DASH_STACK_QUEUE_H
 #define CYBER_DASH_STACK_QUEUE_H
 
-#include "type.h"
+#include "common.h"
 
 
 typedef struct linked_queue_node_t {
@@ -25,11 +25,11 @@ typedef struct linked_queue_t {
 } linked_queue_t;
 
 
-Status LinkQueueInit(linked_queue_t* linked_queue);
+status_t LinkQueueInit(linked_queue_t* linked_queue);
 
-Status LinkQueueEnQueue(linked_queue_t* linked_queue, QUEUE_ELEM elem);
+status_t LinkQueueEnQueue(linked_queue_t* linked_queue, QUEUE_ELEM elem);
 
-Status LinkQueueDeQueue(linked_queue_t* linked_queue, QUEUE_ELEM* elem);
+status_t LinkQueueDeQueue(linked_queue_t* linked_queue, QUEUE_ELEM* elem);
 
 int LinkQueueLength(linked_queue_t linked_queue);
 

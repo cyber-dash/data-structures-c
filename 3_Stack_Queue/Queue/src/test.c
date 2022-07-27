@@ -8,8 +8,8 @@
  *  CyberDash计算机考研
  */
 
-#include "test.h"
 #include <stdio.h>
+#include "test.h"
 
 
 void TestSeqQueueEnQueueAndDeQueue() {
@@ -18,25 +18,25 @@ void TestSeqQueueEnQueueAndDeQueue() {
     printf("                Test SeqQueue EnQueue/DeQueue                \n");
     printf("                      测试顺序队列入队/出队                     \n\n\n");
 
-    seq_queue_t seq_queue;
-    Status status = SeqQueueInit(&seq_queue);
+    circular_queue_t seq_queue;
+    status_t status = CircularQueueInit(&seq_queue);
 
     QUEUE_ELEM elements[8] = { 3, 1, 4, 1, 5, 9, 2, 6 };
     for (int i = 0; i < sizeof(elements) / sizeof(int); i++) {
         printf("入队: %d\n", elements[i]);
-        SeqQueueEnQueue(&seq_queue, elements[i]);
+        CircularQueueEnQueue(&seq_queue, elements[i]);
     }
 
-    SeqQueuePrint(&seq_queue);
+    CircularQueuePrint(&seq_queue);
 
     printf("\n出队5次后:\n\n");
 
     QUEUE_ELEM top_elem;
     for (int i = 0; i < 5; i++) {
-        SeqQueueDeQueue(&seq_queue, &top_elem);
+        CircularQueueDeQueue(&seq_queue, &top_elem);
     }
 
-    SeqQueuePrint(&seq_queue);
+    CircularQueuePrint(&seq_queue);
 
     printf("-------------------- 抖音: cyberdash_yuan --------------------\n");
 }
@@ -54,7 +54,7 @@ void TestLinkQueueEnQueueAndDeQueue() {
     printf("                      测试链式队列入队/出队                     \n\n\n");
 
     linked_queue_t link_queue;
-    Status status = LinkQueueInit(&link_queue);
+    status_t status = LinkQueueInit(&link_queue);
 
     QUEUE_ELEM elements[8] = { 3, 1, 4, 1, 5, 9, 2, 6 };
     for (int i = 0; i < sizeof(elements) / sizeof(int); i++) {

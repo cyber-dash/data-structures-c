@@ -19,7 +19,7 @@
  * @return **执行结果**
  * @note
  */
-Status LinkQueueInit(linked_queue_t* link_queue) {
+status_t LinkQueueInit(linked_queue_t* link_queue) {
     /// ###1 链式队列rear分配内存###
     /// &emsp; **if** 如果malloc失败 :\n
     /// &emsp;&emsp; 返回NON_ALLOCATED
@@ -43,7 +43,7 @@ Status LinkQueueInit(linked_queue_t* link_queue) {
  * @return **执行结果**
  * @note
  */
-Status LinkQueueDestroy(linked_queue_t* link_queue) {
+status_t LinkQueueDestroy(linked_queue_t* link_queue) {
     while (link_queue->front) {
         link_queue->rear = link_queue->front->next;
         free(link_queue->front);
@@ -62,7 +62,7 @@ Status LinkQueueDestroy(linked_queue_t* link_queue) {
  * @return **执行结果**
  * @note
  */
-Status LinkQueueEnQueue(linked_queue_t* link_queue, QUEUE_ELEM elem) {
+status_t LinkQueueEnQueue(linked_queue_t* link_queue, QUEUE_ELEM elem) {
     /// ###1 新结点内存分配###
     /// &emsp; **if** 如果malloc失败 :\n
     /// &emsp;&emsp; 返回NON_ALLOCATED
@@ -92,7 +92,7 @@ Status LinkQueueEnQueue(linked_queue_t* link_queue, QUEUE_ELEM elem) {
  * @return **执行结果**
  * @note
  */
-Status LinkQueueDeQueue(linked_queue_t* linked_queue, QUEUE_ELEM* elem) {
+status_t LinkQueueDeQueue(linked_queue_t* linked_queue, QUEUE_ELEM* elem) {
     /// ###1 空队判断###
     /// &emsp; **if** front等于rear : \n
     /// &emsp;&emsp; 空队, 返回NON_EXISTENT\n
@@ -123,7 +123,6 @@ Status LinkQueueDeQueue(linked_queue_t* linked_queue, QUEUE_ELEM* elem) {
  * @note
  */
 int LinkQueueLength(linked_queue_t linked_queue) {
-    // 返回Q的元素个数, 即为队列的长度
     linked_queue_node_t* cur = linked_queue.front;
     int length = 0;
 
@@ -134,32 +133,6 @@ int LinkQueueLength(linked_queue_t linked_queue) {
 
     return length;
 }
-
-
-/*
-Status ClearQueue(linked_queue_t *Q) {
-    // 将Q清为空队列
-
-}
-
-
-Status QueueEmpty(linked_queue_t Q) {
-    // 若队列Q为空队列, 则返回TRUE, 否则返回FALSE
-
-}
-
-
-Status GetHead(linked_queue_t Q, QUEUE_ELEM *e) {
-    // 若度列不空, 则用e返回Q的队头元素, 并返回OK;否则返回ERROR
-
-}
-
-
-// 从队头到队尾一次对队列Q中每个元素调用函数visit, 一旦visit失败, 则操作失败
-Status QueueTraverse(linked_queue_t Q, void (*visit)(linked_queue_node_t qNode)) {
-
-}
-*/
 
 
 /*!

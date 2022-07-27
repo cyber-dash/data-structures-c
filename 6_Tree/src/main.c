@@ -11,6 +11,7 @@
 #include "test.h"
 
 
+/*! @brief main函数 */
 int main() {
 
     TestBinaryTreePreOrderTraverse();   // 测试二叉树前序遍历
@@ -23,7 +24,7 @@ int main() {
 
     TestBinaryTreeLevelOrderTraverse(); // 测试二叉树层序遍历
 
-    TestHuffmanTree();                  // 测试哈夫曼(Huffman)编码
+    TestHuffmanCoding();                // 测试哈夫曼(Huffman)编码
 
     return 0;
 }

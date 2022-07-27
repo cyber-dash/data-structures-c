@@ -1,21 +1,40 @@
-#include <stdio.h>
-#include <stdlib.h>
-
-#include "cyberdash_string.h"
+/*!
+ * @file main.c
+ * @author CyberDash计算机考研, cyberdash@163.com(抖音id:cyberdash_yuan)
+ * @brief 字符串main文件
+ * @version 1.0.0
+ * @date 2022-07-10
+ * @copyright Copyright (c) 2021
+ *  CyberDash计算机考研
+ */
 
 #include "test.h"
 
-int main()
-{
-	test_StringCopy();
 
-	test_StringCompare();
+/*!
+ * main函数
+ * @return 0
+ * @note
+ */
+int main() {
 
-	test_StringConCat();
+    /// - 测试字符串复制
+    TestStringCopy();
 
-	test_SubString();
+    /// - 测试字符串比较
+    TestStringCompare();
 
-	test_Insert();
+    /// - 测试字符串拼接
+    TestStringConcat();
 
-	test_Index();
+    /// - 测试字符串子串
+	TestStringSubStr();
+
+    /// - 测试字符串插入
+    TestStringInsert();
+
+    /// - 测试字符串匹配(BF和KMP)
+    TestStringSearch();
+
+    return 0;
 }

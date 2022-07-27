@@ -1,7 +1,7 @@
 /*!
  * @file cyberdash_string.h
  * @author CyberDash计算机考研, cyberdash@163.com(抖音id:cyberdash_yuan)
- * @brief  串
+ * @brief 字符串头文件
  * @version 1.0.0
  * @date 2022-07-10
  * @copyright Copyright (c) 2021
@@ -11,41 +11,54 @@
 #define CYBER_DASH_STRING_H
 
 
+/*! @brief 函数返回值枚举 */
 typedef enum Status {
-    OK = 0,
-    NON_ALLOCATED,
-    NON_EXISTENT,
-    OVERFLOW,
-    ERROR,
-} Status;
+    OK = 0,         //!< 正确
+    NON_ALLOCATED,  //!< 内存分配失败
+    NON_EXISTENT,   //!< 不存在
+    OVERFLOW,       //!< 溢出
+    ERROR,          //!< 其他错误
+} status_t;
 
+/*! @brief 字符串 */
 typedef struct {
-    char* str;
-    unsigned int length;
-} cyber_dash_string_t;
+    char* buffer;   //!< char缓存数组
+    int length;     //!< 长度
+} string_t;
 
-Status StringAssign(cyber_dash_string_t* cyber_dash_string, char* src_str, unsigned int str_len);
 
-int StringLength(cyber_dash_string_t* cyber_dash_string);
+// 字符串赋值
+status_t StringAssign(string_t* str, const char* chars, int str_len);
 
-int StringCompare(cyber_dash_string_t* string1, cyber_dash_string_t* string2);
+// 字符串复制
+status_t StringCopy(string_t* dest_str, string_t* src_str);
 
-Status StringClear(cyber_dash_string_t* cyber_dash_string);
+// 是否为空字符串
+int StringEmpty(string_t* str);
 
-Status StringConcat(cyber_dash_string_t* target_string, cyber_dash_string_t* src_string1, cyber_dash_string_t* src_string2);
+// 字符串比较
+int StringCompare(string_t* str1, string_t* str2);
 
-// todo:
-Status StringSubString(cyber_dash_string_t* sub_string, cyber_dash_string_t *src_string, int pos, int len);
+// 字符串长度
+int StringLength(string_t* str);
 
-int BruteForce(cyber_dash_string_t *S, cyber_dash_string_t *T, int pos);
+// 字符串清空
+status_t StringClear(string_t* str);
 
-int KMP(cyber_dash_string_t *S, cyber_dash_string_t *T, int pos);
+// 字符串拼接
+status_t StringConcat(string_t* resulting_string, string_t* str1, string_t* str2);
 
-Status StringCopy(cyber_dash_string_t *target_string, cyber_dash_string_t *src_string);
+// 字符串子串
+status_t StringSubStr(string_t* str, string_t* sub_str, int offset, int sub_str_len);
 
-int StringEmpty(cyber_dash_string_t *cyber_dash_string);
+// 字符串插入
+status_t StringInsert(string_t* str, int index, string_t* insert_str);
 
-Status Insert(cyber_dash_string_t *S, int pos, cyber_dash_string_t *T);
+// 字符串暴力匹配(BF)
+int StringBruteForceSearch(string_t* str, string_t *pattern, int offset);
+
+// 字符串KMP匹配
+int StringKMPSearch(string_t *str, string_t *pattern, int offset);
 
 
 #endif //CYBER_DASH_STRING_H

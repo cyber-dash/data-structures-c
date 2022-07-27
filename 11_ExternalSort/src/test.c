@@ -13,24 +13,23 @@
 #include "loser_tree.h"
 
 
+/*!
+ * @brief 测试败者树K路归并排序
+ */
 void TestLoserTree() {
     printf("\n");
     printf("|------------------------- CyberDash -------------------------|\n");
-    printf("|                      Test loser_tree_t Sort                    |\n");
+    printf("|                      Test loser_tree_t Sort                 |\n");
     printf("|                         测试败者树排序                        |\n\n\n");
 
-
-    // int array[4][5] = {
-    //     10, 9,  20, 6,  12,
-    //     60, 50, 30, 44, 80,
-    //     90, 11, 8,  44, 49,
-    //     79, 3,  9,  14, 13,
-    // };
-    // int array[3][5] = {
-    //     6,12,10,9,20,
-    //     15,37,15,18,22,
-    //     25,48,16,20,40
-    // };
+    /// 5路归并\n
+    /// ```
+    /// 第0路: 6,  15, 25
+    /// 第1路: 12, 37, 48
+    /// 第2路: 10, 15, 16
+    /// 第3路: 9,  18, 20
+    /// 第4路: 20, 22, 40
+    /// ```
 
     int arr0[] = { 6, 15, 25 };
     int arr1[] = { 12, 37, 48 };
@@ -42,7 +41,7 @@ void TestLoserTree() {
     loser_tree_t loserTree;
     leaves_t leafArr;
 
-    K_Merge(loserTree, leafArr, array, 3);
+    KWayMerge(loserTree, leafArr, array, 5, 3);
 
     printf("|-------------------------------------------------------------|\n");
 }

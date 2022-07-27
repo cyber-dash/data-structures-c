@@ -24,10 +24,10 @@
  * @return **是否成功**
  * @note
  */
-Status BinaryTreeCreateByPreOrderStringRecursive(binary_tree_node_t** node,
-                                                 char* pre_order_str,
-                                                 int* traverse_index,
-                                                 size_t pre_order_str_len)
+status_t BinaryTreeCreateByPreOrderStringRecursive(binary_tree_node_t** node,
+                                                   char* pre_order_str,
+                                                   int* traverse_index,
+                                                   size_t pre_order_str_len)
 {
     /// ###1 检查是否终止递归###
     /// &emsp; **if** 遍历索引 >= 字符串长度:\n
@@ -65,10 +65,10 @@ Status BinaryTreeCreateByPreOrderStringRecursive(binary_tree_node_t** node,
 
     /// ###4 对孩子结点进行递归###
     /// - **I**&nbsp;&nbsp; 对左孩子结点执行递归
-    Status status = BinaryTreeCreateByPreOrderStringRecursive(&(*node)->left_child,
-                                                              pre_order_str,
-                                                              traverse_index,
-                                                              pre_order_str_len);
+    status_t status = BinaryTreeCreateByPreOrderStringRecursive(&(*node)->left_child,
+                                                                pre_order_str,
+                                                                traverse_index,
+                                                                pre_order_str_len);
     if (status != OK) { // 如果错误, 返回错误码
         return status;
     }
@@ -90,7 +90,7 @@ Status BinaryTreeCreateByPreOrderStringRecursive(binary_tree_node_t** node,
  * @return **执行结果**
  * @note
  */
-Status BinaryTreePreOrderTraverseRecursive(binary_tree_node_t* node, Status (*Visit)(BINARY_TREE_NODE_DATA)) {
+status_t BinaryTreePreOrderTraverseRecursive(binary_tree_node_t* node, status_t (*Visit)(BINARY_TREE_NODE_DATA)) {
 
     /// ###1 NULL结点处理 ###
     /// &emsp; 返回OK, 正确情况下, **终止递归**
@@ -101,7 +101,7 @@ Status BinaryTreePreOrderTraverseRecursive(binary_tree_node_t* node, Status (*Vi
     /// ###2 访问结点 ###
     /// &emsp; **if** 如果访问失败 :\n
     /// &emsp;&emsp; 返回错误码, 错误情况下, **终止递归**
-    Status status = Visit(node->data);
+    status_t status = Visit(node->data);
     if (status != OK) {
         return status;
     }
@@ -113,7 +113,7 @@ Status BinaryTreePreOrderTraverseRecursive(binary_tree_node_t* node, Status (*Vi
         return status;
     }
 
-    /// - **II**&nbsp;&nbsp; 对node右孩子结点进行递归
+    /// - **II**&nbsp; 对node右孩子结点进行递归
     status = BinaryTreePreOrderTraverseRecursive(node->right_child, Visit);
 
     return status;
@@ -128,7 +128,7 @@ Status BinaryTreePreOrderTraverseRecursive(binary_tree_node_t* node, Status (*Vi
  * @note
  * 有兴趣者, 自行注释:-)
  */
-Status BinaryTreeInOrderTraverse(binary_tree_node_t* node, Status (*Visit)(BINARY_TREE_NODE_DATA)) {
+status_t BinaryTreeInOrderTraverse(binary_tree_node_t* node, status_t (*Visit)(BINARY_TREE_NODE_DATA)) {
 
     seq_stack_t stack;
     SeqStackInit(&stack);
@@ -158,7 +158,7 @@ Status BinaryTreeInOrderTraverse(binary_tree_node_t* node, Status (*Visit)(BINAR
  * @return **执行结果**
  * @note
  */
-Status BinaryTreeInOrderTraverse2(binary_tree_node_t* node, Status (*Visit)(BINARY_TREE_NODE_DATA)) {
+status_t BinaryTreeInOrderTraverse2(binary_tree_node_t* node, status_t (*Visit)(BINARY_TREE_NODE_DATA)) {
 
     /// ###1 初始化栈###
     seq_stack_t stack;
@@ -242,13 +242,13 @@ Status BinaryTreeInOrderTraverse2(binary_tree_node_t* node, Status (*Visit)(BINA
 
 
 /*!
- * @brief **二叉树后序遍历**(递归)
+ * @brief <h1>二叉树后序遍历(递归)</h1>
  * @param node **二叉树结点**(指针)
  * @param Visit **结点访问函数**
  * @return **执行结果**
  * @note
  */
-Status BinaryTreePostOrderTraverseRecursive(binary_tree_node_t* node, Status (*Visit)(BINARY_TREE_NODE_DATA)) {
+status_t BinaryTreePostOrderTraverseRecursive(binary_tree_node_t* node, status_t (*Visit)(BINARY_TREE_NODE_DATA)) {
 
     /// ###1 NULL结点处理
     /// &emsp; **if** 遍历至NULL结点 :\n
@@ -259,7 +259,7 @@ Status BinaryTreePostOrderTraverseRecursive(binary_tree_node_t* node, Status (*V
 
     /// ###2 对左右孩子结点递归###
     /// - **I**&nbsp;&nbsp; 左孩子结点进行递归
-    Status status = BinaryTreePostOrderTraverseRecursive(node->left_child, Visit);
+    status_t status = BinaryTreePostOrderTraverseRecursive(node->left_child, Visit);
     if (status != OK) { // 如果遍历失败, 返回错误码
         return status;
     }
@@ -280,10 +280,9 @@ Status BinaryTreePostOrderTraverseRecursive(binary_tree_node_t* node, Status (*V
 /*!
  * @brief <h1>二叉树后序遍历</h1>
  * @note
- * 见 CyberDash团队 数据结构(C++模板实现)
- * https://gitee.com/cyberdash/data-structure-cpp/blob/master/Tree/BinaryTree/src/binary_tree.h
+ * 见 [CyberDash团队 数据结构(C++模板实现)](https://gitee.com/cyberdash/data-structure-cpp/blob/master/Tree/BinaryTree/src/binary_tree.h)
  */
-Status BinaryTreePostOrderTraverse(binary_tree_node_t* binary_tree, Status (*Visit)(BINARY_TREE_NODE_DATA)) {
+status_t BinaryTreePostOrderTraverse(binary_tree_node_t* binary_tree, status_t (*Visit)(BINARY_TREE_NODE_DATA)) {
     // todo: 见note, 有兴趣者参照C++代码自行实现:-)
     return OK;
 }
@@ -296,34 +295,34 @@ Status BinaryTreePostOrderTraverse(binary_tree_node_t* binary_tree, Status (*Vis
  * @return **执行结果**
  * @note
  */
-Status BinaryTreeLevelOrderTraverse(binary_tree_node_t* binary_tree, Status (*Visit)(BINARY_TREE_NODE_DATA)) {
+status_t BinaryTreeLevelOrderTraverse(binary_tree_node_t* binary_tree, status_t (*Visit)(BINARY_TREE_NODE_DATA)) {
 
     /// ###1 初始化队列###
-    seq_queue_t queue;
-    SeqQueueInit(&queue);
+    circular_queue_t queue;
+    CircularQueueInit(&queue);
 
     /// &emsp; 节点入队
-    SeqQueueEnQueue(&queue, binary_tree);
+    CircularQueueEnQueue(&queue, binary_tree);
 
     /// ###2 使用队列进行遍历###
-    /// &emsp; **while** 队列不为空 :\n
-    while (SeqQueueLength(queue)) {
+    /// &emsp; **while** 队列不为空 :
+    while (CircularQueueGetLength(queue)) {
         /// - **I**&nbsp;&nbsp; 队头出队\n
         binary_tree_node_t* cur = NULL;
-        SeqQueueDeQueue(&queue, &cur);
+        CircularQueueDeQueue(&queue, &cur);
 
         /// - **II**&nbsp; 访问队头\n
         Visit(cur->data);
 
         /// - **III** 孩子结点入队\n
-        ///  + 如果左孩子不为NULL, 左孩子结点入队\n
-        ///  + 如果右孩子不为NULL, 右孩子结点入队\n
+        ///  + **if** 左孩子不为NULL: 左孩子结点入队\n
+        ///  + **if** 右孩子不为NULL: 右孩子结点入队\n
         if (cur->left_child) {
-            SeqQueueEnQueue(&queue, cur->left_child);
+            CircularQueueEnQueue(&queue, cur->left_child);
         }
 
         if (cur->right_child) {
-            SeqQueueEnQueue(&queue, cur->right_child);
+            CircularQueueEnQueue(&queue, cur->right_child);
         }
     }
 

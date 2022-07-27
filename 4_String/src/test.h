@@ -1,7 +1,7 @@
 /*!
  * @file test.h
  * @author CyberDash计算机考研, cyberdash@163.com(抖音id:cyberdash_yuan)
- * @brief  串 测试用例头文件
+ * @brief 字符串测试头文件
  * @version 1.0.0
  * @date 2022-07-10
  * @copyright Copyright (c) 2021
@@ -12,17 +12,23 @@
 #define CYBER_DASH_STRING_TEST_H
 
 
-void test_StringCopy();
+// 测试字符串复制
+void TestStringCopy();
 
-void test_StringCompare();
+// 测试字符串比较
+void TestStringCompare();
 
-void test_StringConCat();
+// 测试字符串拼接
+void TestStringConcat();
 
-void test_SubString();
+// 测试字符串子串
+void TestStringSubStr();
 
-void test_Insert();
+// 测试字符串插入
+void TestStringInsert();
 
-void test_Index();
+// 测试字符串匹配(BF算法 & KMP算法)
+void TestStringSearch();
 
 
 #endif //CYBER_DASH_STRING_TEST_H

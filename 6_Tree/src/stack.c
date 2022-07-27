@@ -13,137 +13,128 @@
 
 
 /*!
- * @brief 顺序栈初始化
- * @param seq_stack 顺序栈(指针)
- * @return 执行结果
+ * @brief <h1>顺序栈初始化</h1>
+ * @param seq_stack **顺序栈**(指针)
+ * @return **执行结果**
+ * @note
  */
-Status SeqStackInit(seq_stack_t* seq_stack) {
+status_t SeqStackInit(seq_stack_t* seq_stack) {
 
-    // 栈元素数组申请内存
+    /// ###1 顺序栈数组分配内存###
+    /// &emsp; **if** 如果malloc失败 :\n
+    /// &emsp;&emsp; 返回NON_ALLOCATED
     seq_stack->elements = (STACK_ELEM*)malloc(STACK_INIT_CAPACITY * sizeof(STACK_ELEM));
     if (!seq_stack->elements) {
         return NON_ALLOCATED;   // 存储分配失败
     }
 
-    seq_stack->top = seq_stack->elements;       //!< top指针初始化
-    seq_stack->capacity = STACK_INIT_CAPACITY;  //!< 栈容量初始化
+    /// ###2 top和容量初始化###
+    /// &emsp; top指向elements首地址, capacity(容量)设置为STACK_INIT_CAPACITY\n
+    seq_stack->top = seq_stack->elements;       // top指针初始化
+    seq_stack->capacity = STACK_INIT_CAPACITY;  // 栈容量初始化
 
     return OK;
 }
 
 
 /*!
- * @brief 获取栈顶元素
- * @param seq_stack 顺序栈
- * @param elem 栈顶元素保存变量
- * @return 执行结果
+ * @brief <h1>顺序栈获取栈顶元素</h1>
+ * @param seq_stack **顺序栈**
+ * @param elem **栈顶元素保存变量**
+ * @return **执行结果**
+ * @note
  */
-Status SeqStackGetTop(seq_stack_t seq_stack, STACK_ELEM* elem) {
+status_t SeqStackGetTop(seq_stack_t seq_stack, STACK_ELEM* elem) {
 
-    // 如果栈空, 返回NON_EXISTENT
+    /// ###1 空栈判断###
+    /// &emsp; **if** 空栈 : \n
+    /// &emsp;&emsp; 返回NON_EXISTENT\n
     if (SeqStackIsEmpty(seq_stack)){
         return NON_EXISTENT;
     }
 
-    *elem = *(seq_stack.top - 1);   // 使用栈顶元素(top指针指向位置的前一位)赋值
+    /// ###2 赋值###
+    /// &emsp; top指针前一位的值, 赋给*elem
+    *elem = *(seq_stack.top - 1);
 
     return OK;
 }
 
 
 /*!
- * @brief 入栈
- * @param seq_stack 顺序栈(指针)
- * @param elem 入栈元素
- * @return 执行结果
+ * @brief <h1>顺序栈入栈</h1>
+ * @param seq_stack **顺序栈**(指针)
+ * @param elem **入栈元素**
+ * @return **执行结果**
+ * @note
  */
-Status SeqStackPush(seq_stack_t* seq_stack, binary_tree_node_t* elem) {
-    // 栈满, 追加存储空间
+status_t SeqStackPush(seq_stack_t* seq_stack, binary_tree_node_t* elem) {
+    /// ###1 判断是否栈满(以追加存储空间) ###
+    /// &emsp; **if** top - elements >= capacity :
     if (seq_stack->top - seq_stack->elements >= seq_stack->capacity) {
-        // 调用realloc重新分配内存
+        /// - **I**&nbsp;&nbsp; 调用realloc重新分配elements数组内存\n
+        ///  + 新的elements数组内存长度为capacity + STACK_INCREMENT\n
+        ///  + 调用realloc\n
         seq_stack->elements = (STACK_ELEM*)realloc(seq_stack->elements,
                                                    (seq_stack->capacity + STACK_INCREMENT) * sizeof(STACK_ELEM));
+        /// &emsp;&emsp;&emsp;&emsp; **if** 内存分配失败 : \n
+        /// &emsp;&emsp;&emsp;&emsp;&emsp; 返回NON_ALLOCATED\n
         if (!seq_stack->elements) {
             return NON_ALLOCATED;   // 如果存储分配失败, 返回NON_ALLOCATED
         }
 
+        /// - **II**&nbsp; 调整top指向和容量
         seq_stack->top = seq_stack->elements + seq_stack->capacity; // 调整top指向
         seq_stack->capacity += STACK_INCREMENT;  // 调整扩容数值
     }
 
-    *seq_stack->top = elem; // node赋值到top指向的位置
-    seq_stack->top++;       // top向后移一位
+    /// ###2 执行入栈 ###
+    /// - **I**&nbsp;&nbsp; elem赋值给top所指向地址
+    *seq_stack->top = elem;
+    /// - **II**&nbsp; top向后移一位
+    seq_stack->top++;
 
     return OK;
 }
 
 
 /*!
- * @brief 出栈
- * @param seq_stack 顺序栈(指针)
- * @param elem 保存出栈元素的元素变量(指针)
- * @return 执行结果
+ * @brief <h1>顺序栈出栈</h1>
+ * @param seq_stack **顺序栈**(指针)
+ * @param elem **出栈元素保存变量**(指针)
+ * @return **执行结果**
+ * @note
  */
-Status SeqStackPop(seq_stack_t* seq_stack, STACK_ELEM* elem) {
-    //!< 如果栈空, 返回NON_EXISTENT
+status_t SeqStackPop(seq_stack_t* seq_stack, STACK_ELEM* elem) {
+    /// ###1 空栈判断###
+    /// &emsp; **if** top指向elements数组首地址 :\n
+    /// &emsp;&emsp; 返回NON_EXISTENT\n
     if (seq_stack->top == seq_stack->elements) {
         return NON_EXISTENT;
     }
 
-    seq_stack->top--;           //!< top指向向前移一位
-    *elem = *seq_stack->top;    //!< top指向的元素值赋给*elem
+    /// ###2 执行出栈###
+    /// - **I**&nbsp;&nbsp; top指向前一位
+    seq_stack->top--;
+    /// - **II**&nbsp; top指向元素赋给*elem
+    *elem = *seq_stack->top;
 
     return OK;
 }
 
 
-/*!
- * @brief 栈销毁
- * @param seq_stack 顺序栈(指针)
- * @return 执行结果
- */
-Status SeqStackDestroy(seq_stack_t* seq_stack) {
-    free(seq_stack->elements);
-    free(seq_stack);
-
-    return OK;
-}
-
 
 /*!
- * @brief 栈清空
- * @param seq_stack 顺序栈(指针)
- * @return 执行结果
- */
-Status SeqStackClear(seq_stack_t* seq_stack) {
-    STACK_ELEM elem;
-    while (SeqStackIsEmpty(*seq_stack) != OK) {
-        SeqStackPop(seq_stack, &elem);
-    }
-
-    return OK;
-}
-
-
-/*!
- * @brief 栈是否为空
- * @param seq_stack 顺序栈
- * @return 是否为空
+ * @brief <h1>顺序栈是否为空</h1>
+ * @param seq_stack **顺序栈**
+ * @return **是否为空**
+ * @note
  */
 int SeqStackIsEmpty(seq_stack_t seq_stack) {
+    /// &emsp; 返回top == elements的结果
     if (seq_stack.top == seq_stack.elements) {
         return TRUE;
     }
 
     return FALSE;
-}
-
-
-/*!
- * @brief 栈长度
- * @param seq_stack 顺序栈
- * @return 长度
- */
-int SeqStackLength(seq_stack_t seq_stack) {
-    return seq_stack.top - seq_stack.elements;
 }

@@ -1,17 +1,16 @@
 ﻿/*!
- * @file queue.c
+ * @file circular_queue.c
  * @author CyberDash计算机考研, cyberdash@163.com(抖音id:cyberdash_yuan)
- * @brief 队列源文件
+ * @brief  循环队列源文件
  * @version 1.0.0
- * @date 2022-07-15
+ * @date 2022-07-10
  * @copyright Copyright (c) 2021
  *  CyberDash计算机考研
  */
 
-
-#include <stdlib.h>
-#include <string.h>
-#include "queue.h"
+#include "circular_queue.h"
+#include "stdlib.h"
+#include "string.h"
 
 
 /*!
@@ -98,6 +97,47 @@ status_t CircularQueueDeQueue(circular_queue_t* circular_queue, QUEUE_ELEM* elem
     /// - **II**&nbsp; front调整数值
     *elem = circular_queue->elements[circular_queue->front];
     circular_queue->front = (circular_queue->front + 1) % MAX_SIZE;
+
+    return OK;
+}
+
+
+/*!
+ * <h1>顺序表转换成字符串</h1>
+ * @param circular_queue **顺序表**(指针)
+ * @param str **字符串**
+ * @param str_len_limit **字符串长度限制**
+ * @return **执行结果**
+ * @note
+ */
+status_t CircularQueueToString(circular_queue_t* circular_queue, char* str, int str_len_limit) {
+
+    /// ###1 空队列处理###
+    /// &emsp; 不做操作
+    if (circular_queue->front == circular_queue->rear) {
+        return OK;
+    }
+
+    /// ###2 计算遍历次数###
+    int loop_stop_condition;
+    if (circular_queue->front < circular_queue->rear) {
+        loop_stop_condition = circular_queue->rear;
+    } else {
+        loop_stop_condition = circular_queue->rear + MAX_SIZE;
+    }
+
+    /// &emsp; **if** 遍历次数 > 字符串长度限制
+    /// &emsp;&emsp; 返回OVERFLOW
+    if (loop_stop_condition - circular_queue->front > str_len_limit) {
+        return OVERFLOW;
+    }
+
+    /// ###3 构造字符串
+    int str_index = 0;
+    for (int i = circular_queue->front; i < loop_stop_condition; i++) {
+        str[str_index] = circular_queue->elements[i % MAX_SIZE];
+        str_index++;
+    }
 
     return OK;
 }

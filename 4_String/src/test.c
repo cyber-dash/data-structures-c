@@ -1,7 +1,7 @@
 /*!
  * @file test.c
  * @author CyberDash计算机考研, cyberdash@163.com(抖音id:cyberdash_yuan)
- * @brief  串 测试用例
+ * @brief 字符串测试源文件
  * @version 1.0.0
  * @date 2022-07-10
  * @copyright Copyright (c) 2021
@@ -9,143 +9,225 @@
  */
 
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
-
 #include "cyberdash_string.h"
-
 #include "test.h"
 
 
-static void inline PrintStr(cyber_dash_string_t* cyber_dash_string) {
-	if (cyber_dash_string == NULL || cyber_dash_string->length <= 0) {
+/*!
+ * <h1>字符串打印</h1>
+ * @param str 字符串
+ * @note
+ */
+static void inline StringPrint(string_t* str) {
+    /// ###1 空字符串处理###
+    /// &emsp; 直接返回
+	if (str == NULL || str->length <= 0) {
 		return;
 	}
 
-	printf("%.*s\n", cyber_dash_string->length, cyber_dash_string->str);
+    /// ### 2 调用printf ###
+	printf("%.*s\n", str->length, str->buffer);
 }
 
 
-void test_StringCopy() {
+/*!
+ * @brief <h1>测试字符串复制</h1>
+ * @note
+ */
+void TestStringCopy() {
     printf("\n");
     printf("|------------------------ CyberDash ------------------------|\n");
     printf("|                      Test StringCopy                      |\n");
     printf("|                        测试字符串复制                       |\n");
 
-	cyber_dash_string_t T = { .str = NULL, .length = 0};
-    cyber_dash_string_t S = { .str = NULL, .length = 0};
+    /// ###1 被复制串和复制串初始化###
+	string_t dest_str = { .buffer = NULL, .length = 0};
+    string_t src_str = { .buffer = NULL, .length = 0};
 
-    // char str[50] = "hello cyberdash!";
-    char str[50] = "你好";
-    StringAssign(&S, str, strlen(str));
+    /// &emsp; 被复制串"Hello cyberdash!"
+    char chars[50] = "Hello cyberdash!";
+    StringAssign(&src_str, chars, (int)strlen(chars));
 
-    T.str = malloc(128);
-    T.length = 128;
+    /// ###2 执行复制###
+    StringCopy(&dest_str, &src_str);
 
-    StringCopy(&T, &S);
-
-	PrintStr(&T);
+    StringPrint(&dest_str);
 
     printf("|-----------------------------------------------------------|\n\n");
 }
 
 
-void test_StringCompare() {
+/*!
+ * @brief <h1>测试字符串比较</h1>
+ * @note
+ */
+void TestStringCompare() {
     printf("\n");
     printf("|------------------------ CyberDash ------------------------|\n");
     printf("|                    Test StringCompare                      |\n");
     printf("|                        测试字符串比较                       |\n");
 
-	cyber_dash_string_t S1 = { .str = NULL, .length = 0};
-    cyber_dash_string_t S2 = { .str = NULL, .length = 0};
-    cyber_dash_string_t S3 = { .str = NULL, .length = 0};
-    cyber_dash_string_t S4 = { .str = NULL, .length = 0};
+    /// ###1 初始化4个字符串###
+	string_t str1 = { .buffer = NULL, .length = 0};
+    string_t str2 = { .buffer = NULL, .length = 0};
+    string_t str3 = { .buffer = NULL, .length = 0};
+    string_t str4 = { .buffer = NULL, .length = 0};
 
-    char str1[50] = "hello cyberdash!";
-    char str2[50] = "hello cyberdash!";
-    char str3[50] = "hello cyberdash and hello Mr. Yuan";
-    char str4[50] = "hi cyberdash";
+    char chars1[50] = "Hello cyberdash!";
+    char chars2[50] = "Hello cyberdash!";
+    char chars3[50] = "Hello cyberdash and hello Mr. Yuan";
+    char chars4[50] = "Hi cyberdash";
 
-    StringAssign(&S1, str1, strlen(str1));
-    StringAssign(&S2, str2, strlen(str2));
-    StringAssign(&S3, str3, strlen(str3));
-    StringAssign(&S4, str4, strlen(str4));
+    StringAssign(&str1, chars1, strlen(chars1));
+    StringAssign(&str2, chars2, strlen(chars2));
+    StringAssign(&str3, chars3, strlen(chars3));
+    StringAssign(&str4, chars4, strlen(chars4));
 
-	printf("S1 compare to S2: %d\n", StringCompare(&S1, &S2));
-	printf("S1 compare to S3: %d\n", StringCompare(&S1, &S3));
-	printf("S2 compare to S3: %d\n", StringCompare(&S2, &S3));
-	printf("S1 compare to S4: %d\n", StringCompare(&S1, &S4));
+    /// ###2 做比较并打印结果###
+	printf("str1 compare to str2: %d\n", StringCompare(&str1, &str2));
+	printf("str1 compare to str3: %d\n", StringCompare(&str1, &str3));
+	printf("str2 compare to str3: %d\n", StringCompare(&str2, &str3));
+	printf("str1 compare to str4: %d\n", StringCompare(&str1, &str4));
 
     printf("|-----------------------------------------------------------|\n\n");
 }
 
 
-void test_StringConCat() {
-	cyber_dash_string_t S1, S2, T;
+/*!
+ * @brief <h1>测试字符串拼接</h1>
+ * @note
+ */
+void TestStringConcat() {
+    printf("\n");
+    printf("|------------------------ CyberDash ------------------------|\n");
+    printf("|                     Test StringConcat                     |\n");
+    printf("|                        测试字符串拼接                       |\n");
 
-    memset(&S1, 0, sizeof(cyber_dash_string_t));
-    memset(&S2, 0, sizeof(cyber_dash_string_t));
-    memset(&T, 0, sizeof(cyber_dash_string_t));
+    /// ###1 初始化2个字符串###
+	string_t str1;
+    string_t str2;
+    string_t resulting_str;
 
-    char str1[50] = "hello cyberdash,";
-    char str2[50] = "hello Mr. Yuan.";
-    StringAssign(&S1, str1, strlen(str1));
-    StringAssign(&S2, str2, strlen(str2));
+    memset(&str1, 0, sizeof(string_t));
+    memset(&str2, 0, sizeof(string_t));
+    memset(&resulting_str, 0, sizeof(string_t));
 
-    StringConcat(&T, &S1, &S2);
+    char chars1[50] = "hello cyberdash,";
+    char chars2[50] = "hello Mr. Yuan.";
+    StringAssign(&str1, chars1, strlen(chars1));
+    StringAssign(&str2, chars2, strlen(chars2));
 
-	PrintStr(&T);
+    /// ###2 执行拼接###
+    StringConcat(&resulting_str, &str1, &str2);
+
+    StringPrint(&resulting_str);
+
+    printf("|-----------------------------------------------------------|\n\n");
 }
 
 
-void test_SubString() {
-	cyber_dash_string_t Sub, S;
+/*!
+ * @brief <h1>测试字符串子串</h1>
+ * @note
+ */
+void TestStringSubStr() {
+    printf("\n");
+    printf("|------------------------ CyberDash ------------------------|\n");
+    printf("|                     Test StringSubStr                     |\n");
+    printf("|                        测试字符串子串                       |\n");
 
-    memset(&S, 0, sizeof(cyber_dash_string_t));
-    memset(&Sub, 0, sizeof(cyber_dash_string_t));
+	string_t sub_str;
+    string_t str;
 
-    char str[50] = "hello cyberdash,";
-    StringAssign(&S, str, strlen(str));
+    memset(&str, 0, sizeof(string_t));
+    memset(&sub_str, 0, sizeof(string_t));
 
-    StringSubString(&Sub, &S, 7, 9);
+    /// ###1 初始化字符串###
+    /// &emsp; "hello cyberdash,"
+    char chars[50] = "hello cyberdash,";
+    StringAssign(&str, chars, strlen(chars));
 
-	PrintStr(&Sub);
+    int offset = 6;
+    int sub_str_len = 9;
+
+    /// ###2 求子串###
+    /// &emsp; 原始字符串偏移量6, 子串长度9
+    StringSubStr(&str, &sub_str, offset, sub_str_len);
+
+    StringPrint(&sub_str);
+
+    printf("|-----------------------------------------------------------|\n\n");
 }
 
 
-void test_Insert() {
-	cyber_dash_string_t S, T;
+/*!
+ * @brief <h1>测试字符串插入</h1>
+ * @note
+ */
+void TestStringInsert() {
+    printf("\n");
+    printf("|------------------------ CyberDash ------------------------|\n");
+    printf("|                     Test StringInsert                     |\n");
+    printf("|                        测试字符串插入                       |\n");
 
-    memset(&S, 0, sizeof(cyber_dash_string_t));
-    memset(&T, 0, sizeof(cyber_dash_string_t));
+    /// ###1 初始化字符串&待插入字符串 ###
+	string_t str;
+    string_t insert_str;
 
-    char str1[50] = "hello dash";
-    char str2[50] = "cyber";
-    StringAssign(&S, str1, strlen(str1));
-    StringAssign(&T, str2, strlen(str2));
+    memset(&str, 0, sizeof(string_t));
+    memset(&insert_str, 0, sizeof(string_t));
 
-	Insert(&S, 7, &T);
+    char chars[50] = "Hello Dash";
+    char insert_chars[50] = "Cyber";
 
-	PrintStr(&S);
+    StringAssign(&str, chars, strlen(chars));
+    StringAssign(&insert_str, insert_chars, strlen(insert_chars));
+
+    /// ###2 调用StringInsert执行插入###
+    StringInsert(&str, 6, &insert_str);
+
+    StringPrint(&str);
+
+    printf("|-----------------------------------------------------------|\n\n");
 }
 
 
-void test_Index() {
-	cyber_dash_string_t S, T;
+/*!
+ * @brief <h1>测试字符串匹配(BF算法 & KMP算法)</h1>
+ * @note
+ */
+void TestStringSearch() {
+    printf("\n");
+    printf("|------------------------ CyberDash ------------------------|\n");
+    printf("|            Test StringSearch BF & StringKMPSearch         |\n");
+    printf("|                   测试字符串搜索BF & KMP算法                 |\n");
 
-    memset(&S, 0, sizeof(cyber_dash_string_t));
-    memset(&T, 0, sizeof(cyber_dash_string_t));
+	string_t str;
+    string_t pattern;
 
-    char str1[50] = "hello cyberdash";
-    char str2[50] = "cyberdash";
-    StringAssign(&S, str1, strlen(str1));
-    StringAssign(&T, str2, strlen(str2));
+    memset(&str, 0, sizeof(string_t));
+    memset(&pattern, 0, sizeof(string_t));
 
-	printf("S: ");
-	PrintStr(&S);
-	printf("T: ");
-	PrintStr(&T);
+    /// ###1 初始化目标串和模式串###
+    /// &emsp; 目标串: "123 cyberdash cyber 456"\n
+    /// &emsp; 模式串: "cyberdash cyber"\n
+    char str_chars[50] = "123 cyberdash cyber 456";
+    char pattern_chars[50] = "cyberdash cyber";
 
-	printf("index: %d\n", BruteForce(&S, &T, 2));
-	printf("index find by kmp: %d\n", KMP(&S, &T, 2));
+    StringAssign(&str, str_chars, strlen(str_chars));
+    StringAssign(&pattern, pattern_chars, strlen(pattern_chars));
+
+	printf("str: ");
+    StringPrint(&str);
+	printf("pattern: ");
+    StringPrint(&pattern);
+
+    /// ###2 使用BF和KMP进行匹配###
+    /// - BF匹配, 目标串偏移量2\n
+    /// - KMP匹配, 目标串偏移量2\n
+	printf("index: %d\n", StringBruteForceSearch(&str, &pattern, 2));
+	printf("index find by kmp: %d\n", StringKMPSearch(&str, &pattern, 2));
+
+    printf("|-----------------------------------------------------------|\n\n");
 }

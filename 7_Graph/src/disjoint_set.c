@@ -18,7 +18,7 @@
  * @param size 并查集大小
  * @return 执行结果
  */
-Status InitDisjointSet(DisjointSet* disjoint_set, int size) {
+status_t InitDisjointSet(DisjointSet* disjoint_set, int size) {
     disjoint_set->size = size;
     disjoint_set->parent_index_array = (int*)malloc(size * sizeof(int));
     if (!disjoint_set->parent_index_array) {
@@ -38,7 +38,7 @@ Status InitDisjointSet(DisjointSet* disjoint_set, int size) {
  * @param disjoint_set 并查集(二级指针)
  * @return 是否成功
  */
-Status DisjointSetDestroy(DisjointSet** disjoint_set) {
+status_t DisjointSetDestroy(DisjointSet** disjoint_set) {
     free((*disjoint_set)->parent_index_array);
     free(*disjoint_set);
     *disjoint_set = NULL;
@@ -54,7 +54,7 @@ Status DisjointSetDestroy(DisjointSet** disjoint_set) {
  * @param index2 索引2
  * @return 执行结果
  */
-Status DisjointSetUnion(DisjointSet* disjoint_set, int index1, int index2) {
+status_t DisjointSetUnion(DisjointSet* disjoint_set, int index1, int index2) {
     int root1 = DisjointSetFindRecursive(disjoint_set, index1);
     int root2 = DisjointSetFindRecursive(disjoint_set, index2);
 

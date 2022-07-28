@@ -23,13 +23,13 @@ typedef struct DisjointSet {
 } DisjointSet;
 
 // 构造函数
-Status InitDisjointSet(DisjointSet* disjoint_set, int size);
+status_t InitDisjointSet(DisjointSet* disjoint_set, int size);
 
 // 销毁并查集
-Status DisjointSetDestroy(DisjointSet** disjoint_set);
+status_t DisjointSetDestroy(DisjointSet** disjoint_set);
 
 // 合并两个集合
-Status DisjointSetUnion(DisjointSet* disjoint_set, int root1, int root2);
+status_t DisjointSetUnion(DisjointSet* disjoint_set, int root1, int root2);
 
 // 查找
 int DisjointSetFindRecursive(DisjointSet* disjoint_set, int index);

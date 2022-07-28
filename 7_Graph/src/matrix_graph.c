@@ -20,7 +20,7 @@
  * @return 是否成功
  * @note
  */
-Status LocateVertex(matrix_graph_t graph, VERTEX_TYPE vertex, int* vertex_index) {
+status_t LocateVertex(matrix_graph_t graph, VERTEX_TYPE vertex, int* vertex_index) {
     for (int i = 0; i < graph.vertex_count; i++) {
         if (graph.vertex_array[i] == vertex) {
             *vertex_index = i;
@@ -124,12 +124,12 @@ edge_t* NextEdge(matrix_graph_t* graph, int vertex_idx, edge_t* edge) {
  *
  * 如有这方面兴趣, 请参考C++模板版本实现 https://gitee.com/cyberdash/data-structure-cpp 中的图代码
  */
-Status CreateGraphByEdgesAndVertices(matrix_graph_t* graph,
-                                     edge_t* edge_array,
-                                     int edge_count,
-                                     const int* vertex_index_array,
-                                     int vertex_count,
-                                     GRAPH_KIND graph_kind)
+status_t CreateGraphByEdgesAndVertices(matrix_graph_t* graph,
+                                       edge_t* edge_array,
+                                       int edge_count,
+                                       const int* vertex_index_array,
+                                       int vertex_count,
+                                       GRAPH_KIND graph_kind)
 {
     // 结点数或边数超过限制
     if (edge_count > MAX_EDGE_CNT || vertex_count > MAX_VERTEX_CNT) {
@@ -192,7 +192,7 @@ Status CreateGraphByEdgesAndVertices(matrix_graph_t* graph,
  * @param graph 图(指针)
  * @return 执行结果
  */
-Status PrintGraphMatrix(matrix_graph_t* graph) {
+status_t PrintGraphMatrix(matrix_graph_t* graph) {
     for (int i = 0; i < graph->vertex_count; i++) {
         for (int j = 0; j < graph->vertex_count; j++) {
             double weight = DBL_MAX;

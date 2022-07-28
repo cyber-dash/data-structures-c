@@ -24,11 +24,11 @@
  */
 typedef enum {
     OK,
-    ERROR,
-    OVERFLOW,
     NON_ALLOCATED,
-    NON_EXISTENT
-} Status;
+    NON_EXISTENT,
+    OVERFLOW,
+    ERROR
+} status_t;
 
 
 typedef enum {

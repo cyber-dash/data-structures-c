@@ -83,7 +83,7 @@ void TestCreateUDNByEdgesAndVertices() {
     }
 
     // 建图, 如果成功则打印
-    Status status = CreateGraphByEdgesAndVertices(&graph, arcCellArr, 5, vertices, 4, UDN);
+    status_t status = CreateGraphByEdgesAndVertices(&graph, arcCellArr, 5, vertices, 4, UDN);
     if (status == OK) {
         printf("建图成功, 打印:\n\n");
         status = PrintGraphMatrix(&graph);

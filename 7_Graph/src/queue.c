@@ -18,9 +18,9 @@
  * @param link_queue
  * @return
  */
-Status InitQueue(linked_queue_node_t* link_queue) {
+status_t LinkedQueueInit(linked_queue_t* link_queue) {
     // 构造一个空队列Q
-    link_queue->rear = (node_t*)malloc(sizeof(node_t));
+    link_queue->rear = (linked_queue_node_t*)malloc(sizeof(linked_queue_node_t));
     if (!link_queue->rear) {
         return NON_ALLOCATED;
     }
@@ -37,14 +37,14 @@ Status InitQueue(linked_queue_node_t* link_queue) {
  * @param v
  * @return
  */
-Status EnQueue(linked_queue_node_t *queue, int v) {
+status_t LinkedQueueEnQueue(linked_queue_t *queue, int v) {
     // 插入元素e为Q的新的队尾元素
-    node_t *cur = (node_t*)malloc(sizeof(node_t));
+    linked_queue_node_t *cur = (linked_queue_node_t*)malloc(sizeof(linked_queue_node_t));
     if (!cur) {
         return OVERFLOW;
     }
 
-    cur->vertexIndex = v;
+    cur->vertex_index = v;
     cur->next = NULL;
 
     queue->rear->next = cur;
@@ -56,23 +56,23 @@ Status EnQueue(linked_queue_node_t *queue, int v) {
 
 /*!
  *
- * @param Q
+ * @param queue
  * @param v
  * @return
  */
-Status DeQueue(linked_queue_node_t *Q, int *v) {
+status_t LinkedQueueDeQueue(linked_queue_t* queue, int *v) {
     // 若队列不空, 则删除Q的队头元素, 用e返回其值, 并返回OK;
     // 否则返回ERROR
-    if (Q->front == Q->rear) {
+    if (queue->front == queue->rear) {
         return ERROR;
     }
 
-    node_t* p = Q->front->next;
-    *v = p->vertexIndex;
-    Q->front->next = p->next;
+    linked_queue_node_t* p = queue->front->next;
+    *v = p->vertex_index;
+    queue->front->next = p->next;
 
-    if (Q->rear == p) {
-        Q->rear = Q->front;
+    if (queue->rear == p) {
+        queue->rear = queue->front;
     }
 
     free(p);
@@ -82,11 +82,11 @@ Status DeQueue(linked_queue_node_t *Q, int *v) {
 
 /*!
  *
- * @param Q
+ * @param queue
  * @return
  */
-int QueueEmpty(linked_queue_node_t *Q) {
-    if (Q->front == Q->rear) {
+int LinkedQueueIsEmpty(linked_queue_t *queue) {
+    if (queue->front == queue->rear) {
         return 1;
     }
 

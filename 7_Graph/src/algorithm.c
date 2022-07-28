@@ -17,7 +17,7 @@
 #include "disjoint_set.h"
 
 
-Status Visit(matrix_graph_t *graph, int vertex_index) {
+status_t Visit(matrix_graph_t *graph, int vertex_index) {
     printf("%d ", vertex_index);
     return OK;
 }
@@ -29,7 +29,7 @@ Status Visit(matrix_graph_t *graph, int vertex_index) {
  * @param Visit 结点访问函数
  * @note
  */
-void DFSTraverse(matrix_graph_t graph, Status (*Visit)(matrix_graph_t* graph, int vertex_index)) {
+void DFSTraverse(matrix_graph_t graph, status_t (*Visit)(matrix_graph_t* graph, int vertex_index)) {
 
     int* visited_vertex_index_array = (int*)malloc(graph.vertex_count * sizeof(int));
 
@@ -55,7 +55,7 @@ void DFSTraverse(matrix_graph_t graph, Status (*Visit)(matrix_graph_t* graph, in
 void DFSRecursive(matrix_graph_t graph,
                   int vertex_index,
                   int* visited_vertex_index_array,
-                  Status (*Visit)(matrix_graph_t*, int))
+                  status_t (*Visit)(matrix_graph_t*, int))
 {
     Visit(&graph, vertex_index);                    // 访问索引vertex_index结点
     visited_vertex_index_array[vertex_index] = 1;   // 标记索引vertex_index结点已经被访问过
@@ -79,7 +79,7 @@ void DFSRecursive(matrix_graph_t graph,
  * @param graph
  * @param Visit
  */
-void BFSTraverse(matrix_graph_t graph, Status (*Visit)(matrix_graph_t*, int)) {
+void BFSTraverse(matrix_graph_t graph, status_t (*Visit)(matrix_graph_t*, int)) {
 
     // 构造visited数组
     int* visited_vertex_index_array = (int*)malloc(graph.vertex_count * sizeof(int));
@@ -88,21 +88,21 @@ void BFSTraverse(matrix_graph_t graph, Status (*Visit)(matrix_graph_t*, int)) {
         visited_vertex_index_array[i] = 0;
     }
 
-    linked_queue_node_t queue;
-    InitQueue(&queue);
+    linked_queue_t queue;
+    LinkedQueueInit(&queue);
 
     for (int i = 0; i < graph.vertex_count; i++) {
         if (!visited_vertex_index_array[i]) {
             visited_vertex_index_array[i] = 1;
             Visit(&graph, i);
 
-            EnQueue(&queue, i);
+            LinkedQueueEnQueue(&queue, i);
 
-            while (!QueueEmpty(&queue)) {
+            while (!LinkedQueueIsEmpty(&queue)) {
 
                 // 取队头
                 int vertex_index;
-                DeQueue(&queue, &vertex_index);
+                LinkedQueueDeQueue(&queue, &vertex_index);
 
                 // 遍历队头的未遍历的邻结点
                 for (int neighbor_vertex_index = FirstAdjVertexIdx(&graph, vertex_index);
@@ -117,7 +117,7 @@ void BFSTraverse(matrix_graph_t graph, Status (*Visit)(matrix_graph_t*, int)) {
                         Visit(&graph, neighbor_vertex_index);
 
                         // 当前邻结点入队
-                        EnQueue(&queue, neighbor_vertex_index);
+                        LinkedQueueEnQueue(&queue, neighbor_vertex_index);
 
                         // 标记当前邻结点被访问
                         visited_vertex_index_array[neighbor_vertex_index] = 1;
@@ -145,7 +145,7 @@ void Prim(matrix_graph_t* graph, edge_t* min_span_tree) {
 
     while (in_vertex_set_cnt < vertex_count) {
 
-        MinPriorityQueue min_priority_queue;
+        min_priority_queue_t min_priority_queue;
         MinPriorityQueueInit(&min_priority_queue, vertex_count * vertex_count);
 
         for (int i = 0; i < in_vertex_set_cnt; i++) {
@@ -197,7 +197,7 @@ void Prim(matrix_graph_t* graph, edge_t* min_span_tree) {
 void Kruskal(matrix_graph_t* graph, edge_t* min_span_tree) {
 
     // 初始化最小优先队列, 容量 = 图边数
-    MinPriorityQueue min_priority_queue;
+    min_priority_queue_t min_priority_queue;
     MinPriorityQueueInit(&min_priority_queue, graph->edge_count);
 
     // 初始化并查集, 容量 = 图边数
@@ -285,7 +285,7 @@ void Dijkstra(matrix_graph_t* graph, int starting_vertex_index, int(*predecessor
     distance[starting_vertex_index].weight.double_value = 0;
 
     // 初始化最小优先队列, 路径 起始点->起始点 的信息(从临界数组中获取)入队
-    MinPriorityQueue min_priority_queue;
+    min_priority_queue_t min_priority_queue;
     MinPriorityQueueInit(&min_priority_queue, graph->vertex_count);
     MinPriorityQueuePush(&min_priority_queue, graph->adj_matrix[starting_vertex_index][starting_vertex_index]);
 

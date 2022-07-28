@@ -1,16 +1,16 @@
 /*!
  * @file queue.c
  * @author CyberDash计算机考研, cyberdash@163.com(抖音id:cyberdash_yuan)
- * @brief 队列
+ * @brief 链式队列源文件
  * @version 1.0.0
  * @date 2022-07-04
  * @copyright Copyright (c) 2021
  *  CyberDash计算机考研
  */
 
-#include "queue.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include "queue.h"
 
 
 /*!

@@ -17,16 +17,24 @@
 #include "disjoint_set.h"
 
 
-status_t Visit(matrix_graph_t *graph, int vertex_index) {
+/*!
+ * @brief <h1>图结点访问函数</h1>
+ * @param graph **图**(指针)
+ * @param vertex_index **图结点索引**
+ * @return 执行结果
+ * @note
+ */
+status_t Visit(matrix_graph_t* graph, int vertex_index) {
+    /// 本实现只调用printf, 打印图结点索引
     printf("%d ", vertex_index);
     return OK;
 }
 
 
 /*!
- * DFS遍历
- * @param graph 图
- * @param Visit 结点访问函数
+ * <h1>图结点DFS遍历</h1>
+ * @param graph **图**(指针)
+ * @param Visit **图结点访问函数**
  * @note
  */
 void DFSTraverse(matrix_graph_t graph, status_t (*Visit)(matrix_graph_t* graph, int vertex_index)) {

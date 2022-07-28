@@ -19,29 +19,22 @@
 void TestLoserTree() {
     printf("\n");
     printf("|------------------------- CyberDash -------------------------|\n");
-    printf("|                      Test loser_tree_t Sort                 |\n");
+    printf("|                     Test LoserTree Sort                     |\n");
     printf("|                         测试败者树排序                        |\n\n\n");
 
     /// 5路归并\n
-    /// ```
-    /// 第0路: 6,  15, 25
-    /// 第1路: 12, 37, 48
-    /// 第2路: 10, 15, 16
-    /// 第3路: 9,  18, 20
-    /// 第4路: 20, 22, 40
-    /// ```
+    int arr0[] = { 6, 15, 16, 17 };
+    int arr1[] = { 12, 13, 14, 16, 16 };
+    int arr2[] = { 10, 20, 30, 40, 50, 60 };
+    int arr3[] = { 9, 18, 27, 36, 45 };
+    int arr4[] = { 20, 24, 28, 46, 52, 64 };
 
-    int arr0[] = { 6, 15, 25 };
-    int arr1[] = { 12, 37, 48 };
-    int arr2[] = { 10, 15, 16 };
-    int arr3[] = { 9, 18, 20 };
-    int arr4[] = { 20, 22, 40 };
     int* array[] = { arr0, arr1, arr2, arr3, arr4 };
+    int sorted_list_lengths[] = { sizeof(arr0)/sizeof(int), sizeof(arr1)/sizeof(int),
+                                  sizeof(arr2)/sizeof(int), sizeof(arr3)/sizeof(int),
+                                  sizeof(arr4)/sizeof(int) };
 
-    loser_tree_t loserTree;
-    leaves_t leafArr;
-
-    KWayMerge(loserTree, leafArr, array, 5, 3);
+    KWayMerge(array, sizeof(array) / sizeof(int*), sorted_list_lengths);
 
     printf("|-------------------------------------------------------------|\n");
 }

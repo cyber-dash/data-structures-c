@@ -16,11 +16,15 @@
 #include <stdio.h>
 
 
+#define NOT_VISITED     0
+#define VISITED         1
+
+
 // 结点访问函数
 status_t Visit(matrix_graph_t* graph, int vertex);
 
 // DFS遍历
-void DFSTraverse(matrix_graph_t graph, status_t (*Visit)(matrix_graph_t* graph, int vertex_index));
+status_t DFSTraverse(matrix_graph_t graph, status_t (*Visit)(matrix_graph_t* graph, int vertex_index));
 
 // DFS遍历(索引starting_vertex_index结点为起始点)
 void DFSRecursive(matrix_graph_t graph,

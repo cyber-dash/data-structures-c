@@ -43,10 +43,10 @@ void LoserTreeAdjust(int* loser_tree, leaf_t* leaves, int K, int winner_leaf_ind
          cur_ancestor_index > 0;
          cur_ancestor_index = cur_ancestor_index / 2)
     {
-        /// &emsp;&emsp; **if** 叶子节点leaves[winner_leaf_index]的key >
+        /// &emsp;&emsp; **if** 叶子节点leaves[winner_leaf_index]的key 大于
         /// 当前祖先节点leaves[loser_tree[cur_ancestor_index]]的key :\n
         /// &emsp;&emsp; (即winner_leaf_index在本轮为败者, loser_tree[cur_ancestor_index]为胜者)
-		if(leaves[winner_leaf_index].key > leaves[loser_tree[cur_ancestor_index]].key) {		//s指示新的胜利者（小为胜，向上比较，大为败，留在双亲结点）
+		if(leaves[winner_leaf_index].key > leaves[loser_tree[cur_ancestor_index]].key) {
             /// &emsp;&emsp;&emsp; winner_leaf_index作为本轮败者存入loser_tree[cur_ancestor_index]\n
             /// &emsp;&emsp;&emsp; loser_tree[cur_ancestor_index]作为胜者, 赋给winner_leaf_index继续向上进行下一轮比较\n
             swap(&winner_leaf_index, &loser_tree[cur_ancestor_index]);
@@ -116,9 +116,9 @@ void CreateLoserTree(int* loser_tree, leaf_t* leaves, int K, int* sorted_list_le
 
 /*!
  * <h1>K路合并</h1>
- * @param K_way_sorted_lists **K组待归并有序数组**
- * @param K
- * @param sorted_list_lengths
+ * @param K_way_sorted_lists **K组待归并有序序列**
+ * @param K **路数**
+ * @param sorted_list_lengths **K组有序序列的长度**
  * @note
  */
 void KWayMerge(int* K_way_sorted_lists[], int K, int* sorted_list_lengths) {

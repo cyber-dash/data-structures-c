@@ -32,19 +32,30 @@ status_t Visit(matrix_graph_t* graph, int vertex_index) {
 
 
 /*!
- * <h1>图结点DFS遍历</h1>
+ * <h1>图DFS遍历</h1>
  * @param graph **图**(指针)
  * @param Visit **图结点访问函数**
  * @note
  */
-void DFSTraverse(matrix_graph_t graph, status_t (*Visit)(matrix_graph_t* graph, int vertex_index)) {
+status_t DFSTraverse(matrix_graph_t graph, status_t (*Visit)(matrix_graph_t*, int)) {
 
+    /// ### 1 分配结点遍历数组 ###
+    /// &emsp; **if** 内存分配失败 :\n
+    /// &emsp;&emsp; 返回NON_ALLOCATED\n
     int* visited_vertex_index_array = (int*)malloc(graph.vertex_count * sizeof(int));
-
-    for (int i = 0; i < graph.vertex_count; i++) {
-        visited_vertex_index_array[i] = 0;
+    if (!visited_vertex_index_array) {
+        return NON_ALLOCATED;
     }
 
+    /// &emsp; 结点遍历数组每个元素, 赋值为0
+    for (int i = 0; i < graph.vertex_count; i++) {
+        visited_vertex_index_array[i] = NOT_VISITED;
+    }
+
+    /// ### 2 遍历图结点进行DFS ###
+    /// &emsp; **for loop** 遍历图结点 :\n
+    /// &emsp;&emsp; **if** 当前结点没有被访问(遍历) : \n
+    /// &emsp &emsp;&emsp; 对当前结点执行DFSRecursive\n
     for (int i = 0; i < graph.vertex_count; i++) {
         if (!visited_vertex_index_array[i]) {
             DFSRecursive(graph, i, visited_vertex_index_array, Visit);
@@ -54,29 +65,35 @@ void DFSTraverse(matrix_graph_t graph, status_t (*Visit)(matrix_graph_t* graph, 
 
 
 /*!
- *
- * @param graph 图
- * @param vertex_index 图结点索引
- * @param visited_vertex_index_array 已访问结点索引的数组
- * @param Visit 访问函数
+ * <h1> 对结点深度优先遍历(递归) </h1>
+ * @param graph **图**
+ * @param vertex_index **图结点索引**
+ * @param visited_vertex_index_array **已访问结点索引的数组**
+ * @param Visit **访问函数**
+ * @note
  */
 void DFSRecursive(matrix_graph_t graph,
                   int vertex_index,
                   int* visited_vertex_index_array,
                   status_t (*Visit)(matrix_graph_t*, int))
 {
-    Visit(&graph, vertex_index);                    // 访问索引vertex_index结点
-    visited_vertex_index_array[vertex_index] = 1;   // 标记索引vertex_index结点已经被访问过
+    /// ### 1 访问索引vertex_index的图结点 ###
+    /// &emsp; - 调用Visit函数访问结点\n
+    Visit(&graph, vertex_index);
+    /// &emsp; - 将索引vertex_index图结点标记为VISITED\n
+    visited_vertex_index_array[vertex_index] = VISITED;
 
-    // 遍历vertex_index结点的所有相邻结点
+    /// ### 2 对索引vertex_index图结点的相邻结点执行递归 ###
+    /// &emsp; **for loop** 依次遍历索引vertex_index图结点的相邻各结点 :\n
     for (int i = FirstAdjVertexIdx(&graph, vertex_index); i >= 0; i = NextAdjVertexIdx(&graph, vertex_index, i)) {
 
-        // 如果当前结点(索引i结点)已经访问过, continue
-        if (visited_vertex_index_array[i]) {
+        /// &emsp;&emsp; **if** 当前结点已经访问过 :\n
+        /// &emsp;&emsp;&emsp; continue\n
+        if (visited_vertex_index_array[i] == VISITED) {
             continue;
         }
 
-        // 递归调用, 对当前结点执行DFSRecursive
+        // &emsp;&emsp; 当前结点递归执行DFSRecursive\n
         DFSRecursive(graph, i, visited_vertex_index_array, Visit);
     }
 }
@@ -84,7 +101,7 @@ void DFSRecursive(matrix_graph_t graph,
 
 /*!
  * BFS遍历
- * @param graph
+ * @param graph 图
  * @param Visit
  */
 void BFSTraverse(matrix_graph_t graph, status_t (*Visit)(matrix_graph_t*, int)) {
@@ -93,7 +110,7 @@ void BFSTraverse(matrix_graph_t graph, status_t (*Visit)(matrix_graph_t*, int)) 
     int* visited_vertex_index_array = (int*)malloc(graph.vertex_count * sizeof(int));
 
     for (int i = 0; i < graph.vertex_count; i++) {
-        visited_vertex_index_array[i] = 0;
+        visited_vertex_index_array[i] = NOT_VISITED;
     }
 
     linked_queue_t queue;
@@ -101,7 +118,7 @@ void BFSTraverse(matrix_graph_t graph, status_t (*Visit)(matrix_graph_t*, int)) 
 
     for (int i = 0; i < graph.vertex_count; i++) {
         if (!visited_vertex_index_array[i]) {
-            visited_vertex_index_array[i] = 1;
+            visited_vertex_index_array[i] = VISITED;
             Visit(&graph, i);
 
             LinkedQueueEnQueue(&queue, i);
@@ -472,8 +489,8 @@ int BellmanFord(matrix_graph_t* graph,
  *         predecessor[i][j] should be initialized to i.
  *
  * 算法执行结果:
- *     distance[i][j] contains the total cost along the shortest path from i to j.
- *     predecessor[i][j] contains the predecessor of j on the shortest path from i to j.
+ *     distance[i][j] contains the total cost along the shortest edge_t from i to j.
+ *     predecessor[i][j] contains the predecessor of j on the shortest edge_t from i to j.
  */
 void Floyd(matrix_graph_t* graph, int (*predecessor)[MAX_VERTEX_CNT], edge_t (*distance)[MAX_VERTEX_CNT]) {
     int vertex_cnt = graph->vertex_count;

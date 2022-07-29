@@ -13,7 +13,7 @@
 
 typedef int KEY;        // 定义关键字类型为整数类型
 
-typedef struct leaf_t {
+typedef struct {
     KEY key;
 } leaf_t;
 

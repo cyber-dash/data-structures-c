@@ -1,7 +1,7 @@
 ﻿/*!
  * @file test.c
  * @author CyberDash计算机考研, cyberdash@163.com(抖音id:cyberdash_yuan)
- * @brief 顺序表 测试用例
+ * @brief 顺序表测试源文件
  * @version 1.0.0
  * @date 2022-07-10
  * @copyright Copyright (c) 2021
@@ -13,10 +13,10 @@
 #include "test.h"
 
 
-int compare(ELEM_TYPE a, ELEM_TYPE b) {
-    if (a > b) {
+int compare(ELEM_TYPE item1, ELEM_TYPE item2) {
+    if (item1 > item2) {
         return 1;
-    } else if (a == b) {
+    } else if (item1 == item2) {
         return 0;
     } else {
         return -1;

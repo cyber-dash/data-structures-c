@@ -1,16 +1,16 @@
 ﻿/*!
  * @file seq_list.c
  * @author CyberDash计算机考研, cyberdash@163.com(抖音id:cyberdash_yuan)
- * @brief 顺序表
+ * @brief 顺序表源文件
  * @version 1.0.0
  * @date 2022-07-10
  * @copyright Copyright (c) 2021
  *  CyberDash计算机考研
  */
 
-#include "seq_list.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include "seq_list.h"
 
 
 /*!

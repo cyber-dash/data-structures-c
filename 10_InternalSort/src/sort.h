@@ -1,14 +1,19 @@
 ﻿/*!
  * @file sort.h
  * @author CyberDash计算机考研, cyberdash@163.com(抖音id:cyberdash_yuan)
- * @brief 内部排序
+ * @brief 内部排序头文件
  * @version 1.0.0
  * @date 2022-07-04
  * @copyright Copyright (c) 2021
  *  CyberDash计算机考研
  */
+
 #ifndef CYBER_DASH_SORT_H
 #define CYBER_DASH_SORT_H
+
+
+#define FALSE   0   //!< 逻辑非
+#define TRUE    1   //!< 逻辑是
 
 #define NUM_0_ASCII_CODE 48
 #define NUM_1_ASCII_CODE 49

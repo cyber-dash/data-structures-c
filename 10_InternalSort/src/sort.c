@@ -1,7 +1,7 @@
 ﻿/*!
  * @file sort.c
  * @author CyberDash计算机考研, cyberdash@163.com(抖音id:cyberdash_yuan)
- * @brief 内部排序
+ * @brief 内部排序源文件
  * @version 1.0.0
  * @date 2022-07-04
  * @copyright Copyright (c) 2021
@@ -9,11 +9,6 @@
  */
 
 #include "sort.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <assert.h>
-#include<stdbool.h>
 
 
 /*!
@@ -223,16 +218,16 @@ void ShellSort(seq_list_t* seq_list, int* gaps, int gap_count) {
  */
 void BubbleSort(seq_list_t* seq_list) {
     for (int i = 0; i < seq_list->length; i++) {
-        bool is_sorted = true;
+        int is_sorted = TRUE;
 
         for (int j = 1; j < seq_list->length - i; j++) {
             if (LessThan(seq_list->elements[j + 1].key, seq_list->elements[j].key)) {
                 Swap(seq_list->elements + j + 1, seq_list->elements + j);
-                is_sorted = false;
+                is_sorted = FALSE;
             }
         }
 
-        if (is_sorted) {
+        if (is_sorted == TRUE) {
             break;
         }
     }

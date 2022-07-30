@@ -1,6 +1,12 @@
-﻿//
-// Created by cyberdash@163.com(抖音: cyberdash_yuan) on 2021/3/10.
-//
+﻿/*!
+ * @file main.c
+ * @author CyberDash计算机考研, cyberdash@163.com(抖音id:cyberdash_yuan)
+ * @brief main源文件
+ * @version 1.0.0
+ * @date 2022-07-04
+ * @copyright Copyright (c) 2021
+ *  CyberDash计算机考研
+ */
 
 #include "test.h"
 

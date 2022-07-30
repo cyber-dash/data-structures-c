@@ -1,7 +1,7 @@
 /*!
  * @file test.h
  * @author CyberDash计算机考研, cyberdash@163.com(抖音id:cyberdash_yuan)
- * @brief 图测试用例 头文件
+ * @brief 图测试头文件
  * @version 1.0.0
  * @date 2022-07-04
  * @copyright Copyright (c) 2021
@@ -13,7 +13,7 @@
 
 #include "matrix_graph.h"
 #include "algorithm.h"
-#include "heap.h"
+#include "min_priority_queue.h"
 
 
 // 测试使用弧(边)数组建造无向网

@@ -1,7 +1,7 @@
 /*!
- * @file heap.h
+ * @file min_priority_queue.h
  * @author CyberDash计算机考研, cyberdash@163.com(抖音id:cyberdash_yuan)
- * @brief 堆
+ * @brief 最小优先队列头文件
  * @version 1.0.0
  * @date 2022-07-04
  * @copyright Copyright (c) 2021

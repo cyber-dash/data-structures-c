@@ -1,7 +1,7 @@
 ﻿/*!
  * @file matrix_graph.h
  * @author CyberDash计算机考研, cyberdash@163.com(抖音id:cyberdash_yuan)
- * @brief 邻接矩阵
+ * @brief 邻接矩阵图头文件
  * @version 1.0.0
  * @date 2022-07-04
  * @copyright Copyright (c) 2021
@@ -22,7 +22,7 @@ status_t CreateGraphByEdgesAndVertices(matrix_graph_t* graph,
 int FirstAdjVertexIdx(matrix_graph_t *graph, int vertex_index);
 
 // 结点(索引)v在图G中的, 结点(索引)w之外第一个(索引)邻接节点
-int NextAdjVertexIdx(matrix_graph_t* graph, int vertex_index, int first_adj_vertex_idx);
+int NextAdjVertexIndex(matrix_graph_t* graph, int vertex_index, int adj_vertex_index);
 
 status_t DestroyGraph(matrix_graph_t* graph);
 

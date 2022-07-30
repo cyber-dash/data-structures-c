@@ -7,6 +7,7 @@
  * @copyright Copyright (c) 2021
  *  CyberDash计算机考研
  */
+
 #ifndef CYBER_DASH_COMMON_H
 #define CYBER_DASH_COMMON_H
 
@@ -18,6 +19,8 @@
 #define MAX_EDGE_CNT    30  //!< 最大边数
 #define VERTEX_TYPE	    int //!< 结点类型
 
+#define NOT_VISITED     0   //!< 图结点遍历未访问
+#define VISITED         1   //!< 图结点遍历已访问
 
 /*! @brief 图类型 */
 typedef enum {

@@ -1,7 +1,7 @@
 ﻿/*!
  * @file disjoint_set.c
  * @author CyberDash计算机考研, cyberdash@163.com(抖音id:cyberdash_yuan)
- * @brief 并查集
+ * @brief 并查集源文件
  * @version 1.0.0
  * @date 2022-07-04
  * @copyright Copyright (c) 2021
@@ -26,7 +26,7 @@ status_t InitDisjointSet(DisjointSet* disjoint_set, int size) {
     }
 
     for (int i = 0; i < size; i++) {
-        disjoint_set->parent_index_array[i] = -1;
+        disjoint_set->parent_index_array[i] = ROOT_PARENT_INDEX;
     }
 
     return OK;

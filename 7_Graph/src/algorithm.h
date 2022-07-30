@@ -1,7 +1,7 @@
 ﻿/*!
  * @file algorithm.h
  * @author CyberDash计算机考研, cyberdash@163.com(抖音id:cyberdash_yuan)
- * @brief 搜索算法
+ * @brief 图算法头文件
  * @version 1.0.0
  * @date 2022-07-04
  * @copyright Copyright (c) 2021
@@ -14,10 +14,6 @@
 
 #include "matrix_graph.h"
 #include <stdio.h>
-
-
-#define NOT_VISITED     0
-#define VISITED         1
 
 
 // 结点访问函数

@@ -1,25 +1,20 @@
 ﻿/*!
  * @file matrix_graph.c
  * @author CyberDash计算机考研, cyberdash@163.com(抖音id:cyberdash_yuan)
- * @brief 邻接矩阵
+ * @brief 邻接矩阵图源文件
  * @version 1.0.0
  * @date 2022-07-04
  * @copyright Copyright (c) 2021
  *  CyberDash计算机考研
  */
+
 #include <stdio.h>
 #include <float.h>
 #include "matrix_graph.h"
 
 
-/*!
- * 获取结点vertex的索引
- * @param graph 图
- * @param vertex 结点
- * @param vertex_index 索引(int指针)
- * @return 是否成功
- * @note
- */
+/*
+此函数未使用
 status_t LocateVertex(matrix_graph_t graph, VERTEX_TYPE vertex, int* vertex_index) {
     for (int i = 0; i < graph.vertex_count; i++) {
         if (graph.vertex_array[i] == vertex) {
@@ -30,16 +25,15 @@ status_t LocateVertex(matrix_graph_t graph, VERTEX_TYPE vertex, int* vertex_inde
 
     return ERROR;
 }
+ */
 
 
 /*!
- * 获取某结点在图G中的第一个邻接节点的索引
- * @param graph 图(指针)
+ * <h1>获取某图结点的第一个邻接节点的索引</h1>
+ * @param graph **图**(指针)
  * @param vertex_index 结点索引
  * @return 第一个邻接节点的索引
  * @note
- *  成功: 返回索引值
- *  失败: 返回 -1
  */
 int FirstAdjVertexIdx(matrix_graph_t* graph, int vertex_index) {
     for (int i = 0; i < graph->vertex_count; i++) {
@@ -53,26 +47,31 @@ int FirstAdjVertexIdx(matrix_graph_t* graph, int vertex_index) {
 
 
 /*!
- * 结点(索引)v在图G中的, 结点(索引)w之外第一个(索引)邻接节点
- * @param graph 图指针
- * @param vertex_index 节点索引v
- * @param first_adj_vertex_idx 节点索引v的一个邻接节点索引w
- * @return 下一个邻接结点的索引
+ * <h1>索引vertex_index结点, adj_vertex_index之外的下一个邻接节点索引</h1>
+ * @param graph **图**(指针)
+ * @param vertex_index **结点索引**
+ * @param adj_vertex_index **一个邻接节点索引**
+ * @return **下一个邻接结点的索引**
  * @note
- *  成功: 返回索引值
- *  失败: 返回 -1
  */
-int NextAdjVertexIdx(matrix_graph_t* graph, int vertex_index, int first_adj_vertex_idx) {
-    if (first_adj_vertex_idx == graph->vertex_count - 1) {
+int NextAdjVertexIndex(matrix_graph_t* graph, int vertex_index, int adj_vertex_index) {
+    /// 如果存在下一邻接节点, 返回其索引, 否则返回-1\n
+    /// &emsp; **if** 当前邻接节点的索引为"结点数 - 1" : \n
+    /// &emsp;&emsp; 返回-1\n
+    if (adj_vertex_index == graph->vertex_count - 1) {
         return -1;
     }
 
-    for (int i = first_adj_vertex_idx + 1; i < graph->vertex_count; i++) {
+    /// **for loop** 遍历所有结点 :\n
+    for (int i = adj_vertex_index + 1; i < graph->vertex_count; i++) {
+        /// &emsp; **if** 遍历结点索引不等于结点索引, 并且 结点与遍历结点之间存在边 : \n
         if (i != vertex_index && graph->adj_matrix[vertex_index][i].weight_type != NO_EDGE) {
+            /// &emsp;&emsp; 返回遍历结点索引\n
             return i;
         }
     }
 
+    /// 返回-1
     return -1;
 }
 

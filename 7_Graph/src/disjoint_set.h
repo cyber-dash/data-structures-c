@@ -1,7 +1,7 @@
 ﻿/*!
  * @file disjoint_set.h
  * @author CyberDash计算机考研, cyberdash@163.com(抖音id:cyberdash_yuan)
- * @brief 并查集
+ * @brief 并查集头文件
  * @version 1.0.0
  * @date 2022-07-04
  * @copyright Copyright (c) 2021

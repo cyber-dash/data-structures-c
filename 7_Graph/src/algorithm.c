@@ -1,7 +1,7 @@
 ﻿/*!
  * @file algorithm.c
  * @author CyberDash计算机考研, cyberdash@163.com(抖音id:cyberdash_yuan)
- * @brief 搜索算法
+ * @brief 图算法源文件
  * @version 1.0.0
  * @date 2022-07-04
  * @copyright Copyright (c) 2021
@@ -13,7 +13,7 @@
 #include <float.h>
 #include "algorithm.h"
 #include "queue.h"
-#include "heap.h"
+#include "min_priority_queue.h"
 #include "disjoint_set.h"
 
 
@@ -85,7 +85,7 @@ void DFSRecursive(matrix_graph_t graph,
 
     /// ### 2 对索引vertex_index图结点的相邻结点执行递归 ###
     /// &emsp; **for loop** 依次遍历索引vertex_index图结点的相邻各结点 :\n
-    for (int i = FirstAdjVertexIdx(&graph, vertex_index); i >= 0; i = NextAdjVertexIdx(&graph, vertex_index, i)) {
+    for (int i = FirstAdjVertexIdx(&graph, vertex_index); i >= 0; i = NextAdjVertexIndex(&graph, vertex_index, i)) {
 
         /// &emsp;&emsp; **if** 当前结点已经访问过 :\n
         /// &emsp;&emsp;&emsp; continue\n
@@ -132,7 +132,7 @@ void BFSTraverse(matrix_graph_t graph, status_t (*Visit)(matrix_graph_t*, int)) 
                 // 遍历队头的未遍历的邻结点
                 for (int neighbor_vertex_index = FirstAdjVertexIdx(&graph, vertex_index);
                      neighbor_vertex_index >= 0;
-                     neighbor_vertex_index = NextAdjVertexIdx(&graph, vertex_index, neighbor_vertex_index)
+                     neighbor_vertex_index = NextAdjVertexIndex(&graph, vertex_index, neighbor_vertex_index)
                     )
                 {
                     // 如果: 当前邻结点未被访问

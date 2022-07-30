@@ -1,7 +1,7 @@
 ﻿/*!
  * @file test.c
  * @author CyberDash计算机考研, cyberdash@163.com(抖音id:cyberdash_yuan)
- * @brief  矩阵 测试用例
+ * @brief  矩阵测试源文件
  * @version 1.0.0
  * @date 2022-07-10
  * @copyright Copyright (c) 2021
@@ -15,21 +15,21 @@
 void TestAddAndReplaceElem() {
     printf("\n");
     printf("------------------------- CyberDash -------------------------\n");
-    printf("                    Test AddAndReplaceElem                   \n");
+    printf("                    Test SparseMatrixAddAndReplaceElem                   \n");
     printf("                       测试新增(替换)函数                       \n\n\n");
 
     sparse_matrix_t tsMatrix;
-    CreateSMatrix(&tsMatrix, 50, 40);
+    SparseMatrixCreate(&tsMatrix, 50, 40);
 
-    AddAndReplaceElem(&tsMatrix, 1, 1, 9);
-    AddAndReplaceElem(&tsMatrix, 49, 38, 19);
-    AddAndReplaceElem(&tsMatrix, 1, 2, 11);
-    AddAndReplaceElem(&tsMatrix, 6, 7, 432);
-    AddAndReplaceElem(&tsMatrix, 6, 22, 5490);
-    AddAndReplaceElem(&tsMatrix, 2, 1, 4);
-    AddAndReplaceElem(&tsMatrix, 49, 39, 64);
+    SparseMatrixAddAndReplaceElem(&tsMatrix, 1, 1, 9);
+    SparseMatrixAddAndReplaceElem(&tsMatrix, 49, 38, 19);
+    SparseMatrixAddAndReplaceElem(&tsMatrix, 1, 2, 11);
+    SparseMatrixAddAndReplaceElem(&tsMatrix, 6, 7, 432);
+    SparseMatrixAddAndReplaceElem(&tsMatrix, 6, 22, 5490);
+    SparseMatrixAddAndReplaceElem(&tsMatrix, 2, 1, 4);
+    SparseMatrixAddAndReplaceElem(&tsMatrix, 49, 39, 64);
 
-    PrintSMatrix(tsMatrix);
+    SparseMatrixPrint(tsMatrix);
 
     printf("|-------------------------------------------------------------|\n");
 }
@@ -38,28 +38,28 @@ void TestAddAndReplaceElem() {
 void TestTransposeSMatrix() {
     printf("\n");
     printf("------------------------- CyberDash -------------------------\n");
-    printf("                    Test TransposeSMatrix                    \n");
+    printf("                    Test SparseMatrixTranspose                    \n");
     printf("                           测试转置                           \n\n\n");
 
     sparse_matrix_t tsMatrix;
-    CreateSMatrix(&tsMatrix, 50, 40);
+    SparseMatrixCreate(&tsMatrix, 50, 40);
 
-    AddAndReplaceElem(&tsMatrix, 1, 1, 9);
-    AddAndReplaceElem(&tsMatrix, 49, 38, 19);
-    AddAndReplaceElem(&tsMatrix, 1, 2, 11);
-    AddAndReplaceElem(&tsMatrix, 6, 7, 432);
-    AddAndReplaceElem(&tsMatrix, 6, 22, 5490);
-    AddAndReplaceElem(&tsMatrix, 2, 1, 4);
-    AddAndReplaceElem(&tsMatrix, 49, 39, 64);
+    SparseMatrixAddAndReplaceElem(&tsMatrix, 1, 1, 9);
+    SparseMatrixAddAndReplaceElem(&tsMatrix, 49, 38, 19);
+    SparseMatrixAddAndReplaceElem(&tsMatrix, 1, 2, 11);
+    SparseMatrixAddAndReplaceElem(&tsMatrix, 6, 7, 432);
+    SparseMatrixAddAndReplaceElem(&tsMatrix, 6, 22, 5490);
+    SparseMatrixAddAndReplaceElem(&tsMatrix, 2, 1, 4);
+    SparseMatrixAddAndReplaceElem(&tsMatrix, 49, 39, 64);
 
     printf("\n转置前: \n");
-    PrintSMatrix(tsMatrix);
+    SparseMatrixPrint(tsMatrix);
 
     sparse_matrix_t tsMatrix2;
-    TransposeSMatrix(tsMatrix, &tsMatrix2);
+    SparseMatrixTranspose(tsMatrix, &tsMatrix2);
 
     printf("\n转置后: \n");
-    PrintSMatrix(tsMatrix2);
+    SparseMatrixPrint(tsMatrix2);
 
     printf("|-------------------------------------------------------------|\n");
 }
@@ -68,28 +68,28 @@ void TestTransposeSMatrix() {
 void TestFastTransposeSMatrix() {
     printf("\n");
     printf("------------------------- CyberDash -------------------------\n");
-    printf("                  Test FastTransposeSMatrix                  \n");
+    printf("                  Test SparseMatrixFastTranspose                  \n");
     printf("                          测试快速转置                         \n\n\n");
 
     sparse_matrix_t tsMatrix;
-    CreateSMatrix(&tsMatrix, 50, 40);
+    SparseMatrixCreate(&tsMatrix, 50, 40);
 
-    AddAndReplaceElem(&tsMatrix, 1, 1, 9);
-    AddAndReplaceElem(&tsMatrix, 49, 38, 19);
-    AddAndReplaceElem(&tsMatrix, 1, 2, 11);
-    AddAndReplaceElem(&tsMatrix, 6, 7, 432);
-    AddAndReplaceElem(&tsMatrix, 6, 22, 5490);
-    AddAndReplaceElem(&tsMatrix, 2, 1, 4);
-    AddAndReplaceElem(&tsMatrix, 49, 39, 64);
+    SparseMatrixAddAndReplaceElem(&tsMatrix, 1, 1, 9);
+    SparseMatrixAddAndReplaceElem(&tsMatrix, 49, 38, 19);
+    SparseMatrixAddAndReplaceElem(&tsMatrix, 1, 2, 11);
+    SparseMatrixAddAndReplaceElem(&tsMatrix, 6, 7, 432);
+    SparseMatrixAddAndReplaceElem(&tsMatrix, 6, 22, 5490);
+    SparseMatrixAddAndReplaceElem(&tsMatrix, 2, 1, 4);
+    SparseMatrixAddAndReplaceElem(&tsMatrix, 49, 39, 64);
 
     printf("\n转置前: \n");
-    PrintSMatrix(tsMatrix);
+    SparseMatrixPrint(tsMatrix);
 
     sparse_matrix_t tsMatrix2;
-    FastTransposeSMatrix(tsMatrix, &tsMatrix2);
+    SparseMatrixFastTranspose(tsMatrix, &tsMatrix2);
 
     printf("\n转置后: \n");
-    PrintSMatrix(tsMatrix2);
+    SparseMatrixPrint(tsMatrix2);
 
     printf("|-------------------------------------------------------------|\n");
 }

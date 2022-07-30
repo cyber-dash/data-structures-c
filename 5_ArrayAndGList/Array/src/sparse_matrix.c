@@ -1,17 +1,23 @@
 ﻿/*!
- * @file sparseMatrix.c
+ * @file sparse_matrix.c
  * @author CyberDash计算机考研, cyberdash@163.com(抖音id:cyberdash_yuan)
- * @brief  稀疏矩阵
+ * @brief  稀疏矩阵源文件
  * @version 1.0.0
  * @date 2022-07-10
  * @copyright Copyright (c) 2021
  *  CyberDash计算机考研
  */
 
-#include "sparseMatrix.h"
 #include <stdlib.h>
 #include <stdio.h>
-#include <string.h>
+#include "sparse_matrix.h"
+
+
+void swap(triple_t* item1, triple_t* item2) {
+    triple_t tmp = *item1;
+    *item1 = *item2;
+    *item2 = tmp;
+}
 
 
 /*!
@@ -22,7 +28,7 @@
  * @param terms
  * @return
  */
-Status CreateSMatrix(sparse_matrix_t* sparse_matrix, int rows, int columns) {
+status_t SparseMatrixCreate(sparse_matrix_t* sparse_matrix, int rows, int columns) {
     sparse_matrix->row_num = rows;       // 行数0
     sparse_matrix->column_num = columns;    // 列数0
     sparse_matrix->non_zero_count = 0;          // 非零元素数初始化为0
@@ -43,7 +49,7 @@ Status CreateSMatrix(sparse_matrix_t* sparse_matrix, int rows, int columns) {
  * @param transposed_matrix 转置矩阵
  * @return 执行结果
  */
-Status TransposeSMatrix(sparse_matrix_t matrix, sparse_matrix_t* transposed_matrix) {
+status_t SparseMatrixTranspose(sparse_matrix_t matrix, sparse_matrix_t* transposed_matrix) {
 
     if (matrix.non_zero_count < 0 || matrix.column_num <= 0 || matrix.row_num <= 0) {
         return ERROR;
@@ -86,7 +92,7 @@ Status TransposeSMatrix(sparse_matrix_t matrix, sparse_matrix_t* transposed_matr
  * @note
  *  注意, 索引是从1开始(不是从0)
  */
-Status FastTransposeSMatrix(sparse_matrix_t matrix, sparse_matrix_t* transposed_matrix) {
+status_t SparseMatrixFastTranspose(sparse_matrix_t matrix, sparse_matrix_t* transposed_matrix) {
 
     if (matrix.non_zero_count < 0 || matrix.column_num <= 0 || matrix.row_num <= 0) {
         return ERROR;
@@ -158,7 +164,7 @@ Status FastTransposeSMatrix(sparse_matrix_t matrix, sparse_matrix_t* transposed_
  * @param sparse_matrix 稀疏矩阵
  * @return 执行结果
  */
-Status DestroySMatrix(sparse_matrix_t* sparse_matrix) {
+status_t SparseMatrixDestroy(sparse_matrix_t* sparse_matrix) {
     free(sparse_matrix->elements);
     free(sparse_matrix);
 
@@ -171,7 +177,7 @@ Status DestroySMatrix(sparse_matrix_t* sparse_matrix) {
  * @param sparse_matrix 稀疏矩阵
  * @return 执行结果
  */
-Status PrintSMatrix(sparse_matrix_t sparse_matrix) {
+status_t SparseMatrixPrint(sparse_matrix_t sparse_matrix) {
     printf("行数: %d\n", sparse_matrix.row_num);
     printf("列数: %d\n", sparse_matrix.column_num);
     printf("非零元素数: %d\n", sparse_matrix.non_zero_count);
@@ -185,13 +191,6 @@ Status PrintSMatrix(sparse_matrix_t sparse_matrix) {
 }
 
 
-void swap(triple_t* a, triple_t* b) {
-    triple_t tmp = *a;
-    *a = *b;
-    *b = tmp;
-}
-
-
 /*!
  *
  * @param M
@@ -200,7 +199,7 @@ void swap(triple_t* a, triple_t* b) {
  * @param elem
  * @return
  */
-Status AddAndReplaceElem(sparse_matrix_t* M, int row, int col, ELEM elem) {
+status_t SparseMatrixAddAndReplaceElem(sparse_matrix_t* M, int row, int col, ELEM elem) {
     if (row > M->row_num || col > M->column_num) {
         return ERROR;
     }

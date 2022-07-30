@@ -1,7 +1,7 @@
 ﻿/*!
  * @file array.h
  * @author CyberDash计算机考研, cyberdash@163.com(抖音id:cyberdash_yuan)
- * @brief  数组
+ * @brief 多维数组源文件
  * @version 1.0.0
  * @date 2022-07-10
  * @copyright Copyright (c) 2021
@@ -22,16 +22,16 @@ typedef struct {
     int dim;        // 数组维数
     int* bounds;    // 数组维界基址, 由InitArray分配
     int* constants; // 数组映像函数常量基址, 由InitArray分配
-} Array;
+} MultiDimensionalArray;
 
 
-Status ArrayInit(Array *A, int dim, ...);
+status_t MultiDimensionalArrayInit(MultiDimensionalArray* array, int dim, ...);
 
-Status DestroyArray(Array *A);
+status_t MultiDimensionalArrayDestroy(MultiDimensionalArray* A);
 
-Status Value(Array A, ELEM* e, ...);
+status_t MultiDimensionalArrayValue(MultiDimensionalArray A, ELEM* e, ...);
 
-Status Assign(Array *A, ELEM e, ...);
+status_t MultiDimensionalArrayAssign(MultiDimensionalArray *A, ELEM e, ...);
 
 
 

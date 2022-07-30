@@ -1,7 +1,7 @@
 /*!
  * @file test.h
  * @author CyberDash计算机考研, cyberdash@163.com(抖音id:cyberdash_yuan)
- * @brief 链表 测试用例头文件
+ * @brief 链表测试头文件
  * @version 1.0.0
  * @date 2022-07-10
  * @copyright Copyright (c) 2021

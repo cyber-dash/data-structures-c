@@ -13,6 +13,10 @@
 #include "test.h"
 
 
+/*!
+ * @brief <h1>测试静态搜索表顺序搜索</h1>
+ * @note
+ */
 void TestStaticSearchTableSeqSearch() {
     printf("\n");
     printf("------------------------- CyberDash -------------------------\n");
@@ -59,6 +63,10 @@ void TestStaticSearchTableSeqSearch() {
 }
 
 
+/*!
+ * @brief <h1>测试静态搜索表二分搜索</h1>
+ * @note
+ */
 void TestStaticSearchTableBinarySearch() {
     printf("\n");
     printf("------------------------- CyberDash -------------------------\n");

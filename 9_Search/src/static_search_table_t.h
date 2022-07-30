@@ -15,11 +15,11 @@
 #include "common.h"
 
 
+/*! @brief 静态搜索表元素 */
 typedef struct {
     KEY     key;
     VALUE   value;
 } elem_t;
-
 
 typedef struct binary_search_tree_node binary_search_tree_node_t;
 struct binary_search_tree_node {
@@ -31,18 +31,26 @@ struct binary_search_tree_node {
 typedef binary_search_tree_node_t* binary_search_tree_t;
 
 
-typedef struct static_search_table_t {
-    elem_t* elements;
-    int length;
-} static_search_table_t;
+/*! @brief 静态搜索表 */
+typedef struct static_search_table static_search_table_t;
+
+/*! @brief 静态搜索表结构体 */
+struct static_search_table {
+    elem_t* elements;   //!< 元素数组
+    int length;         //!< 数组长度
+};
 
 
+// 静态搜索表初始化
 status_t StaticSearchTableInit(static_search_table_t* static_search_table, elem_t* elements, int length);
 
+// 静态搜索表打印
 void StaticSearchTablePrint(static_search_table_t* static_search_table);
 
+// 静态搜索表顺序搜索
 int StaticSearchTableSeqSearch(static_search_table_t* static_search_table, KEY key);
 
+// 静态搜索表二分查找
 int StaticSearchTableBinarySearch(static_search_table_t* static_search_table, KEY key);
 
 

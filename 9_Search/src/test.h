@@ -15,8 +15,10 @@
 #include "static_search_table_t.h"
 
 
+// 测试静态搜索表顺序搜索
 void TestStaticSearchTableSeqSearch();
 
+// 测试静态搜索表二分搜索
 void TestStaticSearchTableBinarySearch();
 
 

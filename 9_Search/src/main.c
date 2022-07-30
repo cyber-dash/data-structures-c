@@ -11,10 +11,16 @@
 #include "test.h"
 
 
+/*!
+ * @brief main函数
+ * @note
+ */
 int main() {
 
+    /// - 测试静态搜索表顺序搜索
     TestStaticSearchTableSeqSearch();
 
+    /// - 测试静态搜索表二分搜索
     TestStaticSearchTableBinarySearch();
 
     return 0;

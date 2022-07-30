@@ -12,19 +12,20 @@
 #define CYBER_DASH_SEARCH_H
 
 
-#define KEY     int
-#define VALUE   double
+#define KEY     int     //!< 关键码类型
+#define VALUE   double  //!< 数据项类型
 
-#define EQUAL(a, b) ((a) == (b))
-#define LESS_THAN(a, b) ((a) < (b))
-#define LESS_THAN_OR_EQUAL(a, b) ((a) <= (b))
+#define EQUAL(a, b) ((a) == (b))    //!< 等于
+#define LESS_THAN(a, b) ((a) < (b)) //!< 小于
+#define LESS_THAN_OR_EQUAL(a, b) ((a) <= (b))   //!< 小于等于
 
 
+/*! @brief 函数返回值枚举 */
 typedef enum {
-    OK = 0,
-    NON_ALLOCATED,
-    NON_EXISTENT,
-    ERROR
+    OK = 0,         //!< 正确
+    NON_ALLOCATED,  //!< 内存分配失败
+    NON_EXISTENT,   //!< 不存在
+    ERROR           //!< 其他错误
 } status_t;
 
 

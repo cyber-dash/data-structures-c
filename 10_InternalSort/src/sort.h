@@ -15,8 +15,8 @@
 #define FALSE   0   //!< 逻辑非
 #define TRUE    1   //!< 逻辑是
 
-#define NUM_0_ASCII_CODE 48
-#define NUM_1_ASCII_CODE 49
+#define NUM_0_ASCII_CODE 48 //!< 字符'0'的ASC码
+#define NUM_1_ASCII_CODE 49 //!< 字符'1'的ASC码
 
 #define MAX_DIGIT_NUMBER 8                  // 关键字项数的最大值
 #define RADIX_10 10                         // 10进制基数
@@ -44,25 +44,9 @@ typedef struct {
  * 顺序表
  */
 typedef struct {
-    seq_list_node_t elements[MAX_SIZE + 1]; //!< elements[0]闲置或用作哨兵单元
     int length;         //!< 顺序表长度
+    seq_list_node_t elements[MAX_SIZE + 1]; //!< elements[0]闲置或用作哨兵单元
 } seq_list_t;
-
-
-/*
-typedef struct
-{
-    seq_list_node_t rc;         //记录项
-    int next;           //指针项
-}SLNode;                //表结点类型
-
-typedef struct
-{
-    SLNode elements[MAX_SIZE];     //0号单元为表头结点
-    int length;         //链表当前长度
-}SLinkListType;         //静态链表类型
- */
-
 
 
 /*!

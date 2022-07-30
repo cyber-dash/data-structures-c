@@ -32,17 +32,18 @@ git clone https://gitee.com/cyberdash/data-structure-c.git
 cmake -G "Makefiles"
 ```
 
-# 🌵 项目结构
+# 🌵 包含知识点
 | 编号 | 章节 | 重点内容 |
 | ---- | ---- | ------- |
 | 2    | [线性表](/2_LinearList/) | [顺序表](/2_LinearList/SeqList/src/seq_list.c)  [单链表](/2_LinearList/LinkedList/src/linked_list.c) |
 | 3    | [栈和队列](/3_Stack_Queue/) | [栈](/3_Stack_Queue/Stack/src/seq_stack.c)  [循环队列](/3_Stack_Queue/Queue/src/circular_queue.c)  [链式队列](/3_Stack_Queue/Queue/src/link_queue.c) |
-| 4    | [字符串](/4_String/)         | [BF算法]() [KMP]()               |
+| 4    | [字符串](/4_String/)         | [BF匹配算法]() [KMP匹配算法]()               |
 | 5    | [多维数组和广义表](/5_ArrayAndGList/) | [多维数组](/5_ArrayAndGList/Array/src/array.c)  [广义表](/5_ArrayAndGList/GList/src/gen_list.c) |
-| 6    | [树和二叉树](/6_Tree/)            | [二叉树](/6_Tree/src/binary_tree.c) [赫夫曼树](/6_Tree/src/huffman_tree.c)                                         |
-| 7    | [图](/7_Graph/)                  | [搜索算法](/7_Graph/src/algorithm.c) [并查集](/7_Graph/src/disjoint_set.c)   [邻接矩阵](/7_Graph/src/matrix_graph.c) |
-| 9    | [查找](/9_Search/)               | [静态查找](/9_Search/src/static_search_table_t.c)                                                                 |
-| 10   | [内部排序](/10_InternalSort/)    |                                                                                                                 |
+| 6    | [树](/6_Tree/)            | [二叉树](/6_Tree/src/binary_tree.c) [赫夫曼树](/6_Tree/src/huffman_tree.c)                                         |
+| 7    | [图](/7_Graph/)                  |  [邻接矩阵图](/7_Graph/src/matrix_graph.c) [深度优先遍历]() [广度优先遍历]() [Prim最小生成树]() 
+	[Kruskal最小生成树]() [Dijkstra最短路径]() [Bellman-Ford最短路径]() [Floyd最短路]() [并查集](/7_Graph/src/disjoint_set.c) [最小优先队列]()  |
+| 9    | [查找](/9_Search/)               | [静态表顺序查找](/9_Search/src/static_search_table_t.c) [静态表二分查找]()                                                                 |
+| 10   | [内部排序](/10_InternalSort/)    | [冒泡排序]() [插入排序]() [选择排序]() [快速排序]() [归并排序]() [堆排序]() [基数排序]() []()                                                                                                                 |
 | 11     |[外部排序](/11_ExternalSort/)   |[败者树](/11_ExternalSort/src/loser_tree.c#L10)                                                                      |
 
 

@@ -1,16 +1,16 @@
 ﻿/*!
  * @file test.c
  * @author CyberDash计算机考研, cyberdash@163.com(抖音id:cyberdash_yuan)
- * @brief 查找 测试用例
+ * @brief 查找源文件
  * @version 1.0.0
  * @date 2022-07-04
  * @copyright Copyright (c) 2021
  *  CyberDash计算机考研
  */
 
+#include <stdio.h>
+#include <stdlib.h>
 #include "test.h"
-#include "stdio.h"
-#include "stdlib.h"
 
 
 void TestStaticSearchTableSeqSearch() {

@@ -1,7 +1,7 @@
 ﻿/*!
- * @file search.h
+ * @file common.h
  * @author CyberDash计算机考研, cyberdash@163.com(抖音id:cyberdash_yuan)
- * @brief 查找
+ * @brief common头文件
  * @version 1.0.0
  * @date 2022-07-04
  * @copyright Copyright (c) 2021
@@ -20,12 +20,12 @@
 #define LESS_THAN_OR_EQUAL(a, b) ((a) <= (b))
 
 
-typedef enum Status {
+typedef enum {
     OK = 0,
     NON_ALLOCATED,
     NON_EXISTENT,
     ERROR
-} Status;
+} status_t;
 
 
 #endif // CYBER_DASH_SEARCH_H

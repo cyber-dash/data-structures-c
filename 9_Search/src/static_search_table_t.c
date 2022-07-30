@@ -13,7 +13,7 @@
 #include "static_search_table_t.h"
 
 
-Status StaticSearchTableInit(static_search_table_t* static_search_table, elem_t* elements, int length) {
+status_t StaticSearchTableInit(static_search_table_t* static_search_table, elem_t* elements, int length) {
     if (static_search_table == NULL) {
         return ERROR;
     }
@@ -76,35 +76,3 @@ int StaticSearchTableBinarySearch(static_search_table_t* static_search_table, KE
 
     return 0;
 }
-
-
-/*
-void SecondOptimal(binary_search_tree_t* T, elem_t* R, double* sw, int low, int high) {
-    // 由有序表R[low ... high]及其累计权值表sw(其中sw[0]等于0)递归构造次有查找树T
-    int i = low;
-    double min = fabs(sw[high] - sw[low]);
-    double dw = sw[high] + sw[low - 1];
-
-	int j;
-    for (j = low + 1; j <= high; j++) {
-        if (fabs(dw - sw[j] - sw[j - 1]) < min) {
-            i = j;
-            min = fabs(dw - sw[j] - sw[j - 1]);
-        }
-    }
-
-    *T = (binary_search_tree_t)malloc(sizeof(binary_search_tree_node_t));
-    (*T)->data = R[i];     // 生成结点
-    if (i == low) {
-        (*T)->left_child = NULL;
-    } else {
-        SecondOptimal(&(*T)->left_child, R, sw, low, i - 1);
-    }
-
-    if (i == high) {
-        (*T)->right_child = NULL;
-    } else {
-        SecondOptimal(&(*T)->right_child, R, sw, i + 1, high);
-    }
-}
- */

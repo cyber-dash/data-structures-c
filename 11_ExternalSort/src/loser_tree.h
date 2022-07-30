@@ -1,7 +1,7 @@
 /*!
- * @file loser_tree_t.h
+ * @file loser_tree.h
  * @author CyberDash计算机考研, cyberdash@163.com(抖音id:cyberdash_yuan)
- * @brief 外部排序 败者树
+ * @brief 败者树头文件
  * @version 1.0.0
  * @date 2022-07-04
  * @copyright Copyright (c) 2021

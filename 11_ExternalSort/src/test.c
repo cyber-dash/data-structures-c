@@ -15,6 +15,7 @@
 
 /*!
  * @brief 测试败者树K路归并排序
+ * @note
  */
 void TestLoserTree() {
     printf("\n");
@@ -22,7 +23,7 @@ void TestLoserTree() {
     printf("|                     Test LoserTree Sort                     |\n");
     printf("|                         测试败者树排序                        |\n\n\n");
 
-    /// 5路归并\n
+    /// - 初始化5路有序序列\n
     int arr0[] = { 6, 15, 16, 17, 18, 19, 20, 70, 71, 72, 73, 74, 75, 76, 77, 78 };
     int arr1[] = { 12, 13, 14, 16, 16, 26, 26, 26, 36, 36, 36, 55, 55, 55, 55, 81, 81, 81 };
     int arr2[] = { 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 };
@@ -30,10 +31,13 @@ void TestLoserTree() {
     int arr4[] = { 20, 24, 28, 46, 52, 64 };
 
     int* array[] = { arr0, arr1, arr2, arr3, arr4 };
+
+    /// - 取5路有序序列各自的长度, 赋给sorted_list_lengths\n
     int sorted_list_lengths[] = { sizeof(arr0)/sizeof(int), sizeof(arr1)/sizeof(int),
                                   sizeof(arr2)/sizeof(int), sizeof(arr3)/sizeof(int),
                                   sizeof(arr4)/sizeof(int) };
 
+    /// - 调用KWayMerge, 执行败者树K路归并排序\n
     KWayMerge(array, sizeof(array) / sizeof(int*), sorted_list_lengths);
 
     printf("|-------------------------------------------------------------|\n");

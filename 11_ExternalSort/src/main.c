@@ -11,9 +11,14 @@
 #include "test.h"
 
 
+/*!
+ * @brief main函数
+ * @note
+ */
 int main() {
 
-  TestLoserTree();
+    /// - 测试败者树外部排序
+    TestLoserTree();
 
-  return 0;
+    return 0;
 }

@@ -11,12 +11,14 @@
 #define CYBER_DASH_LOSER_TREE_H
 
 
-typedef int KEY;        // 定义关键字类型为整数类型
+typedef int KEY;    //!< 关键码类型
 
+/*! @brief 败者树叶子 */
 typedef struct {
-    KEY key;
+    KEY key;    //!< 关键码
 } leaf_t;
 
+// K路归并
 void KWayMerge(int* K_way_sorted_lists[], int K, int* sorted_list_lengths);
 
 

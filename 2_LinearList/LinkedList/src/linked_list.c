@@ -69,7 +69,13 @@ Status LinkedListGetElem(linked_list_t linked_list_head, int pos, ELEM_TYPE* ele
     return OK;
 }
 
-
+/*!
+ * 链表插入
+ * @param linked_list_head 链表头结点(指针)
+ * @param pos 位置
+ * @param elem 保存结点数据项的变量(指针)
+ * @return 是否成功
+ */
 Status LinkedListInsert(linked_list_t linked_list_head, int pos, ELEM_TYPE elem) {
     linked_node_t* insert_node_predecessor = linked_list_head;    // 插入完成后, 插入结点的前一结点(指针), 初始化指向链表头结点
     int insert_pos_predecessor = 0; // 插入位置的前一位置, 初始化为0
@@ -165,7 +171,10 @@ Status LinkedListMergeTwoSortedList(linked_list_t list_a_head, linked_list_t lis
     return OK;
 }
 
-
+/*!
+ * 打印链表
+ * @param linked_list_head 链表指针
+ */
 void LinkedListPrint(linked_list_t linked_list_head) {
     for (linked_node_t* cur = linked_list_head->next; cur != NULL; cur = cur->next) {
         printf("%d ", cur->data);

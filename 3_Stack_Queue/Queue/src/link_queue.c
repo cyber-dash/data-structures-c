@@ -136,7 +136,7 @@ int LinkQueueLength(linked_queue_t linked_queue) {
 
 
 /*!
- *
+ * 打印队列
  * @param linked_queue
  */
 void LinkQueuePrint(linked_queue_t* linked_queue) {

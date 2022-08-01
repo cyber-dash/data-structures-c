@@ -13,6 +13,12 @@
 #include "sparse_matrix.h"
 
 
+/*!
+ * @brief **交换函数**
+ * @param item1 元素1
+ * @param item2 元素2
+ * @note
+ */
 void swap(triple_t* item1, triple_t* item2) {
     triple_t tmp = *item1;
     *item1 = *item2;
@@ -21,21 +27,23 @@ void swap(triple_t* item1, triple_t* item2) {
 
 
 /*!
- * 初始化稀疏矩阵
- * @param sparse_matrix
- * @param rows
- * @param columns
- * @param terms
- * @return
+ * @brief <h1>稀疏矩阵创建</h1>
+ * @param sparse_matrix **稀疏矩阵**(指针)
+ * @param rows **行数**
+ * @param columns **列数**
+ * @return **执行结果**
+ * @note
  */
 status_t SparseMatrixCreate(sparse_matrix_t* sparse_matrix, int rows, int columns) {
+
+    /// - 初始化行数/列数/非0元素数
     sparse_matrix->row_num = rows;       // 行数0
     sparse_matrix->column_num = columns;    // 列数0
     sparse_matrix->non_zero_count = 0;          // 非零元素数初始化为0
 
-    // 判断矩阵元素总数是否小于等于MAXSIZE
+    /// - 检查是否超过最大元素数MAX_SIZE限制
     int elem_count = rows * columns;
-    if (elem_count > MAXSIZE) {
+    if (elem_count > MAX_SIZE) {
         return ERROR;
     }
 
@@ -44,32 +52,39 @@ status_t SparseMatrixCreate(sparse_matrix_t* sparse_matrix, int rows, int column
 
 
 /*!
- * 稀疏矩阵转置
- * @param matrix 原矩阵
- * @param transposed_matrix 转置矩阵
- * @return 执行结果
+ * <h1>稀疏矩阵转置</h1>
+ * @param matrix **原矩阵**
+ * @param transposed_matrix **转置矩阵**
+ * @return **执行结果**
+ * @note
  */
 status_t SparseMatrixTranspose(sparse_matrix_t matrix, sparse_matrix_t* transposed_matrix) {
 
+    /// ### 1 非法参数判断 ###
     if (matrix.non_zero_count < 0 || matrix.column_num <= 0 || matrix.row_num <= 0) {
         return ERROR;
     }
 
+    /// ### 2 初始化行数/列数/非0元素数 ###
     transposed_matrix->row_num = matrix.column_num;
     transposed_matrix->column_num = matrix.row_num;
     transposed_matrix->non_zero_count = matrix.non_zero_count;
 
+    /// &emsp; **if** 非0元素的个数为0 \n
+    /// &emsp;&emsp; 返回OK \n
     if (transposed_matrix->non_zero_count == 0) {
         return OK;
     }
 
+    /// ### 3 转置 ###
     int index = 1;  // 三元组数组的索引, 初始化为1
 
-    // 遍历原矩阵的列(转置矩阵的行)
+    /// &emsp; **for loop** 遍历原矩阵的列(转置矩阵的行) : \n
     for (int column = 1; column <= matrix.column_num; column++) {
-        // 遍历原矩阵的三元组数组
+        /// &emsp;&emsp **for loop** 遍历原矩阵的三元组数组 : \n
         for (int i = 1; i <= matrix.non_zero_count; i++) {
-            // 如果当前元素的列号等于column, 将该元素对应的新数据, 插入到三元组数组index位置
+            /// &emsp;&emsp; **if** 三元组元素的列号等于当前遍历列号 : \n
+            /// &emsp;&emsp;&emsp; 使用三元组元素构造转置后的三元组元素, 赋值到新三元组数组index位置
             if (matrix.elements[i].column == column) {
                 transposed_matrix->elements[index].row = matrix.elements[i].column; // 设置行
                 transposed_matrix->elements[index].column = matrix.elements[i].row; // 设置列
@@ -85,10 +100,10 @@ status_t SparseMatrixTranspose(sparse_matrix_t matrix, sparse_matrix_t* transpos
 
 
 /*!
- * 稀疏矩阵快速转置
- * @param matrix 原矩阵
- * @param transposed_matrix 转置矩阵
- * @return 是否成功
+ * <h1>稀疏矩阵快速转置</h1>
+ * @param matrix **原矩阵**
+ * @param transposed_matrix **转置矩阵**
+ * @return 执行结果
  * @note
  *  注意, 索引是从1开始(不是从0)
  */
@@ -232,7 +247,7 @@ status_t SparseMatrixAddAndReplaceElem(sparse_matrix_t* M, int row, int col, ELE
     }
 
         // 不能再插入
-    if (M->non_zero_count == MAXSIZE || M->non_zero_count == M->row_num * M->column_num) {
+    if (M->non_zero_count == MAX_SIZE || M->non_zero_count == M->row_num * M->column_num) {
         return OVERFLOW;
     }
 

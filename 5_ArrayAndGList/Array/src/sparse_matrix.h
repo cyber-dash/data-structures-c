@@ -11,7 +11,7 @@
 #include "common.h"
 
 
-#define MAXSIZE	12500	// 假设非零元个数的最大值为12500
+#define MAX_SIZE	12500	// 假设非零元个数的最大值为12500
 
 typedef struct {
     // 该非零元的行下标和列下标
@@ -25,7 +25,7 @@ typedef struct {
     int row_num;
     int column_num;
     int non_zero_count;
-	triple_t    elements[MAXSIZE + 1];	// 非零元三元组表, elements[0]未用
+	triple_t    elements[MAX_SIZE + 1];	// 非零元三元组表, elements[0]未用
     // int     terms;              // 当前矩阵多少个非零个数
 } sparse_matrix_t;
 

@@ -18,13 +18,13 @@
 #define NUM_0_ASCII_CODE 48 //!< 字符'0'的ASC码
 #define NUM_1_ASCII_CODE 49 //!< 字符'1'的ASC码
 
-#define MAX_DIGIT_NUMBER 8                  // 关键字项数的最大值
-#define RADIX_10 10                         // 10进制基数
+#define MAX_DIGIT_NUMBER 8  //!< 关键字项数的最大值
+#define RADIX_10 10         //!< 10进制基数
 
-#define MAX_SIZE 20     // 表的最大长度
+#define MAX_SIZE 20     //!< 表的最大长度
 
-typedef int BUCKETS[RADIX_10];
-typedef char KEY_TYPE;
+typedef int BUCKETS[RADIX_10];  //!< 桶数组
+typedef char KEY_TYPE;          //!< 关键字类型
 
 
 typedef int key_t;    //定义关键字类型为整数类型

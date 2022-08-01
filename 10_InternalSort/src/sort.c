@@ -13,9 +13,10 @@
 
 /*!
  * <h1>小于</h1>
- * @param key1 关键字1
- * @param key2 关键字2
- * @return 结果
+ * @param key1 **关键字1**
+ * @param key2 **关键字2**
+ * @return **结果**
+ * @note
  */
 int LessThan(key_t key1, key_t key2) {
     if (key1 < key2) {
@@ -28,9 +29,10 @@ int LessThan(key_t key1, key_t key2) {
 
 /*!
  * <h1>小于等于</h1>
- * @param key1 关键字1
- * @param key2 关键字2
- * @return 结果
+ * @param key1 **关键字1**
+ * @param key2 **关键字2**
+ * @return **结果**
+ * @note
  */
 int LessThanOrEqual(key_t key1, key_t key2) {
     if (key1 <= key2) {
@@ -43,8 +45,9 @@ int LessThanOrEqual(key_t key1, key_t key2) {
 
 /*!
  * <h1>交换函数</h1>
- * @param item1 元素1
- * @param item2 元素2
+ * @param item1 **元素1**
+ * @param item2 **元素2**
+ * @note
  */
 void Swap(seq_list_node_t* item1, seq_list_node_t* item2) {
     seq_list_node_t tmp = *item1;
@@ -54,23 +57,32 @@ void Swap(seq_list_node_t* item1, seq_list_node_t* item2) {
 
 
 /*!
- * <h1>在线性表索引i(包含i)之后的元素中选出key最小的元素的索引</h1>
- * @param seq_list 线性表
- * @param index 索引
- * @return 最小元素索引
+ * <h1>在线性表索引index(包含)之后的元素中选出key最小的元素的索引</h1>
+ * @param seq_list **线性表**
+ * @param index **索引**
+ * @return **最小元素的索引**
+ * @note
  */
 int SelectMinKey(seq_list_t* seq_list, int index) {
+
+    /// ### 1 索引范围检查 ###
+    /// &emsp; **if** index等于线性表长度 :\n
+    /// &emsp;&emsp; 只剩下一个元素, 因此该元素即为最小, 返回index\n
     if (index == seq_list->length) {
         return index;
     }
 
-    // 索引index元素初始化min_key_index/min_key
+    /// ### 2 遍历并查找元素###
+    /// &emsp; 变量min_key_index初始化为index
+    /// &emsp; 变量min_key初始化为对应元素的key
     int min_key_index = index;
     key_t min_key = seq_list->elements[index].key;
 
+    /// &emsp; **for loop** index后面的所有元素 : \n
     for (int i = index + 1; i <= seq_list->length; i++) {
 
-        // 如果索引i元素key 小于 min_key, 更新min_key_index/min_key
+        /// &emsp;&emsp; **if** 当前元素的key 小于 min_key :\n
+        /// &emsp;&emsp;&emsp; 更新min_key_index和min_key
         if (seq_list->elements[i].key < min_key) {
             min_key_index = i;
             min_key = seq_list->elements[i].key;
@@ -84,13 +96,13 @@ int SelectMinKey(seq_list_t* seq_list, int index) {
 /*!
  * @brief <h1>插入排序</h1>
  * @param seq_list 待排线性表
+ * @note
  */
-void InsertSort(seq_list_t* seq_list)
-{
+void InsertSort(seq_list_t* seq_list) {
     //对顺序表L作直接插入排序
-    for (int i = 2; i <= seq_list->length; i++)
-    {
-        if (LessThan(seq_list->elements[i].key, seq_list->elements[i - 1].key)) { // ("<"，需将seq_list.elements[i]插入有序子表)
+    for (int i = 2; i <= seq_list->length; i++) {
+        // ("<"，需将seq_list.elements[i]插入有序子表)
+        if (LessThan(seq_list->elements[i].key, seq_list->elements[i - 1].key)) {
 
             // 交换 seq_list->elements[i]与seq_list->elements[i - 1]
             seq_list->elements[0] = seq_list->elements[i];                  // (复制为哨兵)
@@ -137,52 +149,9 @@ void BinaryInsertSort(seq_list_t* seq_list) {
 }
 
 
-/*
-void TableInsertSort(SLinkListType *SL)
-{
-  SL->elements[0].rc.key = MAX;                          //0号位表头结点，存最大整数值MAX
-  SL->elements[0].next = 1;
-  SL->elements[1].next = 0;
-
-  int i = 0, q = 0, p = 0;
-  for(i=2; i<=SL->length; i++){
-    q = 0;
-    p = SL->elements[q].next;
-    while(LessThanOrEqual(SL->elements[p].rc.key, SL->elements[i].rc.key)){
-      q = p;
-      p = SL->elements[q].next;
-    }
-    SL->elements[q].next = i;
-    SL->elements[i].next = p;
-  }
-}//TableInsertSort
- */
-
-/*
-void Arrange(SLinkListType *SL)
-{
-  int q = 0;
-  int i = 0;
-  int p = SL->elements[0].next;
-
-  for (i = 1; i < SL->length; ++i) {
-    while(p < i){
-      p = SL->elements[p].next;
-    }
-    q = SL->elements[p].next;
-    if(p != i){
-        Swap(&SL->elements[p], &SL->elements[i], sizeof(SL->elements[p]));//交换记录,使第i个记录到位
-      SL->elements[i].next = p;
-    }
-    p = q;
-  }
-}//Arrange
- */
-
-
 /*!
- * 按照间隔gap进行希尔插入排序
- * @param seq_list 顺序表
+ * <h1>按照间隔gap进行希尔插入排序</h1>
+ * @param seq_list **顺序表**(指针)
  * @param gap 间隔
  */
 void ShellInsert(seq_list_t* seq_list, int gap) {
@@ -213,11 +182,15 @@ void ShellSort(seq_list_t* seq_list, int* gaps, int gap_count) {
 
 
 /*!
- * 冒泡排序
- * @param seq_list 线性表(指针)
+ * @brief <h1>冒泡排序</h1>
+ * @param seq_list **线性表**(指针)
+ * @note
+ * 注意: 索引从1开始
  */
 void BubbleSort(seq_list_t* seq_list) {
+    /// **for loop** length - 1 次: \n
     for (int i = 0; i < seq_list->length; i++) {
+        /// &emsp; 在本趟冒泡前设置变量用来检查是否已经有序
         int is_sorted = TRUE;
 
         for (int j = 1; j < seq_list->length - i; j++) {

@@ -29,32 +29,32 @@ void swap(int* item1, int* item2) {
 
 /*!
  * <h1>调整败者树</h1>
- * @param loser_tree
- * @param leaves
- * @param winner_leaf_index
+ * @param loser_tree **败者树非叶子结点数组**(指针)
+ * @param leaves **败者树叶子结点数组**(指针)
+ * @param K **路数**
+ * @param winner_leaf_index **胜者索引**
  * @note
  */
 void LoserTreeAdjust(int* loser_tree, leaf_t* leaves, int K, int winner_leaf_index) {
-    /// 沿从叶子结点leaves[winner_leaf_index]到根结点loser_tree[0]的路径调整败者树
-    /// 结点与父节点作比较, 败者存在父节点, 胜者继续向上执行相同操作
-    /// ###1 沿从叶子节点leaves[winner_leaf_index]到根节点loser_tree[0]的路径调整败者树###
-    /// &emsp; **for loop* 遍历从叶子leaves[winner_leaf_index]的双亲结点到根结点的所有节点 :\n
+    /// 沿从叶子结点leaves[winner_leaf_index]到根结点loser_tree[0]的路径调整败者树\n
+    /// 结点与父节点作比较, 败者存在父节点, 胜者继续向上执行相同操作\n\n
+    /// **for loop** 遍历从叶子leaves[winner_leaf_index]的双亲结点到根结点的所有节点 :\n
     for (int cur_ancestor_index = (winner_leaf_index + K) / 2;
          cur_ancestor_index > 0;
          cur_ancestor_index = cur_ancestor_index / 2)
     {
-        /// &emsp;&emsp; **if** 叶子节点leaves[winner_leaf_index]的key 大于
+        /// &emsp; **if** 叶子节点leaves[winner_leaf_index]的key 大于
         /// 当前祖先节点leaves[loser_tree[cur_ancestor_index]]的key :\n
-        /// &emsp;&emsp; (即winner_leaf_index在本轮为败者, loser_tree[cur_ancestor_index]为胜者)
+        /// &emsp; (即winner_leaf_index在本轮为败者, loser_tree[cur_ancestor_index]为胜者)
 		if(leaves[winner_leaf_index].key > leaves[loser_tree[cur_ancestor_index]].key) {
-            /// &emsp;&emsp;&emsp; winner_leaf_index作为本轮败者存入loser_tree[cur_ancestor_index]\n
-            /// &emsp;&emsp;&emsp; loser_tree[cur_ancestor_index]作为胜者, 赋给winner_leaf_index继续向上进行下一轮比较\n
+            /// &emsp;&emsp; winner_leaf_index作为本轮败者存入loser_tree[cur_ancestor_index]\n
+            /// &emsp;&emsp; loser_tree[cur_ancestor_index]作为胜者, 赋给winner_leaf_index继续向上进行下一轮比较\n
             swap(&winner_leaf_index, &loser_tree[cur_ancestor_index]);
 		}
 	}
 
     /// 将最终的胜者赋给loser_tree[0]
-    loser_tree[0] = winner_leaf_index;							//顶部结点为最小值
+    loser_tree[0] = winner_leaf_index;
 }
 
 
@@ -63,7 +63,7 @@ void LoserTreeAdjust(int* loser_tree, leaf_t* leaves, int K, int winner_leaf_ind
  * @param loser_tree **败者树非叶子节点数组**
  * @param leaves **败者树叶子节点数组**
  * @param K **路数**
- * @param sorted_list_lengths
+ * @param sorted_list_lengths **各路有序序列的长度数组**
  * @note
  * loser_tree构成非叶子结点, 其中loser_tree[0]为根节点, 用来保存最小值
  */
@@ -73,12 +73,12 @@ void CreateLoserTree(int* loser_tree, leaf_t* leaves, int K, int* sorted_list_le
     /// ###1 设置败者树非叶子节点数组各元素初值(都设为K)###
     /// &emsp; **for loop** 遍历loser_tree :\n
     /// &emsp;&emsp; loser_tree[i] <= K\n
-    /// &emsp; (叶子数组的索引范围是[0 ... K], 此时把所有非叶子元素的值都设为K, 不在叶子数组的索引范围内)\n
+    /// &emsp; (叶子数组的索引范围是[0 ... K], 此时把所有非叶子元素的值都设为K, 不在叶子数组的索引范围内0 ... K - 1)\n
     for (int i = 0; i < K; ++i) {
         loser_tree[i] = K;                    // 设置loserTree中"败者"的初值
     }
-    /// 示例:
-    /// &emsp; 初始:\n
+    /// &emsp; **示例**:\n
+    /// &emsp;&emsp; 初始:\n
     /// ```
     ///             5  ----- 5
     ///            / \
@@ -92,7 +92,7 @@ void CreateLoserTree(int* loser_tree, leaf_t* leaves, int K, int* sorted_list_le
     /// ```
 
     /// ### 2 依次用叶子数组元素调整败者树###
-    /// ### &emsp; **while** 从后向前遍历叶子数组 :\n
+    /// &emsp; **while** 从后向前遍历叶子数组 :\n
     for (int leaf_index = K - 1; leaf_index >= 0; leaf_index--) {
         /// &emsp;&emsp; 使用当前叶子索引, 调用LoserTreeAdjust调整败者树\n
         LoserTreeAdjust(loser_tree, leaves, K, leaf_index);
@@ -115,7 +115,7 @@ void CreateLoserTree(int* loser_tree, leaf_t* leaves, int K, int* sorted_list_le
 
 
 /*!
- * <h1>K路合并</h1>
+ * <h1>K路归并</h1>
  * @param K_way_sorted_lists **K组待归并有序序列**
  * @param K **路数**
  * @param sorted_list_lengths **K组有序序列的长度**
@@ -154,19 +154,19 @@ void KWayMerge(int* K_way_sorted_lists[], int K, int* sorted_list_lengths) {
         int winner_leaf_index = loser_tree[0];
         printf("%d  ", leaves[loser_tree[0]].key);
 
-        /// &emsp;&emsp;&emsp; **if** 胜者的归并段还有元素 :\n
-        /// &emsp;&emsp;&emsp;&emsp; 胜者的归并段的当前头元素, 赋值给胜者叶子结点
+        /// &emsp;&emsp; **if** 胜者的归并段还有元素 :\n
+        /// &emsp;&emsp;&emsp; 胜者的归并段的当前头元素, 赋值给胜者叶子结点
         if (traverse_index_per_sorted_list[winner_leaf_index] <= sorted_list_lengths[winner_leaf_index]) {
             leaves[winner_leaf_index].key =
                 K_way_sorted_lists[winner_leaf_index][traverse_index_per_sorted_list[winner_leaf_index]];
             traverse_index_per_sorted_list[winner_leaf_index]++;
         } else {
-            /// &emsp;&emsp;&emsp; **else** (胜者的归并段元素已经全部被归并)
-            /// &emsp;&emsp;&emsp;&emsp; 胜者叶子结点的key设置为INT_MAX
+            /// &emsp;&emsp; **else** (胜者的归并段元素已经全部被归并) :\n
+            /// &emsp;&emsp;&emsp; 胜者叶子结点的key设置为INT_MAX\n
             leaves[winner_leaf_index].key = INT_MAX;
         }
 
-        /// &emsp;&emsp;&emsp; 使用胜者的叶子数组索引执行LoserTreeAdjust(调整败者树)\n
+        /// &emsp;&emsp; 使用胜者的叶子数组索引执行LoserTreeAdjust(调整败者树)\n
         LoserTreeAdjust(loser_tree, leaves, K, winner_leaf_index);
     }
 

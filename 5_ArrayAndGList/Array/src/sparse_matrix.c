@@ -207,11 +207,11 @@ status_t SparseMatrixPrint(sparse_matrix_t sparse_matrix) {
 
 
 /*!
- *
- * @param M
- * @param row
- * @param col
- * @param elem
+ * 添加或替换矩阵的值
+ * @param M 矩阵
+ * @param row 矩阵的行
+ * @param col 矩阵的列
+ * @param elem 值
  * @return
  */
 status_t SparseMatrixAddAndReplaceElem(sparse_matrix_t* M, int row, int col, ELEM elem) {

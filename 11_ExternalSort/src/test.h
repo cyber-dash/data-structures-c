@@ -12,6 +12,7 @@
 #define CYBER_DASH_LOSER_TREE_TEST_H
 
 
+// 测试败者树K路归并排序
 void TestLoserTree();
 
 

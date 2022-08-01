@@ -8,10 +8,11 @@
  *  CyberDash计算机考研
  */
 
-#define ELEM        int
+#define ELEM    int //!< 元素类型
 
 typedef enum {
-    OK = 0,
+    OK = 0,         //!< 正确
+    NON_ALLOCATED,  //!< 分配内存失败
     OVERFLOW,
     UNDERFLOW,
     ERROR

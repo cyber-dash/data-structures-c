@@ -105,35 +105,46 @@ status_t SparseMatrixTranspose(sparse_matrix_t matrix, sparse_matrix_t* transpos
  * @param transposed_matrix **转置矩阵**
  * @return 执行结果
  * @note
- *  注意, 索引是从1开始(不是从0)
  */
 status_t SparseMatrixFastTranspose(sparse_matrix_t matrix, sparse_matrix_t* transposed_matrix) {
 
+    /// ### 1 非法参数判断 ###
     if (matrix.non_zero_count < 0 || matrix.column_num <= 0 || matrix.row_num <= 0) {
         return ERROR;
     }
 
+    /// ### 2 初始化行数/列数/非0元素数 ###
     transposed_matrix->row_num = matrix.column_num;
     transposed_matrix->column_num = matrix.row_num;
     transposed_matrix->non_zero_count = matrix.non_zero_count;
 
-    // 如果矩阵非零元素为0个, 则不做其他操作
+    /// &emsp; **if** 非0元素的个数为0 \n
+    /// &emsp;&emsp; 返回OK \n
     if (transposed_matrix->non_zero_count == 0) {
         return OK;
     }
 
-    // 转置矩阵每行的非零项数数组, 初始化每行0个非零项
+    /// ### 3 构造"转置矩阵每行非0个数数组"和"转置矩阵每行遍历位置数组"###
+    /// &emsp; "转置矩阵每行非0个数数组"分配内存\n
     int* non_zero_count_per_row_array = (int*)malloc((transposed_matrix->row_num + 1) * sizeof(int));
+    if (!non_zero_count_per_row_array) {
+        return NON_ALLOCATED;
+    }
+
+    /// &emsp; 将每个元素设置为0
     for (int row = 1; row <= transposed_matrix->row_num; row++) {
         non_zero_count_per_row_array[row] = 0;
     }
 
-    // 转置矩阵每行的迭代器数组
-    int* iterator_per_row_array = (int*)malloc((transposed_matrix->row_num + 1) * sizeof(int));
+    /// &emsp; "转置矩阵每行的遍历位置数组"分配内存
+    int* traverse_index_per_row_array = (int*)malloc((transposed_matrix->row_num + 1) * sizeof(int));
+    if (!traverse_index_per_row_array) {
+        return NON_ALLOCATED;
+    }
 
-    // 遍历原矩阵的三元组数组, 求出转置矩阵每行的非零项数
+    /// ### 3 遍历求出转置矩阵每行的非0项数 ###
     for (int i = 1; i <= transposed_matrix->non_zero_count; ++i) {
-        // 转置矩阵当前非零项的行号
+        // 转置矩阵当前非零项的行号, 等于原数组该项的列号
         int cur_transposed_matrix_elem_row = matrix.elements[i].column;
         // 当前行的非零项数+1
         non_zero_count_per_row_array[cur_transposed_matrix_elem_row]++;
@@ -141,33 +152,36 @@ status_t SparseMatrixFastTranspose(sparse_matrix_t matrix, sparse_matrix_t* tran
 
     /// 构造转置矩阵的三元组数组elements的分布
     ///
-    /// elements[ 0 第1行的首元素的位置   ...      第2行的首元素的位置      ...            第i行的首个元素的位置        ... ]
+    /// elements[ 0, 第1行的首元素的位置,  ...   , 第2行的首元素的位置,      ...           ,第i行的首个元素的位置,        ... ]
     ///                    ^                           ^                                      ^
     ///                    |                           |                                      |
-    ///      iterator_per_row_array[1]      iterator_per_row_array[2]               iterator_per_row_array[i]   ...
+    ///      traverse_index_per_row_array[1]   traverse_index_per_row_array[2]     traverse_index_per_row_array[i]   ...
     ///
     /// 核心算法:
     ///
-    ///    iterator_per_row_array[i] = iterator_per_row_array[i - 1] + non_zero_count_per_row_array[i - 1];
+    ///    traverse_index_per_row_array[i] = traverse_index_per_row_array[i - 1] + non_zero_count_per_row_array[i - 1];
     /// 即在三元组数组elements上, 转置矩阵每行首元素所在的位置, 等于上一行首个元素的位置 + 该行(上一行)的所有非零项数
 
-    iterator_per_row_array[1] = 1;  // 表示转置矩阵的第1行首个元素将插入到elements[1]
+    /// ### 4 遍历求出"转置矩阵每行的遍历位置数组"的每项元素值 ###
+    /// &emsp; traverse_index_per_row_array[1]为1, 表示转置矩阵的第1行首个元素将插入到elements[1]
+    /// &emsp;
+    traverse_index_per_row_array[1] = 1;
     for (int row = 2; row <= transposed_matrix->row_num; row++) {
-        iterator_per_row_array[row] = iterator_per_row_array[row - 1] + non_zero_count_per_row_array[row - 1];
+        traverse_index_per_row_array[row] = traverse_index_per_row_array[row - 1] + non_zero_count_per_row_array[row - 1];
     }
 
     // 转置矩阵的三元组数组elements更新
     for (int i = 1; i <= matrix.non_zero_count; i++) {
         int cur_elem_row = matrix.elements[i].column;           //!< 当前转置矩阵元素的行号
-        int iterator = iterator_per_row_array[cur_elem_row];    //!< 当前转置矩阵元素在elements数组中对应的索引
+        int iterator = traverse_index_per_row_array[cur_elem_row];    //!< 当前转置矩阵元素在elements数组中对应的索引
 
         // 赋值
         transposed_matrix->elements[iterator].row = matrix.elements[i].column;
         transposed_matrix->elements[iterator].column = matrix.elements[i].row;
         transposed_matrix->elements[iterator].elem = matrix.elements[i].elem;
 
-        // 第cur_elem_row行的迭代器加1(指向后面一个位置), 代表转置矩阵第cur_elem_row行刚刚完成了1个非零项的插入elements数组
-        iterator_per_row_array[cur_elem_row]++;
+        // 第cur_elem_row行的遍历位置加1(指向后面一个位置), 代表转置矩阵第cur_elem_row行刚刚完成了1个非零项的插入elements数组
+        traverse_index_per_row_array[cur_elem_row]++;
     }
 
     return OK;

@@ -420,7 +420,7 @@ void Merge(seq_list_node_t SR[], seq_list_node_t TR[], int i, int m, int n)
 // todo: 写的不太好, 重写
 void MergeSortRecursive(seq_list_node_t* SR, seq_list_node_t* TR1, int left, int right)
 {
-    seq_list_node_t TR2[MAX_SIZE + 1];
+    seq_list_node_t TR2[MAX_SEQ_LIST_SIZE + 1];
     // 将SR[left..right]归并排序为TR1[left..right]
     if (left == right) {
         TR1[left] = SR[left];
@@ -484,7 +484,7 @@ void DistributeIntoBuckets(radix_static_linked_list_t* static_linked_list,
 	for (int elements_index = elements[0].next; elements_index != 0; elements_index = elements[elements_index].next) {
 
         // 获取第i个关键字对应的数字
-        int digit = ord(static_linked_list->elements[elements_index].keys, digit_index);
+        int digit = ord(static_linked_list->elements[elements_index].key, digit_index);
 
         if (!digit_bucket_heads[digit]) {    // 如果digit所在队列的队头元素为空, elements_index入队
             digit_bucket_heads[digit] = elements_index; // elements_index设为队头
@@ -541,8 +541,9 @@ void CollectBuckets(static_linked_list_node_t* elements,
 
 
 /*!
- * 基数排序
- * @param static_linked_list 待排序静态链表
+ * <h1>基数排序</h1>
+ * @param static_linked_list **待排序静态链表**
+ * @note
  */
 void RadixSort(radix_static_linked_list_t* static_linked_list) {
     int digit_queue_heads[10];

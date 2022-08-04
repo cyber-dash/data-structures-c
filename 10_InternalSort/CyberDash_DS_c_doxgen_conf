@@ -32,7 +32,7 @@ DOXYFILE_ENCODING      = UTF-8
 # title of most generated pages and in a few other places.
 # The default value is: My Project.
 
-PROJECT_NAME           = "InternalSort"
+PROJECT_NAME           = "10_InternalSort"
 
 # The PROJECT_NUMBER tag can be used to enter a project or revision number. This
 # could be handy for archiving the generated documentation or if some version
@@ -1773,9 +1773,9 @@ MATHJAX_CODEFILE       =
 # (what the <access key> is depends on the OS and browser, but it is typically
 # <CTRL>, <ALT>/<option>, or both). Inside the search box use the <cursor down
 # key> to jump into the search results window, the results can be navigated
-# using the <cursor keys>. Press <Enter> to select an item or <escape> to cancel
+# using the <cursor key>. Press <Enter> to select an item or <escape> to cancel
 # the search. The filter options can be selected when the cursor is inside the
-# search box by pressing <Shift>+<cursor down>. Also here use the <cursor keys>
+# search box by pressing <Shift>+<cursor down>. Also here use the <cursor key>
 # to select a filter and <Enter> or <escape> to activate or cancel the filter
 # option.
 # The default value is: YES.

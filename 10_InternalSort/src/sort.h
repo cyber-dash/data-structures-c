@@ -26,7 +26,6 @@
 typedef int BUCKETS[RADIX_10];  //!< 10进制基数排序桶数组
 typedef char DIGIT_TYPE;        //!< 10进制数位值类型
 
-
 typedef int key_t;    //!< 顺序表关键字类型
 typedef char info_t;  //!< 其他数据类型
 

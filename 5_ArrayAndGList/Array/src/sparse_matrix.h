@@ -14,19 +14,16 @@
 #define MAX_SIZE	12500	// 假设非零元个数的最大值为12500
 
 typedef struct {
-    // 该非零元的行下标和列下标
 	int	row;
     int column;
 	ELEM	elem;
 } triple_t;
 
 typedef struct {
-    // 矩阵的行数, 列数和非零元个数
     int row_num;
     int column_num;
     int non_zero_count;
 	triple_t    elements[MAX_SIZE + 1];	// 非零元三元组表, elements[0]未用
-    // int     terms;              // 当前矩阵多少个非零个数
 } sparse_matrix_t;
 
 
@@ -48,6 +45,6 @@ status_t SparseMatrixTranspose(sparse_matrix_t matrix, sparse_matrix_t* transpos
 
 status_t SparseMatrixFastTranspose(sparse_matrix_t matrix, sparse_matrix_t* transposed_matrix);
 
-status_t SparseMatrixAddAndReplaceElem(sparse_matrix_t* matrix, int row, int col, ELEM elem);
+status_t SparseMatrixAddAndReplaceElem(sparse_matrix_t* sparse_matrix, int row, int col, ELEM elem);
 
 status_t SparseMatrixRemoveElem(sparse_matrix_t* matrix, int row, int col, ELEM* elem);

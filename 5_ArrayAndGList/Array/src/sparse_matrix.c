@@ -126,19 +126,19 @@ status_t SparseMatrixFastTranspose(sparse_matrix_t matrix, sparse_matrix_t* tran
 
     /// ### 3 构造"转置矩阵每行非0个数数组"和"转置矩阵每行遍历位置数组"###
     /// &emsp; "转置矩阵每行非0个数数组"分配内存\n
-    int* non_zero_count_per_row_array = (int*)malloc((transposed_matrix->row_num + 1) * sizeof(int));
-    if (!non_zero_count_per_row_array) {
+    int* non_zero_counts= (int*)malloc((transposed_matrix->row_num + 1) * sizeof(int));
+    if (!non_zero_counts) {
         return NON_ALLOCATED;
     }
 
     /// &emsp; 将每个元素设置为0
     for (int row = 1; row <= transposed_matrix->row_num; row++) {
-        non_zero_count_per_row_array[row] = 0;
+        non_zero_counts[row] = 0;
     }
 
     /// &emsp; "转置矩阵每行的遍历位置数组"分配内存
-    int* traverse_index_per_row_array = (int*)malloc((transposed_matrix->row_num + 1) * sizeof(int));
-    if (!traverse_index_per_row_array) {
+    int* traverse_indexes = (int*)malloc((transposed_matrix->row_num + 1) * sizeof(int));
+    if (!traverse_indexes) {
         return NON_ALLOCATED;
     }
 
@@ -147,41 +147,48 @@ status_t SparseMatrixFastTranspose(sparse_matrix_t matrix, sparse_matrix_t* tran
         // 转置矩阵当前非零项的行号, 等于原数组该项的列号
         int cur_transposed_matrix_elem_row = matrix.elements[i].column;
         // 当前行的非零项数+1
-        non_zero_count_per_row_array[cur_transposed_matrix_elem_row]++;
+        non_zero_counts[cur_transposed_matrix_elem_row]++;
     }
 
+    /// ```
     /// 构造转置矩阵的三元组数组elements的分布
     ///
     /// elements[ 0, 第1行的首元素的位置,  ...   , 第2行的首元素的位置,      ...           ,第i行的首个元素的位置,        ... ]
     ///                    ^                           ^                                      ^
     ///                    |                           |                                      |
-    ///      traverse_index_per_row_array[1]   traverse_index_per_row_array[2]     traverse_index_per_row_array[i]   ...
+    ///      traverse_indexes[1]   traverse_indexes[2]     traverse_indexes[i]   ...
     ///
     /// 核心算法:
     ///
-    ///    traverse_index_per_row_array[i] = traverse_index_per_row_array[i - 1] + non_zero_count_per_row_array[i - 1];
+    ///    traverse_indexes[i] = traverse_indexes[i - 1] + non_zero_counts[i - 1];
+    ///
     /// 即在三元组数组elements上, 转置矩阵每行首元素所在的位置, 等于上一行首个元素的位置 + 该行(上一行)的所有非零项数
+    /// ```
 
     /// ### 4 遍历求出"转置矩阵每行的遍历位置数组"的每项元素值 ###
-    /// &emsp; traverse_index_per_row_array[1]为1, 表示转置矩阵的第1行首个元素将插入到elements[1]
-    /// &emsp;
-    traverse_index_per_row_array[1] = 1;
+    /// &emsp; traverse_indexes[1]为1, 表示转置矩阵的第1行首个元素将插入到elements[1]
+    traverse_indexes[1] = 1;
+    /// &emsp; **for loop** 2到transposed_matrix->row_num : \n
     for (int row = 2; row <= transposed_matrix->row_num; row++) {
-        traverse_index_per_row_array[row] = traverse_index_per_row_array[row - 1] + non_zero_count_per_row_array[row - 1];
+        /// &emsp;&emsp; traverse_indexes[i] = traverse_indexes[i - 1] + non_zero_counts[i - 1]; \n
+        traverse_indexes[row] = traverse_indexes[row - 1] + non_zero_counts[row - 1];
     }
 
-    // 转置矩阵的三元组数组elements更新
+    /// ### 5 转置矩阵三元组数组更新 ###
+    /// &emsp; **for loop** 遍历转置矩阵三元组数组 : \n
     for (int i = 1; i <= matrix.non_zero_count; i++) {
-        int cur_elem_row = matrix.elements[i].column;           //!< 当前转置矩阵元素的行号
-        int iterator = traverse_index_per_row_array[cur_elem_row];    //!< 当前转置矩阵元素在elements数组中对应的索引
+        /// 获取当前元素在转置矩阵的行号row \n
+        int row = matrix.elements[i].column;
+        /// 获取当前元素在转置矩阵三元组数组elements的索引traverse_index \n
+        int traverse_index = traverse_indexes[row];
 
-        // 赋值
-        transposed_matrix->elements[iterator].row = matrix.elements[i].column;
-        transposed_matrix->elements[iterator].column = matrix.elements[i].row;
-        transposed_matrix->elements[iterator].elem = matrix.elements[i].elem;
+        /// 对索引traverse_index的三元组元素赋值, 行号/列号/值 \n
+        transposed_matrix->elements[traverse_index].row = matrix.elements[i].column;
+        transposed_matrix->elements[traverse_index].column = matrix.elements[i].row;
+        transposed_matrix->elements[traverse_index].elem = matrix.elements[i].elem;
 
-        // 第cur_elem_row行的遍历位置加1(指向后面一个位置), 代表转置矩阵第cur_elem_row行刚刚完成了1个非零项的插入elements数组
-        traverse_index_per_row_array[cur_elem_row]++;
+        /// 第row行的遍历索引traverse_indexes[row]加1(指向后面一个位置), 代表转置矩阵第row行刚刚完成了1个非零项的插入三元组数组
+        traverse_indexes[row]++;
     }
 
     return OK;
@@ -189,12 +196,15 @@ status_t SparseMatrixFastTranspose(sparse_matrix_t matrix, sparse_matrix_t* tran
 
 
 /*!
- * 销毁稀疏矩阵
- * @param sparse_matrix 稀疏矩阵
- * @return 执行结果
+ * <h1>销毁稀疏矩阵</h1>
+ * @param sparse_matrix **稀疏矩阵**
+ * @return **执行结果**
+ * @note
  */
 status_t SparseMatrixDestroy(sparse_matrix_t* sparse_matrix) {
+    /// - 释放三元组数组
     free(sparse_matrix->elements);
+    /// - 释放稀疏矩阵
     free(sparse_matrix);
 
     return OK;
@@ -202,16 +212,20 @@ status_t SparseMatrixDestroy(sparse_matrix_t* sparse_matrix) {
 
 
 /**
- * 打印稀疏矩阵
- * @param sparse_matrix 稀疏矩阵
- * @return 执行结果
+ * <h1>打印稀疏矩阵</h1>
+ * @param sparse_matrix **稀疏矩阵**
+ * @return **执行结果**
+ * @note
  */
 status_t SparseMatrixPrint(sparse_matrix_t sparse_matrix) {
+    /// 打印行数/列数/非0元素数\n
     printf("行数: %d\n", sparse_matrix.row_num);
     printf("列数: %d\n", sparse_matrix.column_num);
     printf("非零元素数: %d\n", sparse_matrix.non_zero_count);
 
+    /// **for loop** 遍历三元组数组 : \n
     for (int i = 1; i <= sparse_matrix.non_zero_count; i++) {
+        /// &emsp; 打印遍历元素\n
         printf("sparse_matrix[%d][%d]: %d\n",
                sparse_matrix.elements[i].row, sparse_matrix.elements[i].column, sparse_matrix.elements[i].elem);
     }
@@ -221,61 +235,69 @@ status_t SparseMatrixPrint(sparse_matrix_t sparse_matrix) {
 
 
 /*!
- * 添加或替换矩阵的值
- * @param M 矩阵
- * @param row 矩阵的行
- * @param col 矩阵的列
- * @param elem 值
+ * <h1>添加或替换矩阵的值</h1>
+ * @param sparse_matrix **稀疏矩阵**
+ * @param row **行号**
+ * @param col **列号**
+ * @param elem **值**
  * @return
  */
-status_t SparseMatrixAddAndReplaceElem(sparse_matrix_t* M, int row, int col, ELEM elem) {
-    if (row > M->row_num || col > M->column_num) {
-        return ERROR;
+status_t SparseMatrixAddAndReplaceElem(sparse_matrix_t* sparse_matrix, int row, int col, ELEM elem) {
+
+    /// ### 1 行号列号合法性检查 ###
+    /// &emsp; **if** 行号越界 或者 列号越界 : \n
+    if (row > sparse_matrix->row_num || col > sparse_matrix->column_num) {
+        /// &emsp;&emsp; 返回OVERFLOW \n
+        return OVERFLOW;
     }
 
+    /// ### 2 找到插入位置 ###
+    /// &emsp; 初始化插入位置为0
     int insert_pos = 0;
-    for (int idx = 1; idx <= M->non_zero_count; idx++) {
-        if (M->elements[idx].row == row) {
-            if (M->elements[idx].column >= col) {
-                insert_pos = idx;
+    /// &emsp; **for loop** 遍历三元组数组 :\n
+    for (int i = 1; i <= sparse_matrix->non_zero_count; i++) {
+        // &emsp;&emsp; **if** 三元组数组
+        if (sparse_matrix->elements[i].row == row) {
+            if (sparse_matrix->elements[i].column >= col) {
+                insert_pos = i;
                 break;
             }
-        } else if (M->elements[idx].row > row) {
-            insert_pos = idx;
+        } else if (sparse_matrix->elements[i].row > row) {
+            insert_pos = i;
             break;
         }
     }
 
     // [row][col]位置已有数据, 执行替换
     if (insert_pos != 0 &&
-        M->elements[insert_pos].row == row &&
-        M->elements[insert_pos].column == col)
+        sparse_matrix->elements[insert_pos].row == row &&
+        sparse_matrix->elements[insert_pos].column == col)
     {
-        M->elements[insert_pos].elem = elem;
+        sparse_matrix->elements[insert_pos].elem = elem;
         return OK;
     }
 
     // 如果insert_pos为0, 此时没有找到插入位置, 因此在最后一位插入
     if (insert_pos == 0) {
-        insert_pos = M->non_zero_count + 1;
+        insert_pos = sparse_matrix->non_zero_count + 1;
     }
 
-        // 不能再插入
-    if (M->non_zero_count == MAX_SIZE || M->non_zero_count == M->row_num * M->column_num) {
+    // 不能再插入
+    if (sparse_matrix->non_zero_count == MAX_SIZE || sparse_matrix->non_zero_count == sparse_matrix->row_num * sparse_matrix->column_num) {
         return OVERFLOW;
     }
 
     // 先插入到最后一个位置
-    M->elements[M->non_zero_count + 1].row = row;
-    M->elements[M->non_zero_count + 1].column = col;
-    M->elements[M->non_zero_count + 1].elem = elem;
+    sparse_matrix->elements[sparse_matrix->non_zero_count + 1].row = row;
+    sparse_matrix->elements[sparse_matrix->non_zero_count + 1].column = col;
+    sparse_matrix->elements[sparse_matrix->non_zero_count + 1].elem = elem;
 
     // 从后向前, 依次相邻交换, 完成插入
-    for (int idx = M->non_zero_count + 1; idx > insert_pos; idx--) {
-        swap(&M->elements[idx], &M->elements[idx - 1]);
+    for (int idx = sparse_matrix->non_zero_count + 1; idx > insert_pos; idx--) {
+        swap(&sparse_matrix->elements[idx], &sparse_matrix->elements[idx - 1]);
     }
 
-    M->non_zero_count++;    // 插入后, 非零元素个数+1
+    sparse_matrix->non_zero_count++;    // 插入后, 非零元素个数+1
 
     return OK;
 }

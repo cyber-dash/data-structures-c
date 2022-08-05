@@ -341,20 +341,20 @@ void MaxHeapSiftDown(seq_list_t* heap, int index, int heap_size)
 
 /*!
  * 堆排序
- * @param heap 顺序表结构(通常可以是数组)
+ * @param seq_list 顺序表结构(通常可以是数组)
  * @note
  * 通常heap可以使用数组
  */
-void HeapSort(seq_list_t* heap)
+void HeapSort(seq_list_t* seq_list)
 {
-    // 对数组heap->elements[1 ... heap->length]建立大顶堆
-    for (int i = heap->length / 2; i > 0; i--) {
-        MaxHeapSiftDown(heap, i, heap->length);
+    // 对数组heap->elements[1 ... seq_list->length]建立大顶堆
+    for (int i = seq_list->length / 2; i > 0; i--) {
+        MaxHeapSiftDown(seq_list, i, seq_list->length);
     }
 
-    for (int i = heap->length; i > 1; --i) {
-        Swap(&heap->elements[1], &heap->elements[i]);
-        MaxHeapSiftDown(heap, 1, i - 1);
+    for (int i = seq_list->length; i > 1; --i) {
+        Swap(&seq_list->elements[1], &seq_list->elements[i]);
+        MaxHeapSiftDown(seq_list, 1, i - 1);
     }
 }
 
@@ -406,10 +406,10 @@ void MergeSortRecursive(seq_list_node_t* SR, seq_list_node_t* TR1, int left, int
 }
 
 
-void MergeSort(seq_list_t* L)
+void MergeSort(seq_list_t* seq_list)
 {
     //对顺序表L作归并排序
-    MergeSortRecursive(L->elements, L->elements, 1, L->length);
+    MergeSortRecursive(seq_list->elements, seq_list->elements, 1, seq_list->length);
 }
 
 
@@ -429,35 +429,42 @@ int ord(char* keys, int i) {
 
 
 /*!
- * @brief 基数排序分配元素入桶
- * @param static_linked_list 静态链表(指针)
- * @param place_of_digit 位数
- * @param digit_bucket_heads 数位(0 - 9)桶的首元素(队头)
- * @param digit_bucket_tails 数位(0 - 9)桶的尾元素(队尾)
+ * @brief <h1>静态链表按照各元素某数位值, 分配各元素入桶</h1>
+ * @param static_linked_list **静态链表**(指针)
+ * @param place_of_digit **数位**
+ * @param digit_bucket_heads **基数桶的首元素数组**(队头数组)
+ * @param digit_bucket_tails **基数桶的尾元素数组**(队尾数组)
  * @note
- * place_of_digit/位数, 个位: 1, 十位: 2, 百位: 3 ...
- * 每个桶是一个队列,
- * digit_bucket_heads[0 ... 9]和digit_queue_tails[0 ... 9]分别指向各桶(队列)的第一个元素(队头)和最后一个元素(队尾)
+ * ### 说明 ###
+ * &emsp; 以10进制正整数为例
+ * - place_of_digit代表数位, 从右侧开始计数, 1: 个位(ones), 2: 十位(tens), 3: 百位(hundreds) ...
+ * - 每个桶是一个队列
+ *  + digit_bucket_heads[0 ... 9]分别指向各基数桶(队列)的第一个元素(队头)
+ *  + digit_queue_tails[0 ... 9]分别指向各基数桶(队列)的最后一个元素(队尾)
  */
 void DistributeIntoBuckets(radix_static_linked_list_t* static_linked_list,
                            int place_of_digit,
                            BUCKETS digit_bucket_heads,
                            BUCKETS digit_bucket_tails)
 {
-    static_linked_list_node_t* elements = static_linked_list->elements;
-    int digit_index = static_linked_list->digit_number - place_of_digit;
-
-
-    // 0 - 9对应的各子表初始化为空表
+    /// ### 1 各基数桶(队列)初始化为空 ###
+    /// &emsp; **for loop** 遍历基数数位 :\n
+    /// &emsp;&emsp; 基数桶的首元素数组(队头数组)各项设置为0\n
+    /// &emsp;&emsp; 基数桶的尾元素数组(队尾数组)各项设置为0\n
     for (int j = 0; j < RADIX_10; j++) {
         digit_bucket_heads[j] = 0;
         digit_bucket_tails[j] = 0;
 	}
 
+    /// ### 2 求数位在元素数组中的索引###
+    int place_index = static_linked_list->number_of_digit - place_of_digit;
+
+    /// ### 3 遍历静态链表, 执行分配 ###
+    static_linked_list_node_t* elements = static_linked_list->elements;
 	for (int elements_index = elements[0].next; elements_index != 0; elements_index = elements[elements_index].next) {
 
         // 获取第i个关键字对应的数字
-        int digit = ord(static_linked_list->elements[elements_index].key, digit_index);
+        int digit = ord(static_linked_list->elements[elements_index].key, place_index);
 
         if (!digit_bucket_heads[digit]) {    // 如果digit所在队列的队头元素为空, elements_index入队
             digit_bucket_heads[digit] = elements_index; // elements_index设为队头
@@ -519,23 +526,27 @@ void CollectBuckets(static_linked_list_node_t* elements,
  * @note
  */
 void RadixSort(radix_static_linked_list_t* static_linked_list) {
-    int digit_queue_heads[10];
-    int digit_queue_tails[10];
+    int digit_queue_heads[10];  // 基数队列队头数组
+    int digit_queue_tails[10];  // 基数队列队尾数组
 
-    // 初始化static_linked_list
+    /// ### 1 初始化static_linked_list各元素的next ###
+    /// &emsp; **for loop** 遍历静态链表, 索引范围[ 1 ... (length - 1) ] : \n
     for (int i = 0; i < static_linked_list->length; ++i) {
+        /// &emsp;&emsp; 索引i元素的next, 设置为i + 1 \n
         static_linked_list->elements[i].next = i + 1;
     }
 
+    /// &mesp; 索引length元素的next, 设置为0(构成循环静态链表)
     static_linked_list->elements[static_linked_list->length].next = 0; // 最后一个元素的next指向0
 
-    // 按最低位优先(右侧起始), 依次对各关键字进行分桶和收集
-    for (int i = 1; i <= static_linked_list->digit_number; i++) {
+    /// ### 2 按最低位优先(右侧个位开始), 依次对各个位进行分桶和收集 ###
+    /// &emsp; **for loop** 从右侧开始, 遍历各个位 :\n
+    for (int i = 1; i <= static_linked_list->number_of_digit; i++) {
 
-        //!< 以从右起第i位作为基数分桶
+        /// &emsp;&emsp; 右侧第i位作为基数, 进行分桶 \n
         DistributeIntoBuckets(static_linked_list, i, digit_queue_heads, digit_queue_tails);
 
-        //!< 对分完的桶, 进行收集
+        /// &emsp;&emsp; 对分完的桶, 进行收集
         CollectBuckets(static_linked_list->elements, digit_queue_heads, digit_queue_tails);
     }
 }

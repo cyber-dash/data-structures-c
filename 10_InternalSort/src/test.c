@@ -305,7 +305,7 @@ void TestRadixSort() {
     radix_static_linked_list_t radix_static_linked_list;
 
     /// - 5位数值正整数
-    radix_static_linked_list.digit_number = 5;  // 元素位数
+    radix_static_linked_list.number_of_digit = 5;  // 元素位数
     /// - 9个数(静态链表长度9)
     radix_static_linked_list.length = 9;        // 静态链表长度
 
@@ -332,10 +332,10 @@ void TestRadixSort() {
         /// &emsp;&emsp;&emsp; 首位随机赋值'1' - '9' \n
         /// &emsp;&emsp;&emsp; 第一个越界位赋值'\0'(字符串结束字符) \n
         /// &emsp;&emsp;&emsp; 其他位随机赋值'0' - '9' \n
-        for (int j = 0; j <= radix_static_linked_list.digit_number; j++) {
+        for (int j = 0; j <= radix_static_linked_list.number_of_digit; j++) {
             if (j == 0) {
                 node.key[j] = NUM_1_ASCII_CODE + (rand() % 9);
-            } else if (j == radix_static_linked_list.digit_number) {
+            } else if (j == radix_static_linked_list.number_of_digit) {
                 node.key[j] = 0;
             } else {
                 node.key[j] = NUM_0_ASCII_CODE + (rand() % 10);

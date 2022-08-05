@@ -55,7 +55,7 @@ typedef struct {
 /*! @brief 基数排序的静态链表 */
 typedef struct {
     static_linked_list_node_t elements[MAX_SEQ_LIST_SIZE];    //!< 元素的静态链表, elements[0]为头结点(不保存元素)
-    int digit_number;                                //!< 基数关键字个数
+    int number_of_digit;                                //!< 基数关键字个数
     int length;                                      //!< 静态链表长度
 } radix_static_linked_list_t;
 
@@ -64,22 +64,19 @@ void InsertSort(seq_list_t* seq_list);
 
 void BinaryInsertSort(seq_list_t* seq_list);
 
-// void TInsertSort(SLinkListType* L);
-
-void ShellInsert(seq_list_t* seq_list, int gap);
-
 void ShellSort(seq_list_t* seq_list, int gaps[], int gap_count);
 
-void SelectSort(seq_list_t* L);
+void SelectSort(seq_list_t* seq_list);
 
 void BubbleSort(seq_list_t* seq_list);
 
 void QuickSort(seq_list_t* seq_list);
 
-void HeapSort(seq_list_t* heap);
+void HeapSort(seq_list_t* seq_list);
 
-void MergeSort(seq_list_t* L);
+void MergeSort(seq_list_t* seq_list);
 
 void RadixSort(radix_static_linked_list_t* static_linked_list);
+
 
 #endif // CYBER_DASH_SORT_H

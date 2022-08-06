@@ -13,6 +13,7 @@
 
 int main() {
 
+    /*
 	// 测试冒泡排序
 	TestBubbleSort();
 
@@ -30,15 +31,18 @@ int main() {
 
 	// 测试快速排序
 	TestQuickSort();
+     */
 
 	// 测试归并排序
 	TestMergeSort();
 
+    /*
 	// 测试堆排序
 	TestHeapSort();
 
     // 测试基数排序
     TestRadixSort();
+     */
 
 	return 0;
 }

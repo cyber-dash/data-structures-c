@@ -57,8 +57,8 @@ void Swap(seq_list_node_t* item1, seq_list_node_t* item2) {
 
 
 /*!
- * <h1>在线性表索引index(包含)之后的元素中选出key最小的元素的索引</h1>
- * @param seq_list **线性表**
+ * <h1>在顺序表索引index(包含)之后的元素中选出key最小的元素的索引</h1>
+ * @param seq_list **顺序表**
  * @param index **索引**
  * @return **最小元素的索引**
  * @note
@@ -66,7 +66,7 @@ void Swap(seq_list_node_t* item1, seq_list_node_t* item2) {
 int SelectMinKey(seq_list_t* seq_list, int index) {
 
     /// ### 1 索引范围检查 ###
-    /// &emsp; **if** index等于线性表长度 :\n
+    /// &emsp; **if** index等于顺序表长度 :\n
     /// &emsp;&emsp; 只剩下一个元素, 因此该元素即为最小, 返回index\n
     if (index == seq_list->length) {
         return index;
@@ -95,7 +95,7 @@ int SelectMinKey(seq_list_t* seq_list, int index) {
 
 /*!
  * @brief <h1>插入排序</h1>
- * @param seq_list 待排线性表
+ * @param seq_list **顺序表**
  * @note
  */
 void InsertSort(seq_list_t* seq_list) {
@@ -121,7 +121,7 @@ void InsertSort(seq_list_t* seq_list) {
 
 /*!
  * \brief <h1>折半插入排序<h1>
- * \param seq_list 待排序线性表
+ * \param seq_list 待排序顺序表
  */
 void BinaryInsertSort(seq_list_t* seq_list) {
     for (int i = 2; i <= seq_list->length; i++) {
@@ -154,7 +154,7 @@ void BinaryInsertSort(seq_list_t* seq_list) {
  * @param seq_list **顺序表**(指针)
  * @param gap 间隔
  */
-void ShellInsert(seq_list_t* seq_list, int gap) {
+void ShellInsertSort(seq_list_t* seq_list, int gap) {
     for (int i = gap + 1; i <= seq_list->length; i++) {
         if (LessThan(seq_list->elements[i].key, seq_list->elements[i - gap].key)) {
             seq_list->elements[0] = seq_list->elements[i];
@@ -169,21 +169,21 @@ void ShellInsert(seq_list_t* seq_list, int gap) {
 
 
 /*!
- * 希尔排序
- * @param seq_list 线性表(指针)
- * @param gaps 间隔数组
- * @param gap_count 间隔数组长度
+ * @brief <h1>希尔排序</h1>
+ * @param seq_list **顺序表**(指针)
+ * @param gaps **间隔数组**
+ * @param gap_count **间隔数组长度**
  */
 void ShellSort(seq_list_t* seq_list, int* gaps, int gap_count) {
     for (int i = 0; i < gap_count; ++i) {
-        ShellInsert(seq_list, gaps[i]);
+        ShellInsertSort(seq_list, gaps[i]);
     }
 }
 
 
 /*!
  * @brief <h1>冒泡排序</h1>
- * @param seq_list **线性表**(指针)
+ * @param seq_list **顺序表**(指针)
  * @note
  * 注意: 索引从1开始
  */
@@ -209,7 +209,7 @@ void BubbleSort(seq_list_t* seq_list) {
 
 /*!
  * 快速排序划分函数
- * @param seq_list 线性表(指针)
+ * @param seq_list 顺序表(指针)
  * @param low 下界
  * @param high 上界
  * @return 划分位置
@@ -238,7 +238,7 @@ int Partition(seq_list_t* seq_list, int low, int high) {
 
 /*!
  * 快速排序划分函数
- * @param seq_list 线性表(指针)
+ * @param seq_list 顺序表(指针)
  * @param low 下界
  * @param high 上界
  * @return 划分位置
@@ -340,13 +340,11 @@ void MaxHeapSiftDown(seq_list_t* heap, int index, int heap_size)
 
 
 /*!
- * 堆排序
- * @param seq_list 顺序表结构(通常可以是数组)
+ * @brief <h1>堆排序</h1>
+ * @param seq_list **顺序表**
  * @note
- * 通常heap可以使用数组
  */
-void HeapSort(seq_list_t* seq_list)
-{
+void HeapSort(seq_list_t* seq_list) {
     // 对数组heap->elements[1 ... seq_list->length]建立大顶堆
     for (int i = seq_list->length / 2; i > 0; i--) {
         MaxHeapSiftDown(seq_list, i, seq_list->length);
@@ -359,58 +357,104 @@ void HeapSort(seq_list_t* seq_list)
 }
 
 
-// @brief 两个有序表归并为一个有序表
-// @param seq_list 有序表
-// @param merged_seq_list 合并后的有序表
-// @param left SR起始位置
-// @param mid SR归并中点
-// @param right SR终止位置
+/*!
+ * @brief <h1>将顺序表中的两个有序段合并成一个有序段</h1>
+ * @param seq_list **顺序表**
+ * @param merged_seq_list **合并结果的顺序表**
+ * @param left **左侧有序段的左边界**
+ * @param mid **两个有序段的中间位置**(左侧段的右边界(包含), 右侧段的左边界(不包含))
+ * @param right **右侧有序段的右边界**
+ * @note
+ */
 void Merge(seq_list_node_t* seq_list, seq_list_node_t* merged_seq_list, int left, int mid, int right) {
+
+    /// ### 1 初始化3个遍历变量 ###
+    /// &emsp; 合并后的顺序表遍历索引, 初始化为left \n
+    int merged_seq_list_index = left;
+    /// &emsp; 顺序表执行归并的左侧有序段的遍历索引, 初始化为left \n
     int left_part_index = left;
+    /// &emsp; 顺序表执行归并的右侧有序段的遍历索引, 初始化为mid + 1 \n
     int right_part_index = mid + 1;
-    /// 将有序线性表的[left ... mid]部分和(mid+1..right]归并到有序线性表resulting_seq_list[left ... right]
-    // for (; left <= mid && right_part_index <= right; left_part_index++) {
-    for (; left_part_index <= mid && right_part_index <= right; left_part_index++) {
-        //将SR中记录由小到大地并入TR
-        if (LessThanOrEqual(seq_list[left].key, seq_list[right_part_index].key)) {
-            // merged_seq_list[left_part_index] = seq_list[left++];
-            merged_seq_list[left_part_index] = seq_list[left_part_index];
-        } else {
-            merged_seq_list[left_part_index] = seq_list[right_part_index++];
+
+    /// ### 2 执行合并 ###
+    /// &emsp; **for loop** 遍历顺序表两个归并段 : \n
+    for (; left_part_index <= mid && right_part_index <= right; merged_seq_list_index++) {
+        /// &emsp;&emsp; **if** 左侧归并段当前元素 <= 右侧归并段当前元素 : \n
+        if (LessThanOrEqual(seq_list[left_part_index].key, seq_list[right_part_index].key)) {
+            /// &emsp;&emsp;&emsp; 左侧归并段当前元素加入合并顺序表尾部 \n
+            merged_seq_list[merged_seq_list_index] = seq_list[left_part_index];
+            left_part_index++;
+        } else {    /// &emsp;&emsp; **else** (左侧归并段当前元素 <= 右侧归并段当前元素) : \n
+            /// &emsp;&emsp;&emsp; 右侧归并段当前元素加入合并顺序表尾部 \n
+            merged_seq_list[merged_seq_list_index] = seq_list[right_part_index];
+            right_part_index++;
         }
     }
 
-    while (left_part_index <= mid) {                                          //将剩余的SR[left..mid]复制到TR
-        // merged_seq_list[left_part_index++] = seq_list[left++];
-        merged_seq_list[left_part_index] = seq_list[left_part_index];
+    /// &emsp; 将左侧有序段剩余的元素, 加入到合并结果顺序表 \n
+    while (left_part_index <= mid) {
+        merged_seq_list[merged_seq_list_index] = seq_list[left_part_index];
+        merged_seq_list_index++;
         left_part_index++;
     }
 
+    /// &emsp; 将右侧有序段剩余的元素, 加入到合并结果顺序表 \n
     while (right_part_index <= right) {                                         //将剩余的SR[right_part_index..right]复制到TR
-        merged_seq_list[left_part_index] = seq_list[right_part_index];
-        left_part_index++;
+        merged_seq_list[merged_seq_list_index] = seq_list[right_part_index];
+        merged_seq_list_index++;
         right_part_index++;
     }
 }
 
 
-// todo: 写的不太好, 重写
-void MergeSortRecursive(seq_list_node_t* SR, seq_list_node_t* TR1, int left, int right) {
-    seq_list_node_t TR2[MAX_SEQ_LIST_SIZE + 1];
-    // 将SR[left..right]归并排序为TR1[left..right]
-    if (left == right) {
-        TR1[left] = SR[left];
-    } else {
-        int mid = (left + right) / 2;                                      //将SR[left..right]平分为SR[left..mid]和SR[mid+1..right]
-        MergeSortRecursive(SR, TR2, left, mid);                                 //递归地将SR[left..mid]归并为有序的TR2[left..mid]
-        MergeSortRecursive(SR, TR2, mid + 1, right);                             //递归地将SR[mid+1..right]归并为有序的TR2[mid+1..right]
-        Merge(TR2, TR1, left, mid, right);                             //将R[left..mid]和TR2[mid+1..right]归并到TR1[left..right]
+/*!
+ * @brief <h1>归并排序(递归)<h1>
+ * @param seq_list **顺序表**
+ * @param merged_seq_list **归并结果的顺序表**
+ * @param left **归并段左侧边界**
+ * @param right **归并段右侧边界**
+ * @note
+ */
+void MergeSortRecursive(seq_list_node_t* seq_list, seq_list_node_t* merged_seq_list, int left, int right) {
+
+    /// ### 1 递归终止条件###
+    /// &emsp; **if** 归并段没有元素 : \n
+    /// &emsp;&emsp; 直接返回 \n
+    if (left > right) {
+        return;
     }
+
+    /// &emsp; **if** 归并段只有1个元素 : \n
+    /// &emsp;&emsp; 该元素赋值给归并结果顺序表的对应元素 \n
+    if (left == right) {
+        merged_seq_list[left] = seq_list[left];
+        return;
+    }
+
+    /// ### 2 递归执行归并 ###
+    /// &emsp; 声明缓存顺序表cache_seq_list \n
+    seq_list_node_t cache_seq_list[MAX_SEQ_LIST_SIZE + 1];
+
+    /// &emsp; 将seq_list[left ... right]分为 左侧[left ... mid] 和 右侧[mid + 1 ... right] 两部分 \n
+    int mid = (left + right) / 2;
+
+    /// - 对左侧部分调用MergeSortRecursive, 进行递归, 归并结果保存在缓存顺序表cache_seq_list
+    MergeSortRecursive(seq_list, cache_seq_list, left, mid);
+    /// - 对右侧部分调用MergeSortRecursive, 进行递归, 归并结果保存在缓存顺序表cache_seq_list
+    MergeSortRecursive(seq_list, cache_seq_list, mid + 1, right);
+
+    /// - 将缓存顺序表cache_seq_list的两部分[left ... mid] 和 [mid + 1 ... right] 合并到merged_seq_list顺序表
+    Merge(cache_seq_list, merged_seq_list, left, mid, right);
 }
 
 
+/*!
+ * @brief <h1>归并排序</h1>
+ * @param seq_list **顺序表**
+ * @note
+ */
 void MergeSort(seq_list_t* seq_list) {
-    //对顺序表L作归并排序
+    /// 调用MergeSortRecursive, 对顺序表seq_list做归并排序
     MergeSortRecursive(seq_list->elements, seq_list->elements, 1, seq_list->length);
 }
 

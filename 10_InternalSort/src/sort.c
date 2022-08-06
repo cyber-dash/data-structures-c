@@ -360,39 +360,42 @@ void HeapSort(seq_list_t* seq_list)
 
 
 // @brief 两个有序表归并为一个有序表
-// @param SR 有序表
-// @param TR 返回的有序表
-// @param i SR起始位置
-// @param m SR归并中点
-// @param n SR终止位置
-void Merge(seq_list_node_t SR[], seq_list_node_t TR[], int i, int m, int n)
-{
-    int j;
-    int k;
-    //将有序的SR[i..m]和SR[m+1..n]归并为有序的TR[i..n]
-    for (j = m + 1, k = i; i <= m && j <= n; ++k) {            //将SR中记录由小到大地并入TR
-        if (LessThanOrEqual(SR[i].key, SR[j].key))
-        {
-            TR[k] = SR[i++];
-        }
-        else
-        {
-            TR[k] = SR[j++];
+// @param seq_list 有序表
+// @param merged_seq_list 合并后的有序表
+// @param left SR起始位置
+// @param mid SR归并中点
+// @param right SR终止位置
+void Merge(seq_list_node_t* seq_list, seq_list_node_t* merged_seq_list, int left, int mid, int right) {
+    int left_part_index = left;
+    int right_part_index = mid + 1;
+    /// 将有序线性表的[left ... mid]部分和(mid+1..right]归并到有序线性表resulting_seq_list[left ... right]
+    // for (; left <= mid && right_part_index <= right; left_part_index++) {
+    for (; left_part_index <= mid && right_part_index <= right; left_part_index++) {
+        //将SR中记录由小到大地并入TR
+        if (LessThanOrEqual(seq_list[left].key, seq_list[right_part_index].key)) {
+            // merged_seq_list[left_part_index] = seq_list[left++];
+            merged_seq_list[left_part_index] = seq_list[left_part_index];
+        } else {
+            merged_seq_list[left_part_index] = seq_list[right_part_index++];
         }
     }
 
-    while (i <= m) {                                          //将剩余的SR[i..m]复制到TR
-        TR[k++] = SR[i++];
+    while (left_part_index <= mid) {                                          //将剩余的SR[left..mid]复制到TR
+        // merged_seq_list[left_part_index++] = seq_list[left++];
+        merged_seq_list[left_part_index] = seq_list[left_part_index];
+        left_part_index++;
     }
-    while (j <= n) {                                         //将剩余的SR[j..n]复制到TR
-        TR[k++] = SR[j++];
+
+    while (right_part_index <= right) {                                         //将剩余的SR[right_part_index..right]复制到TR
+        merged_seq_list[left_part_index] = seq_list[right_part_index];
+        left_part_index++;
+        right_part_index++;
     }
 }
 
 
 // todo: 写的不太好, 重写
-void MergeSortRecursive(seq_list_node_t* SR, seq_list_node_t* TR1, int left, int right)
-{
+void MergeSortRecursive(seq_list_node_t* SR, seq_list_node_t* TR1, int left, int right) {
     seq_list_node_t TR2[MAX_SEQ_LIST_SIZE + 1];
     // 将SR[left..right]归并排序为TR1[left..right]
     if (left == right) {
@@ -406,23 +409,22 @@ void MergeSortRecursive(seq_list_node_t* SR, seq_list_node_t* TR1, int left, int
 }
 
 
-void MergeSort(seq_list_t* seq_list)
-{
+void MergeSort(seq_list_t* seq_list) {
     //对顺序表L作归并排序
     MergeSortRecursive(seq_list->elements, seq_list->elements, 1, seq_list->length);
 }
 
 
 /*!
- * 获取keys第
- * @param keys
- * @param i
- * @param digit_num
- * @return
+ * 获取key索引i数位的整型值
+ * @param key 关键字
+ * @param i 索引
+ * @return 值
+ * @note
  */
-int ord(char* keys, int i) {
-    // int index = digit_num - i - 1;
-    int num = (int)keys[i] - NUM_0_ASCII_CODE;
+int ord(char* key, int i) {
+    /// 关键字索引i的asc码 减去 0的asc码
+    int num = (int)key[i] - NUM_0_ASCII_CODE;
 
     return num;
 }
@@ -461,62 +463,75 @@ void DistributeIntoBuckets(radix_static_linked_list_t* static_linked_list,
 
     /// ### 3 遍历静态链表, 执行分配 ###
     static_linked_list_node_t* elements = static_linked_list->elements;
-	for (int elements_index = elements[0].next; elements_index != 0; elements_index = elements[elements_index].next) {
+    /// &emsp; **for loop** 遍历静态链表各元素 :\n
+	for (int i = elements[0].next; i != 0; i = elements[i].next) {
 
-        // 获取第i个关键字对应的数字
-        int digit = ord(static_linked_list->elements[elements_index].key, place_index);
+        /// &emsp;&emsp; 取第i个元素, 数位place_of_digit的数位值\n
+        int place_value = ord(static_linked_list->elements[i].key, place_index);
 
-        if (!digit_bucket_heads[digit]) {    // 如果digit所在队列的队头元素为空, elements_index入队
-            digit_bucket_heads[digit] = elements_index; // elements_index设为队头
-        } else {    // 如果digit所在队列的队头元素不为空, 队尾元素对应的elements数组元素的next, 指向elements_index(即加入队尾)
-            elements[digit_bucket_tails[digit]].next = elements_index;    // 队尾增加元素
+        /// &emsp;&emsp; **if** 该数位对应的桶(队列)为空 :\n
+        if (!digit_bucket_heads[place_value]) {
+            /// &emsp;&emsp;&emsp; 该数位的数组索引place_index入队(进桶)\n
+            digit_bucket_heads[place_value] = i;
+        } else {    /// &emsp;&emsp; **else** (如果该数位对应的桶(队列)不为空\n
+            /// &emsp;&emsp;&emsp; 队尾元素的next, 指向place_index(即加入队尾)\n
+            elements[digit_bucket_tails[place_value]].next = i;
         }
 
-        digit_bucket_tails[digit] = elements_index;  // 更新队尾数组digit_queue_tails
+        digit_bucket_tails[place_value] = i;  // &emsp;&emsp; 更新该数位队尾数组元素值\n
 	}
 }
 
 
 /*!
- * 基数排序收集桶
- * @param elements 元素数组
- * @param digit_bucket_heads 数位(0 - 9)桶的首元素(队头)
- * @param digit_bucket_tails 数位(0 - 9)桶的尾元素(队尾)
+ * <h1>基数排序收集桶</h1>
+ * @param elements **静态链表元素数组**
+ * @param digit_bucket_heads **基数桶的首元素数组**(队头数组)
+ * @param digit_bucket_tails **基数桶的尾元素数组**(队尾数组)
  * @note
- * digit]自小至大, 将digit_queue_heads[0 ... 9]所指各桶, 依次连接成一个链表
+ * digit自小至大, 将digit_queue_heads[0 ... 9]所指各桶, 依次连接成一个链表
  */
 void CollectBuckets(static_linked_list_node_t* elements,
                     BUCKETS digit_bucket_heads,
                     BUCKETS digit_bucket_tails)
 {
 
-    // 找第一个非空子表
-    int digit = 0;
-    while (digit_bucket_heads[digit] == 0) {
-        digit++;
+    /// ### 1 找到第一个非空桶(队列) ###
+    /// &emsp; 遍历digit_bucket_heads, 找到第一个非空桶\n
+    int place_value = 0;
+    while (digit_bucket_heads[place_value] == 0) {
+        place_value++;
     }
 
-    elements[0].next = digit_bucket_heads[digit];       //!< elements[0].next指向第一个非空桶的第1个结点
-    int digit_bucket_tail = digit_bucket_tails[digit];  //!< 第1个桶的最后1个元素的elements数组索引
+    /// &emsp; elements[0].next指向第一个非空桶的首结点(第一个非空队列的队头)\n
+    elements[0].next = digit_bucket_heads[place_value];
+    /// &emsp; 变量digit_bucket_tail保存当前非空桶的最后1个元素
+    int digit_bucket_tail = digit_bucket_tails[place_value];
 
-    while (digit < RADIX_10) {
+    /// ### 2 执行桶收集 ###
+    /// &emsp; **for loop** 数位从0到9 :\n
+    while (place_value < RADIX_10) {
 
-        // 寻找下一个非空桶
-        digit++;    // 第1个非空桶的下一个桶
-        while (digit < RADIX_10 && digit_bucket_heads[digit] == 0) {
-            digit++;
+        /// &emsp;&emsp; 寻找下一个非空桶\n
+        place_value++;
+        while (place_value < RADIX_10 && digit_bucket_heads[place_value] == 0) {
+            place_value++;
         }
 
-        // 找不到非空桶, 退出
-        if (digit == RADIX_10) {
+        /// &emsp;&emsp; **if** 找不到非空桶 : \n
+        /// &emsp;&emsp;&emsp; 退出
+        if (place_value == RADIX_10) {
             break;
         }
 
-        elements[digit_bucket_tail].next = digit_bucket_heads[digit];   // 上一个桶的最后一个元素的next, 指到下一个桶的head
-        digit_bucket_tail = digit_bucket_tails[digit];  // digit_bucket_tail指向新的非空桶的tail
+        /// &emsp;&emsp; 前一非空桶的最后一个元素(队尾元素)elements[digit_bucket_tail]的next, 指向当前数位对应的非空桶的首个元素的索引(队头)
+        elements[digit_bucket_tail].next = digit_bucket_heads[place_value];
+        /// &emsp;&emsp; 更新digit_bucket_tail值为当前非空桶的最后一个元素的索引(队尾);
+        digit_bucket_tail = digit_bucket_tails[place_value];
     }
 
-    elements[digit_bucket_tail].next = 0;   // elements[digit_bucket_tail].next指向0(代表所有桶Collection结束)
+    /// &emsp; 最后一个非空桶的最后一个元素(队尾元素)的next指向0
+    elements[digit_bucket_tail].next = 0;
 }
 
 

@@ -14,7 +14,7 @@
 
 
 /*!
- * @brief 测试败者树K路归并排序
+ * @brief <h1>测试败者树K路归并排序</h1>
  * @note
  */
 void TestLoserTree() {

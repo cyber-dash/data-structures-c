@@ -11,38 +11,35 @@
 #include "test.h"
 
 
+/*! @brief main函数 */
 int main() {
 
-    /*
-	// 测试冒泡排序
+	/// - 测试冒泡排序
 	TestBubbleSort();
 
-	// 测试插入排序
+	/// - 测试插入排序
 	TestInsertSort();
 
-	// 测试折半插入排序
+	/// - 测试折半插入排序
     TestBinaryInsertSort();
 
-	// 测试希尔排序
-	TestShellSort();
-
-	// 测试选择排序
+	/// - 测试选择排序
 	TestSelectSort();
 
-	// 测试快速排序
-	TestQuickSort();
-     */
+    /// - 测试希尔排序
+    TestShellSort();
 
-	// 测试归并排序
+	/// - 测试快速排序
+	TestQuickSort();
+
+	/// -  测试归并排序
 	TestMergeSort();
 
-    /*
-	// 测试堆排序
+	/// - 测试堆排序
 	TestHeapSort();
 
-    // 测试基数排序
+    /// - 测试基数排序
     TestRadixSort();
-     */
 
 	return 0;
 }

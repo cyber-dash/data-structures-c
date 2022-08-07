@@ -60,22 +60,31 @@ typedef struct {
 } radix_static_linked_list_t;
 
 
+// 插入排序
 void InsertSort(seq_list_t* seq_list);
 
+// 折半插入排序
 void BinaryInsertSort(seq_list_t* seq_list);
 
-void ShellSort(seq_list_t* seq_list, int gaps[], int gap_count);
-
+// 选择排序
 void SelectSort(seq_list_t* seq_list);
 
+// 冒泡排序
 void BubbleSort(seq_list_t* seq_list);
 
+// 希尔排序
+void ShellSort(seq_list_t* seq_list, int* gaps, int gaps_length);
+
+// 快速排序
 void QuickSort(seq_list_t* seq_list);
 
+// 堆排序
 void HeapSort(seq_list_t* seq_list);
 
+// 归并排序
 void MergeSort(seq_list_t* seq_list);
 
+// 基数排序
 void RadixSort(radix_static_linked_list_t* static_linked_list);
 
 

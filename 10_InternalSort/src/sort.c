@@ -44,6 +44,22 @@ int LessThanOrEqual(key_t key1, key_t key2) {
 
 
 /*!
+ * <h1>大于等于</h1>
+ * @param key1 **关键字1**
+ * @param key2 **关键字2**
+ * @return **结果**
+ * @note
+ */
+int GreaterThanOrEqual(key_t key1, key_t key2) {
+    if (key1 >= key2) {
+        return 1;
+    }
+
+    return 0;
+}
+
+
+/*!
  * <h1>交换函数</h1>
  * @param item1 **元素1**
  * @param item2 **元素2**
@@ -99,71 +115,100 @@ int SelectMinKey(seq_list_t* seq_list, int index) {
  * @note
  */
 void InsertSort(seq_list_t* seq_list) {
-    //对顺序表L作直接插入排序
+    /// **for loop** 第2个元素至最后一个元素 : \n
     for (int i = 2; i <= seq_list->length; i++) {
-        // ("<"，需将seq_list.elements[i]插入有序子表)
-        if (LessThan(seq_list->elements[i].key, seq_list->elements[i - 1].key)) {
-
-            // 交换 seq_list->elements[i]与seq_list->elements[i - 1]
-            seq_list->elements[0] = seq_list->elements[i];                  // (复制为哨兵)
-            seq_list->elements[i] = seq_list->elements[i - 1];
-
-            int j;
-            for (j = i - 1; LessThan(seq_list->elements[0].key, seq_list->elements[j].key); --j)
-            {
-                seq_list->elements[j + 1] = seq_list->elements[j];                //记录后移
-            }
-            seq_list->elements[j + 1] = seq_list->elements[0];                  //插入到正确位置
+        /// &emsp; **if** 当前元素 >= 前一元素 : \n
+        if (GreaterThanOrEqual(seq_list->elements[i].key, seq_list->elements[i - 1].key)) {
+            /// &emsp;&emsp; continue (当前元素直接进入前边的有序区) \n
+            continue;
         }
+
+        /// &emsp; elements[0]暂存当前元素(待插入的元素) \n
+        seq_list->elements[0] = seq_list->elements[i];
+
+        int j;
+        /// &emsp; **for loop** 当前元素的前一元素, 向前一直到大于当前元素的元素(将插入位置后边的所有元素向后移动一位) : \n
+        for (j = i - 1; LessThan(seq_list->elements[0].key, seq_list->elements[j].key); j--) {
+            /// &emsp;&emsp; 遍历位置的元素, 被它前面的元素赋值(元素后移) \n
+            seq_list->elements[j + 1] = seq_list->elements[j];
+        }
+
+        /// &emsp; 将elements[0]暂存的当前元素, 赋值给插入位置 \n
+        seq_list->elements[j + 1] = seq_list->elements[0];
     }
 }
 
 
 /*!
- * \brief <h1>折半插入排序<h1>
- * \param seq_list 待排序顺序表
+ * @brief <h1>折半插入排序</h1>
+ * @param seq_list **顺序表**
+ * @note
  */
 void BinaryInsertSort(seq_list_t* seq_list) {
+    /// **for loop** 第2个元素至最后一个元素 : \n
     for (int i = 2; i <= seq_list->length; i++) {
-        seq_list->elements[0] = seq_list->elements[i];  //将seq_list->elements[i]暂存到seq_list->elements[0]
 
+        /// &emsp; elements[0]暂存当前元素(待插入的元素) \n
+        seq_list->elements[0] = seq_list->elements[i];
+
+        /// &emsp; 有序区(当前元素前边的预期)低位为1, 高位为当前元素前一元素位置i - 1 \n
         int low = 1;
         int high = i - 1;
 
+        /// &emsp; **while** 低位<=高位 : \n
         while (low <= high) {
-            int mid = (low + high) / 2;                       //折半
+            /// &emsp;&emsp; 计算中位mid, 用于折半 \n
+            int mid = (low + high) / 2;
 
+            /// &emsp;&emsp; **if** 当前元素 < 中位位置元素 : \n
             if (LessThan(seq_list->elements[0].key, seq_list->elements[mid].key)) {
-                high = mid - 1;                             //插入点在低半区
-            } else {
-                low = mid + 1;                              //插入点在高半区
+                /// &emsp;&emsp;&emsp; 高位high设置为mid - 1(插入点在低位半区) \n
+                high = mid - 1;
+            } else { /// &emsp;&emsp; **else** (当前元素 >= 中位位置元素) : \n
+                /// &emsp;&emsp;&emsp; 低位low设置为mid + 1(插入点在高位半区) \n
+                low = mid + 1;
             }
         }
 
+        /// &emsp; **for loop** 遍历当前元素, 至插入位置的后一位置元素 \n
         for (int j = i - 1; j >= high + 1; --j) {
-            seq_list->elements[j + 1] = seq_list->elements[j];                  //记录后移
+            /// &emsp;&emsp; 遍历位置的元素, 被它前面的元素赋值(元素后移) \n
+            seq_list->elements[j + 1] = seq_list->elements[j];
         }
 
-        seq_list->elements[high + 1] = seq_list->elements[0];                 //插入
+        /// &emsp; 将elements[0]暂存的当前元素, 赋值给插入位置 \n
+        seq_list->elements[high + 1] = seq_list->elements[0];
     }
 }
 
 
 /*!
- * <h1>按照间隔gap进行希尔插入排序</h1>
- * @param seq_list **顺序表**(指针)
- * @param gap 间隔
+ * @brief <h1>按照间隔gap进行希尔插入排序</h1>
+ * @param seq_list **顺序表**
+ * @param gap **间隔**
+ * @note
  */
 void ShellInsertSort(seq_list_t* seq_list, int gap) {
+    /// **for loop** 按照间隔gap遍历元素 : \n
     for (int i = gap + 1; i <= seq_list->length; i++) {
-        if (LessThan(seq_list->elements[i].key, seq_list->elements[i - gap].key)) {
-            seq_list->elements[0] = seq_list->elements[i];
-            int j;
-            for (j = i - gap; j > 0 && LessThan(seq_list->elements[0].key, seq_list->elements[j].key); j -= gap) {
-                seq_list->elements[j + gap] = seq_list->elements[j];
-            }
-            seq_list->elements[j + gap] = seq_list->elements[0];
+
+        /// &emsp; **if** 当前元素 >= 前一元素 : \n
+        if (GreaterThanOrEqual(seq_list->elements[i].key, seq_list->elements[i - gap].key)) {
+            /// &emsp;&emsp; continue (当前元素直接进入前边的有序区) \n
+            continue;
         }
+
+        /// &emsp; elements[0]暂存当前元素(待插入的元素) \n
+        seq_list->elements[0] = seq_list->elements[i];
+        int j;
+        /// &emsp; **for loop** 当前元素的前一元素, 向前一直到大于当前元素的元素(将插入位置后边的所有元素向后移动一位) : \n
+        for (j = i - gap; j > 0 && LessThan(seq_list->elements[0].key, seq_list->elements[j].key); j -= gap) {
+            /// &emsp;&emsp; 遍历位置的元素, 被它前一gap间隔的元素赋值(元素后移) \n
+            seq_list->elements[j + gap] = seq_list->elements[j];
+        }
+
+        /// &emsp; 将elements[0]暂存的当前元素, 赋值给插入位置 \n
+        seq_list->elements[j + gap] = seq_list->elements[0];
     }
 }
 
@@ -172,10 +217,13 @@ void ShellInsertSort(seq_list_t* seq_list, int gap) {
  * @brief <h1>希尔排序</h1>
  * @param seq_list **顺序表**(指针)
  * @param gaps **间隔数组**
- * @param gap_count **间隔数组长度**
+ * @param gaps_length **间隔数组长度**
+ * @note
  */
-void ShellSort(seq_list_t* seq_list, int* gaps, int gap_count) {
-    for (int i = 0; i < gap_count; ++i) {
+void ShellSort(seq_list_t* seq_list, int* gaps, int gaps_length) {
+    /// **for loop** 间隔数组 : \n
+    for (int i = 0; i < gaps_length; i++) {
+        /// &emsp; 使用当前间隔gaps[i], 调用ShellInsertSort \n
         ShellInsertSort(seq_list, gaps[i]);
     }
 }
@@ -183,24 +231,32 @@ void ShellSort(seq_list_t* seq_list, int* gaps, int gap_count) {
 
 /*!
  * @brief <h1>冒泡排序</h1>
- * @param seq_list **顺序表**(指针)
+ * @param seq_list **顺序表**
  * @note
- * 注意: 索引从1开始
  */
 void BubbleSort(seq_list_t* seq_list) {
     /// **for loop** length - 1 次: \n
     for (int i = 0; i < seq_list->length; i++) {
-        /// &emsp; 在本趟冒泡前设置变量用来检查是否已经有序
+        /// &emsp; 在本趟冒泡前设置变量is_sorted, 用来检查某趟冒泡后, 是否已经有序
         int is_sorted = TRUE;
 
+        /// &emsp; **for loop** length - i - 1次(比较) : \n
         for (int j = 1; j < seq_list->length - i; j++) {
-            if (LessThan(seq_list->elements[j + 1].key, seq_list->elements[j].key)) {
-                Swap(seq_list->elements + j + 1, seq_list->elements + j);
-                is_sorted = FALSE;
+            /// &emsp;&emsp; **if** 后一元素 >= 当前元素 : \n
+            if (GreaterThanOrEqual(seq_list->elements[j + 1].key, seq_list->elements[j].key)) {
+                /// &emsp;&emsp;&emsp; continue \n
+                continue;
             }
+
+            /// &emsp;&emsp; 后一元素 与 当前元素 交换 \n
+            Swap(seq_list->elements + j + 1, seq_list->elements + j);
+            /// &emsp;&emsp; is_sorted设置为FALSE \n
+            is_sorted = FALSE;
         }
 
+        /// &emsp; **if** is_sorted为TRUE : \n
         if (is_sorted == TRUE) {
+            /// &emsp;&emsp; 已经有序, 结束循环 \n
             break;
         }
     }
@@ -208,96 +264,114 @@ void BubbleSort(seq_list_t* seq_list) {
 
 
 /*!
- * 快速排序划分函数
- * @param seq_list 顺序表(指针)
- * @param low 下界
- * @param high 上界
- * @return 划分位置
+ * <h1>快速排序划分函数</h1>
+ * @param seq_list **顺序表**(指针)
+ * @param low **下界**
+ * @param high **上界**
+ * @return **划分位置**
+ * @note
  */
 int Partition(seq_list_t* seq_list, int low, int high) {
 
+    /// ### 1 取最低位的key作为轴pivot ###
     int pivot_key = seq_list->elements[low].key;
 
+    /// ### 2 左右两侧向中间逼近求划分位置 ###
+    /// &emsp; **while** 低位 < 高位
     while (low < high) {
+        /// &emsp;&emsp; **while** 低位 < 高位 and 右侧high位置元素 >= 轴pivot_key(右侧边界元素的值>=轴) : \n
         while (low < high && seq_list->elements[high].key >= pivot_key) {
+            /// &emsp;&emsp;&emsp; 右侧向中间逼近 \n
             high--;
         }
 
+        /// &emsp;&emsp; 右侧发现1个元素小于轴, 交换该元素与轴 \n
         Swap(seq_list->elements + high, seq_list->elements + low);
+
+        /// &emsp;&emsp; **while** 低位 < 高位 and 左侧high位置元素 <= 轴pivot_key(左侧边界元素的值<=轴) : \n
+        while (low < high && seq_list->elements[low].key <= pivot_key) {
+            /// &emsp;&emsp;&emsp; 左侧向中间逼近 \n
+            low++;
+        }
+
+        /// &emsp;&emsp; 左侧发现1个元素大于轴, 交换该元素与轴 \n
+        Swap(seq_list->elements + high, seq_list->elements + low);
+    }
+
+    /// ### 3 返回轴的位置 ###
+    return low;
+}
+
+
+/*!
+ * <h1>快速排序划分函数</h1>
+ * @param seq_list **顺序表**(指针)
+ * @param low **下界**
+ * @param high **上界**
+ * @return **划分位置**
+ * @note
+ * 有兴趣者, 自行补充:-)
+ */
+int Partition2(seq_list_t* seq_list, int low, int high) {
+    int pivot_key;
+
+    seq_list->elements[0] = seq_list->elements[low];
+    pivot_key = seq_list->elements[low].key;
+
+    while (low < high) {
+        while (low < high && seq_list->elements[high].key > pivot_key) {
+            high--;
+        }
+
+        seq_list->elements[low] = seq_list->elements[high];
 
         while (low < high && seq_list->elements[low].key <= pivot_key) {
             low++;
         }
 
-        Swap(seq_list->elements + high, seq_list->elements + low);
+        seq_list->elements[high] = seq_list->elements[low];
     }
+
+    seq_list->elements[low] = seq_list->elements[0];
 
     return low;
 }
 
 
 /*!
- * 快速排序划分函数
- * @param seq_list 顺序表(指针)
- * @param low 下界
- * @param high 上界
- * @return 划分位置
- */
-int Partition2(seq_list_t* seq_list, int low, int high) {
-    int pivot_key;
-
-    //变换顺序表L中子表r[low,high]的记录，枢轴记录到位，并返回其所在位置，此时
-    //在它之前（后）的记录均不大（小）于它。
-    seq_list->elements[0] = seq_list->elements[low];                    //用子表第一个记录作枢轴记录
-    pivot_key = seq_list->elements[low].key;                 //枢轴记录关键字
-
-    while (low < high)
-    { //从表的两端交替地向中间扫描
-        while (low < high && seq_list->elements[high].key > pivot_key) {
-            high--;
-        }
-
-        seq_list->elements[low] = seq_list->elements[high];               //将比枢轴记录小的记录交换到低端
-
-        while (low < high && seq_list->elements[low].key <= pivot_key) {
-            low++;
-        }
-
-        seq_list->elements[high] = seq_list->elements[low];               //将比枢轴记录大的记录交换到高端
-    }
-
-    seq_list->elements[low] = seq_list->elements[0];                    //枢轴记录到位
-
-    return low;                                 //返回枢轴所在位置
-}
-
-
-/*!
- * 快速排序(递归)
- * @param seq_list 顺序表(指针)
- * @param left 表左侧位置
- * @param right 表右侧位置
+ * @brief <h1>快速排序(递归)</h1>
+ * @param seq_list **顺序表**
+ * @param left **顺序表左侧边界**
+ * @param right **顺序表右侧边界**
+ * @note
  */
 void QuickSortRecursive(seq_list_t* seq_list, int left, int right) {
+    /// ### 1 递归终止条件 ###
+    /// &emsp; **if** 低位 >= 高位 : \n
     if (left >= right) {
+        /// &emsp;&emsp; 终止递归 \n
         return;
     }
 
-    // 划分出分治点位置
-    int pivot = Partition2(seq_list, left, right);
+    /// ### 2 划分出分治点 ###
+    int pivot = Partition(seq_list, left, right);
 
-    QuickSortRecursive(seq_list, 1, pivot - 1);        //!< 左侧递归执行QuickSortRecursive
-    QuickSortRecursive(seq_list, pivot + 1, right);    //!< 右侧递归执行QuickSortRecursive
+    /// ### 3 分治递归 ###
+    /// - 左侧递归执行QuickSortRecursive
+    QuickSortRecursive(seq_list, 1, pivot - 1);
+    /// - 右侧递归执行QuickSortRecursive
+    QuickSortRecursive(seq_list, pivot + 1, right);
 }
 
 
 /*!
- * @brief 顺序表快速排序
- * @param seq_list 顺序表(指针)
+ * @brief <h1>顺序表快速排序</h1>
+ * @param seq_list **顺序表**
+ * @note
  */
 void QuickSort(seq_list_t* seq_list) {
-    int starting_index = 1; //!< 顺序表的起始索引为1(区别于数组0)
-
+    int starting_index = 1;
+    /// 调用QuickSortRecursive
     QuickSortRecursive(seq_list, starting_index, seq_list->length);
 }
 
@@ -307,33 +381,42 @@ void QuickSort(seq_list_t* seq_list) {
  * @param seq_list 待排数组
  */
 void SelectSort(seq_list_t* seq_list) {
+    /// **for loop** length - 1 次: \n
     for (int i = 1; i < seq_list->length; i++) {
-        int j = SelectMinKey(seq_list, i);  //!< 在seq_list->elements[ i ... seq_list->length ]中选择key最小的记录
+        /// &emsp; 在线性表[ i ... seq_list->length ]中选择最小元素, 其位置赋给min_key_index \n
+        int min_key_index = SelectMinKey(seq_list, i);
 
-        if (i != j) {
-            Swap(seq_list->elements + i, seq_list->elements + j); //与第i个记录交换
+        /// &emsp; **if** min_key_index不等于i : \n
+        if (i != min_key_index) {
+            /// &emsp;&emsp; 交换位置i与位置min_key_index的元素
+            Swap(seq_list->elements + i, seq_list->elements + min_key_index); //与第i个记录交换
         }
     }
 }
 
 
 /*!
- * 大顶堆SiftDown
- * @param heap 顺序表结构(通常可以是数组)
- * @param index 位置索引
- * @param heap_size 堆size
+ * <h1>大顶堆SiftDown</h1>
+ * @param heap **顺序表**
+ * @param index **位置索引**
+ * @param heap_size **堆size**
+ * @note
  */
-void MaxHeapSiftDown(seq_list_t* heap, int index, int heap_size)
-{
+void MaxHeapSiftDown(seq_list_t* heap, int index, int heap_size) {
+    /// **for loop** 遍历index结点的子孙节点 : \n
     for (int child_index = 2 * index; child_index <= heap_size; index = child_index, child_index *= 2) {
+        /// &emsp; 找到当前左右孩子节点中, 最大的结点
         if (child_index < heap_size && LessThan(heap->elements[child_index].key, heap->elements[child_index + 1].key)) {
             child_index++;
         }
 
+        /// &emsp; **if** 当前结点(index索引) >= 最大孩子节点 : \n
         if (!LessThan(heap->elements[index].key, heap->elements[child_index].key)) {
+            /// &emsp;&emsp; 遍历结束 \n
             break;
         }
 
+        /// &emsp; 交换当前结点与最大孩子结点\n
         Swap(heap->elements + index, heap->elements + child_index);
     }
 }
@@ -345,13 +428,19 @@ void MaxHeapSiftDown(seq_list_t* heap, int index, int heap_size)
  * @note
  */
 void HeapSort(seq_list_t* seq_list) {
-    // 对数组heap->elements[1 ... seq_list->length]建立大顶堆
+    /// ### 1 线性表元素数组建立大顶堆 ###
+    /// &emsp; **for loop** 遍历数组前半部分 : \n
     for (int i = seq_list->length / 2; i > 0; i--) {
+        /// &emsp;&emsp; 对遍历结点执行SiftDown \n
         MaxHeapSiftDown(seq_list, i, seq_list->length);
     }
 
-    for (int i = seq_list->length; i > 1; --i) {
+    /// ### 2 不断地堆顶出堆, 执行堆排序 ###
+    /// &emsp; **for loop** 遍历length - 1 次 : \n
+    for (int i = seq_list->length; i > 1; i--) {
+        /// &emsp;&emsp; 交换堆顶与索引i结点(交换后, i结点进入数组后边的有序区) \n
         Swap(&seq_list->elements[1], &seq_list->elements[i]);
+        /// &emsp;&emsp; 对堆顶执行SiftDown \n
         MaxHeapSiftDown(seq_list, 1, i - 1);
     }
 }
@@ -408,7 +497,7 @@ void Merge(seq_list_node_t* seq_list, seq_list_node_t* merged_seq_list, int left
 
 
 /*!
- * @brief <h1>归并排序(递归)<h1>
+ * @brief <h1>归并排序(递归)</h1>
  * @param seq_list **顺序表**
  * @param merged_seq_list **归并结果的顺序表**
  * @param left **归并段左侧边界**
@@ -595,7 +684,7 @@ void RadixSort(radix_static_linked_list_t* static_linked_list) {
         static_linked_list->elements[i].next = i + 1;
     }
 
-    /// &mesp; 索引length元素的next, 设置为0(构成循环静态链表)
+    /// &emsp; 索引length元素的next, 设置为0(构成循环静态链表)
     static_linked_list->elements[static_linked_list->length].next = 0; // 最后一个元素的next指向0
 
     /// ### 2 按最低位优先(右侧个位开始), 依次对各个位进行分桶和收集 ###

@@ -15,8 +15,9 @@
 #include "graph.h"
 
 
-#define ROOT_PARENT_INDEX   -1
+#define ROOT_PARENT_INDEX   -1  //!< 根节点的父节点索引值
 
+/*! @brief 并查集 */
 typedef struct DisjointSet {
     int size; //!< 大小
     int* parent_index_array; //!< 父节点数组
@@ -35,6 +36,7 @@ status_t DisjointSetUnion(DisjointSet* disjoint_set, int root1, int root2);
 int DisjointSetFindRecursive(DisjointSet* disjoint_set, int index);
 
 int DisjointSetFind(DisjointSet* disjoint_set, int index);
+
 /*
 // 合并集合(Weighted)
 void WeightedUnion(int node1, int node2);

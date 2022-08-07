@@ -61,6 +61,8 @@ status_t DFSTraverse(matrix_graph_t graph, status_t (*Visit)(matrix_graph_t*, in
             DFSRecursive(graph, i, visited_vertex_index_array, Visit);
         }
     }
+
+    return OK;
 }
 
 

@@ -17,7 +17,7 @@
 
 #define MAX_VERTEX_CNT  10  //!< 最大顶点数
 #define MAX_EDGE_CNT    30  //!< 最大边数
-#define VERTEX_TYPE	    int //!< 结点类型
+#define VERTEX_TYPE     int //!< 结点类型
 
 #define NOT_VISITED     0   //!< 图结点遍历未访问
 #define VISITED         1   //!< 图结点遍历已访问

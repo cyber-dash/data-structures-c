@@ -228,7 +228,7 @@ void Kruskal(matrix_graph_t* graph, edge_t* min_span_tree) {
     MinPriorityQueueInit(&min_priority_queue, graph->edge_count);
 
     // 初始化并查集, 容量 = 图边数
-    DisjointSet disjoint_set;
+    disjoint_set_t disjoint_set;
     InitDisjointSet(&disjoint_set, graph->edge_count);
 
     // 将所有边插入到最小优先队列
@@ -532,7 +532,7 @@ void Floyd(matrix_graph_t* graph, int (*predecessor)[MAX_VERTEX_CNT], edge_t (*d
 }
 
 
-void PrintSingleSourceShortestPath(matrix_graph_t *graph,
+void PrintSingleSourceShortestPath(matrix_graph_t* graph,
                                    int starting_vertex_index,
                                    int (*predecessor)[MAX_VERTEX_CNT],
                                    edge_t* distance)
@@ -553,7 +553,7 @@ void PrintSingleSourceShortestPath(matrix_graph_t *graph,
 }
 
 
-void PrintMultiSourceShortestPath(matrix_graph_t *graph,
+void PrintMultiSourceShortestPath(matrix_graph_t* graph,
                                   edge_t (*distance)[MAX_VERTEX_CNT],
                                   int (*predecessor)[MAX_VERTEX_CNT])
 {
@@ -583,7 +583,7 @@ void PrintMultiSourceShortestPath(matrix_graph_t *graph,
  * @note
  * 多源最短路径和单源最短路径问题, 都可以使用此函数
  */
-void PrintSingleSourceShortestPathRecursive(matrix_graph_t *graph, int i, int j, int (*predecessor)[MAX_VERTEX_CNT]) {
+void PrintSingleSourceShortestPathRecursive(matrix_graph_t* graph, int i, int j, int (*predecessor)[MAX_VERTEX_CNT]) {
     if (i != j) {
         int predecessor_of_j = predecessor[i][j];
         PrintSingleSourceShortestPathRecursive(graph, i, predecessor_of_j, predecessor);

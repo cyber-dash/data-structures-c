@@ -18,24 +18,24 @@
 #define ROOT_PARENT_INDEX   -1  //!< 根节点的父节点索引值
 
 /*! @brief 并查集 */
-typedef struct DisjointSet {
+typedef struct {
     int size; //!< 大小
-    int* parent_index_array; //!< 父节点数组
-} DisjointSet;
+    int* parent_indexes; //!< 父节点数组
+} disjoint_set_t;
 
 // 构造函数
-status_t InitDisjointSet(DisjointSet* disjoint_set, int size);
+status_t InitDisjointSet(disjoint_set_t* disjoint_set, int size);
 
 // 销毁并查集
-status_t DisjointSetDestroy(DisjointSet** disjoint_set);
+status_t DisjointSetDestroy(disjoint_set_t** disjoint_set);
 
 // 合并两个集合
-status_t DisjointSetUnion(DisjointSet* disjoint_set, int root1, int root2);
+status_t DisjointSetUnion(disjoint_set_t* disjoint_set, int root1, int root2);
 
 // 查找
-int DisjointSetFindRecursive(DisjointSet* disjoint_set, int index);
+int DisjointSetFindRecursive(disjoint_set_t* disjoint_set, int index);
 
-int DisjointSetFind(DisjointSet* disjoint_set, int index);
+int DisjointSetFind(disjoint_set_t* disjoint_set, int index);
 
 /*
 // 合并集合(Weighted)

@@ -13,10 +13,11 @@
 
 
 /*!
- * 小于(<)
- * @param item1 元素1
- * @param item2 元素2
- * @return 比较结果
+ * <h1>小于(<)</h1>
+ * @param item1 **元素1**
+ * @param item2 **元素2***
+ * @return **比较结果**
+ * @note
  */
 int LessThan(edge_t* item1, edge_t* item2) {
     if (item1->weight_type == DOUBLE && item2->weight_type == DOUBLE) {
@@ -32,10 +33,11 @@ int LessThan(edge_t* item1, edge_t* item2) {
 
 
 /*!
- * 大于(>)
- * @param item1 元素1
+ * <h1>大于(>)</h1>
+ * @param item1 **元素1**
  * @param item2 元素2
- * @return 比较结果
+ * @return **比较结果**
+ * @note
  */
 int GreaterThan(edge_t* item1, edge_t* item2) {
     if (item1->weight_type == DOUBLE && item2->weight_type == DOUBLE) {
@@ -51,9 +53,10 @@ int GreaterThan(edge_t* item1, edge_t* item2) {
 
 
 /*!
- * 交换元素值
- * @param item1 元素1(指针)
- * @param item2 元素2(指针)
+ * <h1>交换元素值</h1>
+ * @param item1 **元素1**(指针)
+ * @param item2 **元素2**(指针)
+ * @note
  */
 void Swap(edge_t* item1, edge_t* item2) {
     edge_t tmp = *item1;
@@ -63,7 +66,7 @@ void Swap(edge_t* item1, edge_t* item2) {
 
 
 /*!
- * 小顶堆SiftDown
+ * <h1>小顶堆SiftDown</h1>
  * @brief 迭代建立小顶堆
  * @param items 堆元素数组
  * @param index 执行SiftDown的索引

@@ -112,7 +112,7 @@ edge_t* NextEdge(matrix_graph_t* graph, int vertex_idx, edge_t* edge) {
  * @param graph 图(指针)
  * @param edge_array 边信息数组
  * @param edge_count 边数量
- * @param vertex_index_array 结点索引数组
+ * @param vertex_indexes 结点索引数组
  * @param vertex_count 结点数量
  * @param graph_kind 图类型
  * @return 执行结果
@@ -126,7 +126,7 @@ edge_t* NextEdge(matrix_graph_t* graph, int vertex_idx, edge_t* edge) {
 status_t CreateGraphByEdgesAndVertices(matrix_graph_t* graph,
                                        edge_t* edge_array,
                                        int edge_count,
-                                       const int* vertex_index_array,
+                                       const int* vertex_indexes,
                                        int vertex_count,
                                        GRAPH_KIND graph_kind)
 {
@@ -143,7 +143,7 @@ status_t CreateGraphByEdgesAndVertices(matrix_graph_t* graph,
     for (int i = 0; i < graph->vertex_count; ++i) {
 
         // 结点信息数组各元素初始化
-        graph->vertex_array[i] = vertex_index_array[i];
+        graph->vertex_array[i] = vertex_indexes[i];
 
         // 邻接矩阵每个元素初始化
         //     主对角线元素, weight_type设为DOUBLE, weight.double_value设为0

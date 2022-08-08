@@ -14,7 +14,7 @@
 #include "queue.h"
 
 
-typedef struct min_priority_queue {
+typedef struct {
     edge_t* mst_edges;
     int size;
     int capacity;
@@ -33,7 +33,7 @@ void MinHeapSiftDown(edge_t* items, int index, int heap_size);
 void MinHeapSiftUp(edge_t* items, int index);
 
 
-void MinHeapBuildBySiftDown(edge_t *items, int heap_size);
+void MinHeapBuildBySiftDown(edge_t* items, int heap_size);
 
 
 status_t MinPriorityQueueInit(min_priority_queue_t* min_priority_queue, int capacity);

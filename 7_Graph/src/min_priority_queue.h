@@ -7,6 +7,7 @@
  * @copyright Copyright (c) 2021
  *  CyberDash计算机考研
  */
+
 #ifndef CYBER_DASH_HEAP_H
 #define CYBER_DASH_HEAP_H
 
@@ -14,10 +15,11 @@
 #include "queue.h"
 
 
+/*! @brief 最小优先队列 */
 typedef struct {
-    edge_t* mst_edges;
-    int size;
-    int capacity;
+    edge_t* items;      //!< 队列元素数组
+    int size;           //!< 队列长度
+    int capacity;       //!< 队列容量
 } min_priority_queue_t;
 
 
@@ -43,8 +45,6 @@ status_t MinPriorityQueuePush(min_priority_queue_t* min_priority_queue, edge_t i
 
 
 status_t MinPriorityQueuePop(min_priority_queue_t* min_priority_queue, edge_t* item);
-
-
 
 
 #endif // CYBER_DASH_HEAP_H

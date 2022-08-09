@@ -129,16 +129,22 @@ void MinHeapBuildBySiftDown(edge_t* items, int heap_size) {
 
 
 /*!
- * 最小优先队列初始化
- * @param min_priority_queue 最小优先队列
- * @param capacity 队列容量
- * @return 执行结果
+ * @brief <h1>最小优先队列初始化</h1>
+ * @param min_priority_queue **最小优先队列**
+ * @param capacity **队列容量**
+ * @return **执行结果**
+ * @note
  */
 status_t MinPriorityQueueInit(min_priority_queue_t* min_priority_queue, int capacity) {
+    /// ### 1 边界条件判断 ###
+    /// &emsp; **if** 容量 < 0 或者 容量 > 图结点数的平方 : \n
     if (capacity < 0 || capacity > MAX_VERTEX_CNT * MAX_VERTEX_CNT) {
+        /// &emsp;&emsp; 返回ERROR\n
         return ERROR;
     }
-    min_priority_queue->mst_edges = (edge_t*)malloc(sizeof(edge_t) * (capacity + 1));
+
+    /// ### 2 最小优先队列分配内存and设置属性 ###
+    min_priority_queue->items = (edge_t*)malloc(sizeof(edge_t) * (capacity + 1));
     min_priority_queue->capacity = capacity;
     min_priority_queue->size = 0;
 
@@ -147,20 +153,27 @@ status_t MinPriorityQueueInit(min_priority_queue_t* min_priority_queue, int capa
 
 
 /*!
- * 最小优先队列入队
- * @param min_priority_queue 最小优先队列(指针)
- * @param item 入队元素
- * @return 执行结果
+ * @brief <h1>最小优先队列入队</h1>
+ * @param min_priority_queue **最小优先队列**(指针)
+ * @param item **入队元素**
+ * @return **执行结果**
+ * @note
  */
 status_t MinPriorityQueuePush(min_priority_queue_t* min_priority_queue, edge_t item) {
+
+    /// ### 1 满队判断 ###
+    /// &emsp; **if** 队列长度 等于 队列容量 : \n
     if (min_priority_queue->size == min_priority_queue->capacity) {
-        return ERROR;
+        /// &emsp;&emsp; 队列满, 无法入队, 返回OVERFLOW错误 \n
+        return OVERFLOW;
     }
 
-    min_priority_queue->mst_edges[min_priority_queue->size + 1] = item;
+    /// ### 2 在队列元素数组尾部加入元素 ###
+    min_priority_queue->items[min_priority_queue->size + 1] = item;
     min_priority_queue->size++;
 
-    MinHeapSiftUp(min_priority_queue->mst_edges, min_priority_queue->size);
+    /// ### 3 对刚刚插入的元素执行SiftUp ###
+    MinHeapSiftUp(min_priority_queue->items, min_priority_queue->size);
 
     return OK;
 }
@@ -177,12 +190,12 @@ status_t MinPriorityQueuePop(min_priority_queue_t* min_priority_queue, edge_t* i
         return ERROR;
     }
 
-    *item = min_priority_queue->mst_edges[1];
+    *item = min_priority_queue->items[1];
 
-    min_priority_queue->mst_edges[1] = min_priority_queue->mst_edges[min_priority_queue->size];
+    min_priority_queue->items[1] = min_priority_queue->items[min_priority_queue->size];
     min_priority_queue->size--;
 
-    MinHeapSiftDown(min_priority_queue->mst_edges, 1, min_priority_queue->size);
+    MinHeapSiftDown(min_priority_queue->items, 1, min_priority_queue->size);
 
     return OK;
 }

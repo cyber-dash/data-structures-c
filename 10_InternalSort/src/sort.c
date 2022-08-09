@@ -398,14 +398,14 @@ void SelectSort(seq_list_t* seq_list) {
 /*!
  * <h1>大顶堆SiftDown</h1>
  * @param heap **顺序表**
- * @param index **位置索引**
+ * @param index **执行Siftdown的索引**
  * @param heap_size **堆size**
  * @note
  */
 void MaxHeapSiftDown(seq_list_t* heap, int index, int heap_size) {
     /// **for loop** 遍历index结点的子孙节点 : \n
     for (int child_index = 2 * index; child_index <= heap_size; index = child_index, child_index *= 2) {
-        /// &emsp; 找到当前左右孩子节点中, 最大的结点
+        /// &emsp; 找到当前结点的左右孩子节点中, 最大的结点
         if (child_index < heap_size && LessThan(heap->elements[child_index].key, heap->elements[child_index + 1].key)) {
             child_index++;
         }
@@ -488,7 +488,7 @@ void Merge(seq_list_node_t* seq_list, seq_list_node_t* merged_seq_list, int left
     }
 
     /// &emsp; 将右侧有序段剩余的元素, 加入到合并结果顺序表 \n
-    while (right_part_index <= right) {                                         //将剩余的SR[right_part_index..right]复制到TR
+    while (right_part_index <= right) {
         merged_seq_list[merged_seq_list_index] = seq_list[right_part_index];
         merged_seq_list_index++;
         right_part_index++;
@@ -611,7 +611,8 @@ void DistributeIntoBuckets(radix_static_linked_list_t* static_linked_list,
             elements[digit_bucket_tails[place_value]].next = i;
         }
 
-        digit_bucket_tails[place_value] = i;  // &emsp;&emsp; 更新该数位队尾数组元素值\n
+        /// &emsp;&emsp; 更新该数位队尾数组元素值\n
+        digit_bucket_tails[place_value] = i;
 	}
 }
 
@@ -625,8 +626,8 @@ void DistributeIntoBuckets(radix_static_linked_list_t* static_linked_list,
  * digit自小至大, 将digit_queue_heads[0 ... 9]所指各桶, 依次连接成一个链表
  */
 void CollectBuckets(static_linked_list_node_t* elements,
-                    BUCKETS digit_bucket_heads,
-                    BUCKETS digit_bucket_tails)
+                    const BUCKETS digit_bucket_heads,
+                    const BUCKETS digit_bucket_tails)
 {
 
     /// ### 1 找到第一个非空桶(队列) ###

@@ -66,55 +66,63 @@ void Swap(edge_t* item1, edge_t* item2) {
 
 
 /*!
- * <h1>小顶堆SiftDown</h1>
- * @brief 迭代建立小顶堆
- * @param items 堆元素数组
- * @param index 执行SiftDown的索引
- * @param heap_size 堆size
+ * @brief <h1>小顶堆SiftDown</h1>
+ * @param items **堆元素数组**
+ * @param index **执行SiftDown的索引**
+ * @param heap_size **堆size**
  */
 void MinHeapSiftDown(edge_t* items, int index, int heap_size) {
+    /// **for loop** 遍历index结点的子孙节点 : \n
     for (int child_index = 2 * index; child_index <= heap_size; child_index *= 2) {
 
-        // index的孩子结点中, 权重较小的结点索引, 赋给child_idx
+        /// &emsp; 找到当前结点的左右孩子节点中, 较小的结点
         if (child_index < heap_size && GreaterThan(items + child_index, items + child_index + 1)) {
             child_index++;
         }
 
-        // 如果父节点<=子节点, sift down结束
+        /// &emsp; **if** 当前结点(index索引) <= 最大孩子节点 : \n
         if (!GreaterThan(items + index, items + child_index)) {
+            /// &emsp;&emsp; 遍历结束(SiftDown结束) \n
             break;
         }
 
-        //! 交换父子结点
+        /// &emsp; 交换当前结点与最大孩子结点\n
         Swap(items + index, items + child_index);
     }
 }
 
 
 /*!
- * 小顶堆SiftUp
- * @param items 堆元素数组
- * @param index 执行SiftUp的索引
+ * <h1>小顶堆SiftUp</h1>
+ * @param items **堆元素数组**
+ * @param index **执行SiftUp的索引**
  * @note
  */
 void MinHeapSiftUp(edge_t* items, int index) {
+    /// **for loop** 遍历index结点的祖先节点 : \n
     for (int parent_index = index / 2; parent_index > 0; parent_index /= 2) {
+        /// &emsp; **if** 双亲结点 <= 当前节点 : \n
         if (!GreaterThan(items + parent_index, items + index)) {
+            /// &emsp;&emsp; 遍历结束(SiftUp结束) \n
             break;
         }
 
+        /// &emsp; 交换当前结点与双亲结点\n
         Swap(items + parent_index, items + index);
     }
 }
 
 
 /*!
- * 建堆(使用SiftDown)
- * @param items 堆元素数组
- * @param heap_size 堆size
+ * @brief <h1>建堆(使用SiftDown)</h1>
+ * @param items **堆元素数组**
+ * @param heap_size **堆size**
+ * @note
  */
 void MinHeapBuildBySiftDown(edge_t* items, int heap_size) {
+    /// **for loop** 从数组中间向前遍历 : \n
     for (int i = heap_size / 2; i > 0; i--) {
+        /// &emsp; 对当前结点执行SiftDown
         MinHeapSiftDown(items, i, heap_size);
     }
 }

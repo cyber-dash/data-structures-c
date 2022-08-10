@@ -14,6 +14,7 @@
 /*! @brief main函数 */
 int main() {
 
+    /*
     /// - 测试使用边和结点创建无向网
     TestCreateUDNByEdgesAndVertices();
 
@@ -22,10 +23,12 @@ int main() {
 
     /// - 测试广度有限遍历
     TestBFSTraverse();
+     */
 
     /// - 测试Prim算法
     TestPrim();
 
+    /*
     /// - 测试克努斯卡尔算法
     TestKruskal();
 
@@ -37,6 +40,7 @@ int main() {
 
     /// - 测试弗洛伊德算法
     TestFloyd();
+     */
 
     return 0;
 }

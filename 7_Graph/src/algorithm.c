@@ -67,11 +67,11 @@ status_t DFSTraverse(matrix_graph_t graph, status_t (*Visit)(matrix_graph_t*, in
 
 
 /*!
- * <h1> 对结点深度优先遍历(递归) </h1>
+ * <h1>对结点深度优先遍历(递归)</h1>
  * @param graph **图**
  * @param vertex_index **图结点索引**
  * @param visited_vertex_index_array **已访问结点索引的数组**
- * @param Visit **访问函数**
+ * @param Visit **结点访问函数**
  * @note
  */
 void DFSRecursive(matrix_graph_t graph,
@@ -102,54 +102,69 @@ void DFSRecursive(matrix_graph_t graph,
 
 
 /*!
- * BFS遍历
- * @param graph 图
- * @param Visit
+ * <h1>图广度优先BFS遍历</h1>
+ * @param graph **图**
+ * @param Visit **结点访问函数**
+ * @note
  */
 void BFSTraverse(matrix_graph_t graph, status_t (*Visit)(matrix_graph_t*, int)) {
 
-    // 构造visited数组
-    int* visited_vertex_index_array = (int*)malloc(graph.vertex_count * sizeof(int));
+    /// ### 1 构造visited数组 ###
+    /// &emsp; 数组visited_vertex_indexes分配内存 \n
+    int* visited_vertex_indexes = (int*)malloc(graph.vertex_count * sizeof(int));
 
+    /// &emsp; **for loop** 遍历图结点 :\n
     for (int i = 0; i < graph.vertex_count; i++) {
-        visited_vertex_index_array[i] = NOT_VISITED;
+        /// &emsp;&emsp; 每个结点都设置成未访问NOT_VISITED \n
+        visited_vertex_indexes[i] = NOT_VISITED;
     }
 
+    /// ### 2 初始化空队列 ###
     linked_queue_t queue;
     LinkedQueueInit(&queue);
 
+    /// ### 3 执行BFS遍历 ###
+    /// &emsp; **for loop** 遍历图结点 : \n
     for (int i = 0; i < graph.vertex_count; i++) {
-        if (!visited_vertex_index_array[i]) {
-            visited_vertex_index_array[i] = VISITED;
-            Visit(&graph, i);
 
-            LinkedQueueEnQueue(&queue, i);
+        /// &emsp;&emsp; **if** 当前结点已经访问过 : \n
+        if (visited_vertex_indexes[i] == VISITED) {
+            /// &emsp;&emsp;&emsp; continue \n
+            continue;
+        }
 
-            while (!LinkedQueueIsEmpty(&queue)) {
+        /// &emsp;&emsp; 访问当前结点 \n
+        Visit(&graph, i);
+        /// &emsp;&emsp; 将当前结点设置为已访问 \n
+        visited_vertex_indexes[i] = VISITED;
+        /// &emsp;&emsp; 当前结点索引入队 \n
+        LinkedQueueEnQueue(&queue, i);
 
-                // 取队头
-                int vertex_index;
-                LinkedQueueDeQueue(&queue, &vertex_index);
+        /// &emsp;&emsp; **while** 队列不为空 : \n
+        while (!LinkedQueueIsEmpty(&queue)) {
 
-                // 遍历队头的未遍历的邻结点
-                for (int neighbor_vertex_index = FirstAdjVertexIdx(&graph, vertex_index);
-                     neighbor_vertex_index >= 0;
-                     neighbor_vertex_index = NextAdjVertexIndex(&graph, vertex_index, neighbor_vertex_index)
-                    )
-                {
-                    // 如果: 当前邻结点未被访问
-                    if (!visited_vertex_index_array[neighbor_vertex_index]) {
+            /// &emsp;&emsp;&emsp; 取当前队头结点 \n
+            int vertex_index;
+            LinkedQueueDeQueue(&queue, &vertex_index);
 
-                        // 访问当前邻结点
-                        Visit(&graph, neighbor_vertex_index);
-
-                        // 当前邻结点入队
-                        LinkedQueueEnQueue(&queue, neighbor_vertex_index);
-
-                        // 标记当前邻结点被访问
-                        visited_vertex_index_array[neighbor_vertex_index] = 1;
-                    }
+            /// &emsp;&emsp;&emsp; **for loop** 遍历当前队头结点的相邻结点 : \n
+            for (int neighbor_vertex_index = FirstAdjVertexIdx(&graph, vertex_index);
+                 neighbor_vertex_index >= 0;
+                 neighbor_vertex_index = NextAdjVertexIndex(&graph, vertex_index, neighbor_vertex_index)
+                )
+            {
+                /// &emsp;&emsp;&emsp;&emsp; **if** 当前相邻结点已被访问 : \n
+                if (visited_vertex_indexes[neighbor_vertex_index] == VISITED) {
+                    /// &emsp;&emsp;&emsp;&emsp;&emsp; continue \n
+                    continue;
                 }
+
+                /// &emsp;&emsp;&emsp;&emsp; 访问当前相邻结点 \n
+                Visit(&graph, neighbor_vertex_index);
+                /// &emsp;&emsp;&emsp;&emsp; 当前相邻结点入队 \n
+                LinkedQueueEnQueue(&queue, neighbor_vertex_index);
+                /// &emsp;&emsp;&emsp;&emsp; 标记当前相邻结点被访问 \n
+                visited_vertex_indexes[neighbor_vertex_index] = VISITED;
             }
         }
     }
@@ -157,50 +172,59 @@ void BFSTraverse(matrix_graph_t graph, status_t (*Visit)(matrix_graph_t*, int)) 
 
 
 /*!
- * Prim最小生成树算法
- * @param graph 图(指针)
- * @param min_span_tree 最小生成树(数组)
+ * @brief <h1>Prim最小生成树算法</h1>
+ * @param graph **图**(指针)
+ * @param min_span_tree **最小生成树**(数组)
+ * @note
  */
+ /*
 void Prim(matrix_graph_t* graph, edge_t* min_span_tree) {
     int vertex_count = graph->vertex_count;
 
     // note: 此处使用数组, 如果可以, 使用set来实现vertex_set,
     // 如果你觉得用c语言做set比较麻烦, 请移步C++, C++更适合做算法
-    int vertex_set[MAX_VERTEX_CNT];
-    vertex_set[0] = 0;       // 从索引0结点开始
-    int in_vertex_set_cnt = 1;  // 在vertex_set中的结点数量
+    int mst_vertex_index_set[MAX_VERTEX_CNT];
+    mst_vertex_index_set[0] = 0;       // 从索引0结点开始
+    int mst_vertex_index_set_size = 1;  // 在vertex_set中的结点数量
 
-    while (in_vertex_set_cnt < vertex_count) {
+    /// ### 2 使用贪心法构造最小生成树###
+    /// &emsp; **while** 最小生成树结点索引集合的size < 图结点数量 : \n
+    while (mst_vertex_index_set_size < vertex_count) {
 
+        /// &emsp;&emsp; 初始化优先队列 \n
         min_priority_queue_t min_priority_queue;
         MinPriorityQueueInit(&min_priority_queue, vertex_count * vertex_count);
 
-        for (int i = 0; i < in_vertex_set_cnt; i++) {
-            int cur_starting_vertex_idx = vertex_set[i];
-            for (int j = 0; j < vertex_count; j++) {
+        /// &emsp;&emsp; **for loop** 遍历当前最小生成树中的结点(找到以这些结点中某个结点为起点, 不在这些结点的某个结点为终点的, 最短的边) : \n
+        for (int i = 0; i < mst_vertex_index_set_size; i++) {
+            /// &emsp;&emsp;&emsp; 取当前在当前最小生成树的结点索引, 作为起点索引cur_starting_vertex_index \n
+            int cur_starting_vertex_index = mst_vertex_index_set[i];
+            /// &emsp;&emsp;&emsp; **for loop** 遍历图结点 : \n
+            for (int cur_ending_vertex_index = 0; cur_ending_vertex_index < vertex_count; cur_ending_vertex_index++) {
 
-                // 检查索引j结点是否在vertex_set中
+                /// &emsp;&emsp;&emsp;&emsp; 检查当前结点索引cur_ending_vertex_index是否在mst_vertex_index_set中 \n
                 int in_vertex_set = FALSE;
-                for (int k = 0; k < in_vertex_set_cnt; k++) {
-                    if (j == vertex_set[k]) {
+                for (int k = 0; k < mst_vertex_index_set_size; k++) {
+                    if (cur_ending_vertex_index == mst_vertex_index_set[k]) {
                         in_vertex_set = TRUE;
                         break;
                     }
                 }
 
-                // 如果索引j结点在vertex_set中, continue
+                /// &emsp;&emsp;&emsp;&emsp; **if** 索引cur_ending_vertex_index结点在mst_vertex_index_set中 : \n
                 if (in_vertex_set) {
+                    /// &emsp;&emsp;&emsp;&emsp;&emsp; continue \n
                     continue;
                 }
 
-                // 如果cur_starting_vertex_idx == j, 或者边(cur_starting_vertex_idx == j, j)不存在, continue
-                if (cur_starting_vertex_idx == j ||
-                    graph->adj_matrix[cur_starting_vertex_idx][j].weight_type == NO_EDGE)
-                {
+                /// &emsp;&emsp;&emsp;&emsp; **if** 边(cur_starting_vertex_index, cur_ending_vertex_index)不存在 : \n
+                if (graph->adj_matrix[cur_starting_vertex_index][cur_ending_vertex_index].weight_type == NO_EDGE) {
+                    /// &emsp;&emsp;&emsp;&emsp;&emsp; continue \n
                     continue;
                 }
 
-                edge_t cur_adj_edge = graph->adj_matrix[cur_starting_vertex_idx][j];
+                /// &emsp;&emsp;&emsp;&emsp; 将边(cur_starting_vertex_index, cur_ending_vertex_index) Push进最小优先队列
+                edge_t cur_adj_edge = graph->adj_matrix[cur_starting_vertex_index][cur_ending_vertex_index];
                 MinPriorityQueuePush(&min_priority_queue, cur_adj_edge);
             }
         }
@@ -208,10 +232,56 @@ void Prim(matrix_graph_t* graph, edge_t* min_span_tree) {
         edge_t cur_mst_edge;
         MinPriorityQueuePop(&min_priority_queue, &cur_mst_edge);
 
-        min_span_tree[in_vertex_set_cnt - 1] = cur_mst_edge;
+        min_span_tree[mst_vertex_index_set_size - 1] = cur_mst_edge;
 
-        vertex_set[in_vertex_set_cnt] = cur_mst_edge.ending_vertex_index;
-        in_vertex_set_cnt++;
+        mst_vertex_index_set[mst_vertex_index_set_size] = cur_mst_edge.ending_vertex_index;
+        mst_vertex_index_set_size++;
+    }
+}
+*/
+void Prim(matrix_graph_t* graph, edge_t* min_span_tree) {
+    int vertex_count = graph->vertex_count;
+
+    int mst_vertex_index_set[MAX_VERTEX_CNT];
+    mst_vertex_index_set[0] = 0;       // 从索引0结点开始
+    int mst_vertex_index_set_size = 1;  // 在vertex_set中的结点数量
+
+    min_priority_queue_t min_priority_queue;
+    MinPriorityQueueInit(&min_priority_queue, vertex_count * vertex_count);
+
+    for (int i = 1; i < graph->vertex_count; i++) {
+        if (graph->adj_matrix[0][i].weight_type == NO_EDGE) {
+            continue;
+        }
+
+        MinPriorityQueuePush(&min_priority_queue, graph->adj_matrix[0][1]);
+    }
+
+    while (mst_vertex_index_set_size != vertex_count) {
+
+        edge_t cur_mst_edge;
+        MinPriorityQueuePop(&min_priority_queue, &cur_mst_edge);
+
+        min_span_tree[mst_vertex_index_set_size - 1] = cur_mst_edge;
+        mst_vertex_index_set[mst_vertex_index_set_size] = cur_mst_edge.ending_vertex_index;
+        mst_vertex_index_set_size++;
+
+        for (int i = 0; i < vertex_count; i++) {
+            int in_vertex_set = FALSE;
+            for (int k = 0; k < mst_vertex_index_set_size; k++) {
+                if (i == mst_vertex_index_set[k]) {
+                    in_vertex_set = TRUE;
+                    break;
+                }
+            }
+
+            if (in_vertex_set || graph->adj_matrix[cur_mst_edge.ending_vertex_index][i].weight_type == NO_EDGE) {
+                continue;
+            }
+
+            edge_t cur_adj_edge = graph->adj_matrix[cur_mst_edge.ending_vertex_index][i];
+            MinPriorityQueuePush(&min_priority_queue, cur_adj_edge);
+        }
     }
 }
 

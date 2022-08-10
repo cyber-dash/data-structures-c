@@ -177,108 +177,61 @@ void BFSTraverse(matrix_graph_t graph, status_t (*Visit)(matrix_graph_t*, int)) 
  * @param min_span_tree **最小生成树**(数组)
  * @note
  */
- /*
 void Prim(matrix_graph_t* graph, edge_t* min_span_tree) {
-    int vertex_count = graph->vertex_count;
 
-    // note: 此处使用数组, 如果可以, 使用set来实现vertex_set,
-    // 如果你觉得用c语言做set比较麻烦, 请移步C++, C++更适合做算法
+    /// ### 1 初始化最小生成树结点索引数组 ###
+    /// &emsp; 声明最小生成树结点索引数组mst_vertex_index_set \n
     int mst_vertex_index_set[MAX_VERTEX_CNT];
-    mst_vertex_index_set[0] = 0;       // 从索引0结点开始
-    int mst_vertex_index_set_size = 1;  // 在vertex_set中的结点数量
+    /// &emsp; 索引0图结点进入mst_vertex_index_set(加入最小生成树) \n
+    mst_vertex_index_set[0] = 0;
+    /// &emsp; 最小生成树大小设置为1(只包含1个结点) \n
+    int mst_size = 1;
 
-    /// ### 2 使用贪心法构造最小生成树###
-    /// &emsp; **while** 最小生成树结点索引集合的size < 图结点数量 : \n
-    while (mst_vertex_index_set_size < vertex_count) {
-
-        /// &emsp;&emsp; 初始化优先队列 \n
-        min_priority_queue_t min_priority_queue;
-        MinPriorityQueueInit(&min_priority_queue, vertex_count * vertex_count);
-
-        /// &emsp;&emsp; **for loop** 遍历当前最小生成树中的结点(找到以这些结点中某个结点为起点, 不在这些结点的某个结点为终点的, 最短的边) : \n
-        for (int i = 0; i < mst_vertex_index_set_size; i++) {
-            /// &emsp;&emsp;&emsp; 取当前在当前最小生成树的结点索引, 作为起点索引cur_starting_vertex_index \n
-            int cur_starting_vertex_index = mst_vertex_index_set[i];
-            /// &emsp;&emsp;&emsp; **for loop** 遍历图结点 : \n
-            for (int cur_ending_vertex_index = 0; cur_ending_vertex_index < vertex_count; cur_ending_vertex_index++) {
-
-                /// &emsp;&emsp;&emsp;&emsp; 检查当前结点索引cur_ending_vertex_index是否在mst_vertex_index_set中 \n
-                int in_vertex_set = FALSE;
-                for (int k = 0; k < mst_vertex_index_set_size; k++) {
-                    if (cur_ending_vertex_index == mst_vertex_index_set[k]) {
-                        in_vertex_set = TRUE;
-                        break;
-                    }
-                }
-
-                /// &emsp;&emsp;&emsp;&emsp; **if** 索引cur_ending_vertex_index结点在mst_vertex_index_set中 : \n
-                if (in_vertex_set) {
-                    /// &emsp;&emsp;&emsp;&emsp;&emsp; continue \n
-                    continue;
-                }
-
-                /// &emsp;&emsp;&emsp;&emsp; **if** 边(cur_starting_vertex_index, cur_ending_vertex_index)不存在 : \n
-                if (graph->adj_matrix[cur_starting_vertex_index][cur_ending_vertex_index].weight_type == NO_EDGE) {
-                    /// &emsp;&emsp;&emsp;&emsp;&emsp; continue \n
-                    continue;
-                }
-
-                /// &emsp;&emsp;&emsp;&emsp; 将边(cur_starting_vertex_index, cur_ending_vertex_index) Push进最小优先队列
-                edge_t cur_adj_edge = graph->adj_matrix[cur_starting_vertex_index][cur_ending_vertex_index];
-                MinPriorityQueuePush(&min_priority_queue, cur_adj_edge);
-            }
-        }
-
-        edge_t cur_mst_edge;
-        MinPriorityQueuePop(&min_priority_queue, &cur_mst_edge);
-
-        min_span_tree[mst_vertex_index_set_size - 1] = cur_mst_edge;
-
-        mst_vertex_index_set[mst_vertex_index_set_size] = cur_mst_edge.ending_vertex_index;
-        mst_vertex_index_set_size++;
-    }
-}
-*/
-void Prim(matrix_graph_t* graph, edge_t* min_span_tree) {
-    int vertex_count = graph->vertex_count;
-
-    int mst_vertex_index_set[MAX_VERTEX_CNT];
-    mst_vertex_index_set[0] = 0;       // 从索引0结点开始
-    int mst_vertex_index_set_size = 1;  // 在vertex_set中的结点数量
-
+    /// ### 2 初始化边的最小优先队列 ###
     min_priority_queue_t min_priority_queue;
-    MinPriorityQueueInit(&min_priority_queue, vertex_count * vertex_count);
+    MinPriorityQueueInit(&min_priority_queue, graph->edge_count);
 
+    /// ### 3 索引0图结点的相邻边全部进入最小优先队列 ###
     for (int i = 1; i < graph->vertex_count; i++) {
         if (graph->adj_matrix[0][i].weight_type == NO_EDGE) {
             continue;
         }
 
-        MinPriorityQueuePush(&min_priority_queue, graph->adj_matrix[0][1]);
+        MinPriorityQueuePush(&min_priority_queue, graph->adj_matrix[0][i]);
     }
 
-    while (mst_vertex_index_set_size != vertex_count) {
+    /// ### 4 贪心法构造最小生成树 ###
+    /// &emsp; **while** 最小生成树结点数量 != 图结点数量 : \n
+    while (mst_size != graph->vertex_count) {
 
+        /// &emsp;&emsp; 取最小优先队列队头(以mst_vertex_index_set中某个结点为起点, 不在这些结点的某个结点为终点的, 最短的边)
         edge_t cur_mst_edge;
         MinPriorityQueuePop(&min_priority_queue, &cur_mst_edge);
 
-        min_span_tree[mst_vertex_index_set_size - 1] = cur_mst_edge;
-        mst_vertex_index_set[mst_vertex_index_set_size] = cur_mst_edge.ending_vertex_index;
-        mst_vertex_index_set_size++;
+        /// &emsp;&emsp; 将当前最短生成树边, 加入到min_span_tree数组 \n
+        min_span_tree[mst_size - 1] = cur_mst_edge;
+        /// &emsp;&emsp; 将当前最短生成树边的终点, 加入到mst_vertex_index_set \n
+        mst_vertex_index_set[mst_size] = cur_mst_edge.ending_vertex_index;
+        /// &emsp;&emsp; 当前最短生成树结点数量++ \n
+        mst_size++;
 
-        for (int i = 0; i < vertex_count; i++) {
+        /// &emsp;&emsp; **for loop** 遍历图结点(将结点cur_mst_edge.ending_vertex_index为起点, 终点不在mst_vertex_index_set的边) : \n
+        for (int i = 0; i < graph->vertex_count; i++) {
             int in_vertex_set = FALSE;
-            for (int k = 0; k < mst_vertex_index_set_size; k++) {
+            for (int k = 0; k < mst_size; k++) {
                 if (i == mst_vertex_index_set[k]) {
                     in_vertex_set = TRUE;
                     break;
                 }
             }
 
+            /// &emsp;&emsp;&emsp; **if** 当前结点已经在mst_vertex_index_set 或者 边(cur_mst_edge.ending_vertex_index, i)不存在 : \n
             if (in_vertex_set || graph->adj_matrix[cur_mst_edge.ending_vertex_index][i].weight_type == NO_EDGE) {
+                /// &emsp;&emsp;&emsp;&emsp; continue \n
                 continue;
             }
 
+            /// &emsp;&emsp;&emsp; 将边(cur_mst_edge.ending_vertex_index, i) Push进入最小优先队列 \n
             edge_t cur_adj_edge = graph->adj_matrix[cur_mst_edge.ending_vertex_index][i];
             MinPriorityQueuePush(&min_priority_queue, cur_adj_edge);
         }

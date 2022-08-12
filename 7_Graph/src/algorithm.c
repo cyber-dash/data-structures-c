@@ -486,6 +486,7 @@ int BellmanFord(matrix_graph_t* graph,
  * @param distance
  * @note
  *
+ * /// ```
  * 弗洛伊德算法:
  *     distance[][] is a distance matrix for n vertexes.
  *         distance[i][j] is the distance to move directly from i to j.
@@ -498,39 +499,60 @@ int BellmanFord(matrix_graph_t* graph,
  * 算法执行结果:
  *     distance[i][j] contains the total cost along the shortest edge_t from i to j.
  *     predecessor[i][j] contains the predecessor of j on the shortest edge_t from i to j.
+ * /// ```
  */
 void Floyd(matrix_graph_t* graph, int (*predecessor)[MAX_VERTEX_CNT], edge_t (*distance)[MAX_VERTEX_CNT]) {
-    int vertex_count = graph->vertex_count;
 
-    for (int starting_vertex_index = 0; starting_vertex_index < vertex_count; starting_vertex_index++) {
-        for (int ending_vertex_index = 0; ending_vertex_index < vertex_count; ending_vertex_index++) {
+    /// ### 1 初始化distance和predecessor ###
+    /// &emsp; **for loop** 遍历图结点, 作为起点 : \n
+    for (int start = 0; start < graph->vertex_count; start++) {
+        /// &emsp;&emsp; **for loop** 遍历图结点, 作为终点 : \n
+        for (int end = 0; end < graph->vertex_count; end++) {
 
-            if (starting_vertex_index == ending_vertex_index) {
-                distance[starting_vertex_index][ending_vertex_index].weight_type = DOUBLE;
-                distance[starting_vertex_index][ending_vertex_index].weight.double_value = 0;
-            } else {
-                distance[starting_vertex_index][ending_vertex_index].weight_type = DOUBLE;
-                if (graph->adj_matrix[starting_vertex_index][ending_vertex_index].weight.double_value != DBL_MAX) {
-                    distance[starting_vertex_index][ending_vertex_index].weight.double_value =
-                        graph->adj_matrix[starting_vertex_index][ending_vertex_index].weight.double_value;
-                } else {
-                    distance[starting_vertex_index][ending_vertex_index].weight.double_value = DBL_MAX;
+            /// &emsp;&emsp;&emsp; **if** 当前起点 等于 当前终点 : \n
+            if (start == end) {
+                distance[start][end].weight_type = DOUBLE;
+                /// &emsp;&emsp;&emsp;&emsp; 最短路径(当前起点 --> 当前终点)的值设置为0 \n
+                distance[start][end].weight.double_value = 0;
+            } else { /// &emsp;&emsp;&emsp; **else** (当前起点 不等于 当前终点) : \n
+                distance[start][end].weight_type = DOUBLE;
+                /// &emsp;&emsp;&emsp;&emsp; **if** 当前起点到当前终点存在边 : \n
+                if (graph->adj_matrix[start][end].weight.double_value != DBL_MAX) {
+                    /// &emsp;&emsp;&emsp;&emsp;&emsp; 最短路径(当前起点 --> 当前终点)的值设置为边长 \n
+                    distance[start][end].weight.double_value = graph->adj_matrix[start][end].weight.double_value;
+                } else { /// &emsp;&emsp;&emsp;&emsp; **else** (当前起点到当前终点不存在边) : \n
+                    /// &emsp;&emsp;&emsp;&emsp;&emsp; 最短路径(当前起点 --> 当前终点)的值设置为极大值(不存在路径) \n
+                    distance[start][end].weight.double_value = DBL_MAX;
                 }
             }
 
-            predecessor[starting_vertex_index][ending_vertex_index] = starting_vertex_index;
+            /// &emsp;&emsp;&emsp; 当前终点在最短路径(当前起点 --> 当前终点)的前一结点, 设为当前起点 \n
+            predecessor[start][end] = start;
         }
     }
 
-    for (int k = 0; k < vertex_count; k++) {
-        for (int i = 0; i < vertex_count; i++) {
-            for (int j = 0; j < vertex_count; j++) {
-                if (distance[i][k].weight.double_value + distance[k][j].weight.double_value
-                    < distance[i][j].weight.double_value)
+    /// ### 2 动态规划构造最短路径 ###
+    /// &emsp; **for loop** 遍历图结点, 作为中转结点intermediate :\n
+    for (int intermediate = 0; intermediate < graph->vertex_count; intermediate++) {
+        /// &emsp;&emsp; **for loop** 遍历图结点, 作为起点start :\n
+        for (int start = 0; start < graph->vertex_count; start++) {
+            /// &emsp;&emsp;&emsp; **for loop** 遍历图结点, 作为终点end :\n
+            for (int end = 0; end < graph->vertex_count; end++) {
+                /// &emsp;&emsp;&emsp;&emsp; **if** 路径(start --> intermediate) + 路径(intermediate --> end) < 路径(start --> end) :\n
+                if (distance[start][intermediate].weight.double_value
+                    +
+                    distance[intermediate][end].weight.double_value
+                    <
+                    distance[start][end].weight.double_value)
                 {
-                    distance[i][j].weight.double_value =
-                        distance[i][k].weight.double_value + distance[k][j].weight.double_value;
-                    predecessor[i][j] = predecessor[k][j];
+                    /// &emsp;&emsp;&emsp;&emsp;&emsp; (松弛) \n
+                    /// &emsp;&emsp;&emsp;&emsp;&emsp; 路径(start --> end) <== (start --> intermediate) + 路径(intermediate --> end) \n
+                    distance[start][end].weight.double_value =
+                        distance[start][intermediate].weight.double_value
+                        +
+                        distance[intermediate][end].weight.double_value;
+                    /// &emsp;&emsp;&emsp;&emsp;&emsp; end在路径(start --> end)的最短路径的前一结点, 设为intermediate \n
+                    predecessor[start][end] = predecessor[intermediate][end];
                 }
             }
         }
@@ -538,23 +560,34 @@ void Floyd(matrix_graph_t* graph, int (*predecessor)[MAX_VERTEX_CNT], edge_t (*d
 }
 
 
+/*!
+ * @brief <h1>通用单源最短路径打印函数</h1>
+ * @param graph **图**(指针)
+ * @param start **起点索引**
+ * @param predecessor **前驱数组**
+ * @param distance **最短路径数组**
+ * @note
+ */
 void PrintSingleSourceShortestPath(matrix_graph_t* graph,
-                                   int starting_vertex_index,
+                                   int start,
                                    int (*predecessor)[MAX_VERTEX_CNT],
                                    edge_t* distance)
 {
-    int vertex_cnt = graph->vertex_count;
-    for (int i = 0; i < vertex_cnt; i++) {
-        // 不处理v0到v0自己本身的最短路径
-        if (i == starting_vertex_index) {
+    /// **for loop** 遍历图结点 : \n
+    for (int end = 0; end < graph->vertex_count; end++) {
+        /// &emsp; **if** 当前图结点为起点本身 : \n
+        if (end == start) {
+            /// &emsp;&emsp; 不做处理, continue \n
             continue;
         }
 
-        printf("起始点%d到结点%d的最短路径为:\n", starting_vertex_index, i);
-        PrintSingleSourceShortestPathRecursive(graph, starting_vertex_index, i, predecessor);
+        printf("起始点%d到结点%d的最短路径为:\n", start, end);
+        /// &emsp; 调用PrintSingleSourceShortestPathRecursive求起点-->当前结点的单源最短路径 \n
+        PrintSingleSourceShortestPathRecursive(graph, start, end, predecessor);
 
         printf(", ");
-        printf("最短路径长度为: %.2lf\n", distance[i].weight.double_value);
+        /// &emsp; 显示起点-->当前结点的单源最短路径的长度 \n
+        printf("最短路径长度为: %.2lf\n", distance[end].weight.double_value);
     }
 }
 
@@ -563,48 +596,48 @@ void PrintMultiSourceShortestPath(matrix_graph_t* graph,
                                   edge_t (*distance)[MAX_VERTEX_CNT],
                                   int (*predecessor)[MAX_VERTEX_CNT])
 {
-    for (int starting_vertex_index = 0; starting_vertex_index < graph->vertex_count; starting_vertex_index++) {
-        printf("--- 从起始点%d到其他各顶点的最短路径 ---\n", starting_vertex_index);
-        for (int ending_vertex_index = 0; ending_vertex_index < graph->vertex_count; ending_vertex_index++) {
-            if (starting_vertex_index == ending_vertex_index) {
+    for (int start = 0; start < graph->vertex_count; start++) {
+        printf("--- 从起始点%d到其他各顶点的最短路径 ---\n", start);
+        for (int end = 0; end < graph->vertex_count; end++) {
+            if (start == end) {
                 continue;
             }
-            printf("起始点%d到结点%d的最短路径为:\n", starting_vertex_index, ending_vertex_index);
+            printf("起始点%d到结点%d的最短路径为:\n", start, end);
 
-            PrintSingleSourceShortestPathRecursive(graph, starting_vertex_index, ending_vertex_index, predecessor);
+            PrintSingleSourceShortestPathRecursive(graph, start, end, predecessor);
 
-            printf(", 最短路径长度: %.2lf\n", distance[starting_vertex_index][ending_vertex_index].weight.double_value);
+            printf(", 最短路径长度: %.2lf\n", distance[start][end].weight.double_value);
         }
     }
 }
 
 
 /*!
- * 通用单源最短路径打印函数
+ * <h1>通用单源最短路径打印函数(递归)</h1>
  * @param graph **图**(指针)
- * @param starting_vertex_index **起点索引**
- * @param ending_vertex_index **终点索引**
+ * @param start **起点索引**
+ * @param end **终点索引**
  * @param predecessor **前驱数组**
  * @note
  * "多源最短路径和单源最短路径问题, 都可以使用此函数" \n
  */
 void PrintSingleSourceShortestPathRecursive(matrix_graph_t* graph,
-                                            int starting_vertex_index,
-                                            int ending_vertex_index,
+                                            int start,
+                                            int end,
                                             int (*predecessor)[MAX_VERTEX_CNT])
 {
     /// **if** 起点和终点不是同一结点 : \n
-    if (starting_vertex_index != ending_vertex_index) {
+    if (start != end) {
         /// &emsp; 终点在本条最短路径(参数起点 --> 参数终点)的前一结点索引为
-        /// predecessor[starting_vertex_index][ending_vertex_index] \n
-        int predecessor_index_of_ending_vertex = predecessor[starting_vertex_index][ending_vertex_index];
+        /// predecessor[start][end] \n
+        int predecessor_of_end = predecessor[start][end];
         /// &emsp; 递归调用PrintSingleSourceShortestPathRecursive
         PrintSingleSourceShortestPathRecursive(graph,
-                                               starting_vertex_index,
-                                               predecessor_index_of_ending_vertex,
+                                               start,
+                                               predecessor_of_end,
                                                predecessor);
     }
 
     /// 打印终点索引
-    printf("%d ", ending_vertex_index);
+    printf("%d ", end);
 }

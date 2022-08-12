@@ -17,7 +17,7 @@
 此函数未使用
 status_t LocateVertex(matrix_graph_t graph, VERTEX_TYPE vertex, int* vertex_index) {
     for (int i = 0; i < graph.vertex_count; i++) {
-        if (graph.vertex_array[i] == vertex) {
+        if (graph.vertexes[i] == vertex) {
             *vertex_index = i;
             return OK;
         }
@@ -143,7 +143,7 @@ status_t CreateGraphByEdgesAndVertices(matrix_graph_t* graph,
     for (int i = 0; i < graph->vertex_count; ++i) {
 
         // 结点信息数组各元素初始化
-        graph->vertex_array[i] = vertex_indexes[i];
+        graph->vertexes[i] = vertex_indexes[i];
 
         // 邻接矩阵每个元素初始化
         //     主对角线元素, weight_type设为DOUBLE, weight.double_value设为0
@@ -179,7 +179,7 @@ status_t CreateGraphByEdgesAndVertices(matrix_graph_t* graph,
         }
 
         // 图边信息数组赋值
-        graph->edge_array[i] = edge_array[i];
+        graph->edges[i] = edge_array[i];
     }
 
     return OK;

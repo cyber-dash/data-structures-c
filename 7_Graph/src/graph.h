@@ -72,8 +72,8 @@ typedef struct {
     GRAPH_KIND  kind;           //!< 图的种类标志
     WEIGHT_TYPE weight_type;    //!< 边权值类型
 
-    VERTEX_TYPE vertex_array[MAX_VERTEX_CNT];    //!< 顶点集合(数组)
-    edge_t edge_array[MAX_EDGE_CNT];             //!< 边集合(数组)
+    VERTEX_TYPE vertexes[MAX_VERTEX_CNT];    //!< 结点集合(数组)
+    edge_t edges[MAX_EDGE_CNT];             //!< 边集合(数组)
     adj_matrix_t adj_matrix;                     //!< 邻接矩阵
 
 } matrix_graph_t;

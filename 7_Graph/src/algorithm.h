@@ -56,7 +56,7 @@ void Floyd(matrix_graph_t* graph, int (*predecessor)[MAX_VERTEX_CNT], edge_t (*d
 void PrintSingleSourceShortestPath(matrix_graph_t *graph, int starting_vertex_index, int (*predecessor)[MAX_VERTEX_CNT], edge_t* distance);
 
 // 打印单源最短路径(递归)
-void PrintSingleSourceShortestPathRecursive(matrix_graph_t *graph, int i, int j, int (*predecessor)[MAX_VERTEX_CNT]);
+void PrintSingleSourceShortestPathRecursive(matrix_graph_t *graph, int starting_vertex_index, int ending_vertex_index, int (*predecessor)[MAX_VERTEX_CNT]);
 
 
 void PrintMultiSourceShortestPath(matrix_graph_t *graph,

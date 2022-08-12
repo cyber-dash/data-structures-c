@@ -59,7 +59,7 @@ void TestCreateUDNByEdgesAndVertices() {
 
     // 结点信息写到graph.vertices数组
     for (int i = 0; i < sizeof(vertices) / sizeof(VERTEX_TYPE); i++) {
-        graph.vertex_array[i] = vertices[i];
+        graph.vertexes[i] = vertices[i];
     }
 
     // 弧(边)信息, 注意没有方向
@@ -146,7 +146,7 @@ void TestDFSTraverse() {
 
     // 结点信息写到G.vexs数组
     for (int i = 0; i < sizeof(vertices) / sizeof(VERTEX_TYPE); i++) {
-        G.vertex_array[i] = vertices[i];
+        G.vertexes[i] = vertices[i];
     }
 
     // 弧(边)信息, 注意没有方向
@@ -224,7 +224,7 @@ void TestBFSTraverse() {
 
     // 结点信息写到G.vexs数组
     for (int i = 0; i < sizeof(vertices) / sizeof(VERTEX_TYPE); i++) {
-        G.vertex_array[i] = vertices[i];
+        G.vertexes[i] = vertices[i];
     }
 
     // 弧(边)信息, 注意没有方向
@@ -274,7 +274,7 @@ void TestPrim() {
     // 构造adj_matrix数组,
     // 每个数组元素的weight_type设置为NO_EDGE
     for (int i = 0; i < graph.vertex_count; i++) {
-        graph.vertex_array[i] = vertices[i];
+        graph.vertexes[i] = vertices[i];
 
         for (int j = 0; j < graph.vertex_count; j++) {
             graph.adj_matrix[i][j].weight_type = NO_EDGE;
@@ -377,7 +377,7 @@ void TestDijkstra() {
     printf("                 测试迪杰斯特拉(Dijkstra)最短路径               \n\n\n");
 
     VERTEX_TYPE vertex_array[6] = {0, 1, 2, 3, 4, 5};
-    // VERTEX_TYPE vertex_array[4] = { 0, 1, 2, 3/*, 4, 5*/ };
+    // VERTEX_TYPE vertexes[4] = { 0, 1, 2, 3/*, 4, 5*/ };
 
     matrix_graph_t graph;
     int vertex_count = 6;           // 结点数量
@@ -522,7 +522,7 @@ void TestFloyd() {
 
     // 对每个[i, j]进行初始化, 默认没有弧(边), 所有的弧(边)长为最大值
     for (int i = 0; i < G.vertex_count; i++) {
-        G.vertex_array[i] = vertices[i];
+        G.vertexes[i] = vertices[i];
         for (int j = 0; j < G.vertex_count; j++) {
             G.adj_matrix[i][j].weight_type = DOUBLE;
             // G.adj_matrix[i][j].edge_info = (edge_t*)malloc(sizeof(edge_t));

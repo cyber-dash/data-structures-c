@@ -123,14 +123,14 @@ edge_t* NextEdge(matrix_graph_t* graph, int vertex_index, edge_t* edge) {
 
 
 /*!
- * 构造图
- * @param graph 图(指针)
- * @param edges 边信息数组
- * @param edge_count 边数量
- * @param vertex_indexes 结点索引数组
- * @param vertex_count 结点数量
- * @param graph_kind 图类型
- * @return 执行结果
+ * @brief <h1>构造图(使用边和结点)</h1>
+ * @param graph **图**(指针)
+ * @param edges **边数组**
+ * @param edge_count **边数量**
+ * @param vertex_indexes **结点索引数组**
+ * @param vertex_count **结点数量**
+ * @param graph_kind **图类型**
+ * @return **执行结果**
  * @note
  * vertex_index_arr为图结点索引数组, 如: 结点0, 结点1, 结点2 ...
  * 实际上应该允许传各种结点类型(vertex_type), 表示 "北京", "上海", "深圳" / "女神A", "女神B", "女神C" ...
@@ -145,41 +145,44 @@ status_t CreateGraphByEdgesAndVertices(matrix_graph_t* graph,
                                        int vertex_count,
                                        GRAPH_KIND graph_kind)
 {
-    // 结点数或边数超过限制
+    /// ### 1 边界条件检查 ###
+    /// &emsp; **if** 边和结点的数量大过限制 : \n
     if (edge_count > MAX_EDGE_CNT || vertex_count > MAX_VERTEX_CNT) {
-        return ERROR;
+        /// &emsp;&emsp; 返回OVERFLOW \n
+        return OVERFLOW;
     }
 
-    graph->kind = graph_kind;              //!< 图类型
-    graph->vertex_count = vertex_count;    //!< 结点数量
-    graph->edge_count = edge_count;        //!< 边数量
+    /// ### 2 设置图属性 ###
+    graph->kind = graph_kind;              // 图类型
+    graph->vertex_count = vertex_count;    // 结点数量
+    graph->edge_count = edge_count;        // 边数量
     graph->weight_type = edges->weight_type;  // 使用edge_arr第0项的weight_type, 赋给graph->weight_type
 
+    /// &emsp; **for loop** 遍历图结点数组(作为邻接矩阵元素的起始结点) : \n
     for (int i = 0; i < graph->vertex_count; ++i) {
 
-        // 结点信息数组各元素初始化
+        /// &emsp;&emsp; 结点信息数组各元素初始化
         graph->vertexes[i] = vertex_indexes[i];
 
-        // 邻接矩阵每个元素初始化
-        //     主对角线元素, weight_type设为DOUBLE, weight.double_value设为0
-        //     非主对角线元素, weight_type设为NO_EDGE
-        for (int j = 0; j < graph->vertex_count; ++j) {
-            graph->adj_matrix[i][j].starting_vertex_index = i; //! 边的起点索引
-            graph->adj_matrix[i][j].ending_vertex_index = j;   //! 边的终点索引
+        /// &emsp;&emsp; **for loop** 遍历图结点数组(作为邻接矩阵元素的终点) : \n
+        for (int j = 0; j < graph->vertex_count; j++) {
+            graph->adj_matrix[i][j].starting_vertex_index = i; // 边的起点索引
+            graph->adj_matrix[i][j].ending_vertex_index = j;   // 边的终点索引
 
+            /// &emsp;&emsp;&emsp; 主对角线元素, weight_type设为DOUBLE, weight.double_value设为0
             if (i == j ) {
-                graph->adj_matrix[i][j].weight_type = DOUBLE;       //! 弧(边)权值类型 todo: 可以放到参数, 有兴趣自己实现:-)
+                graph->adj_matrix[i][j].weight_type = DOUBLE;
                 graph->adj_matrix[i][j].weight.double_value = 0;
-            } else {
-                graph->adj_matrix[i][j].weight_type = NO_EDGE;      //! 弧(边)权值类型
+            } else { /// &emsp;&emsp;&emsp; 非主对角线元素, weight_type设为NO_EDGE
+                graph->adj_matrix[i][j].weight_type = NO_EDGE;
             }
         }
     }
 
-    //! 使用edge_array填充adj_matrix中对应的结点数据
+    /// &emsp; **for loop** 遍历边数组 : \n
     for (int i = 0; i < edge_count; ++i) {
 
-        //! 边: u --> v
+        /// &emsp;&emsp; 将当前边u --> v赋给邻接矩阵响应元素
         int u = edges[i].starting_vertex_index;
         int v = edges[i].ending_vertex_index;
 

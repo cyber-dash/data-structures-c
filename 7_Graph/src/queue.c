@@ -14,9 +14,10 @@
 
 
 /*!
- *
- * @param link_queue
- * @return
+ * <h1>链式队列初始化</h1>
+ * @param link_queue **链式队列**
+ * @return **执行结果**
+ * @note
  */
 status_t LinkedQueueInit(linked_queue_t* link_queue) {
     // 构造一个空队列Q
@@ -32,19 +33,20 @@ status_t LinkedQueueInit(linked_queue_t* link_queue) {
 
 
 /*!
- * 队列入队
- * @param queue 队列(指针)
- * @param v
- * @return
+ * <h1>链式队列入队</h1>
+ * @param queue **链式队列**(指针)
+ * @param vertex_index **图结点索引**
+ * @return **执行结果**
+ * @note
  */
-status_t LinkedQueueEnQueue(linked_queue_t *queue, int v) {
+status_t LinkedQueueEnQueue(linked_queue_t *queue, int vertex_index) {
     // 插入元素e为Q的新的队尾元素
-    linked_queue_node_t *cur = (linked_queue_node_t*)malloc(sizeof(linked_queue_node_t));
+    linked_queue_node_t* cur = (linked_queue_node_t*)malloc(sizeof(linked_queue_node_t));
     if (!cur) {
         return OVERFLOW;
     }
 
-    cur->vertex_index = v;
+    cur->vertex_index = vertex_index;
     cur->next = NULL;
 
     queue->rear->next = cur;
@@ -60,7 +62,7 @@ status_t LinkedQueueEnQueue(linked_queue_t *queue, int v) {
  * @param v
  * @return
  */
-status_t LinkedQueueDeQueue(linked_queue_t* queue, int *v) {
+status_t LinkedQueueDeQueue(linked_queue_t* queue, int* v) {
     // 若队列不空, 则删除Q的队头元素, 用e返回其值, 并返回OK;
     // 否则返回ERROR
     if (queue->front == queue->rear) {
@@ -81,14 +83,18 @@ status_t LinkedQueueDeQueue(linked_queue_t* queue, int *v) {
 
 
 /*!
- *
- * @param queue
- * @return
+ * <h1>链式队列是否为空</h1>
+ * @param queue **链式队列**
+ * @return 是/否
+ * @note
  */
-int LinkedQueueIsEmpty(linked_queue_t *queue) {
+int LinkedQueueIsEmpty(linked_queue_t* queue) {
+    /// **if** 头指针和为指针指向地址相同 : \n
     if (queue->front == queue->rear) {
-        return 1;
+        /// &emsp; 返回TRUE
+        return TRUE;
     }
 
-    return 0;
+    /// 返回FALSE
+    return FALSE;
 }

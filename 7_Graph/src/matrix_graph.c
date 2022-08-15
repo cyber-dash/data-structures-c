@@ -132,9 +132,9 @@ edge_t* NextEdge(matrix_graph_t* graph, int vertex_index, edge_t* edge) {
  * @param graph_kind **图类型**
  * @return **执行结果**
  * @note
- * vertex_index_arr为图结点索引数组, 如: 结点0, 结点1, 结点2 ...
- * 实际上应该允许传各种结点类型(vertex_type), 表示 "北京", "上海", "深圳" / "女神A", "女神B", "女神C" ...
- * 由于本代码重点在实现算法, 因此不做vertex_type的灵活性工作
+ * vertex_index_arr为图结点索引数组, 如: 结点0, 结点1, 结点2 ... \n
+ * 实际上应该允许传各种结点类型(vertex_type), 表示 "北京", "上海", "深圳" / "女神A", "女神B", "女神C" ... \n
+ * 由于本代码重点在实现算法, 因此不做vertex_type的灵活性工作 \n
  *
  * 如有这方面兴趣, 请参考C++模板版本实现 https://gitee.com/cyberdash/data-structure-cpp 中的图代码
  */
@@ -158,7 +158,7 @@ status_t CreateGraphByEdgesAndVertices(matrix_graph_t* graph,
     graph->edge_count = edge_count;        // 边数量
     graph->weight_type = edges->weight_type;  // 使用edge_arr第0项的weight_type, 赋给graph->weight_type
 
-    /// &emsp; **for loop** 遍历图结点数组(作为邻接矩阵元素的起始结点) : \n
+    /// &emsp; **for loop** 遍历图结点数组(作为邻接矩阵元素的起点) : \n
     for (int i = 0; i < graph->vertex_count; ++i) {
 
         /// &emsp;&emsp; 结点信息数组各元素初始化
@@ -205,9 +205,10 @@ status_t CreateGraphByEdgesAndVertices(matrix_graph_t* graph,
 
 
 /*!
- * 打印图邻接矩阵
- * @param graph 图(指针)
- * @return 执行结果
+ * <h1>打印图邻接矩阵</h1>
+ * @param graph **图**(指针)
+ * @return **执行结果**
+ * @note
  */
 status_t PrintGraphMatrix(matrix_graph_t* graph) {
     for (int i = 0; i < graph->vertex_count; i++) {

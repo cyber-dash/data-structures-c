@@ -602,25 +602,32 @@ void PrintSingleSourceShortestPath(matrix_graph_t* graph,
 
 
 /*!
- *
- * @param graph
- * @param distance
- * @param predecessor
+ * @brief <h1>多源最短路径打印函数</h1>
+ * @param graph **图**(指针)
+ * @param distance **最短路径数组**
+ * @param predecessor **前驱数组**
  */
 void PrintMultiSourceShortestPath(matrix_graph_t* graph,
                                   edge_t (*distance)[MAX_VERTEX_CNT],
                                   int (*predecessor)[MAX_VERTEX_CNT])
 {
+    /// **for loop** 遍历图结点(作为起点) : \n
     for (int start = 0; start < graph->vertex_count; start++) {
         printf("--- 从起始点%d到其他各顶点的最短路径 ---\n", start);
+        /// &emsp; **for loop** 遍历图结点(作为终点) : \n
         for (int end = 0; end < graph->vertex_count; end++) {
+
+            /// &emsp;&emsp; **if** 起点和终点相同 : \n
             if (start == end) {
+                /// &emsp;&emsp;&emsp; 不作处理continue \n
                 continue;
             }
             printf("起始点%d到结点%d的最短路径为:\n", start, end);
 
+            /// &emsp;&emsp; 调用PrintSingleSourceShortestPathRecursive执行单源最短路径打印 \n
             PrintSingleSourceShortestPathRecursive(graph, start, end, predecessor);
 
+            /// &emsp;&emsp; 打印最短路径长度 \n
             printf(", 最短路径长度: %.2lf\n", distance[start][end].weight.double_value);
         }
     }

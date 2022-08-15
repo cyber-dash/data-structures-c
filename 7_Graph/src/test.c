@@ -558,7 +558,6 @@ void TestFloyd() {
     for (int i = 0; i < MAX_VERTEX_CNT; i++) {
         for (int j = 0; j < MAX_VERTEX_CNT; j++) {
             distance[i][j].weight_type = DOUBLE;
-            // distance[i][j].edge_info = (edge_t *) malloc(sizeof(edge_t));
         }
     }
 

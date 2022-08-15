@@ -20,19 +20,16 @@
 status_t Visit(matrix_graph_t* graph, int vertex);
 
 // DFS遍历
-status_t DFSTraverse(matrix_graph_t graph, status_t (*Visit)(matrix_graph_t* graph, int vertex_index));
+status_t DFSTraverse(matrix_graph_t graph, status_t (*Visit)(matrix_graph_t*, int));
 
 // DFS遍历(索引starting_vertex_index结点为起始点)
 void DFSRecursive(matrix_graph_t graph,
                   int vertex_index,
                   int* visited_vertex_index_array,
-                  status_t (*Visit)(matrix_graph_t* graph, int vertex_index));
+                  status_t (*Visit)(matrix_graph_t*, int));
 
 // BFS遍历
-void BFSTraverse(matrix_graph_t graph, status_t (*Visit)(matrix_graph_t *G, int v));
-
-// BFS遍历(结点(索引)v为起始点)
-void BFS(matrix_graph_t G, int v, int *visited);
+void BFSTraverse(matrix_graph_t graph, status_t (*Visit)(matrix_graph_t*, int));
 
 // Prim最小生成树
 void Prim(matrix_graph_t* graph, edge_t* min_span_tree);

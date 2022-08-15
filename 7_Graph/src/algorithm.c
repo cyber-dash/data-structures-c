@@ -32,7 +32,7 @@ status_t Visit(matrix_graph_t* graph, int vertex_index) {
 
 
 /*!
- * <h1>图DFS遍历</h1>
+ * @brief <h1>图DFS遍历</h1>
  * @param graph **图**(指针)
  * @param Visit **图结点访问函数**
  * @note
@@ -55,7 +55,7 @@ status_t DFSTraverse(matrix_graph_t graph, status_t (*Visit)(matrix_graph_t*, in
     /// ### 2 遍历图结点进行DFS ###
     /// &emsp; **for loop** 遍历图结点 :\n
     /// &emsp;&emsp; **if** 当前结点没有被访问(遍历) : \n
-    /// &emsp &emsp;&emsp; 对当前结点执行DFSRecursive\n
+    /// &emsp;&emsp;&emsp; 对当前结点执行DFSRecursive\n
     for (int i = 0; i < graph.vertex_count; i++) {
         if (!visited_vertex_index_array[i]) {
             DFSRecursive(graph, i, visited_vertex_index_array, Visit);
@@ -67,7 +67,7 @@ status_t DFSTraverse(matrix_graph_t graph, status_t (*Visit)(matrix_graph_t*, in
 
 
 /*!
- * <h1>对结点深度优先遍历(递归)</h1>
+ * @brief <h1>对结点深度优先遍历(递归)</h1>
  * @param graph **图**
  * @param vertex_index **图结点索引**
  * @param visited_vertex_index_array **已访问结点索引的数组**
@@ -80,9 +80,9 @@ void DFSRecursive(matrix_graph_t graph,
                   status_t (*Visit)(matrix_graph_t*, int))
 {
     /// ### 1 访问索引vertex_index的图结点 ###
-    /// &emsp; - 调用Visit函数访问结点\n
+    /// &emsp; - 调用Visit函数访问参数结点\n
     Visit(&graph, vertex_index);
-    /// &emsp; - 将索引vertex_index图结点标记为VISITED\n
+    /// &emsp; - 将已访问的参数结点标记为VISITED\n
     visited_vertex_index_array[vertex_index] = VISITED;
 
     /// ### 2 对索引vertex_index图结点的相邻结点执行递归 ###
@@ -292,7 +292,7 @@ void Kruskal(matrix_graph_t* graph, edge_t* min_span_tree) {
 
 
 /*!
- * @brief <h1>打印最小生成树
+ * @brief <h1>打印最小生成树</h1>
  * @param min_span_tree **最小生成树**(数组)
  * @param size **最小生成树边数量**
  * @note
@@ -321,54 +321,63 @@ void PrintMinSpanTree(MST_t min_span_tree, int size) {
  */
 void Dijkstra(matrix_graph_t* graph, int starting_vertex_index, int(*predecessor)[MAX_VERTEX_CNT], edge_t* distance) {
 
-    /// --- 初始化 ---
+    /// ### 1 初始化 ###
 
-    // 结点集合初始化, 每个结点都不在集合中
+    /// &emsp; 声明结点索引数组vertex_index_set, 初试状态时, 每个结点都不在集合中
     int* vertex_index_set = (int*)malloc(graph->vertex_count * sizeof(int));
     memset(vertex_index_set, 0, graph->vertex_count * sizeof(int));
 
-    // distance数组初始化, distance[起始点]的路径距离值为0, distance[起始点之外其他结点]的路径距离值为DBL_MAX(double类型最大值)
+    /// &emsp; distance数组初始化, distance[起始点]的路径距离值为0, distance[起始点之外其他结点]的路径距离值为DBL_MAX(double类型最大值)
     for (int i = 0; i < graph->vertex_count; i++) {
         distance[i].weight_type = DOUBLE;
         distance[i].weight.double_value = DBL_MAX;
     }
     distance[starting_vertex_index].weight.double_value = 0;
 
-    // 初始化最小优先队列, 路径 起始点->起始点 的信息(从临界数组中获取)入队
+    /// &emsp; 初始化最小优先队列
     min_priority_queue_t min_priority_queue;
     MinPriorityQueueInit(&min_priority_queue, graph->vertex_count);
+    /// &emsp; 路径(起始点 --> 起始点)入队
     MinPriorityQueuePush(&min_priority_queue, graph->adj_matrix[starting_vertex_index][starting_vertex_index]);
 
-    /// --- 贪心 ---
+    /// ### 2 贪心 ###
 
+    /// &emsp; **while** 最小优先队列不为空 : \n
     while (min_priority_queue.size != 0) {
 
-        // 最小优先队列pop出当前最短路径cur_min_distance
+        /// &emsp;&emsp; 队头出队, 保存在当前最短路径cur_min_distance
         path_t cur_min_distance;
         MinPriorityQueuePop(&min_priority_queue, &cur_min_distance);
 
-        // 取当前最短路径终点索引cur_ending_vertex_index, 进入集合vertex_index_set
+        /// &emsp;&emsp; 当前最短路径的终点, 设置为已经处理 \n
         int cur_ending_vertex_index = cur_min_distance.ending_vertex_index;
         vertex_index_set[cur_ending_vertex_index] = TRUE;
 
         // --- 松弛 starting_vertex_index --> i(使用cur_ending_vertex_index) ---
 
+        /// &emsp;&emsp; **while** 遍历图结点(使用当前最短路径的终点进行松弛) : \n
         for (int i = 0; i < graph->vertex_count; i++) {
 
-            // 索引i结点已经在集合vertex_set 或者 cur_ending_vertex_index与i之间没有边, continue
+            /// &emsp;&emsp;&emsp; **if** 当前结点已处理过 或者 起始结点与当前结点之间没有边 : \n
+            /// &emsp;&emsp;&emsp;&emsp; continue \n
             if (vertex_index_set[i] == TRUE || graph->adj_matrix[cur_ending_vertex_index][i].weight_type == NO_EDGE) {
                 continue;
             }
 
-            // 如果
-            //   边 (starting_vertex_index --> cur_ending_vertex_index)         的weight
-            //    +
-            //   边                           (cur_ending_vertex_index  -->  i) 的weight
-            //    <
-            //   边 (starting_vertex_index ------------------------------->  i) 的weight
-            // 则
-            //   更新distance[j]和predecessor[starting_vertex_index][j]
-            //   distance[i]进入最小优先队列
+            ///
+            /// ```
+            /// &emsp;&emsp;&emsp; 松弛 \n
+            /// 如果
+            ///   边 (starting_vertex_index --> cur_ending_vertex_index)         的weight
+            ///    +
+            ///   边                           (cur_ending_vertex_index  -->  i) 的weight
+            ///    <
+            ///   边 (starting_vertex_index ------------------------------->  i) 的weight
+            /// 则
+            ///   更新distance[j]和predecessor[starting_vertex_index][j]
+            ///   distance[i]进入最小优先队列
+            /// ```
+
             if (distance[cur_ending_vertex_index].weight.double_value
                 +
                 graph->adj_matrix[cur_min_distance.ending_vertex_index][i].weight.double_value
@@ -397,7 +406,7 @@ void Dijkstra(matrix_graph_t* graph, int starting_vertex_index, int(*predecessor
  * @param distance
  * @return
  * @note
- *
+ * ```
  * BellmanFord算法:
  *
  *     --- 初始化 ---
@@ -416,7 +425,7 @@ void Dijkstra(matrix_graph_t* graph, int starting_vertex_index, int(*predecessor
  *
  *     --- 动态规划 ---
  *
- *     for循环(图结点总数 - 1)次:
+ *     for 循环(图结点总数 - 1)次:
  *         for 图的每一条边edge (u, v):
  *             // 松弛
  *             如果 distance[u] + 边(u, v)权重 < distance[v]:
@@ -429,6 +438,7 @@ void Dijkstra(matrix_graph_t* graph, int starting_vertex_index, int(*predecessor
  *     for 每一条边edge (u, v):
  *         如果 distance[u] + 边(u, v)权重 < distance[v]:
  *             error "图包含负回路"
+ * ```
  */
 int BellmanFord(matrix_graph_t* graph,
                 int starting_vertex_index,
@@ -480,18 +490,18 @@ int BellmanFord(matrix_graph_t* graph,
 
 
 /*!
- *
- * @param graph
- * @param predecessor
- * @param distance
+ * <h1>弗洛伊德(Floyd)算法</h1>
+ * @param graph **图**(指针)
+ * @param predecessor **前驱数组**
+ * @param distance **最短路径数组**
  * @note
  *
- * /// ```
+ * ```
  * 弗洛伊德算法:
- *     distance[][] is a distance matrix for n vertexes.
+ *      distance[][] is a distance matrix for n vertexes.
  *         distance[i][j] is the distance to move directly from i to j.
  *         if no direct link from i to j
- *             then initialize distance[i][j] = INFINITY
+ *              then initialize distance[i][j] = INFINITY
  *         the distance from a node to itself is 0(Initialize distance[i][i] = 0 for all i).
  *     predecessor[][] is a predecessor matrix. it enables you to reconstruct the shortest paths.
  *         predecessor[i][j] should be initialized to i.
@@ -499,7 +509,7 @@ int BellmanFord(matrix_graph_t* graph,
  * 算法执行结果:
  *     distance[i][j] contains the total cost along the shortest edge_t from i to j.
  *     predecessor[i][j] contains the predecessor of j on the shortest edge_t from i to j.
- * /// ```
+ * ```
  */
 void Floyd(matrix_graph_t* graph, int (*predecessor)[MAX_VERTEX_CNT], edge_t (*distance)[MAX_VERTEX_CNT]) {
 
@@ -545,13 +555,12 @@ void Floyd(matrix_graph_t* graph, int (*predecessor)[MAX_VERTEX_CNT], edge_t (*d
                     <
                     distance[start][end].weight.double_value)
                 {
-                    /// &emsp;&emsp;&emsp;&emsp;&emsp; (松弛) \n
-                    /// &emsp;&emsp;&emsp;&emsp;&emsp; 路径(start --> end) <== (start --> intermediate) + 路径(intermediate --> end) \n
+                    /// &emsp;&emsp;&emsp;&emsp;&emsp; 路径(start --> end) <== 路径(start --> intermediate) + 路径(intermediate --> end)
                     distance[start][end].weight.double_value =
                         distance[start][intermediate].weight.double_value
                         +
                         distance[intermediate][end].weight.double_value;
-                    /// &emsp;&emsp;&emsp;&emsp;&emsp; end在路径(start --> end)的最短路径的前一结点, 设为intermediate \n
+                    /// &emsp;&emsp;&emsp;&emsp;&emsp; end结点在最短路径(start --> end)中的前一结点, 设为intermediate
                     predecessor[start][end] = predecessor[intermediate][end];
                 }
             }
@@ -592,6 +601,12 @@ void PrintSingleSourceShortestPath(matrix_graph_t* graph,
 }
 
 
+/*!
+ *
+ * @param graph
+ * @param distance
+ * @param predecessor
+ */
 void PrintMultiSourceShortestPath(matrix_graph_t* graph,
                                   edge_t (*distance)[MAX_VERTEX_CNT],
                                   int (*predecessor)[MAX_VERTEX_CNT])

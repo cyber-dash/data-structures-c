@@ -76,33 +76,48 @@ int NextAdjVertexIndex(matrix_graph_t* graph, int vertex_index, int adj_vertex_i
 }
 
 
-// 获取结点的第一条弧(边)
-edge_t* FirstEdge(matrix_graph_t* graph, int vertex_idx) {
+/*!
+ * @brief <h1>获取结点的第一条边</h1>
+ * @param graph **图**(结点)
+ * @param vertex_index **结点索引**
+ * @note
+ */
+edge_t* FirstEdge(matrix_graph_t* graph, int vertex_index) {
+    /// **for loop** 遍历图结点 : \n
     for (int i = 0; i < graph->vertex_count; i++) {
-        if (graph->weight_type != NO_EDGE) {
-            return &graph->adj_matrix[vertex_idx][i];
+        /// &emsp; **if** 边(vertex_index --> i)存在 : \n
+        if (graph->adj_matrix[vertex_index][i].weight_type != NO_EDGE)
+        {
+            /// &emsp;&emsp; 返回 边(vertex_index --> i) \n
+            return &graph->adj_matrix[vertex_index][i];
         }
     }
 
+    /// 返回 NULL
     return NULL;
 }
 
 
 /*!
- * 获取结点的基于某条弧(边)的下一条弧(边)
- * @param graph 图(指针)
- * @param vertex_idx 结点索引
- * @param edge 弧(边)(指针)
- * @return 下一条弧(边)的指针
+ * <h1>获取结点的基于某条边的下一条边</h1>
+ * @param graph **图**(指针)
+ * @param vertex_index **结点索引**
+ * @param edge **边**(指针)
+ * @return **下一条边**(指针)
+ * @note
  */
-edge_t* NextEdge(matrix_graph_t* graph, int vertex_idx, edge_t* edge) {
+edge_t* NextEdge(matrix_graph_t* graph, int vertex_index, edge_t* edge) {
 
+    /// **for loop** 从边终点索引的下一索引结点开始, 遍历图结点 : \n
     for (int i = edge->ending_vertex_index + 1; i < graph->vertex_count; i++) {
-        if (graph->weight_type == NO_EDGE) {
-            return &graph->adj_matrix[vertex_idx][i];
+        /// &emsp; **if** 边(vertex_index --> i)存在 : \n
+        if (graph->adj_matrix[vertex_index][i].weight_type != NO_EDGE) {
+            /// &emsp;&emsp; 返回 边(vertex_index --> i) \n
+            return &graph->adj_matrix[vertex_index][i];
         }
     }
 
+    /// 返回 NULL
     return NULL;
 }
 
@@ -110,7 +125,7 @@ edge_t* NextEdge(matrix_graph_t* graph, int vertex_idx, edge_t* edge) {
 /*!
  * 构造图
  * @param graph 图(指针)
- * @param edge_array 边信息数组
+ * @param edges 边信息数组
  * @param edge_count 边数量
  * @param vertex_indexes 结点索引数组
  * @param vertex_count 结点数量
@@ -124,7 +139,7 @@ edge_t* NextEdge(matrix_graph_t* graph, int vertex_idx, edge_t* edge) {
  * 如有这方面兴趣, 请参考C++模板版本实现 https://gitee.com/cyberdash/data-structure-cpp 中的图代码
  */
 status_t CreateGraphByEdgesAndVertices(matrix_graph_t* graph,
-                                       edge_t* edge_array,
+                                       edge_t* edges,
                                        int edge_count,
                                        const int* vertex_indexes,
                                        int vertex_count,
@@ -138,7 +153,7 @@ status_t CreateGraphByEdgesAndVertices(matrix_graph_t* graph,
     graph->kind = graph_kind;              //!< 图类型
     graph->vertex_count = vertex_count;    //!< 结点数量
     graph->edge_count = edge_count;        //!< 边数量
-    graph->weight_type = edge_array->weight_type;  // 使用edge_arr第0项的weight_type, 赋给graph->weight_type
+    graph->weight_type = edges->weight_type;  // 使用edge_arr第0项的weight_type, 赋给graph->weight_type
 
     for (int i = 0; i < graph->vertex_count; ++i) {
 
@@ -165,21 +180,21 @@ status_t CreateGraphByEdgesAndVertices(matrix_graph_t* graph,
     for (int i = 0; i < edge_count; ++i) {
 
         //! 边: u --> v
-        int u = edge_array[i].starting_vertex_index;
-        int v = edge_array[i].ending_vertex_index;
+        int u = edges[i].starting_vertex_index;
+        int v = edges[i].ending_vertex_index;
 
-        graph->adj_matrix[u][v] = edge_array[i];
+        graph->adj_matrix[u][v] = edges[i];
 
 
         // 无向图/网, 增加 边: v --> u
         if (graph->kind == UDN || graph->kind == UDG) {
-            graph->adj_matrix[v][u] = edge_array[i];
+            graph->adj_matrix[v][u] = edges[i];
             graph->adj_matrix[v][u].starting_vertex_index = v;
             graph->adj_matrix[v][u].ending_vertex_index = u;
         }
 
         // 图边信息数组赋值
-        graph->edges[i] = edge_array[i];
+        graph->edges[i] = edges[i];
     }
 
     return OK;

@@ -13,9 +13,9 @@
 
 // 构造图
 status_t CreateGraphByEdgesAndVertices(matrix_graph_t* graph,
-                                       edge_t* edge_arr,
+                                       edge_t* edges,
                                        int edge_cnt,
-                                       const VERTEX_TYPE* vertex_indexes,
+                                       const int* vertex_indexes,
                                        int vertex_cnt,
                                        GRAPH_KIND graph_kind);
 
@@ -25,9 +25,9 @@ int FirstAdjVertexIdx(matrix_graph_t* graph, int vertex_index);
 // 结点(索引)v在图G中的, 结点(索引)w之外第一个(索引)邻接节点
 int NextAdjVertexIndex(matrix_graph_t* graph, int vertex_index, int adj_vertex_index);
 
-status_t DestroyGraph(matrix_graph_t* graph);
+// status_t DestroyGraph(matrix_graph_t* graph);
 
-status_t LocateVertex(matrix_graph_t graph, VERTEX_TYPE vertex, int* vertex_index);
+// status_t LocateVertex(matrix_graph_t graph, VERTEX_TYPE vertex, int* vertex_index);
 
 // 获取结点的第一条弧(边)
 edge_t* FirstEdge(matrix_graph_t* graph, int vertex_index);

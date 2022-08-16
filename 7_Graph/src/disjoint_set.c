@@ -41,11 +41,14 @@ status_t InitDisjointSet(disjoint_set_t* disjoint_set, int size) {
 
 
 /*!
- * 销毁并查集
- * @param disjoint_set 并查集(二级指针)
- * @return 是否成功
+ * <h1>销毁并查集</h1>
+ * @param disjoint_set **并查集**(二级指针)
+ * @return **执行结果**
+ * @note
  */
 status_t DisjointSetDestroy(disjoint_set_t** disjoint_set) {
+    /// - free并查集的父节点数组
+    /// - free并查集
     free((*disjoint_set)->parent_indexes);
     free(*disjoint_set);
     *disjoint_set = NULL;
@@ -55,25 +58,33 @@ status_t DisjointSetDestroy(disjoint_set_t** disjoint_set) {
 
 
 /*!
- * 并查集合并
- * @param disjoint_set 并查集(指针)
- * @param index1 索引1
- * @param index2 索引2
- * @return 执行结果
+ * @brief <h1>并查集合并</h1>
+ * @param disjoint_set **并查集**(指针)
+ * @param index1 **结点索引1**
+ * @param index2 **结点索引2**
+ * @return **执行结果**
+ * @note
  */
 status_t DisjointSetUnion(disjoint_set_t* disjoint_set, int index1, int index2) {
+    /// - 取结点1的根结点索引root1
     int root1 = DisjointSetFindRecursive(disjoint_set, index1);
+    /// - 取结点2的根结点索引root1
     int root2 = DisjointSetFindRecursive(disjoint_set, index2);
 
+    /// - 边界条件判断 \n
+    /// &emsp; **if** 两个根节点中任何一个小于0 : \n
+    /// &emsp;&emsp; 返回ERROR \n
+    /// &emsp; **if** 两个根节点相同 : \n
+    /// &emsp;&emsp; 返回OK(已经在一个集合,不需要合并) \n
     if (root1 < 0 || root2 < 0) {
         return ERROR;
     }
 
-    if (root1 == root2) {   // 不需要合并
+    if (root1 == root2) {
         return OK;
     }
 
-    // 将根root2连接到另一根root1下面
+    /// - 将根root2加到另一根root1下面
     disjoint_set->parent_indexes[root1] += disjoint_set->parent_indexes[root2];
     disjoint_set->parent_indexes[root2] = root1;
 
@@ -82,30 +93,39 @@ status_t DisjointSetUnion(disjoint_set_t* disjoint_set, int index1, int index2) 
 
 
 /*!
- * 查找索引的根结点索引(递归)
- * @param disjoint_set 并查集(指针)
- * @param index 索引
- * @return 根结点索引
+ * <h1>并查集获取结点的根结点索引(递归)</h1>
+ * @param disjoint_set **并查集**(指针)
+ * @param index **结点索引**
+ * @return **根结点索引**
+ * @note
  */
 int DisjointSetFindRecursive(disjoint_set_t* disjoint_set, int index) {
+    /// - 根结点处理
+    /// &emsp; **if** 参数结点的父节点索引 < 0 : \n
+    /// &emsp;&emsp; 返回参数结点索引(本身即为根节点索引) \n
     if (disjoint_set->parent_indexes[index] < 0) {
         return index;
     }
 
+    /// - 递归调用DisjointSetFindRecursive
     return DisjointSetFindRecursive(disjoint_set, disjoint_set->parent_indexes[index]);
 }
 
 
 /*!
- * 查找索引的根结点索引
- * @param disjoint_set 并查集(指针)
- * @param index 索引
- * @return 根结点索引
+ * <h1>并查集获取结点的根结点索引</h1>
+ * @param disjoint_set **并查集**(指针)
+ * @param index **结点索引**
+ * @return **根结点索引**
+ * @note
  */
 int DisjointSetFind(disjoint_set_t* disjoint_set, int index) {
+    /// **while** 结点的父节点索引 >= 0 : \n
+    /// &emsp; 结点索引 <== 父节点索引 \n
     while (disjoint_set->parent_indexes[index] >= 0) {
         index = disjoint_set->parent_indexes[index];
     }
 
+    /// 返回结点索引值
     return index;
 }

@@ -29,25 +29,29 @@ status_t LocateVertex(matrix_graph_t graph, VERTEX_TYPE vertex, int* vertex_inde
 
 
 /*!
- * <h1>获取某图结点的第一个邻接节点的索引</h1>
+ * <h1>获取某结点的第一个邻接节点的索引</h1>
  * @param graph **图**(指针)
  * @param vertex_index 结点索引
  * @return 第一个邻接节点的索引
  * @note
  */
-int FirstAdjVertexIdx(matrix_graph_t* graph, int vertex_index) {
+int FirstAdjVertexIndex(matrix_graph_t* graph, int vertex_index) {
+    /// **for loop** 遍历图结点 : \n
     for (int i = 0; i < graph->vertex_count; i++) {
+        /// &emsp; **if** i不等有vertex_index 并且 边(vertex_index --> i)存在 : \n
         if (i != vertex_index && graph->adj_matrix[vertex_index][i].weight_type != NO_EDGE) {
+            /// &emsp;&emsp; 返回i \n
             return i;
         }
     }
 
+    /// 返回-1 \n
     return -1;
 }
 
 
 /*!
- * <h1>索引vertex_index结点, adj_vertex_index之外的下一个邻接节点索引</h1>
+ * <h1>获取索引vertex_index结点, adj_vertex_index之外的下一个邻接节点索引</h1>
  * @param graph **图**(指针)
  * @param vertex_index **结点索引**
  * @param adj_vertex_index **一个邻接节点索引**
@@ -86,8 +90,7 @@ edge_t* FirstEdge(matrix_graph_t* graph, int vertex_index) {
     /// **for loop** 遍历图结点 : \n
     for (int i = 0; i < graph->vertex_count; i++) {
         /// &emsp; **if** 边(vertex_index --> i)存在 : \n
-        if (graph->adj_matrix[vertex_index][i].weight_type != NO_EDGE)
-        {
+        if (graph->adj_matrix[vertex_index][i].weight_type != NO_EDGE) {
             /// &emsp;&emsp; 返回 边(vertex_index --> i) \n
             return &graph->adj_matrix[vertex_index][i];
         }
@@ -99,7 +102,7 @@ edge_t* FirstEdge(matrix_graph_t* graph, int vertex_index) {
 
 
 /*!
- * <h1>获取结点的基于某条边的下一条边</h1>
+ * <h1>获取结点的某条邻接边之外的下一条邻接边</h1>
  * @param graph **图**(指针)
  * @param vertex_index **结点索引**
  * @param edge **边**(指针)
@@ -211,13 +214,18 @@ status_t CreateGraphByEdgesAndVertices(matrix_graph_t* graph,
  * @note
  */
 status_t PrintGraphMatrix(matrix_graph_t* graph) {
-    for (int i = 0; i < graph->vertex_count; i++) {
-        for (int j = 0; j < graph->vertex_count; j++) {
+    /// **for loop** 遍历图结点(作为起点) : \n
+    for (int start = 0; start < graph->vertex_count; start++) {
+        /// &emsp; **for loop** 遍历图结点(作为终点) : \n
+        for (int end = 0; end < graph->vertex_count; end++) {
             double weight = DBL_MAX;
-            if (graph->adj_matrix[i][j].weight_type == NO_EDGE) {
+            /// &emsp;&emsp; **if** 邻接矩阵元素adj_matrix[start][end] 没有边 : \n
+            if (graph->adj_matrix[start][end].weight_type == NO_EDGE) {
+                /// &emsp;&emsp;&emsp; 边权值设为0
                 weight = 0;
-            } else {
-                weight = graph->adj_matrix[i][j].weight.double_value;
+            } else { /// &emsp;&emsp; **else** (邻接矩阵元素(起点 --> 终点) 有边) : \n
+                /// &emsp;&emsp;&emsp; 边权值为adj_matrix[start][end].weight.double_value \n
+                weight = graph->adj_matrix[start][end].weight.double_value;
             }
 
             printf("%lf ", weight);

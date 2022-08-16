@@ -15,21 +15,24 @@
 
 
 /*!
- * 测试使用弧(边)数组创建无向网(UDN)
- * @note:
-             结点0
-             / \
-            /   \
-          0.1   0.12
-          /       \
-         /         \
-     结点1---0.2---结点2
-         \        /
-          \      /
-          0.14  0.05
-           \  /
-            \/
-           结点3
+ * @brief <h1>测试使用结点数组和边数组创建无向网</h1>
+ * @note
+ * ```
+ *           结点0
+ *           / \
+ *          /   \
+ *        0.1   0.12
+ *        /       \
+ *       /         \
+ *   结点1---0.2---结点2
+ *       \        /
+ *        \      /
+ *        0.14  0.05
+ *         \  /
+ *          \/
+ *         结点3
+ * ```
+ *
  */
 void TestCreateUDNByEdgesAndVertices() {
     printf("\n");
@@ -50,40 +53,30 @@ void TestCreateUDNByEdgesAndVertices() {
     printf("         \\/\n");
     printf("       结点3\n");
 
+    /// - 声明并构造结点数组和边数组
     VERTEX_TYPE vertices[4] = { 0, 1, 2, 3 };
 
+    // 边信息, 注意没有方向
+    // 0 - 1: 0.1,  0 - 2: 0.12,  1 - 2: 0.2,  1 - 3: 0.14,  2 - 3: 0.05
+    int starting_vertex_indexes[5] = {0, 0, 1, 1, 2 }; // 起点索引数组
+    int ending_vertex_indexes[5] = {1, 2, 2, 3, 3 };   // 终点索引数组
+    double weights[5] = {0.1, 0.12, 0.2, 0.14, 0.05 }; // 边权重索引数组
+
+    // 使用起点(索引)数组, 终点(索引)数组, 权重数组, 构造边数组
+    edge_t edges[5];
+    for (int i = 0; i < sizeof(edges) / sizeof(edge_t); i++) {
+        edges[i].weight_type = DOUBLE;
+        edges[i].starting_vertex_index = starting_vertex_indexes[i];
+        edges[i].ending_vertex_index = ending_vertex_indexes[i];
+        edges[i].weight.double_value = weights[i];
+    }
+
+    /// - 声明邻接矩阵图并设置类型
     matrix_graph_t graph;
-    graph.vertex_count = 4; // 结点数量
-    graph.edge_count = 5;   // 弧(边)数量
     graph.kind = UDN;       // 类型:无向网
 
-    // 结点信息写到graph.vertices数组
-    for (int i = 0; i < sizeof(vertices) / sizeof(VERTEX_TYPE); i++) {
-        graph.vertexes[i] = vertices[i];
-    }
-
-    // 弧(边)信息, 注意没有方向
-    // 0 - 1: 0.1
-    // 0 - 2: 0.12
-    // 1 - 2: 0.2
-    // 1 - 3: 0.14
-    // 2 - 3: 0.05
-    int startingVertexIndexArr[5] = { 0, 0, 1, 1, 2 }; // 起点
-    int endingVertexIndexArr[5] = { 1, 2, 2, 3, 3 };   // 终点
-    double weightArr[5] = { 0.1, 0.12, 0.2, 0.14, 0.05 }; // 权重
-
-    // 使用起点(索引)数组, 终点(索引)数组, 权重数组, 构造弧(边)数组
-    edge_t arcCellArr[5];
-    for (int i = 0; i < sizeof(arcCellArr) / sizeof(edge_t); i++) {
-        arcCellArr[i].weight_type = DOUBLE;
-        // arcCellArr[i].edge_info = (edge_t*)malloc(sizeof(edge_t));
-        arcCellArr[i].starting_vertex_index = startingVertexIndexArr[i];
-        arcCellArr[i].ending_vertex_index = endingVertexIndexArr[i];
-        arcCellArr[i].weight.double_value = weightArr[i];
-    }
-
-    // 建图, 如果成功则打印
-    status_t status = CreateGraphByEdgesAndVertices(&graph, arcCellArr, 5, vertices, 4, UDN);
+    /// - 建图并打印邻接矩阵
+    status_t status = CreateGraphByEdgesAndVertices(&graph, edges, 5, vertices, 4, UDN);
     if (status == OK) {
         printf("建图成功, 打印:\n\n");
         status = PrintGraphMatrix(&graph);
@@ -99,23 +92,25 @@ void TestCreateUDNByEdgesAndVertices() {
 
 
 /*!
- * 测试深度优先遍历
- * @note:
-             结点0
-             / \
-            /   \
-          0.1   0.12
-          /       \
-         /         \
-     结点1---0.2---结点2
-         \        /
-          \      /
-          0.14  0.05
-           \  /
-            \/
-           结点3
-
-   从结点0开始遍历
+ * @brief <h1>测试深度优先遍历</h1>
+ * @note
+ * ```
+ *           结点0
+ *           / \
+ *          /   \
+ *        0.1   0.12
+ *        /       \
+ *       /         \
+ *   结点1---0.2---结点2
+ *       \        /
+ *        \      /
+ *        0.14  0.05
+ *         \  /
+ *          \/
+ *         结点3
+ * ```
+ *
+ * 从结点0开始遍历
  */
 void TestDFSTraverse() {
     printf("\n");
@@ -179,22 +174,25 @@ void TestDFSTraverse() {
 
 /*!
  * 测试广度优先遍历
- * @note:
-             结点0
-             / \
-            /   \
-          0.1   0.12
-          /       \
-         /         \
-     结点1---0.2---结点2
-         \        /
-          \      /
-          0.14  0.05
-           \  /
-            \/
-           结点3
-
-   从结点0开始遍历
+ * @note
+ * ```
+ *           结点0
+ *           / \
+ *          /   \
+ *        0.1   0.12
+ *        /       \
+ *       /         \
+ *   结点1---0.2---结点2
+ *       \        /
+ *        \      /
+ *        0.14  0.05
+ *         \  /
+ *          \/
+ *         结点3
+ * ```
+ *
+ * 从结点0开始遍历
+ *
  */
 void TestBFSTraverse() {
     printf("\n");
@@ -255,7 +253,8 @@ void TestBFSTraverse() {
 
 
 /*!
- * 测试(Prim)最小生成树
+ * @brief 测试(Prim)最小生成树
+ * @note
  */
 void TestPrim() {
     printf("\n");
@@ -282,10 +281,10 @@ void TestPrim() {
         }
     }
 
-    // 边(0-->1): 0.1, 边(0-->2): 0.12, 边(1-->2): 0.01, 边(1-->3): 0.14, 边(2-->3): 0.05
+    // 边(0-->1): 0.1, 边(0-->2): 0.12, 边(1-->2): 0.2, 边(1-->3): 0.14, 边(2-->3): 0.05
     int starting_vertex_idx_arr[5] = {0, 0, 1, 1, 2 }; // 起点
     int ending_vertex_idx_arr[5] = {1, 2, 2, 3, 3 };   // 终点
-    double weight_arr[5] = {0.1, 0.12, 0.01, 0.14, 0.05 }; // 权重
+    double weight_arr[5] = {0.1, 0.12, 0.2, 0.14, 0.05 }; // 权重
 
     // 使用起点(索引)数组, 终点(索引)数组, 权重数组, 构造弧(边)数组
     for (int i = 0; i < graph.edge_count; i++) {
@@ -324,10 +323,10 @@ void TestKruskal() {
 
     VERTEX_TYPE vertex_array[4] = { 0, 1, 2, 3 };
 
-    // 0 - 1: 0.1, 0 - 2: 0.12, 1 - 2: 0.01, 1 - 3: 0.14, 2 - 3: 0.05
+    // 0 - 1: 0.1, 0 - 2: 0.12, 1 - 2: 0.2, 1 - 3: 0.14, 2 - 3: 0.05
     int starting_vertex_index_array[5] = {0, 0, 1, 1, 2 }; // 起点
     int ending_vertex_index_array[5] = {1, 2, 2, 3, 3 };   // 终点
-    double weight_array[5] = {0.1, 0.12, 0.01, 0.14, 0.05 }; // 权重
+    double weight_array[5] = {0.1, 0.12, 0.2, 0.14, 0.05 }; // 权重
 
     // 构造边数组
     edge_t edge_array[5];
@@ -352,23 +351,26 @@ void TestKruskal() {
 
 
 /*!
- * 测试迪杰斯特拉(Dijkstra)最短路径
- * @note:
-              结点0
-              / \
-             /   \
-           0.1   0.12
-           /       \
-          /         \
-      结点1---0.01---结点2
-        / \        / \
-       /   \      /   \
-    0.13  0.14 0.05   0.17
-     /      \  /        \
-    /        \/          \
-结点4--0.09--结点3--0.11--结点5
-
-   结点0为起始节点, 求结点0到其他结点的最短路径
+ * @brief <h1>测试迪杰斯特拉(Dijkstra)最短路径</h1>
+ * @note
+ *
+ * ```
+ *               结点0
+ *               / \
+ *              /   \
+ *            0.1   0.12
+ *            /       \
+ *           /         \
+ *       结点1---0.01---结点2
+ *         / \         / \
+ *        /   \       /   \
+ *     0.13  0.14 0.05   0.17
+ *      /      \  /        \
+ *     /        \/          \
+ * 结点4--0.09--结点3--0.11--结点5
+ * ```
+ *
+ * 结点0为起始节点, 求结点0到其他结点的最短路径
  */
 void TestDijkstra() {
     printf("\n");
@@ -377,7 +379,6 @@ void TestDijkstra() {
     printf("                 测试迪杰斯特拉(Dijkstra)最短路径               \n\n\n");
 
     VERTEX_TYPE vertex_array[6] = {0, 1, 2, 3, 4, 5};
-    // VERTEX_TYPE vertexes[4] = { 0, 1, 2, 3/*, 4, 5*/ };
 
     matrix_graph_t graph;
     int vertex_count = 6;           // 结点数量
@@ -416,23 +417,26 @@ void TestDijkstra() {
 
 
 /*!
- * 测试贝尔曼福特(BellmanFord)最短路径
- * @note:
-              结点0
-              / \
-             /   \
-           0.1   0.12
-           /       \
-          /         \
-      结点1---0.01---结点2
-        / \        / \
-       /   \      /   \
-    0.13  0.14 0.05   0.17
-     /      \  /        \
-    /        \/          \
-结点4--0.09--结点3--0.11--结点5
-
-   结点0为起始节点
+ * @brief <h1>测试贝尔曼福特(BellmanFord)最短路径</h1>
+ * @note
+ *
+ * ```
+ *               结点0
+ *               / \
+ *              /   \
+ *            0.1   0.12
+ *            /       \
+ *           /         \
+ *       结点1---0.01---结点2
+ *         / \         / \
+ *        /   \       /   \
+ *     0.13  0.14 0.05   0.17
+ *      /      \  /        \
+ *     /        \/          \
+ * 结点4--0.09--结点3--0.11--结点5
+ * ```
+ *
+ * 结点0为起始节点, 求结点0到其他结点的最短路径
  */
 void TestBellmanFord() {
     printf("\n");
@@ -483,21 +487,25 @@ void TestBellmanFord() {
 
 
 /*!
- * 测试弗洛伊德(Floyd-Warshall)算法
- * @note:
-              结点0
-              / \
-             /   \
-           0.1   0.12
-           /       \
-          /         \
-      结点1---0.01---结点2
-        / \        / \
-       /   \      /   \
-    0.13  0.14 0.05   0.17
-     /      \  /        \
-    /        \/          \
-结点4--0.09--结点3--0.11--结点5
+ * @brief <h1>测试弗洛伊德(Floyd-Warshall)算法</h1>
+ * @note
+ *
+ * ```
+ *               结点0
+ *               / \
+ *              /   \
+ *            0.1   0.12
+ *            /       \
+ *           /         \
+ *       结点1---0.01---结点2
+ *         / \         / \
+ *        /   \       /   \
+ *     0.13  0.14 0.05   0.17
+ *      /      \  /        \
+ *     /        \/          \
+ * 结点4--0.09--结点3--0.11--结点5
+ * ```
+ *
  */
 void TestFloyd() {
     printf("\n");
@@ -507,48 +515,46 @@ void TestFloyd() {
 
     VERTEX_TYPE vertices[6] = {0, 1, 2, 3, 4, 5};
 
-    matrix_graph_t G;
-    G.vertex_count = 6;           // 结点数量
-    G.edge_count = 9;           // 弧(边)数量
-    G.kind = DN;            // 类型:有向网
-    G.weight_type = DOUBLE;  // 弧(边)权值类型
+    matrix_graph_t graph;
+    graph.vertex_count = 6;           // 结点数量
+    graph.edge_count = 9;           // 弧(边)数量
+    graph.kind = DN;            // 类型:有向网
+    graph.weight_type = DOUBLE;  // 弧(边)权值类型
 
     // 0 - 1: 0.1,   0 - 2: 0.12,  1 - 2: 0.2
     // 1 - 3: 0.14,  1 - 4: 0.13,  2 - 3: 0.05
     // 2 - 5: 0.17,  3 - 4: 0.09,  3 - 5: 0.11
-    int starting_vertex_index_arr[9] = {0, 0, 1, 1, 1, 2, 2, 3, 3}; // 起点
-    int ending_vertex_index_arr[9] = {1, 2, 2, 3, 4, 3, 5, 4, 5};   // 终点
-    double weight_arr[9] = {0.1, 0.12, 0.01, 0.14, 0.13, 0.05, 0.17, 0.09, 0.11}; // 权重
+    int starting_vertex_indexes[9] = {0, 0, 1, 1, 1, 2, 2, 3, 3}; // 起点
+    int ending_vertex_indexes[9] = {1, 2, 2, 3, 4, 3, 5, 4, 5};   // 终点
+    double weights[9] = {0.1, 0.12, 0.01, 0.14, 0.13, 0.05, 0.17, 0.09, 0.11}; // 权重
 
     // 对每个[i, j]进行初始化, 默认没有弧(边), 所有的弧(边)长为最大值
-    for (int i = 0; i < G.vertex_count; i++) {
-        G.vertexes[i] = vertices[i];
-        for (int j = 0; j < G.vertex_count; j++) {
-            G.adj_matrix[i][j].weight_type = DOUBLE;
-            // G.adj_matrix[i][j].edge_info = (edge_t*)malloc(sizeof(edge_t));
-            G.adj_matrix[i][j].starting_vertex_index = i;
-            G.adj_matrix[i][j].ending_vertex_index = j;
-            G.adj_matrix[i][j].weight.double_value = DBL_MAX;
+    for (int i = 0; i < graph.vertex_count; i++) {
+        graph.vertexes[i] = vertices[i];
+        for (int j = 0; j < graph.vertex_count; j++) {
+            graph.adj_matrix[i][j].weight_type = DOUBLE;
+            graph.adj_matrix[i][j].starting_vertex_index = i;
+            graph.adj_matrix[i][j].ending_vertex_index = j;
+            graph.adj_matrix[i][j].weight.double_value = DBL_MAX;
 
-            G.adj_matrix[j][i].weight_type = DOUBLE;
-            // G.adj_matrix[j][i].edge_info = (edge_t*)malloc(sizeof(edge_t));
-            G.adj_matrix[j][i].starting_vertex_index = j;
-            G.adj_matrix[j][i].ending_vertex_index = i;
-            G.adj_matrix[j][i].weight.double_value = DBL_MAX;
+            graph.adj_matrix[j][i].weight_type = DOUBLE;
+            graph.adj_matrix[j][i].starting_vertex_index = j;
+            graph.adj_matrix[j][i].ending_vertex_index = i;
+            graph.adj_matrix[j][i].weight.double_value = DBL_MAX;
         }
     }
 
-    for (int i = 0; i < G.edge_count; i++) {
-        int row_idx = starting_vertex_index_arr[i];
-        int col_idx = ending_vertex_index_arr[i];
+    for (int i = 0; i < graph.edge_count; i++) {
+        int start = starting_vertex_indexes[i];
+        int end = ending_vertex_indexes[i];
 
-        G.adj_matrix[row_idx][col_idx].starting_vertex_index = row_idx;
-        G.adj_matrix[row_idx][col_idx].ending_vertex_index = col_idx;
-        G.adj_matrix[row_idx][col_idx].weight.double_value = weight_arr[i];
+        graph.adj_matrix[start][end].starting_vertex_index = start;
+        graph.adj_matrix[start][end].ending_vertex_index = end;
+        graph.adj_matrix[start][end].weight.double_value = weights[i];
 
-        G.adj_matrix[col_idx][row_idx].starting_vertex_index = col_idx;
-        G.adj_matrix[col_idx][row_idx].ending_vertex_index = row_idx;
-        G.adj_matrix[col_idx][row_idx].weight.double_value = weight_arr[i];
+        graph.adj_matrix[end][start].starting_vertex_index = end;
+        graph.adj_matrix[end][start].ending_vertex_index = start;
+        graph.adj_matrix[end][start].weight.double_value = weights[i];
     }
 
     int predecessor[MAX_VERTEX_CNT][MAX_VERTEX_CNT];
@@ -561,8 +567,8 @@ void TestFloyd() {
         }
     }
 
-    Floyd(&G, predecessor, distance);
-    PrintMultiSourceShortestPath(&G, distance, predecessor);
+    Floyd(&graph, predecessor, distance);
+    PrintMultiSourceShortestPath(&graph, distance, predecessor);
 
     printf("-------------------- 抖音: cyberdash_yuan --------------------\n");
 }

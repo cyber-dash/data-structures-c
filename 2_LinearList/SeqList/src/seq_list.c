@@ -14,45 +14,66 @@
 
 
 /*!
- * 初始化顺序表
- * @param seq_list 顺序表(指针)
- * @return 是否成功
+ * <h1>顺序表初始化</h1>
+ * @param seq_list **顺序表**(指针)
+ * @return **是否成功**
+ * @note
  */
-Status SeqListInit(seq_list_t* seq_list) {
-    seq_list->elements = (ELEM_TYPE*)malloc(LIST_INIT_SIZE * sizeof(ELEM_TYPE));
+status_t SeqListInit(seq_list_t* seq_list) {
+
+    /// - 分配elements数组内存 \n
+    /// &emsp; **if** 内存分配失败 : \n
+    /// &emsp;&emsp; 返回NON_ALLOCATED \n
+    seq_list->elements = (ELEM_TYPE*)malloc(LIST_INIT_CAPACITY * sizeof(ELEM_TYPE));
     if (!seq_list->elements) {
         return NON_ALLOCATED;
     }
 
+    /// - 设置length和capacity \n
+    /// &emsp; length初始化为0 \n
+    /// &emsp; capacity初始化为0 \n
     seq_list->length = 0;               // 空表长度为0
-    seq_list->size = LIST_INIT_SIZE;    // 初始存储容量
+    seq_list->capacity = LIST_INIT_CAPACITY;    // 初始存储容量
 
     return OK;
 }
 
 
 /*!
- * 顺序表插入
- * @param seq_list 顺序表(指针)
- * @param pos 插入位置
- * @param elem 元素
- * @return 是否成功
+ * <h1>顺序表插入</h1>
+ * @param seq_list **顺序表**(指针)
+ * @param pos **插入位置(前)**
+ * @param elem **待插入元素**
+ * @return **执行结果**
+ * @note
+ * 本顺序表实现, 索引从1开始, 区别于数组的从0开始; \n
+ * 插入到参数pos的前一位置 \n
  */
-Status SeqListInsert(seq_list_t* seq_list, int pos, ELEM_TYPE elem) {
+status_t SeqListInsert(seq_list_t* seq_list, int pos, ELEM_TYPE elem) {
+
+    /// - 插入位置合法性判断 \n
+    /// &emsp; **if** 插入位置 < 1 或者 插入位置 > 长度 + 1 : \n
+    /// &emsp;&emsp; 返回OVERFLOW \n
     if (pos < 1 || pos > seq_list->length + 1) {
-        return ERROR;
+        return OVERFLOW;
     }
 
-    // 当前存储空间已满, 增加分配
-    if (seq_list->length >= seq_list->size) {
-        unsigned int new_size = (seq_list->size + LIST_INCREMENT) * sizeof(ELEM_TYPE);
-        ELEM_TYPE* new_base = (ELEM_TYPE*)realloc(seq_list->elements, new_size);
-        if (!new_base) {
+    /// - 满容量处理 \n
+    /// &emsp; **if** 线性表的容量已满(不扩容无法插入) : \n
+    if (seq_list->length >= seq_list->capacity) {
+        /// &emsp;&emsp; 使用增量LIST_INCREMENT计算新的容量, 并分配新的elements数组内存 \n
+        unsigned int new_capacity = (seq_list->capacity + LIST_INCREMENT) * sizeof(ELEM_TYPE);
+        ELEM_TYPE* new_elements = (ELEM_TYPE*)realloc(seq_list->elements, new_capacity);
+        /// &emsp;&emsp; **if** 内存分配失败 : \n
+        if (!new_elements) {
+            /// &emsp;&emsp;&emsp; 返回NON_ALLOCATED \n
             return NON_ALLOCATED; // 存储分配失败
         }
 
-        seq_list->elements = new_base;         // 新基址
-        seq_list->size += LIST_INCREMENT;      // 增加存储容量
+        /// &emsp;&emsp; 顺序表elements指针指向新数组 \n
+        seq_list->elements = new_elements;         // 新基址
+        /// &emsp;&emsp; 顺序表capacity增加容量数值 \n
+        seq_list->capacity += LIST_INCREMENT;      // 增加存储容量
     }
 
     ELEM_TYPE* insert_pos_elem = &(seq_list->elements[pos - 1]);    // q为插入位置
@@ -76,7 +97,7 @@ Status SeqListInsert(seq_list_t* seq_list, int pos, ELEM_TYPE elem) {
  * @note
  * 删除位置pos的元素, 将其值赋给elem
  */
-Status SeqListDelete(seq_list_t* seq_list, int pos, ELEM_TYPE* elem) {
+status_t SeqListDelete(seq_list_t* seq_list, int pos, ELEM_TYPE* elem) {
     if (pos < 1 || pos > seq_list->length) {
         return ERROR;
     }
@@ -128,7 +149,7 @@ int SeqListLocate(seq_list_t* seq_list, ELEM_TYPE elem, int (*compare)(ELEM_TYPE
  * @param merged_list 合并后的表(的指针)
  * @return 是否合并成功
  */
-Status SeqListMerge(seq_list_t* list_a, seq_list_t* list_b, seq_list_t* merged_list) {
+status_t SeqListMerge(seq_list_t* list_a, seq_list_t* list_b, seq_list_t* merged_list) {
     ELEM_TYPE* list_a_cur = list_a->elements;   // list_a_cur指针 -> 顺序表a的elements数组首地址
     ELEM_TYPE* list_b_cur = list_b->elements;   // list_b_cur指针 -> 顺序表b的elements数组首地址
     ELEM_TYPE* list_a_last = list_a->elements + list_a->length - 1; // last_a_last指针 -> 顺序表a的elements数组尾地址
@@ -136,8 +157,8 @@ Status SeqListMerge(seq_list_t* list_a, seq_list_t* list_b, seq_list_t* merged_l
 
     // 合并后的表
     merged_list->length = list_a->length + list_b->length;  // 长度
-    merged_list->size = list_a->size + list_b->size;        // 容量
-    merged_list->elements = (ELEM_TYPE*)malloc(merged_list->size * sizeof(ELEM_TYPE));  // elements数组分配内存
+    merged_list->capacity = list_a->capacity + list_b->capacity;        // 容量
+    merged_list->elements = (ELEM_TYPE*)malloc(merged_list->capacity * sizeof(ELEM_TYPE));  // elements数组分配内存
     if (!merged_list->elements) {
         return NON_ALLOCATED;   // 分配失败
     }

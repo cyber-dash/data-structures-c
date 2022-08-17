@@ -73,14 +73,14 @@ void Swap(edge_t* item1, edge_t* item2) {
  */
 void MinHeapSiftDown(edge_t* items, int index, int heap_size) {
     /// **for loop** 遍历index结点的子孙节点 : \n
-    for (int child_index = 2 * index; child_index <= heap_size; child_index *= 2) {
+    for (int child_index = 2 * index; child_index <= heap_size; index = child_index, child_index *= 2) {
 
         /// &emsp; 找到当前结点的左右孩子节点中, 较小的结点
         if (child_index < heap_size && GreaterThan(items + child_index, items + child_index + 1)) {
             child_index++;
         }
 
-        /// &emsp; **if** 当前结点(index索引) <= 最大孩子节点 : \n
+        /// &emsp; **if** 当前结点(index索引) <= 最小孩子节点 : \n
         if (!GreaterThan(items + index, items + child_index)) {
             /// &emsp;&emsp; 遍历结束(SiftDown结束) \n
             break;
@@ -100,7 +100,7 @@ void MinHeapSiftDown(edge_t* items, int index, int heap_size) {
  */
 void MinHeapSiftUp(edge_t* items, int index) {
     /// **for loop** 遍历index结点的祖先节点 : \n
-    for (int parent_index = index / 2; parent_index > 0; parent_index /= 2) {
+    for (int parent_index = index / 2; parent_index > 0; index = parent_index, parent_index /= 2) {
         /// &emsp; **if** 双亲结点 <= 当前节点 : \n
         if (!GreaterThan(items + parent_index, items + index)) {
             /// &emsp;&emsp; 遍历结束(SiftUp结束) \n
@@ -174,6 +174,8 @@ status_t MinPriorityQueuePush(min_priority_queue_t* min_priority_queue, edge_t i
 
     /// ### 3 对刚刚插入的元素执行SiftUp ###
     MinHeapSiftUp(min_priority_queue->items, min_priority_queue->size);
+
+    // for (int i = 1; i <= min_priority_queue->size)
 
     return OK;
 }

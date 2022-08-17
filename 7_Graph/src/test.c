@@ -9,7 +9,6 @@
  */
 
 #include <stdio.h>
-#include <stdlib.h>
 #include <float.h>
 #include "test.h"
 
@@ -56,13 +55,12 @@ void TestCreateUDNByEdgesAndVertices() {
     /// - 声明并构造结点数组和边数组
     VERTEX_TYPE vertices[4] = { 0, 1, 2, 3 };
 
-    // 边信息, 注意没有方向
-    // 0 - 1: 0.1,  0 - 2: 0.12,  1 - 2: 0.2,  1 - 3: 0.14,  2 - 3: 0.05
-    int starting_vertex_indexes[5] = {0, 0, 1, 1, 2 }; // 起点索引数组
-    int ending_vertex_indexes[5] = {1, 2, 2, 3, 3 };   // 终点索引数组
-    double weights[5] = {0.1, 0.12, 0.2, 0.14, 0.05 }; // 边权重索引数组
+    // 无向边信息, 0 - 1: 0.1,  0 - 2: 0.12,  1 - 2: 0.2,  1 - 3: 0.14,  2 - 3: 0.05
+    int starting_vertex_indexes[5] = { 0, 0, 1, 1, 2 }; // 起点索引数组
+    int ending_vertex_indexes[5] = { 1, 2, 2, 3, 3 };   // 终点索引数组
+    double weights[5] = { 0.1, 0.12, 0.2, 0.14, 0.05 }; // 边权重索引数组
 
-    // 使用起点(索引)数组, 终点(索引)数组, 权重数组, 构造边数组
+    // 使用起点索引数组, 终点索引数组, 边权重数组, 构造边数组
     edge_t edges[5];
     for (int i = 0; i < sizeof(edges) / sizeof(edge_t); i++) {
         edges[i].weight_type = DOUBLE;
@@ -133,40 +131,28 @@ void TestDFSTraverse() {
 
     VERTEX_TYPE vertices[4] = {0, 1, 2, 3};
 
-    matrix_graph_t G;
-    G.weight_type = DOUBLE;
-    G.vertex_count = 4;   // 结点数量
-    G.edge_count = 5;   // 弧(边)数量
-    G.kind = UDN;   // 类型:无向网
+    // 无向边信息, 0 - 1: 0.1,  0 - 2: 0.12,  1 - 2: 0.2,  1 - 3: 0.14,  2 - 3: 0.05
+    int starting_vertex_indexes[5] = {0, 0, 1, 1, 2 }; // 起点
+    int ending_vertex_indexes[5] = {1, 2, 2, 3, 3 };   // 终点
+    double weights[5] = {0.1, 0.12, 0.2, 0.14, 0.05 }; // 权重
 
-    // 结点信息写到G.vexs数组
-    for (int i = 0; i < sizeof(vertices) / sizeof(VERTEX_TYPE); i++) {
-        G.vertexes[i] = vertices[i];
+    // 使用起点索引数组, 终点索引数组, 边权重数组, 构造边数组
+    edge_t edges[5];
+    for (int i = 0; i < sizeof(edges) / sizeof(edge_t); i++) {
+        edges[i].weight_type = DOUBLE;
+        edges[i].starting_vertex_index = starting_vertex_indexes[i];
+        edges[i].ending_vertex_index = ending_vertex_indexes[i];
+        edges[i].weight.double_value = weights[i];
     }
 
-    // 弧(边)信息, 注意没有方向
-    // 0 - 1: 0.1
-    // 0 - 2: 0.12
-    // 1 - 2: 0.2
-    // 1 - 3: 0.14
-    // 2 - 3: 0.05
-    int startingVertexIndexArr[5] = { 0, 0, 1, 1, 2 }; // 起点
-    int endingVertexIndexArr[5] = { 1, 2, 2, 3, 3 };   // 终点
-    double weightArr[5] = { 0.1, 0.12, 0.2, 0.14, 0.05 }; // 权重
+    matrix_graph_t graph;
+    graph.kind = UDN;   // 类型:无向网
 
-    // 使用起点(索引)数组, 终点(索引)数组, 权重数组, 构造弧(边)数组
-    edge_t arcCellArr[5];
-    for (int i = 0; i < sizeof(arcCellArr) / sizeof(edge_t); i++) {
-        arcCellArr[i].weight_type = DOUBLE;
-        // arcCellArr[i].edge_info = (edge_t*)malloc(sizeof(edge_t));
-        arcCellArr[i].starting_vertex_index = startingVertexIndexArr[i];
-        arcCellArr[i].ending_vertex_index = endingVertexIndexArr[i];
-        arcCellArr[i].weight.double_value = weightArr[i];
-    }
+    CreateGraphByEdgesAndVertices(&graph, edges, 5, vertices, 4, UDN);
 
     printf("深度优先遍历:\n");
 
-    DFSTraverse(G, Visit);
+    DFSTraverse(graph, Visit);
 
     printf("\n-------------------- 抖音: cyberdash_yuan --------------------\n");
 }
@@ -215,38 +201,28 @@ void TestBFSTraverse() {
 
     VERTEX_TYPE vertices[4] = {0, 1, 2, 3};
 
-    matrix_graph_t G;
-    G.vertex_count = 4;   // 结点数量
-    G.edge_count = 5;   // 弧(边)数量
-    G.kind = UDN;   // 类型:无向网
-
-    // 结点信息写到G.vexs数组
-    for (int i = 0; i < sizeof(vertices) / sizeof(VERTEX_TYPE); i++) {
-        G.vertexes[i] = vertices[i];
-    }
-
-    // 弧(边)信息, 注意没有方向
-    // 0 - 1: 0.1
-    // 0 - 2: 0.12
-    // 1 - 2: 0.2
-    // 1 - 3: 0.14
-    // 2 - 3: 0.05
-    int startingVertexIndexArr[5] = { 0, 0, 1, 1, 2 }; // 起点
-    int endingVertexIndexArr[5] = { 1, 2, 2, 3, 3 };   // 终点
-    double weightArr[5] = { 0.1, 0.12, 0.2, 0.14, 0.05 }; // 权重
+    // 无向边信息, 0 - 1: 0.1,  0 - 2: 0.12,  1 - 2: 0.2,  1 - 3: 0.14,  2 - 3: 0.05
+    int starting_vertex_indexes[5] = {0, 0, 1, 1, 2 }; // 起点
+    int ending_vertex_indexes[5] = {1, 2, 2, 3, 3 };   // 终点
+    double weights[5] = {0.1, 0.12, 0.2, 0.14, 0.05 }; // 权重
 
     // 使用起点(索引)数组, 终点(索引)数组, 权重数组, 构造弧(边)数组
-    edge_t edge_array[5];
-    for (int i = 0; i < sizeof(edge_array) / sizeof(edge_t); i++) {
-        edge_array[i].weight_type = DOUBLE;
-        edge_array[i].starting_vertex_index = startingVertexIndexArr[i];
-        edge_array[i].ending_vertex_index = endingVertexIndexArr[i];
-        edge_array[i].weight.double_value = weightArr[i];
+    edge_t edges[5];
+    for (int i = 0; i < sizeof(edges) / sizeof(edge_t); i++) {
+        edges[i].weight_type = DOUBLE;
+        edges[i].starting_vertex_index = starting_vertex_indexes[i];
+        edges[i].ending_vertex_index = ending_vertex_indexes[i];
+        edges[i].weight.double_value = weights[i];
     }
+
+    matrix_graph_t graph;
+    graph.kind = UDN;   // 类型:无向网
+
+    CreateGraphByEdgesAndVertices(&graph, edges, 5, vertices, 4, UDN);
 
     printf("广度优先遍历:\n");
 
-    BFSTraverse(G, Visit);
+    BFSTraverse(graph, Visit);
 
     printf("\n-------------------- 抖音: cyberdash_yuan --------------------\n");
 }
@@ -262,39 +238,26 @@ void TestPrim() {
     printf("                          Test Prim                          \n");
     printf("                      测试(Prim)最小生成树                     \n\n\n");
 
-    VERTEX_TYPE vertices[4] = {0, 1, 2, 3 };
+    VERTEX_TYPE vertices[4] = {0, 1, 2, 3};
 
-    matrix_graph_t graph;
-    graph.vertex_count = 4;   // 结点数量
-    graph.edge_count = 5;   // 弧(边)数量
-    graph.kind = DN;
-    graph.weight_type = DOUBLE;
-
-    // 构造adj_matrix数组,
-    // 每个数组元素的weight_type设置为NO_EDGE
-    for (int i = 0; i < graph.vertex_count; i++) {
-        graph.vertexes[i] = vertices[i];
-
-        for (int j = 0; j < graph.vertex_count; j++) {
-            graph.adj_matrix[i][j].weight_type = NO_EDGE;
-            graph.adj_matrix[i][j].weight.double_value = DBL_MAX;
-        }
-    }
-
-    // 边(0-->1): 0.1, 边(0-->2): 0.12, 边(1-->2): 0.2, 边(1-->3): 0.14, 边(2-->3): 0.05
-    int starting_vertex_idx_arr[5] = {0, 0, 1, 1, 2 }; // 起点
-    int ending_vertex_idx_arr[5] = {1, 2, 2, 3, 3 };   // 终点
-    double weight_arr[5] = {0.1, 0.12, 0.2, 0.14, 0.05 }; // 权重
+    // 无向边信息, 0 - 1: 0.1,  0 - 2: 0.12,  1 - 2: 0.2,  1 - 3: 0.14,  2 - 3: 0.05
+    int starting_vertex_indexes[5] = {0, 0, 1, 1, 2 }; // 起点
+    int ending_vertex_indexes[5] = {1, 2, 2, 3, 3 };   // 终点
+    double weights[5] = {0.1, 0.12, 0.2, 0.14, 0.05 }; // 权重
 
     // 使用起点(索引)数组, 终点(索引)数组, 权重数组, 构造弧(边)数组
-    for (int i = 0; i < graph.edge_count; i++) {
-        int starting_vertex_index = starting_vertex_idx_arr[i];
-        int ending_vertex_index = ending_vertex_idx_arr[i];
-        graph.adj_matrix[starting_vertex_index][ending_vertex_index].weight_type = DOUBLE;
-        graph.adj_matrix[starting_vertex_index][ending_vertex_index].starting_vertex_index = starting_vertex_index;
-        graph.adj_matrix[starting_vertex_index][ending_vertex_index].ending_vertex_index = ending_vertex_index;
-        graph.adj_matrix[starting_vertex_index][ending_vertex_index].weight.double_value = weight_arr[i];
+    edge_t edges[5];
+    for (int i = 0; i < sizeof(edges) / sizeof(edge_t); i++) {
+        edges[i].weight_type = DOUBLE;
+        edges[i].starting_vertex_index = starting_vertex_indexes[i];
+        edges[i].ending_vertex_index = ending_vertex_indexes[i];
+        edges[i].weight.double_value = weights[i];
     }
+
+    matrix_graph_t graph;
+    graph.kind = UDN;   // 类型:无向网
+
+    CreateGraphByEdgesAndVertices(&graph, edges, 5, vertices, 4, UDN);
 
     MST_t min_span_node_arr;
     Prim(&graph, min_span_node_arr);
@@ -315,30 +278,26 @@ void TestKruskal() {
     printf("                         Test Kruskal                        \n");
     printf("                  测试克努斯卡尔(Kruskal)最小生成树              \n\n\n");
 
-    matrix_graph_t graph;
+    VERTEX_TYPE vertices[4] = {0, 1, 2, 3};
 
-    int vertex_count = 4;   // 结点数量
-    int edge_count = 5;   // 弧(边)数量
-    GRAPH_KIND graph_kind = UDN;   // 类型:无向网
+    // 无向边信息, 0 - 1: 0.1,  0 - 2: 0.12,  1 - 2: 0.2,  1 - 3: 0.14,  2 - 3: 0.05
+    int starting_vertex_indexes[5] = {0, 0, 1, 1, 2 }; // 起点
+    int ending_vertex_indexes[5] = {1, 2, 2, 3, 3 };   // 终点
+    double weights[5] = {0.1, 0.12, 0.2, 0.14, 0.05 }; // 权重
 
-    VERTEX_TYPE vertex_array[4] = { 0, 1, 2, 3 };
-
-    // 0 - 1: 0.1, 0 - 2: 0.12, 1 - 2: 0.2, 1 - 3: 0.14, 2 - 3: 0.05
-    int starting_vertex_index_array[5] = {0, 0, 1, 1, 2 }; // 起点
-    int ending_vertex_index_array[5] = {1, 2, 2, 3, 3 };   // 终点
-    double weight_array[5] = {0.1, 0.12, 0.2, 0.14, 0.05 }; // 权重
-
-    // 构造边数组
-    edge_t edge_array[5];
-    for (int i = 0; i < edge_count; i++) {
-        edge_array[i].weight_type = DOUBLE;
-        edge_array[i].starting_vertex_index = starting_vertex_index_array[i];
-        edge_array[i].ending_vertex_index = ending_vertex_index_array[i];
-        edge_array[i].weight.double_value = weight_array[i];
+    // 使用起点(索引)数组, 终点(索引)数组, 权重数组, 构造弧(边)数组
+    edge_t edges[5];
+    for (int i = 0; i < sizeof(edges) / sizeof(edge_t); i++) {
+        edges[i].weight_type = DOUBLE;
+        edges[i].starting_vertex_index = starting_vertex_indexes[i];
+        edges[i].ending_vertex_index = ending_vertex_indexes[i];
+        edges[i].weight.double_value = weights[i];
     }
 
-    // 图初始化
-    CreateGraphByEdgesAndVertices(&graph,edge_array, edge_count, vertex_array, vertex_count, graph_kind);
+    matrix_graph_t graph;
+    graph.kind = UDN;   // 类型:无向网
+
+    CreateGraphByEdgesAndVertices(&graph, edges, 5, vertices, 4, UDN);
 
     MST_t min_span_tree;
     Kruskal(&graph, min_span_tree);
@@ -378,29 +337,30 @@ void TestDijkstra() {
     printf("                        Test Dijkstra                        \n");
     printf("                 测试迪杰斯特拉(Dijkstra)最短路径               \n\n\n");
 
-    VERTEX_TYPE vertex_array[6] = {0, 1, 2, 3, 4, 5};
-
-    matrix_graph_t graph;
     int vertex_count = 6;           // 结点数量
     int edge_count = 9;           // 弧(边)数量
-    GRAPH_KIND graph_kind = UDN;            // 类型:有向网
 
-    // 边(弧)信息
+    VERTEX_TYPE vertex_array[6] = {0, 1, 2, 3, 4, 5};
+
+    // 边信息
     // 0 - 1: 0.1,   0 - 2: 0.12,  1 - 2: 0.2
     // 1 - 3: 0.14,  1 - 4: 0.13,  2 - 3: 0.05
     // 2 - 5: 0.17,  3 - 4: 0.09,  3 - 5: 0.11
-    int starting_vertex_index_array[9] = { 0, 0, 1, 1, 1, 2, 2, 3, 3 };               // 起点索引数组
-    int ending_vertex_index_array[9] = { 1, 2, 2, 3, 4, 3, 5, 4, 5 };                 // 终点索引数组
-    double weight_array[9] = { 0.1, 0.12, 0.01, 0.14, 0.13, 0.05, 0.17, 0.09, 0.11 }; // 边权重数组
+    int starting_vertex_indexes[9] = {0, 0, 1, 1, 1, 2, 2, 3, 3 };               // 起点索引数组
+    int ending_vertex_indexes[9] = {1, 2, 2, 3, 4, 3, 5, 4, 5 };                 // 终点索引数组
+    double weights[9] = {0.1, 0.12, 0.01, 0.14, 0.13, 0.05, 0.17, 0.09, 0.11 }; // 边权重数组
 
     // 构造边数组
     edge_t edge_array[9];
     for (int i = 0; i < edge_count; i++) {
         edge_array[i].weight_type = DOUBLE;
-        edge_array[i].starting_vertex_index = starting_vertex_index_array[i];
-        edge_array[i].ending_vertex_index = ending_vertex_index_array[i];
-        edge_array[i].weight.double_value = weight_array[i];
+        edge_array[i].starting_vertex_index = starting_vertex_indexes[i];
+        edge_array[i].ending_vertex_index = ending_vertex_indexes[i];
+        edge_array[i].weight.double_value = weights[i];
     }
+
+    matrix_graph_t graph;
+    GRAPH_KIND graph_kind = UDN;            // 类型:有向网
 
     // 图初始化
     CreateGraphByEdgesAndVertices(&graph, edge_array, edge_count, vertex_array, vertex_count, graph_kind);
@@ -444,11 +404,8 @@ void TestBellmanFord() {
     printf("                       Test BellmanFord                      \n");
     printf("                测试贝尔曼福特(BellmanFord)最短路径              \n\n\n");
 
-    matrix_graph_t graph;   // 邻接矩阵图
-
     int vertex_count = 6;   // 结点数量
     int edge_count = 9;     // 弧(边)数量
-    GRAPH_KIND graph_kind = UDN;  // 类型: 无向网
 
     // 结点索引信息
     int vertex_array[6] = { 0, 1, 2, 3, 4, 5 };
@@ -470,13 +427,16 @@ void TestBellmanFord() {
         edge_array[i].weight.double_value = weight_array[i];
     }
 
+    matrix_graph_t graph;   // 邻接矩阵图
+    GRAPH_KIND graph_kind = UDN;  // 类型: 无向网
+
     // 图初始化
     CreateGraphByEdgesAndVertices(&graph, edge_array, edge_count, vertex_array, vertex_count, graph_kind);
 
     int predecessor[MAX_VERTEX_CNT][MAX_VERTEX_CNT];    // 前驱结点索引数组
     path_t distance[MAX_VERTEX_CNT];                    // 最短路径数组
 
-    int starting_vertex_index = 0; // 起点数组索引, 假设为0
+    int starting_vertex_index = 0; // 起点索引
 
     BellmanFord(&graph, starting_vertex_index, predecessor, distance);  // 执行BellmanFord算法
 
@@ -509,16 +469,32 @@ void TestBellmanFord() {
  */
 void TestFloyd() {
     printf("\n");
-    printf("------------------------- CyberDash -------------------------\n");
-    printf("                      Test Floyd-Warshall                         \n");
-    printf("                测试弗洛伊德(Floyd-Warshall)最短路径              \n\n\n");
+    printf("|------------------------ CyberDash ------------------------|\n");
+    printf("|                     Test Floyd-Warshall                   |\n");
+    printf("|               测试弗洛伊德(Floyd-Warshall)最短路径           |\n");
+    printf("|                                                           |\n");
+    printf("|                         结点0                              |\n");
+    printf("|                         / \\                               |\n");
+    printf("|                        /   \\                              |\n");
+    printf("|                      0.1   0.12                           |\n");
+    printf("|                      /       \\                            |\n");
+    printf("|                     /         \\                           |\n");
+    printf("|                 结点1---0.01---结点2                       |\n");
+    printf("|                   / \\         / \\                         |\n");
+    printf("|                  /   \\       /   \\                        |\n");
+    printf("|               0.13  0.14 0.05   0.17                      |\n");
+    printf("|                /       \\  /        \\                      |\n");
+    printf("|               /         \\/          \\                     |\n");
+    printf("|           结点4--0.09--结点3--0.11--结点5                   |\n");
+    printf("\n");
 
+    /*
     VERTEX_TYPE vertices[6] = {0, 1, 2, 3, 4, 5};
 
     matrix_graph_t graph;
     graph.vertex_count = 6;           // 结点数量
     graph.edge_count = 9;           // 弧(边)数量
-    graph.kind = DN;            // 类型:有向网
+    graph.kind = UDN;            // 类型:有向网
     graph.weight_type = DOUBLE;  // 弧(边)权值类型
 
     // 0 - 1: 0.1,   0 - 2: 0.12,  1 - 2: 0.2
@@ -556,6 +532,46 @@ void TestFloyd() {
         graph.adj_matrix[end][start].ending_vertex_index = start;
         graph.adj_matrix[end][start].weight.double_value = weights[i];
     }
+
+    int predecessor[MAX_VERTEX_CNT][MAX_VERTEX_CNT];
+    edge_t distance[MAX_VERTEX_CNT][MAX_VERTEX_CNT];
+
+    // D初始化
+    for (int i = 0; i < MAX_VERTEX_CNT; i++) {
+        for (int j = 0; j < MAX_VERTEX_CNT; j++) {
+            distance[i][j].weight_type = DOUBLE;
+        }
+    }
+    */
+
+    int vertex_count = 6;   // 结点数量
+    int edge_count = 9;     // 弧(边)数量
+
+    // 结点索引信息
+    int vertex_array[6] = { 0, 1, 2, 3, 4, 5 };
+
+    // 边信息
+    // 0 - 1: 0.1,   0 - 2: 0.12,  1 - 2: 0.2
+    // 1 - 3: 0.14,  1 - 4: 0.13,  2 - 3: 0.05
+    // 2 - 5: 0.17,  3 - 4: 0.09,  3 - 5: 0.11
+    int starting_vertex_index_array[9] = {0, 0, 1, 1, 1, 2, 2, 3, 3};               // 起点索引数组
+    int ending_vertex_index_array[9] = {1, 2, 2, 3, 4, 3, 5, 4, 5};                 // 终点索引数组
+    double weight_array[9] = {0.1, 0.12, 0.01, 0.14, 0.13, 0.05, 0.17, 0.09, 0.11}; // 边权重数组
+
+    // 构造边数组
+    edge_t edge_array[9];
+    for (int i = 0; i < edge_count; i++) {
+        edge_array[i].weight_type = DOUBLE;
+        edge_array[i].starting_vertex_index = starting_vertex_index_array[i];
+        edge_array[i].ending_vertex_index = ending_vertex_index_array[i];
+        edge_array[i].weight.double_value = weight_array[i];
+    }
+
+    matrix_graph_t graph;   // 邻接矩阵图
+    GRAPH_KIND graph_kind = UDN;  // 类型: 无向网
+
+    // 图初始化
+    CreateGraphByEdgesAndVertices(&graph, edge_array, edge_count, vertex_array, vertex_count, graph_kind);
 
     int predecessor[MAX_VERTEX_CNT][MAX_VERTEX_CNT];
     edge_t distance[MAX_VERTEX_CNT][MAX_VERTEX_CNT];

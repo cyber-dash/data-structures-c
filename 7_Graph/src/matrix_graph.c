@@ -126,7 +126,7 @@ edge_t* NextEdge(matrix_graph_t* graph, int vertex_index, edge_t* edge) {
 
 
 /*!
- * @brief <h1>构造图(使用边和结点)</h1>
+ * @brief <h1>构造图(使用边数组和结点索引数组)</h1>
  * @param graph **图**(指针)
  * @param edges **边数组**
  * @param edge_count **边数量**
@@ -148,59 +148,82 @@ status_t CreateGraphByEdgesAndVertices(matrix_graph_t* graph,
                                        int vertex_count,
                                        GRAPH_KIND graph_kind)
 {
-    /// ### 1 边界条件检查 ###
+    /// - 边界条件检查 \n
     /// &emsp; **if** 边和结点的数量大过限制 : \n
+    /// &emsp;&emsp; 返回OVERFLOW \n
+    /// - 设置图属性 \n
+    /// - 初始化图的领接矩阵并设置图的结点数组 \n
+    /// &emsp; **for loop** 遍历参数结点数组, 初始化图的邻接矩阵和图结点数组 : \n
+    /// &emsp;&emsp; 当前参数结点数组值, 赋给图结点数组 \n
+    /// &emsp;&emsp; **for loop** 遍历图结点数组 : \n
+    /// &emsp;&emsp;&emsp; 设置邻接矩阵元素adj_matrix[i][j]的starting_vertex_index和ending_vertex_index \n
+    /// &emsp;&emsp;&emsp; 主对角线元素设置权值类型, 权值设为0 \n
+    /// &emsp;&emsp;&emsp; 非主对角线元素, 权值类型设为NO_EDGE, 权值设为极大值 \n
+    /// - 使用参数边数组进一步设置图的领接矩阵和图的边数组 \n
+    /// &emsp; **for loop** 遍历参数边数组 : \n
+    /// &emsp;&emsp; 将 当前边(start --> end) 赋给邻接矩阵相应元素 \n
+    /// &emsp;&emsp; **if** 无向图/网 : \n
+    /// &emsp;&emsp;&emsp; 增加 边(end --> start) \n
+
+    // if 边和结点的数量大过限制
     if (edge_count > MAX_EDGE_CNT || vertex_count > MAX_VERTEX_CNT) {
-        /// &emsp;&emsp; 返回OVERFLOW \n
-        return OVERFLOW;
+        return OVERFLOW; // 返回OVERFLOW
     }
 
-    /// ### 2 设置图属性 ###
+    // 设置图属性
     graph->kind = graph_kind;              // 图类型
     graph->vertex_count = vertex_count;    // 结点数量
     graph->edge_count = edge_count;        // 边数量
     graph->weight_type = edges->weight_type;  // 使用edge_arr第0项的weight_type, 赋给graph->weight_type
 
-    /// &emsp; **for loop** 遍历图结点数组(作为邻接矩阵元素的起点) : \n
-    for (int i = 0; i < graph->vertex_count; ++i) {
+    // 初始化图的领接矩阵并设置图的结点数组
 
-        /// &emsp;&emsp; 结点信息数组各元素初始化
+    // for loop 遍历参数结点数组, 初始化图的邻接矩阵和图结点数组
+    for (int i = 0; i < vertex_count; ++i) {
+
+        // 当前参数结点数组值, 赋给图结点数组
         graph->vertexes[i] = vertex_indexes[i];
 
-        /// &emsp;&emsp; **for loop** 遍历图结点数组(作为邻接矩阵元素的终点) : \n
-        for (int j = 0; j < graph->vertex_count; j++) {
-            graph->adj_matrix[i][j].starting_vertex_index = i; // 边的起点索引
-            graph->adj_matrix[i][j].ending_vertex_index = j;   // 边的终点索引
+        // for loop 遍历图结点数组
+        for (int j = 0; j < vertex_count; j++) {
+            // 设置邻接矩阵元素adj_matrix[i][j]的starting_vertex_index和ending_vertex_index
+            graph->adj_matrix[i][j].starting_vertex_index = i;
+            graph->adj_matrix[i][j].ending_vertex_index = j;
 
-            /// &emsp;&emsp;&emsp; 主对角线元素, weight_type设为DOUBLE, weight.double_value设为0
+            // 主对角线元素设置权值类型, 权值设为0
             if (i == j ) {
-                graph->adj_matrix[i][j].weight_type = DOUBLE;
-                graph->adj_matrix[i][j].weight.double_value = 0;
-            } else { /// &emsp;&emsp;&emsp; 非主对角线元素, weight_type设为NO_EDGE
+                graph->adj_matrix[i][j].weight_type = graph->weight_type;
+                if (graph->weight_type == DOUBLE) {
+                    graph->adj_matrix[i][j].weight.double_value = 0;
+                }
+            } else { // 非主对角线元素, 权值类型设为NO_EDGE, 权值设为极大值
                 graph->adj_matrix[i][j].weight_type = NO_EDGE;
+                if (graph->weight_type == DOUBLE) {
+                    graph->adj_matrix[i][j].weight.double_value = DBL_MAX;
+                }
             }
         }
     }
 
-    /// &emsp; **for loop** 遍历边数组 : \n
+    // 使用参数边数组进一步设置图的领接矩阵和图的边数组
+
+    // for loop 遍历参数边数组
     for (int i = 0; i < edge_count; ++i) {
 
-        /// &emsp;&emsp; 将当前边u --> v赋给邻接矩阵响应元素
-        int u = edges[i].starting_vertex_index;
-        int v = edges[i].ending_vertex_index;
-
-        graph->adj_matrix[u][v] = edges[i];
-
-
-        // 无向图/网, 增加 边: v --> u
-        if (graph->kind == UDN || graph->kind == UDG) {
-            graph->adj_matrix[v][u] = edges[i];
-            graph->adj_matrix[v][u].starting_vertex_index = v;
-            graph->adj_matrix[v][u].ending_vertex_index = u;
-        }
-
-        // 图边信息数组赋值
         graph->edges[i] = edges[i];
+
+        int start = edges[i].starting_vertex_index;
+        int end = edges[i].ending_vertex_index;
+
+        // 将 当前边(start --> end) 赋给邻接矩阵相应元素
+        graph->adj_matrix[start][end] = edges[i];
+
+        // if 无向图/网
+        if (graph->kind == UDN || graph->kind == UDG) {
+            // 增加 边(end --> start)
+            graph->adj_matrix[end][start].weight_type = graph->weight_type;
+            graph->adj_matrix[end][start] = edges[i];
+        }
     }
 
     return OK;

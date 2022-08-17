@@ -633,12 +633,13 @@ void PrintMultiSourceShortestPath(matrix_graph_t* graph,
             if (start == end) {
                 continue;
             }
-            printf("起始点%d到结点%d的最短路径为:\n", start, end);
+            printf("起始点%d到结点%d的最短路径为: ", start, end);
 
             PrintSingleSourceShortestPathRecursive(graph, start, end, predecessor);
 
             printf(", 最短路径长度: %.2lf\n", distance[start][end].weight.double_value);
         }
+        printf("\n");
     }
 }
 

@@ -140,6 +140,23 @@ edge_t* NextEdge(matrix_graph_t* graph, int vertex_index, edge_t* edge) {
  * 由于本代码重点在实现算法, 因此不做vertex_type的灵活性工作 \n
  *
  * 如有这方面兴趣, 请参考C++模板版本实现 https://gitee.com/cyberdash/data-structure-cpp 中的图代码
+ *
+ * - 边界条件检查 \n
+ * &emsp; **if** 边和结点的数量大过限制 : \n
+ * &emsp;&emsp; 返回OVERFLOW \n
+ * - 设置图属性 \n
+ * - 初始化图的领接矩阵并设置图的结点数组 \n
+ * &emsp; **for loop** 遍历参数结点数组, 初始化图的邻接矩阵和图结点数组 : \n
+ * &emsp;&emsp; 当前参数结点数组值, 赋给图结点数组 \n
+ * &emsp;&emsp; **for loop** 遍历图结点数组 : \n
+ * &emsp;&emsp;&emsp; 设置邻接矩阵元素adj_matrix[i][j]的starting_vertex_index和ending_vertex_index \n
+ * &emsp;&emsp;&emsp; 主对角线元素设置权值类型, 权值设为0 \n
+ * &emsp;&emsp;&emsp; 非主对角线元素, 权值类型设为NO_EDGE, 权值设为极大值 \n
+ * - 使用参数边数组进一步设置图的领接矩阵和图的边数组 \n
+ * &emsp; **for loop** 遍历参数边数组 : \n
+ * &emsp;&emsp; 将 当前边(start --> end) 赋给邻接矩阵相应元素 \n
+ * &emsp;&emsp; **if** 无向图/网 : \n
+ * &emsp;&emsp;&emsp; 增加 邻接矩阵元素(end --> start) \n
  */
 status_t CreateGraphByEdgesAndVertices(matrix_graph_t* graph,
                                        edge_t* edges,
@@ -148,22 +165,6 @@ status_t CreateGraphByEdgesAndVertices(matrix_graph_t* graph,
                                        int vertex_count,
                                        GRAPH_KIND graph_kind)
 {
-    /// - 边界条件检查 \n
-    /// &emsp; **if** 边和结点的数量大过限制 : \n
-    /// &emsp;&emsp; 返回OVERFLOW \n
-    /// - 设置图属性 \n
-    /// - 初始化图的领接矩阵并设置图的结点数组 \n
-    /// &emsp; **for loop** 遍历参数结点数组, 初始化图的邻接矩阵和图结点数组 : \n
-    /// &emsp;&emsp; 当前参数结点数组值, 赋给图结点数组 \n
-    /// &emsp;&emsp; **for loop** 遍历图结点数组 : \n
-    /// &emsp;&emsp;&emsp; 设置邻接矩阵元素adj_matrix[i][j]的starting_vertex_index和ending_vertex_index \n
-    /// &emsp;&emsp;&emsp; 主对角线元素设置权值类型, 权值设为0 \n
-    /// &emsp;&emsp;&emsp; 非主对角线元素, 权值类型设为NO_EDGE, 权值设为极大值 \n
-    /// - 使用参数边数组进一步设置图的领接矩阵和图的边数组 \n
-    /// &emsp; **for loop** 遍历参数边数组 : \n
-    /// &emsp;&emsp; 将 当前边(start --> end) 赋给邻接矩阵相应元素 \n
-    /// &emsp;&emsp; **if** 无向图/网 : \n
-    /// &emsp;&emsp;&emsp; 增加 边(end --> start) \n
 
     // if 边和结点的数量大过限制
     if (edge_count > MAX_EDGE_CNT || vertex_count > MAX_VERTEX_CNT) {

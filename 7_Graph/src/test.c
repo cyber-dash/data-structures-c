@@ -435,21 +435,22 @@ void TestKruskal() {
     double weights[9] = {0.1, 0.12, 0.01, 0.14, 0.13, 0.05, 0.17, 0.09, 0.11 }; // 边权重数组
 
     // 构造边数组
-    edge_t edge_array[9];
+    edge_t edges[9];
     for (int i = 0; i < edge_count; i++) {
-        edge_array[i].weight_type = DOUBLE;
-        edge_array[i].starting_vertex_index = starting_vertex_indexes[i];
-        edge_array[i].ending_vertex_index = ending_vertex_indexes[i];
-        edge_array[i].weight.double_value = weights[i];
+        edges[i].weight_type = DOUBLE;
+        edges[i].starting_vertex_index = starting_vertex_indexes[i];
+        edges[i].ending_vertex_index = ending_vertex_indexes[i];
+        edges[i].weight.double_value = weights[i];
     }
 
     // 建图
+
     // 声明邻接矩阵图并设置类型
     matrix_graph_t graph;
     GRAPH_KIND graph_kind = UDN;            // 类型:有向网
 
     // 调用CreateGraphByEdgesAndVertices建图
-    CreateGraphByEdgesAndVertices(&graph, edge_array, edge_count, vertex_indexes, vertex_count, graph_kind);
+    CreateGraphByEdgesAndVertices(&graph, edges, edge_count, vertex_indexes, vertex_count, graph_kind);
 
     // 测试克努斯卡尔算法
     // 调用Kruskal
@@ -535,12 +536,12 @@ void TestDijkstra() {
     double weights[9] = {0.1, 0.12, 0.01, 0.14, 0.13, 0.05, 0.17, 0.09, 0.11 }; // 边权重数组
 
     // 构造边数组
-    edge_t edge_array[9];
+    edge_t edges[9];
     for (int i = 0; i < edge_count; i++) {
-        edge_array[i].weight_type = DOUBLE;
-        edge_array[i].starting_vertex_index = starting_vertex_indexes[i];
-        edge_array[i].ending_vertex_index = ending_vertex_indexes[i];
-        edge_array[i].weight.double_value = weights[i];
+        edges[i].weight_type = DOUBLE;
+        edges[i].starting_vertex_index = starting_vertex_indexes[i];
+        edges[i].ending_vertex_index = ending_vertex_indexes[i];
+        edges[i].weight.double_value = weights[i];
     }
 
     // 建图
@@ -549,7 +550,7 @@ void TestDijkstra() {
     GRAPH_KIND graph_kind = UDN;            // 类型:有向网
 
     // 调用CreateGraphByEdgesAndVertices建图
-    CreateGraphByEdgesAndVertices(&graph, edge_array, edge_count, vertex_indexes, vertex_count, graph_kind);
+    CreateGraphByEdgesAndVertices(&graph, edges, edge_count, vertex_indexes, vertex_count, graph_kind);
 
     // 迪杰斯特拉算法
     // 声明predecessor和distance数组
@@ -624,30 +625,30 @@ void TestBellmanFord() {
     int edge_count = 9;     // 弧(边)数量
 
     // 结点索引信息
-    int vertex_array[6] = { 0, 1, 2, 3, 4, 5 };
+    int vertexes[6] = {0, 1, 2, 3, 4, 5 };
 
     // 边信息
     // 0 - 1: 0.1,   0 - 2: 0.12,  1 - 2: 0.2
     // 1 - 3: 0.14,  1 - 4: 0.13,  2 - 3: 0.05
     // 2 - 5: 0.17,  3 - 4: 0.09,  3 - 5: 0.11
-    int starting_vertex_index_array[9] = {0, 0, 1, 1, 1, 2, 2, 3, 3};               // 起点索引数组
-    int ending_vertex_index_array[9] = {1, 2, 2, 3, 4, 3, 5, 4, 5};                 // 终点索引数组
-    double weight_array[9] = {0.1, 0.12, 0.01, 0.14, 0.13, 0.05, 0.17, 0.09, 0.11}; // 边权重数组
+    int starting_vertex_indexes[9] = {0, 0, 1, 1, 1, 2, 2, 3, 3};               // 起点索引数组
+    int ending_vertex_indexes[9] = {1, 2, 2, 3, 4, 3, 5, 4, 5};                 // 终点索引数组
+    double weights[9] = {0.1, 0.12, 0.01, 0.14, 0.13, 0.05, 0.17, 0.09, 0.11}; // 边权重数组
 
     // 构造边数组
-    edge_t edge_array[9];
+    edge_t edges[9];
     for (int i = 0; i < edge_count; i++) {
-        edge_array[i].weight_type = DOUBLE;
-        edge_array[i].starting_vertex_index = starting_vertex_index_array[i];
-        edge_array[i].ending_vertex_index = ending_vertex_index_array[i];
-        edge_array[i].weight.double_value = weight_array[i];
+        edges[i].weight_type = DOUBLE;
+        edges[i].starting_vertex_index = starting_vertex_indexes[i];
+        edges[i].ending_vertex_index = ending_vertex_indexes[i];
+        edges[i].weight.double_value = weights[i];
     }
 
     matrix_graph_t graph;   // 邻接矩阵图
     GRAPH_KIND graph_kind = UDN;  // 类型: 无向网
 
     // 建图
-    CreateGraphByEdgesAndVertices(&graph, edge_array, edge_count, vertex_array, vertex_count, graph_kind);
+    CreateGraphByEdgesAndVertices(&graph, edges, edge_count, vertexes, vertex_count, graph_kind);
 
     int predecessor[MAX_VERTEX_CNT][MAX_VERTEX_CNT];    // 前驱结点索引数组
     path_t distance[MAX_VERTEX_CNT];                    // 最短路径数组
@@ -718,30 +719,30 @@ void TestFloyd() {
     int edge_count = 9;     // 弧(边)数量
 
     // 结点索引信息
-    int vertex_array[6] = { 0, 1, 2, 3, 4, 5 };
+    int vertexes[6] = {0, 1, 2, 3, 4, 5 };
 
     // 边信息
     // 0 - 1: 0.1,   0 - 2: 0.12,  1 - 2: 0.2
     // 1 - 3: 0.14,  1 - 4: 0.13,  2 - 3: 0.05
     // 2 - 5: 0.17,  3 - 4: 0.09,  3 - 5: 0.11
-    int starting_vertex_index_array[9] = {0, 0, 1, 1, 1, 2, 2, 3, 3};               // 起点索引数组
-    int ending_vertex_index_array[9] = {1, 2, 2, 3, 4, 3, 5, 4, 5};                 // 终点索引数组
-    double weight_array[9] = {0.1, 0.12, 0.01, 0.14, 0.13, 0.05, 0.17, 0.09, 0.11}; // 边权重数组
+    int starting_vertex_indexes[9] = {0, 0, 1, 1, 1, 2, 2, 3, 3};               // 起点索引数组
+    int ending_vertex_indexes[9] = {1, 2, 2, 3, 4, 3, 5, 4, 5};                 // 终点索引数组
+    double weights[9] = {0.1, 0.12, 0.01, 0.14, 0.13, 0.05, 0.17, 0.09, 0.11}; // 边权重数组
 
     // 构造边数组
-    edge_t edge_array[9];
+    edge_t edges[9];
     for (int i = 0; i < edge_count; i++) {
-        edge_array[i].weight_type = DOUBLE;
-        edge_array[i].starting_vertex_index = starting_vertex_index_array[i];
-        edge_array[i].ending_vertex_index = ending_vertex_index_array[i];
-        edge_array[i].weight.double_value = weight_array[i];
+        edges[i].weight_type = DOUBLE;
+        edges[i].starting_vertex_index = starting_vertex_indexes[i];
+        edges[i].ending_vertex_index = ending_vertex_indexes[i];
+        edges[i].weight.double_value = weights[i];
     }
 
     matrix_graph_t graph;   // 邻接矩阵图
     GRAPH_KIND graph_kind = UDN;  // 类型: 无向网
 
     // 建图
-    CreateGraphByEdgesAndVertices(&graph, edge_array, edge_count, vertex_array, vertex_count, graph_kind);
+    CreateGraphByEdgesAndVertices(&graph, edges, edge_count, vertexes, vertex_count, graph_kind);
 
     int predecessor[MAX_VERTEX_CNT][MAX_VERTEX_CNT];
     edge_t distance[MAX_VERTEX_CNT][MAX_VERTEX_CNT];

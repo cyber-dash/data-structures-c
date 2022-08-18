@@ -29,7 +29,7 @@ int main() {
     /// - 测试克努斯卡尔(Kruskal)算法
     TestKruskal();
 
-    /// - 测试迪杰斯特拉(Dijsktra)算法
+    /// - 测试迪杰斯特拉(Dijkstra)算法
     TestDijkstra();
 
     /// - 测试贝尔曼福特(Bellman-Ford)算法

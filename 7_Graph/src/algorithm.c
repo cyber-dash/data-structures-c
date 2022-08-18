@@ -21,11 +21,11 @@
  * @brief <h1>图结点访问函数</h1>
  * @param graph **图**(指针)
  * @param vertex_index **图结点索引**
- * @return 执行结果
+ * @return **执行结果**
  * @note
+ * 本实现只调用printf, 打印图结点索引
  */
 status_t Visit(matrix_graph_t* graph, int vertex_index) {
-    /// 本实现只调用printf, 打印图结点索引
     printf("%d ", vertex_index);
     return OK;
 }
@@ -42,14 +42,14 @@ status_t DFSTraverse(matrix_graph_t graph, status_t (*Visit)(matrix_graph_t*, in
     /// ### 1 分配结点遍历数组 ###
     /// &emsp; **if** 内存分配失败 :\n
     /// &emsp;&emsp; 返回NON_ALLOCATED\n
-    int* visited_vertex_index_array = (int*)malloc(graph.vertex_count * sizeof(int));
-    if (!visited_vertex_index_array) {
+    int* visited_vertex_indexes = (int*)malloc(graph.vertex_count * sizeof(int));
+    if (!visited_vertex_indexes) {
         return NON_ALLOCATED;
     }
 
     /// &emsp; 结点遍历数组每个元素, 赋值为0
     for (int i = 0; i < graph.vertex_count; i++) {
-        visited_vertex_index_array[i] = NOT_VISITED;
+        visited_vertex_indexes[i] = NOT_VISITED;
     }
 
     /// ### 2 遍历图结点进行DFS ###
@@ -57,8 +57,8 @@ status_t DFSTraverse(matrix_graph_t graph, status_t (*Visit)(matrix_graph_t*, in
     /// &emsp;&emsp; **if** 当前结点没有被访问(遍历) : \n
     /// &emsp;&emsp;&emsp; 对当前结点执行DFSRecursive\n
     for (int i = 0; i < graph.vertex_count; i++) {
-        if (!visited_vertex_index_array[i]) {
-            DFSRecursive(graph, i, visited_vertex_index_array, Visit);
+        if (!visited_vertex_indexes[i]) {
+            DFSRecursive(graph, i, visited_vertex_indexes, Visit);
         }
     }
 
@@ -70,20 +70,20 @@ status_t DFSTraverse(matrix_graph_t graph, status_t (*Visit)(matrix_graph_t*, in
  * @brief <h1>对结点深度优先遍历(递归)</h1>
  * @param graph **图**
  * @param vertex_index **图结点索引**
- * @param visited_vertex_index_array **已访问结点索引的数组**
+ * @param visited_vertex_indexes **已访问结点索引的数组**
  * @param Visit **结点访问函数**
  * @note
  */
 void DFSRecursive(matrix_graph_t graph,
                   int vertex_index,
-                  int* visited_vertex_index_array,
+                  int* visited_vertex_indexes,
                   status_t (*Visit)(matrix_graph_t*, int))
 {
     /// ### 1 访问索引vertex_index的图结点 ###
     /// &emsp; - 调用Visit函数访问参数结点\n
     Visit(&graph, vertex_index);
     /// &emsp; - 将已访问的参数结点标记为VISITED\n
-    visited_vertex_index_array[vertex_index] = VISITED;
+    visited_vertex_indexes[vertex_index] = VISITED;
 
     /// ### 2 对索引vertex_index图结点的相邻结点执行递归 ###
     /// &emsp; **for loop** 依次遍历索引vertex_index图结点的相邻各结点 :\n
@@ -91,12 +91,12 @@ void DFSRecursive(matrix_graph_t graph,
 
         /// &emsp;&emsp; **if** 当前结点已经访问过 :\n
         /// &emsp;&emsp;&emsp; continue\n
-        if (visited_vertex_index_array[i] == VISITED) {
+        if (visited_vertex_indexes[i] == VISITED) {
             continue;
         }
 
         // &emsp;&emsp; 当前结点递归执行DFSRecursive\n
-        DFSRecursive(graph, i, visited_vertex_index_array, Visit);
+        DFSRecursive(graph, i, visited_vertex_indexes, Visit);
     }
 }
 

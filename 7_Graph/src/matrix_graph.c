@@ -31,8 +31,8 @@ status_t LocateVertex(matrix_graph_t graph, VERTEX_TYPE vertex, int* vertex_inde
 /*!
  * <h1>获取某结点的第一个邻接节点的索引</h1>
  * @param graph **图**(指针)
- * @param vertex_index 结点索引
- * @return 第一个邻接节点的索引
+ * @param vertex_index **结点索引**
+ * @return **第一个邻接节点的索引**
  * @note
  */
 int FirstAdjVertexIndex(matrix_graph_t* graph, int vertex_index) {

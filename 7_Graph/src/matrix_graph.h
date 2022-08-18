@@ -11,7 +11,7 @@
 #include "graph.h"
 
 
-// 构造图(使用边和结点)
+// 构造图(使用边和结点)
 status_t CreateGraphByEdgesAndVertices(matrix_graph_t* graph,
                                        edge_t* edges,
                                        int edge_cnt,

@@ -7,6 +7,7 @@
  * @copyright Copyright (c) 2021
  *  CyberDash计算机考研
  */
+
 #ifndef CYBER_DASH_GRAPH_TEST_H
 #define CYBER_DASH_GRAPH_TEST_H
 
@@ -19,10 +20,10 @@
 // 测试使用弧(边)数组建造无向网
 void TestCreateUDNByEdgesAndVertices();
 
-// 测试深度优先遍历
+// 测试深度优先遍历(DFS)
 void TestDFSTraverse();
 
-// 测试广度优先遍历
+// 测试广度优先遍历(BFS)
 void TestBFSTraverse();
 
 // 测试(Prim)最小生成树

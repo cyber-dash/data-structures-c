@@ -8,19 +8,32 @@
  *  CyberDash计算机考研
  */
 
-#include "linked_list.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include "linked_list.h"
 
 
 /*!
- * 创建链表
- * @param linked_list_head 链表头结点(指针)
- * @param elements
- * @param elem_cnt
- * @return
+ * @brief <h1>链表创建<h1>
+ * @param linked_list_head **链表头结点**(指针)
+ * @param elements **数据项数组**
+ * @param elem_count **数据项数量**
+ * @return **执行结果**
+ * @note
+ *
+ * - 链表头结点分配内存 \n
+ * &emsp; **if** 内存分配失败 : \n
+ * &emsp;&emsp; 返回NON_ALLOCATED \n
+ * - 链表头节点next设置为NULL \n
+ * - 遍历数据项数组并插入链表结点
+ * &emsp; **for loop** 遍历数据项数组(从后向前) : \n
+ * &emsp;&emsp; 分配当前链表结点内存 \n
+ * &emsp;&emsp; **if** 内存分配失败 : \n
+ * &emsp;&emsp;&emsp; 返回NON_ALLOCATED \n
+ * &emsp;&emsp; 当前数据项elements[i]赋给当前链表结点的data \n
+ * &emsp;&emsp; 链表头的next指向当前链表结点 \n
  */
-Status LinkedListCreate(linked_node_t** linked_list_head, ELEM_TYPE* elements, int elem_cnt) {
+status_t LinkedListCreate(linked_node_t** linked_list_head, ELEM_TYPE* elements, int elem_count) {
     *linked_list_head = (linked_node_t*)malloc(sizeof(linked_node_t)); // 链表头结点分配内存
     if (!(*linked_list_head)) {
         return NON_ALLOCATED;
@@ -28,7 +41,7 @@ Status LinkedListCreate(linked_node_t** linked_list_head, ELEM_TYPE* elements, i
 
     (*linked_list_head)->next = NULL;
 
-    for (int i = elem_cnt - 1; i >= 0; i--) {
+    for (int i = elem_count - 1; i >= 0; i--) {
         linked_node_t* linked_node = (linked_node_t*)malloc(sizeof(linked_node_t)); // 新结点分配内存
         if (!linked_node) {
             return NON_ALLOCATED;
@@ -44,39 +57,53 @@ Status LinkedListCreate(linked_node_t** linked_list_head, ELEM_TYPE* elements, i
 
 
 /*!
- * 获取位置pos的结点数据
- * @param linked_list_head 链表头结点(指针)
- * @param pos 位置
- * @param elem 保存结点数据项的变量(指针)
- * @return 是否成功
+ * @brief <h1>链表获取某位置的结点数据</h1>
+ * @param linked_list_head **链表头结点**(指针)
+ * @param pos **位置**
+ * @param elem **保存结点数据项的变量**(指针)
+ * @return **执行结果**
+ * @note
+ *
+ * - 初始化遍历指针cur和起始位置cur_post(从1开始, 区别于数组的从0开始) \n
+ * - 遍历链表至位置pos \n
+ * &emsp; **while** 未遍历至位置pos : \n
+ * &emsp;&emsp; cur指向后一个结点 \n
+ * &emsp;&emsp; cur_pos加1 \n
+ * - 边界条件判断 \n
+ * **if** 遍历指针cur指向NULL 或者 cur_pos大于pos : \n
+ * &emsp; 返回NON_EXISTENT(不存在该位置的元素) \n
+ * - 将位置pos的元素的data赋给参数elem指向的变量
  */
-Status LinkedListGetElem(linked_list_t linked_list_head, int pos, ELEM_TYPE* elem) {
-    linked_node_t* cur_node = linked_list_head->next;
+status_t LinkedListGetElem(linked_list_t linked_list_head, int pos, ELEM_TYPE* elem) {
+    linked_node_t* cur = linked_list_head->next;
     int cur_pos = 1;
 
-    while (cur_node && cur_pos < pos) {
-        cur_node = cur_node->next;
+    while (cur && cur_pos < pos) {
+        cur = cur->next;
         cur_pos++;
     }
 
     // 位置pos的结点不存在, 返回NON_EXISTENT
-    if (!cur_node || cur_pos > pos) {
+    if (!cur || cur_pos > pos) {
         return NON_EXISTENT;
     }
 
-    *elem = cur_node->data; // 将位置pos的数据项赋给*elem
+    *elem = cur->data; // 将位置pos的数据项赋给*elem
 
     return OK;
 }
 
 /*!
- * 链表插入
- * @param linked_list_head 链表头结点(指针)
- * @param pos 位置
- * @param elem 保存结点数据项的变量(指针)
- * @return 是否成功
+ * @brief <h1>链表插入</h1>
+ * @param linked_list_head **链表头结点**(指针)
+ * @param pos **位置**(在这个位置前执行插入)
+ * @param elem **待插入的数据项**
+ * @return **执行结果**
+ * @note
+ *
+ *
  */
-Status LinkedListInsert(linked_list_t linked_list_head, int pos, ELEM_TYPE elem) {
+status_t LinkedListInsert(linked_list_t linked_list_head, int pos, ELEM_TYPE elem) {
     linked_node_t* insert_node_predecessor = linked_list_head;    // 插入完成后, 插入结点的前一结点(指针), 初始化指向链表头结点
     int insert_pos_predecessor = 0; // 插入位置的前一位置, 初始化为0
 
@@ -87,7 +114,7 @@ Status LinkedListInsert(linked_list_t linked_list_head, int pos, ELEM_TYPE elem)
     }
 
     // 如果插入位置不存在, 返回ERROR
-    if (!insert_node_predecessor || insert_pos_predecessor > pos - 1) {
+    if (insert_node_predecessor != NULL || insert_pos_predecessor > pos - 1) {
         return ERROR;
     }
 
@@ -111,7 +138,7 @@ Status LinkedListInsert(linked_list_t linked_list_head, int pos, ELEM_TYPE elem)
  * @param elem 被删除结点数据项的保存变量(指针)
  * @return 是否成功
  */
-Status LinkedListDelete(linked_list_t linked_list_head, int pos, ELEM_TYPE* elem) {
+status_t LinkedListDelete(linked_list_t linked_list_head, int pos, ELEM_TYPE* elem) {
     linked_node_t* delete_node_predecessor = linked_list_head;    // 待删除结点前一结点(指针), 初始化指向链表头结点
     int delete_pos_predecessor = 0; // 待删除结点前一结点的位置, 初始化为0
 
@@ -144,7 +171,7 @@ Status LinkedListDelete(linked_list_t linked_list_head, int pos, ELEM_TYPE* elem
  * @param merged_list_head 合并链表头结点(二级指针)
  * @return 合并结果
  */
-Status LinkedListMergeTwoSortedList(linked_list_t list_a_head, linked_list_t list_b_head, linked_list_t* merged_list_head) {
+status_t LinkedListMergeTwoSortedList(linked_list_t list_a_head, linked_list_t list_b_head, linked_list_t* merged_list_head) {
 
     linked_node_t* a_cur = list_a_head->next;
     linked_node_t* b_cur = list_b_head->next;

@@ -7,6 +7,7 @@
  * @copyright Copyright (c) 2021
  *  CyberDash计算机考研
  */
+
 #ifndef CYBER_DASH_LINKED_LIST_H
 #define CYBER_DASH_LINKED_LIST_H
 
@@ -17,25 +18,25 @@ typedef enum {
     NON_ALLOCATED,  //!< 内存分配失败
     NON_EXISTENT,   //!< 不存在
     ERROR           //!< 错误
-} Status;
+} status_t;
 
-typedef struct linked_node_t {
+typedef struct linked_node {
     ELEM_TYPE               data;   //!< 数据项
-    struct linked_node_t*   next;   //!< 下一结点
+    struct linked_node*   next;   //!< 下一结点
 } linked_node_t;
 
 typedef linked_node_t* linked_list_t;
 
 
-Status LinkedListCreate(linked_node_t** linked_list_head, ELEM_TYPE* elements, int elem_cnt);
+status_t LinkedListCreate(linked_node_t** linked_list_head, ELEM_TYPE* elements, int elem_count);
 
-Status LinkedListGetElem(linked_list_t linked_list_head, int pos, ELEM_TYPE* elem);
+status_t LinkedListGetElem(linked_list_t linked_list_head, int pos, ELEM_TYPE* elem);
 
-Status LinkedListInsert(linked_list_t linked_list_head, int pos, ELEM_TYPE elem);
+status_t LinkedListInsert(linked_list_t linked_list_head, int pos, ELEM_TYPE elem);
 
-Status LinkedListDelete(linked_list_t linked_list_head, int pos, ELEM_TYPE* elem);
+status_t LinkedListDelete(linked_list_t linked_list_head, int pos, ELEM_TYPE* elem);
 
-Status LinkedListMergeTwoSortedList(linked_list_t list_a_head, linked_list_t list_b_head, linked_list_t* merged_list_head);
+status_t LinkedListMergeTwoSortedList(linked_list_t list_a_head, linked_list_t list_b_head, linked_list_t* merged_list_head);
 
 void LinkedListPrint(linked_list_t linked_list_head);
 

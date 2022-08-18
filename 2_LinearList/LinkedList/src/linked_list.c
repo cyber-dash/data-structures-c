@@ -93,6 +93,7 @@ status_t LinkedListGetElem(linked_list_t linked_list_head, int pos, ELEM_TYPE* e
     return OK;
 }
 
+
 /*!
  * @brief <h1>链表插入</h1>
  * @param linked_list_head **链表头结点**(指针)
@@ -101,7 +102,7 @@ status_t LinkedListGetElem(linked_list_t linked_list_head, int pos, ELEM_TYPE* e
  * @return **执行结果**
  * @note
  *
- *
+ * -
  */
 status_t LinkedListInsert(linked_list_t linked_list_head, int pos, ELEM_TYPE elem) {
     linked_node_t* insert_node_predecessor = linked_list_head;    // 插入完成后, 插入结点的前一结点(指针), 初始化指向链表头结点

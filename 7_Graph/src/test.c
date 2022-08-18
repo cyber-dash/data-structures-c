@@ -9,7 +9,6 @@
  */
 
 #include <stdio.h>
-#include <float.h>
 #include "test.h"
 
 
@@ -31,6 +30,14 @@
  *          \/
  *         结点3
  * ```
+ *
+ * - 声明并构造 **结点索引数组** 和 **边数组**  \n
+ * &emsp; 声明 **结点索引数组** \n
+ * &emsp; 构造 **边数组** \n
+ * - 建图 \n
+ * &emsp; 声明 **邻接矩阵图** 并设置类型 \n
+ * &emsp; 调用 **CreateGraphByEdgesAndVertices** 建图 \n
+ * - 打印图的邻接矩阵 \n
  *
  */
 void TestCreateUDNByEdgesAndVertices() {
@@ -203,7 +210,7 @@ void TestDFSTraverse() {
  * - 建图 \n
  * &emsp; 声明 **邻接矩阵图** 并设置类型 \n
  * &emsp; 调用 **CreateGraphByEdgesAndVertices** 建图 \n
- * - 测试广度有限遍历(BFS) \n
+ * - 测试广度有限遍历(BFS)(从结点0开始遍历) \n
  *
  */
 void TestBFSTraverse() {
@@ -267,7 +274,7 @@ void TestBFSTraverse() {
 
 
 /*!
- * @brief 测试(Prim)最小生成树
+ * @brief <h1>测试(Prim)最小生成树</h1>
  * @note
  *
  * ```
@@ -444,7 +451,7 @@ void TestKruskal() {
     // 调用CreateGraphByEdgesAndVertices建图
     CreateGraphByEdgesAndVertices(&graph, edge_array, edge_count, vertex_indexes, vertex_count, graph_kind);
 
-    // 克努斯卡尔算法
+    // 测试克努斯卡尔算法
     // 调用Kruskal
     MST_t min_span_tree;
     Kruskal(&graph, min_span_tree);
@@ -478,6 +485,17 @@ void TestKruskal() {
  * ```
  *
  * 结点0为起始节点, 求结点0到其他结点的最短路径
+ *
+ * - 声明并构造结点索引数组和边数组 \n
+ * &emsp; 声明结点索引数组 \n
+ * &emsp; 构造边数组 \n
+ * - 建图 \n
+ * &emsp; 声明邻接矩阵图并设置类型 \n
+ * &emsp; 调用CreateGraphByEdgesAndVertices建图 \n
+ * - 测试迪杰斯特拉算法 \n
+ * &emsp; 声明predecessor和distance数组 \n
+ * &emsp; 调用Dijkstra \n
+ * &emsp; 打印单源最短路径 \n
  */
 void TestDijkstra() {
     printf("\n");
@@ -502,17 +520,6 @@ void TestDijkstra() {
 
     int vertex_count = 6;           // 结点数量
     int edge_count = 9;           // 弧(边)数量
-
-    /// - 声明并构造结点索引数组和边数组 \n
-    /// &emsp; 声明结点索引数组 \n
-    /// &emsp; 构造边数组 \n
-    /// - 建图 \n
-    /// &emsp; 声明邻接矩阵图并设置类型 \n
-    /// &emsp; 调用CreateGraphByEdgesAndVertices建图 \n
-    /// - 迪杰斯特拉算法 \n
-    /// &emsp; 声明predecessor和distance数组 \n
-    /// &emsp; 调用Dijkstra \n
-    /// &emsp; 打印单源最短路径 \n
 
     // 声明并构造结点索引数组和边数组
 
@@ -580,6 +587,17 @@ void TestDijkstra() {
  * ```
  *
  * 结点0为起始节点, 求结点0到其他结点的最短路径
+ *
+ * - 声明并构造结点索引数组和边数组 \n
+ * &emsp; 声明结点索引数组 \n
+ * &emsp; 构造边数组 \n
+ * - 建图 \n
+ * &emsp; 声明邻接矩阵图并设置类型 \n
+ * &emsp; 调用CreateGraphByEdgesAndVertices建图 \n
+ * - 测试贝尔曼福特(Bellman-Ford)算法 \n
+ * &emsp; 声明predecessor和distance数组 \n
+ * &emsp; 调用BellmanFord \n
+ * &emsp; 打印单源最短路径 \n
  */
 void TestBellmanFord() {
     printf("\n");
@@ -628,7 +646,7 @@ void TestBellmanFord() {
     matrix_graph_t graph;   // 邻接矩阵图
     GRAPH_KIND graph_kind = UDN;  // 类型: 无向网
 
-    // 图初始化
+    // 建图
     CreateGraphByEdgesAndVertices(&graph, edge_array, edge_count, vertex_array, vertex_count, graph_kind);
 
     int predecessor[MAX_VERTEX_CNT][MAX_VERTEX_CNT];    // 前驱结点索引数组
@@ -664,6 +682,16 @@ void TestBellmanFord() {
  * 结点4--0.09--结点3--0.11--结点5
  * ```
  *
+ * - 声明并构造结点索引数组和边数组 \n
+ * &emsp; 声明结点索引数组 \n
+ * &emsp; 构造边数组 \n
+ * - 建图 \n
+ * &emsp; 声明邻接矩阵图并设置类型 \n
+ * &emsp; 调用CreateGraphByEdgesAndVertices建图 \n
+ * - 测试迪杰斯特拉算法 \n
+ * &emsp; 声明predecessor和distance数组 \n
+ * &emsp; 调用Floyd \n
+ * &emsp; 打印多源最短路径 \n
  */
 void TestFloyd() {
     printf("\n");
@@ -685,62 +713,6 @@ void TestFloyd() {
     printf("|               /         \\/          \\                     |\n");
     printf("|           结点4--0.09--结点3--0.11--结点5                   |\n");
     printf("\n");
-
-    /*
-    VERTEX_TYPE vertices[6] = {0, 1, 2, 3, 4, 5};
-
-    matrix_graph_t graph;
-    graph.vertex_count = 6;           // 结点数量
-    graph.edge_count = 9;           // 弧(边)数量
-    graph.kind = UDN;            // 类型:有向网
-    graph.weight_type = DOUBLE;  // 弧(边)权值类型
-
-    // 0 - 1: 0.1,   0 - 2: 0.12,  1 - 2: 0.2
-    // 1 - 3: 0.14,  1 - 4: 0.13,  2 - 3: 0.05
-    // 2 - 5: 0.17,  3 - 4: 0.09,  3 - 5: 0.11
-    int starting_vertex_indexes[9] = {0, 0, 1, 1, 1, 2, 2, 3, 3}; // 起点
-    int ending_vertex_indexes[9] = {1, 2, 2, 3, 4, 3, 5, 4, 5};   // 终点
-    double weights[9] = {0.1, 0.12, 0.01, 0.14, 0.13, 0.05, 0.17, 0.09, 0.11}; // 权重
-
-    // 对每个[i, j]进行初始化, 默认没有弧(边), 所有的弧(边)长为最大值
-    for (int i = 0; i < graph.vertex_count; i++) {
-        graph.vertexes[i] = vertices[i];
-        for (int j = 0; j < graph.vertex_count; j++) {
-            graph.adj_matrix[i][j].weight_type = DOUBLE;
-            graph.adj_matrix[i][j].starting_vertex_index = i;
-            graph.adj_matrix[i][j].ending_vertex_index = j;
-            graph.adj_matrix[i][j].weight.double_value = DBL_MAX;
-
-            graph.adj_matrix[j][i].weight_type = DOUBLE;
-            graph.adj_matrix[j][i].starting_vertex_index = j;
-            graph.adj_matrix[j][i].ending_vertex_index = i;
-            graph.adj_matrix[j][i].weight.double_value = DBL_MAX;
-        }
-    }
-
-    for (int i = 0; i < graph.edge_count; i++) {
-        int start = starting_vertex_indexes[i];
-        int end = ending_vertex_indexes[i];
-
-        graph.adj_matrix[start][end].starting_vertex_index = start;
-        graph.adj_matrix[start][end].ending_vertex_index = end;
-        graph.adj_matrix[start][end].weight.double_value = weights[i];
-
-        graph.adj_matrix[end][start].starting_vertex_index = end;
-        graph.adj_matrix[end][start].ending_vertex_index = start;
-        graph.adj_matrix[end][start].weight.double_value = weights[i];
-    }
-
-    int predecessor[MAX_VERTEX_CNT][MAX_VERTEX_CNT];
-    edge_t distance[MAX_VERTEX_CNT][MAX_VERTEX_CNT];
-
-    // D初始化
-    for (int i = 0; i < MAX_VERTEX_CNT; i++) {
-        for (int j = 0; j < MAX_VERTEX_CNT; j++) {
-            distance[i][j].weight_type = DOUBLE;
-        }
-    }
-    */
 
     int vertex_count = 6;   // 结点数量
     int edge_count = 9;     // 弧(边)数量
@@ -768,13 +740,12 @@ void TestFloyd() {
     matrix_graph_t graph;   // 邻接矩阵图
     GRAPH_KIND graph_kind = UDN;  // 类型: 无向网
 
-    // 图初始化
+    // 建图
     CreateGraphByEdgesAndVertices(&graph, edge_array, edge_count, vertex_array, vertex_count, graph_kind);
 
     int predecessor[MAX_VERTEX_CNT][MAX_VERTEX_CNT];
     edge_t distance[MAX_VERTEX_CNT][MAX_VERTEX_CNT];
 
-    // D初始化
     for (int i = 0; i < MAX_VERTEX_CNT; i++) {
         for (int j = 0; j < MAX_VERTEX_CNT; j++) {
             distance[i][j].weight_type = DOUBLE;

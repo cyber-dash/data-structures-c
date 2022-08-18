@@ -17,25 +17,25 @@ int main() {
     /// - 测试使用边和结点创建无向网
     TestCreateUDNByEdgesAndVertices();
 
-    /// - 测试深度优先遍历
+    /// - 测试深度优先遍历(DFS)
     TestDFSTraverse();
 
-    /// - 测试广度有限遍历
+    /// - 测试广度优先遍历(BFS)
     TestBFSTraverse();
 
     /// - 测试Prim算法
     TestPrim();
 
-    /// - 测试克努斯卡尔算法
+    /// - 测试克努斯卡尔(Kruskal)算法
     TestKruskal();
 
-    /// - 测试迪杰斯特拉算法
+    /// - 测试迪杰斯特拉(Dijsktra)算法
     TestDijkstra();
 
-    /// - 测试贝尔曼福特算法
+    /// - 测试贝尔曼福特(Bellman-Ford)算法
     TestBellmanFord();
 
-    /// - 测试弗洛伊德算法
+    /// - 测试弗洛伊德(Floyd)算法
     TestFloyd();
 
     return 0;

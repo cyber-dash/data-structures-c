@@ -92,64 +92,82 @@ void TestCreateUDNByEdgesAndVertices() {
 /*!
  * @brief <h1>测试深度优先遍历</h1>
  * @note
+ *
  * ```
- *           结点0
- *           / \
- *          /   \
- *        0.1   0.12
- *        /       \
- *       /         \
- *   结点1---0.2---结点2
- *       \        /
- *        \      /
- *        0.14  0.05
- *         \  /
- *          \/
- *         结点3
+ *               结点0
+ *               / \
+ *              /   \
+ *            0.1   0.12
+ *            /       \
+ *           /         \
+ *       结点1---0.01---结点2
+ *         / \         / \
+ *        /   \       /   \
+ *     0.13  0.14 0.05   0.17
+ *      /      \  /        \
+ *     /        \/          \
+ * 结点4--0.09--结点3--0.11--结点5
  * ```
  *
- * 从结点0开始遍历
+ * - 声明并构造 **结点索引数组** 和 **边数组**  \n
+ * &emsp; 声明 **结点索引数组** \n
+ * &emsp; 构造 **边数组** \n
+ * - 建图 \n
+ * &emsp; 声明 **邻接矩阵图** 并设置类型 \n
+ * &emsp; 调用 **CreateGraphByEdgesAndVertices** 建图 \n
+ * - 测试深度有限遍历(DFS)(从结点0开始遍历) \n
  */
 void TestDFSTraverse() {
     printf("\n");
-    printf("------------------------- CyberDash -------------------------\n");
-    printf("                      Test DFSRecursive Traverse                      \n");
-    printf("                        测试深度优先遍历                       \n\n\n");
-    printf("         结点0\n");
-    printf("         / \\\n");
-    printf("        /   \\\n");
-    printf("      0.1   0.12\n");
-    printf("      /       \\\n");
-    printf("     /         \\\n");
-    printf(" 结点1---0.2---结点2\n");
-    printf("     \\        /\n");
-    printf("      \\      /\n");
-    printf("      0.14  0.05\n");
-    printf("        \\  /\n");
-    printf("         \\/\n");
-    printf("       结点3\n");
+    printf("|------------------------ CyberDash ------------------------|\n");
+    printf("|                     Test DFSRecursive Traverse            |\n");
+    printf("|                       测试深度优先遍历                      |\n\n\n");
+    printf("|                                                           |\n");
+    printf("|                         结点0                              |\n");
+    printf("|                         / \\                               |\n");
+    printf("|                        /   \\                              |\n");
+    printf("|                      0.1   0.12                           |\n");
+    printf("|                      /       \\                            |\n");
+    printf("|                     /         \\                           |\n");
+    printf("|                 结点1---0.01---结点2                       |\n");
+    printf("|                   / \\         / \\                         |\n");
+    printf("|                  /   \\       /   \\                        |\n");
+    printf("|               0.13  0.14   0.05   0.17                      |\n");
+    printf("|                /       \\   /       \\                      |\n");
+    printf("|               /         \\ /         \\                     |\n");
+    printf("|            结点4--0.09--结点3--0.11--结点5                   |\n");
+    printf("\n");
 
-    /// - 声明并构造结点数组和边数组
-    VERTEX_TYPE vertices[4] = {0, 1, 2, 3};
+    int vertex_count = 6;   // 结点数量
+    int edge_count = 9;     // 弧(边)数量
 
-    // 无向边信息, 0 - 1: 0.1,  0 - 2: 0.12,  1 - 2: 0.2,  1 - 3: 0.14,  2 - 3: 0.05
-    int starting_vertex_indexes[5] = {0, 0, 1, 1, 2 }; // 起点
-    int ending_vertex_indexes[5] = {1, 2, 2, 3, 3 };   // 终点
-    double weights[5] = {0.1, 0.12, 0.2, 0.14, 0.05 }; // 权重
+    // 声明结点索引数组
+    int vertex_indexes[6] = { 0, 1, 2, 3, 4, 5 };
 
-    // 使用起点索引数组, 终点索引数组, 边权重数组, 构造边数组
-    edge_t edges[5];
-    for (int i = 0; i < sizeof(edges) / sizeof(edge_t); i++) {
+    // 边信息
+    // 0 - 1: 0.1,   0 - 2: 0.12,  1 - 2: 0.2
+    // 1 - 3: 0.14,  1 - 4: 0.13,  2 - 3: 0.05
+    // 2 - 5: 0.17,  3 - 4: 0.09,  3 - 5: 0.11
+    int starting_vertex_indexes[9] = { 0, 0, 1, 1, 1, 2, 2, 3, 3 };                 // 起点索引数组
+    int ending_vertex_indexes[9] = { 1, 2, 2, 3, 4, 3, 5, 4, 5 };                   // 终点索引数组
+    double weights[9] = { 0.1, 0.12, 0.01, 0.14, 0.13, 0.05, 0.17, 0.09, 0.11 };    // 边权重数组
+
+    // 构造边数组
+    edge_t edges[9];
+    for (int i = 0; i < edge_count; i++) {
         edges[i].weight_type = DOUBLE;
         edges[i].starting_vertex_index = starting_vertex_indexes[i];
         edges[i].ending_vertex_index = ending_vertex_indexes[i];
         edges[i].weight.double_value = weights[i];
     }
 
+    // 建图
+    // 声明邻接矩阵图并设置类型
     matrix_graph_t graph;
-    graph.kind = UDN;   // 类型:无向网
+    GRAPH_KIND graph_kind = UDN;            // 类型:有向网
 
-    CreateGraphByEdgesAndVertices(&graph, edges, 5, vertices, 4, UDN);
+    // 调用CreateGraphByEdgesAndVertices建图
+    CreateGraphByEdgesAndVertices(&graph, edges, edge_count, vertex_indexes, vertex_count, graph_kind);
 
     printf("深度优先遍历:\n");
 
@@ -160,66 +178,85 @@ void TestDFSTraverse() {
 
 
 /*!
- * 测试广度优先遍历
+ * @brief <h1>测试广度优先遍历</h1>
  * @note
+ *
  * ```
- *           结点0
- *           / \
- *          /   \
- *        0.1   0.12
- *        /       \
- *       /         \
- *   结点1---0.2---结点2
- *       \        /
- *        \      /
- *        0.14  0.05
- *         \  /
- *          \/
- *         结点3
+ *               结点0
+ *               / \
+ *              /   \
+ *            0.1   0.12
+ *            /       \
+ *           /         \
+ *       结点1---0.01---结点2
+ *         / \         / \
+ *        /   \       /   \
+ *     0.13  0.14 0.05   0.17
+ *      /      \  /        \
+ *     /        \/          \
+ * 结点4--0.09--结点3--0.11--结点5
  * ```
  *
- * 从结点0开始遍历
+ * - 声明并构造 **结点索引数组** 和 **边数组**  \n
+ * &emsp; 声明 **结点索引数组** \n
+ * &emsp; 构造 **边数组** \n
+ * - 建图 \n
+ * &emsp; 声明 **邻接矩阵图** 并设置类型 \n
+ * &emsp; 调用 **CreateGraphByEdgesAndVertices** 建图 \n
+ * - 测试广度有限遍历(BFS) \n
  *
  */
 void TestBFSTraverse() {
     printf("\n");
-    printf("------------------------- CyberDash -------------------------\n");
-    printf("                      Test BFS Traverse                      \n");
-    printf("                        测试广度优先遍历                       \n\n\n");
-    printf("         结点0\n");
-    printf("         / \\\n");
-    printf("        /   \\\n");
-    printf("      0.1   0.12\n");
-    printf("      /       \\\n");
-    printf("     /         \\\n");
-    printf(" 结点1---0.2---结点2\n");
-    printf("     \\        /\n");
-    printf("      \\      /\n");
-    printf("      0.14  0.05\n");
-    printf("        \\  /\n");
-    printf("         \\/\n");
-    printf("       结点3\n");
+    printf("|------------------------ CyberDash ------------------------|\n");
+    printf("|                     Test BFS Traverse                     |\n");
+    printf("|                       测试广度优先遍历                      |\n\n\n");
+    printf("|                                                           |\n");
+    printf("|                         结点0                              |\n");
+    printf("|                         / \\                               |\n");
+    printf("|                        /   \\                              |\n");
+    printf("|                      0.1   0.12                           |\n");
+    printf("|                      /       \\                            |\n");
+    printf("|                     /         \\                           |\n");
+    printf("|                 结点1---0.01---结点2                       |\n");
+    printf("|                   / \\         / \\                         |\n");
+    printf("|                  /   \\       /   \\                        |\n");
+    printf("|               0.13  0.14   0.05   0.17                      |\n");
+    printf("|                /       \\   /       \\                      |\n");
+    printf("|               /         \\ /         \\                     |\n");
+    printf("|            结点4--0.09--结点3--0.11--结点5                   |\n");
+    printf("\n");
 
-    VERTEX_TYPE vertices[4] = {0, 1, 2, 3};
+    int vertex_count = 6;   // 结点数量
+    int edge_count = 9;     // 弧(边)数量
 
-    // 无向边信息, 0 - 1: 0.1,  0 - 2: 0.12,  1 - 2: 0.2,  1 - 3: 0.14,  2 - 3: 0.05
-    int starting_vertex_indexes[5] = {0, 0, 1, 1, 2 }; // 起点
-    int ending_vertex_indexes[5] = {1, 2, 2, 3, 3 };   // 终点
-    double weights[5] = {0.1, 0.12, 0.2, 0.14, 0.05 }; // 权重
+    // 声明结点索引数组
+    int vertex_indexes[6] = { 0, 1, 2, 3, 4, 5 };
 
-    // 使用起点(索引)数组, 终点(索引)数组, 权重数组, 构造弧(边)数组
-    edge_t edges[5];
-    for (int i = 0; i < sizeof(edges) / sizeof(edge_t); i++) {
+    // 边信息
+    // 0 - 1: 0.1,   0 - 2: 0.12,  1 - 2: 0.2
+    // 1 - 3: 0.14,  1 - 4: 0.13,  2 - 3: 0.05
+    // 2 - 5: 0.17,  3 - 4: 0.09,  3 - 5: 0.11
+    int starting_vertex_indexes[9] = { 0, 0, 1, 1, 1, 2, 2, 3, 3 };                 // 起点索引数组
+    int ending_vertex_indexes[9] = { 1, 2, 2, 3, 4, 3, 5, 4, 5 };                   // 终点索引数组
+    double weights[9] = { 0.1, 0.12, 0.01, 0.14, 0.13, 0.05, 0.17, 0.09, 0.11 };    // 边权重数组
+
+    // 构造边数组
+    edge_t edges[9];
+    for (int i = 0; i < edge_count; i++) {
         edges[i].weight_type = DOUBLE;
         edges[i].starting_vertex_index = starting_vertex_indexes[i];
         edges[i].ending_vertex_index = ending_vertex_indexes[i];
         edges[i].weight.double_value = weights[i];
     }
 
+    // 建图
+    // 声明邻接矩阵图并设置类型
     matrix_graph_t graph;
-    graph.kind = UDN;   // 类型:无向网
+    GRAPH_KIND graph_kind = UDN;            // 类型:有向网
 
-    CreateGraphByEdgesAndVertices(&graph, edges, 5, vertices, 4, UDN);
+    // 调用CreateGraphByEdgesAndVertices建图
+    CreateGraphByEdgesAndVertices(&graph, edges, edge_count, vertex_indexes, vertex_count, graph_kind);
 
     printf("广度优先遍历:\n");
 
@@ -232,12 +269,39 @@ void TestBFSTraverse() {
 /*!
  * @brief 测试(Prim)最小生成树
  * @note
+ *
+ * ```
+ *               结点0
+ *               / \
+ *              /   \
+ *            0.1   0.12
+ *            /       \
+ *           /         \
+ *       结点1---0.01---结点2
+ *         / \         / \
+ *        /   \       /   \
+ *     0.13  0.14 0.05   0.17
+ *      /      \  /        \
+ *     /        \/          \
+ * 结点4--0.09--结点3--0.11--结点5
+ * ```
+ *
+ * - 声明并构造 **结点索引数组** 和 **边数组**  \n
+ * &emsp; 声明 **结点索引数组** \n
+ * &emsp; 构造 **边数组** \n
+ * - 建图 \n
+ * &emsp; 声明 **邻接矩阵图** 并设置类型 \n
+ * &emsp; 调用 **CreateGraphByEdgesAndVertices** 建图 \n
+ * - 测试Prim算法 \n
+ * &emsp; 调用 **Prim** \n
+ * &emsp; 打印最小生成树 \n
+ *
  */
 void TestPrim() {
     printf("\n");
-    printf("------------------------- CyberDash -------------------------\n");
-    printf("                          Test Prim                          \n");
-    printf("                      测试(Prim)最小生成树                     \n\n\n");
+    printf("|------------------------ CyberDash ------------------------|\n");
+    printf("|                         Test Prim                         |\n");
+    printf("|                     测试(Prim)最小生成树                    |\n\n\n");
     printf("|                                                           |\n");
     printf("|                         结点0                              |\n");
     printf("|                         / \\                               |\n");
@@ -248,32 +312,11 @@ void TestPrim() {
     printf("|                 结点1---0.01---结点2                       |\n");
     printf("|                   / \\         / \\                         |\n");
     printf("|                  /   \\       /   \\                        |\n");
-    printf("|               0.13  0.14 0.05   0.17                      |\n");
-    printf("|                /       \\  /        \\                      |\n");
-    printf("|               /         \\/          \\                     |\n");
-    printf("|           结点4--0.09--结点3--0.11--结点5                   |\n");
+    printf("|               0.13  0.14   0.05   0.17                      |\n");
+    printf("|                /       \\   /       \\                      |\n");
+    printf("|               /         \\ /         \\                     |\n");
+    printf("|            结点4--0.09--结点3--0.11--结点5                   |\n");
     printf("\n");
-
-    /*
-    VERTEX_TYPE vertices[4] = {0, 1, 2, 3};
-
-    // 无向边信息, 0 - 1: 0.1,  0 - 2: 0.12,  1 - 2: 0.2,  1 - 3: 0.14,  2 - 3: 0.05
-    int starting_vertex_indexes[5] = {0, 0, 1, 1, 2 }; // 起点
-    int ending_vertex_indexes[5] = {1, 2, 2, 3, 3 };   // 终点
-    double weights[5] = {0.1, 0.12, 0.2, 0.14, 0.05 }; // 权重
-
-    // 使用起点(索引)数组, 终点(索引)数组, 权重数组, 构造弧(边)数组
-    edge_t edges[5];
-    for (int i = 0; i < sizeof(edges) / sizeof(edge_t); i++) {
-        edges[i].weight_type = DOUBLE;
-        edges[i].starting_vertex_index = starting_vertex_indexes[i];
-        edges[i].ending_vertex_index = ending_vertex_indexes[i];
-        edges[i].weight.double_value = weights[i];
-    }
-
-    matrix_graph_t graph;
-    graph.kind = UDN;   // 类型:无向网
-     */
 
     int vertex_count = 6;   // 结点数量
     int edge_count = 9;     // 弧(边)数量
@@ -317,7 +360,34 @@ void TestPrim() {
 
 
 /*!
- * 测试克努斯卡尔(Kruskal)最小生成树
+ * @brief <h1>测试克努斯卡尔(Kruskal)最小生成树</h1>
+ * @note
+ *
+ * ```
+ *               结点0
+ *               / \
+ *              /   \
+ *            0.1   0.12
+ *            /       \
+ *           /         \
+ *       结点1---0.01---结点2
+ *         / \         / \
+ *        /   \       /   \
+ *     0.13  0.14 0.05   0.17
+ *      /      \  /        \
+ *     /        \/          \
+ * 结点4--0.09--结点3--0.11--结点5
+ * ```
+ *
+ * - 声明并构造结点索引数组和边数组 \n
+ * &emsp; 声明结点索引数组 \n
+ * &emsp; 构造边数组 \n
+ * - 建图 \n
+ * &emsp; 声明邻接矩阵图并设置类型 \n
+ * &emsp; 调用CreateGraphByEdgesAndVertices建图 \n
+ * - 测试克努斯卡尔算法 \n
+ * &emsp; 调用Kruskal \n
+ * &emsp; 打印最小生成树 \n
  */
 void TestKruskal() {
     printf("\n");
@@ -343,16 +413,6 @@ void TestKruskal() {
     int vertex_count = 6;           // 结点数量
     int edge_count = 9;           // 弧(边)数量
 
-    /// - 声明并构造结点索引数组和边数组 \n
-    /// &emsp; 声明结点索引数组 \n
-    /// &emsp; 构造边数组 \n
-    /// - 建图 \n
-    /// &emsp; 声明邻接矩阵图并设置类型 \n
-    /// &emsp; 调用CreateGraphByEdgesAndVertices建图 \n
-    /// - 迪杰斯特拉算法 \n
-    /// &emsp; 声明predecessor和distance数组 \n
-    /// &emsp; 调用Dijkstra \n
-    /// &emsp; 打印单源最短路径 \n
 
     // 声明并构造结点索引数组和边数组
 
@@ -384,9 +444,12 @@ void TestKruskal() {
     // 调用CreateGraphByEdgesAndVertices建图
     CreateGraphByEdgesAndVertices(&graph, edge_array, edge_count, vertex_indexes, vertex_count, graph_kind);
 
+    // 克努斯卡尔算法
+    // 调用Kruskal
     MST_t min_span_tree;
     Kruskal(&graph, min_span_tree);
 
+    // 打印最小生成树
     printf("最小生成树: \n");
     PrintMinSpanTree(min_span_tree, graph.vertex_count - 1);
 

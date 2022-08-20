@@ -8,20 +8,24 @@
  *  CyberDash计算机考研
  */
 
+#include <stdlib.h>
+#include <stdio.h>
 #include "test.h"
 #include "seq_stack.h"
-#include "stdlib.h"
-#include "stdio.h"
 
 
-void TestStackInsert() {
+/*!
+ * @brief **测试顺序栈插入**
+ * @note
+ */
+void TestSeqStackInsert() {
     printf("\n");
     printf("|------------------------ CyberDash ------------------------|\n");
     printf("|                        Test Insert                        |\n");
     printf("|                          测试栈插入                         |\n");
 
     seq_stack_t *sqStack = (seq_stack_t*)malloc(sizeof(seq_stack_t));
-    Status res = SeqStackInit(sqStack);
+    status_t res = SeqStackInit(sqStack);
     if (res != OK) {
         printf("初始化栈失败");
     }
@@ -38,14 +42,18 @@ void TestStackInsert() {
 }
 
 
-void TestClearStack() {
+/*!
+ * @brief **顺序栈清空**
+ * @note
+ */
+void TestSeqStackClear() {
     printf("\n");
     printf("|------------------------ CyberDash ------------------------|\n");
     printf("|                      Test SeqStackClear                      |\n");
     printf("|                          测试清除栈                         |\n");
 
     seq_stack_t sqStack;
-    Status res = SeqStackInit(&sqStack);
+    status_t res = SeqStackInit(&sqStack);
     if (res != OK) {
         printf("初始化栈失败");
     }
@@ -67,14 +75,18 @@ void TestClearStack() {
 }
 
 
-void TestStackLength() {
+/*!
+ * @brief **测试顺序栈长度**
+ * @note
+ */
+void TestSeqStackLength() {
     printf("\n");
     printf("|------------------------ CyberDash ------------------------|\n");
     printf("|                        Test Length                        |\n");
     printf("|                          测试栈长度                         |\n");
 
     seq_stack_t sqStack;
-    Status res = SeqStackInit(&sqStack);
+    status_t res = SeqStackInit(&sqStack);
     if (res != OK) {
         printf("初始化栈失败");
     }
@@ -91,14 +103,18 @@ void TestStackLength() {
 }
 
 
-void TestGetTop() {
+/*!
+ * @brief 测试顺序栈栈顶
+ * @note
+ */
+void TestSeqStackTop() {
     printf("\n");
     printf("|------------------------ CyberDash ------------------------|\n");
     printf("|                        Test SeqStackTop                        |\n");
     printf("|                         测试获取栈顶                        |\n");
 
     seq_stack_t sqStack;
-    Status res = SeqStackInit(&sqStack);
+    status_t res = SeqStackInit(&sqStack);
     if (res != OK) {
         printf("初始化栈失败");
     }

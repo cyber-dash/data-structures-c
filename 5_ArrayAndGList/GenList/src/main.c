@@ -1,5 +1,5 @@
 /*!
- * @file main.h
+ * @file main.c
  * @author CyberDash计算机考研, cyberdash@163.com(抖音id:cyberdash_yuan)
  * @brief main文件
  * @version 1.0.0
@@ -10,12 +10,18 @@
 
 #include "test.h"
 
-
+/*!
+ * @brief main函数
+ * @return 0
+ * @note
+ */
 int main() {
 
+    /// - 测试广义表深度
     TestGenListDepth();
 
-    TestGListCopy();
+    /// - 测试广义表复制
+    TestGenListCopy();
 
     return 0;
 }

@@ -12,13 +12,17 @@
 #define CYBER_DASH_STACK_TEST_H
 
 
-void TestStackInsert();
+// 测试顺序栈插入
+void TestSeqStackInsert();
 
-void TestClearStack();
+// 顺序栈清空
+void TestSeqStackClear();
 
-void TestStackLength();
+// 测试顺序栈长度
+void TestSeqStackLength();
 
-void TestGetTop();
+// 测试顺序栈栈顶
+void TestSeqStackTop();
 
 
 #endif // CYBER_DASH_STACK_TEST_H

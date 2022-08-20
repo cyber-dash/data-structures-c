@@ -46,8 +46,9 @@ void TestGenListDepth() {
 
 /*!
  * @brief 广义表复制测试
+ * @note
  */
-void TestGListCopy() {
+void TestGenListCopy() {
     printf("\n");
     printf("------------------------- CyberDash -------------------------\n");
     printf("                       Test GenListCopy                      \n");

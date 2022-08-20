@@ -12,7 +12,7 @@
 #define CYBER_DASH_QUEUE_TYPE_H
 
 
-#define QUEUE_ELEM int
+#define QUEUE_ELEM int  //!< 队列元素类型
 
 /*! @brief 函数返回值枚举 */
 typedef enum {

@@ -42,7 +42,7 @@ status_t GenListInitListHeadNode(gen_list_node_t** node) {
 
 
 /*!
- * <h1>广义表原子结点初始化</h1>
+ * @brief <h1>广义表原子结点初始化</h1>
  * @param node **结点**(指针)
  * @param chr **原子结点字符**
  * @return 执行结果
@@ -50,8 +50,8 @@ status_t GenListInitListHeadNode(gen_list_node_t** node) {
  */
 status_t GenListInitAtomNode(gen_list_node_t** node, ATOM_TYPE chr) {
     /// ###1 结点分配内存###
-    /// &emsp; **if** 如果malloc失败 :\n
-    /// &emsp;&emsp; 返回NON_ALLOCATED\n
+    /// &emsp; **if** 如果malloc失败 : \n
+    /// &emsp;&emsp; 返回NON_ALLOCATED \n
     *node = (gen_list_node_t*)malloc(sizeof(gen_list_node_t));
     if (!(*node)) {
         return ERROR;
@@ -70,7 +70,7 @@ status_t GenListInitAtomNode(gen_list_node_t** node, ATOM_TYPE chr) {
 
 
 /*!
- * <h1>广义表使用队列建表(递归)</h1>
+ * @brief <h1>广义表使用队列建表(递归)</h1>
  * @param char_queue **字符队列**(指针)
  * @param node **结点**(广义表结点二级指针)
  * @note
@@ -126,7 +126,7 @@ void GenListCreateByQueueRecursive(circular_queue_t* char_queue, gen_list_node_t
  * @param str_len **字符串长度**
  * @note
  */
-void GenListCreateByStr(gen_list_t* gen_list, char* str, int str_len) {
+void GenListCreateByStr(gen_list_node_t** gen_list, char* str, int str_len) {
 
     /// ###1 初始化队列###
     circular_queue_t char_queue;
@@ -149,7 +149,7 @@ void GenListCreateByStr(gen_list_t* gen_list, char* str, int str_len) {
  * @param str_len_limit **字符串长度限制**
  * @return **执行结果**
  */
-status_t GenListToString(gen_list_t gen_list, char* gen_list_str, int str_len_limit) {
+status_t GenListToString(gen_list_node_t* gen_list, char* gen_list_str, int str_len_limit) {
 
     /// ###1 初始化队列和字符串###
     /// - **I**&nbsp;&nbsp; 初始化字符队列
@@ -216,7 +216,7 @@ void GenListToCharQueueRecursive(gen_list_t gen_list, circular_queue_t* char_que
 
 
 /*!
- * <h1>广义表深度(递归)</h1>
+ * @brief <h1>广义表深度(递归)</h1>
  * @param gen_list_node **广义表结点**
  * @return **深度值**
  * @note

@@ -11,15 +11,18 @@
 #include "test.h"
 
 
+/*!
+ * @brief **main函数**
+ * @return 0
+ * @note
+ */
 int main() {
 
-    TestSeqQueueEnQueueAndDeQueue();
+    // - 测试循环队列入队/出队
+    TestCircularQueueEnQueueAndDeQueue();
 
-    TestSeqQueueDeQueue();
-
+    // - 测试链式队列入队/出队
     TestLinkQueueEnQueueAndDeQueue();
 
-  TestLinkDeQueue();
-
-  return 0;
+    return 0;
 }

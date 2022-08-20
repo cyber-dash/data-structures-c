@@ -12,7 +12,11 @@
 #include "test.h"
 
 
-void TestSeqQueueEnQueueAndDeQueue() {
+/*!
+ * @brief 测试循环队列入队/出队
+ * @note
+ */
+void TestCircularQueueEnQueueAndDeQueue() {
     printf("\n");
     printf("------------------------- CyberDash -------------------------\n");
     printf("                Test SeqQueue EnQueue/DeQueue                \n");
@@ -42,11 +46,9 @@ void TestSeqQueueEnQueueAndDeQueue() {
 }
 
 
-void TestSeqQueueDeQueue() {
-
-}
-
-
+/*!
+ * @brief 测试链式队列入队/出队
+ */
 void TestLinkQueueEnQueueAndDeQueue() {
     printf("\n");
     printf("------------------------- CyberDash -------------------------\n");
@@ -54,29 +56,24 @@ void TestLinkQueueEnQueueAndDeQueue() {
     printf("                      测试链式队列入队/出队                     \n\n\n");
 
     linked_queue_t link_queue;
-    status_t status = LinkQueueInit(&link_queue);
+    status_t status = LinkedQueueInit(&link_queue);
 
     QUEUE_ELEM elements[8] = { 3, 1, 4, 1, 5, 9, 2, 6 };
     for (int i = 0; i < sizeof(elements) / sizeof(int); i++) {
         printf("入队: %d\n", elements[i]);
-        LinkQueueEnQueue(&link_queue, elements[i]);
+        LinkedQueueEnQueue(&link_queue, elements[i]);
     }
 
-    LinkQueuePrint(&link_queue);
+    LinkedQueuePrint(&link_queue);
 
     printf("\n出队5次后:\n\n");
 
     QUEUE_ELEM top_elem;
-    for (int i = 0; i < 8; i++) {
-        LinkQueueDeQueue(&link_queue, &top_elem);
+    for (int i = 0; i < 5; i++) {
+        LinkedQueueDeQueue(&link_queue, &top_elem);
     }
 
-    LinkQueuePrint(&link_queue);
+    LinkedQueuePrint(&link_queue);
 
     printf("-------------------- 抖音: cyberdash_yuan --------------------\n");
-}
-
-
-void TestLinkDeQueue() {
-
 }

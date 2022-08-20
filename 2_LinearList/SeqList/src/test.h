@@ -16,9 +16,16 @@
 
 int compare(ELEM_TYPE item1, ELEM_TYPE item2);
 
+// 测试线性表插入
 void TestSeqListInsert();
+
+// 测试线性表删除
 void TestSeqListDelete();
+
+// 测试线性表查找
 void TestSeqListLocate();
+
+// 测试线性表合并
 void TestSeqListMerge();
 
 

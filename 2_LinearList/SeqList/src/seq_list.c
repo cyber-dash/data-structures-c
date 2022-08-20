@@ -14,10 +14,13 @@
 
 
 /*!
- * <h1>顺序表初始化</h1>
+ * @brief **顺序表初始化**
  * @param seq_list **顺序表**(指针)
  * @return **是否成功**
  * @note
+ * 顺序表初始化
+ * ----------
+ * ----------
  */
 status_t SeqListInit(seq_list_t* seq_list) {
 
@@ -40,7 +43,7 @@ status_t SeqListInit(seq_list_t* seq_list) {
 
 
 /*!
- * @brief 顺序表插入
+ * @brief **顺序表插入**
  * @param seq_list **顺序表**(指针)
  * @param pos **插入位置(插入到该位置结点的前一位置)**
  * @param elem **待插入元素**
@@ -72,21 +75,19 @@ status_t SeqListInsert(seq_list_t* seq_list, int pos, ELEM_TYPE elem) {
         return OVERFLOW;
     }
 
-    // 满容量处理 \n
+    // 满容量处理
     if (seq_list->length >= seq_list->capacity) {
-        /// &emsp;&emsp; 使用增量LIST_INCREMENT计算新的容量, 并分配新的elements数组内存 \n
+        // 使用增量LIST_INCREMENT计算新的容量, 并分配新的elements数组内存
         unsigned int new_capacity = (seq_list->capacity + LIST_INCREMENT) * sizeof(ELEM_TYPE);
         ELEM_TYPE* new_elements = (ELEM_TYPE*)realloc(seq_list->elements, new_capacity);
-        /// &emsp;&emsp; **if** 内存分配失败 : \n
         if (!new_elements) {
-            /// &emsp;&emsp;&emsp; 返回NON_ALLOCATED \n
-            return NON_ALLOCATED; // 存储分配失败
+            return NON_ALLOCATED;
         }
 
-        /// &emsp;&emsp; 顺序表elements指针指向新数组 \n
-        seq_list->elements = new_elements;         // 新基址
-        /// &emsp;&emsp; 顺序表capacity增加容量数值 \n
-        seq_list->capacity += LIST_INCREMENT;      // 增加存储容量
+        // 顺序表elements指针指向新数组
+        seq_list->elements = new_elements;
+        // 顺序表capacity增加容量数值
+        seq_list->capacity += LIST_INCREMENT;
     }
 
     // 插入位置(包含)后面的所有结点向后移动一位
@@ -103,7 +104,7 @@ status_t SeqListInsert(seq_list_t* seq_list, int pos, ELEM_TYPE elem) {
 
 
 /*!
- * @brief 顺序表删除元素
+ * @brief **顺序表删除元素**
  * @param seq_list **顺序表**(指针)
  * @param pos **被删除结点所在位置**
  * @param elem **被删除结点的保存变量**
@@ -155,7 +156,7 @@ status_t SeqListDelete(seq_list_t* seq_list, int pos, ELEM_TYPE* elem) {
  * ------------
  * 如果没有该元素, 则返回0, 否则返回所在位置(首元素从1开始) \n
  * - 初始化pos和遍历指针cur \n
- * &emsp; pos初始化为1(首结点) \n
+ * &emsp; pos初始化为1(首结点位置) \n
  * &emsp; cur指向elements数组首元素 \n
  * - 遍历线性表查找
  * &emsp; **while** 未遍历完线性表and未找到对应结点 : \n
@@ -166,6 +167,7 @@ status_t SeqListDelete(seq_list_t* seq_list, int pos, ELEM_TYPE* elem) {
  * &emsp; 如果没有找到位置, 返回0 \n
  */
 int SeqListLocate(seq_list_t* seq_list, ELEM_TYPE elem, int (*compare)(ELEM_TYPE, ELEM_TYPE)) {
+
     // 初始化pos和遍历指针cur
     int pos = 1;                            // pos为第1个元素的位置
     ELEM_TYPE* cur = seq_list->elements;    // cur指向第1个元素的存储位置
@@ -186,11 +188,36 @@ int SeqListLocate(seq_list_t* seq_list, ELEM_TYPE elem, int (*compare)(ELEM_TYPE
 
 
 /*!
+ * @brief **顺序表的合并**
+ * @param list_a **顺序表a**
+ * @param list_b **顺序表b**
+ * @param merged_list **合并后的顺序表**
+ * @return **执行结果**
+ * @note
+ *
  * 顺序表的合并
- * @param list_a 顺序表a(的指针)
- * @param list_b 顺序表b(的指针)
- * @param merged_list 合并后的表(的指针)
- * @return 是否合并成功
+ * ----------
+ * ----------
+ * - 初始化两个顺序表的表头指针/表尾指针 \n
+ * &emsp; list_a_cur指向表a的表头, list_b_cur指向表b的表头 \n
+ * &emsp; list_a_last指向表a的表尾, list_b_last指向表b的表尾 \n
+ * - 合并后的表设置属性分配内存 \n
+ * &emsp; 设置长度/容量 \n
+ * &emsp; 分配内存 \n
+ * &emsp; **if** 内存分配失败 : \n
+ * &emsp;&emsp; 返回NON_ALLOCATED \n
+ * - 执行合并 \n
+ * &emsp; **while** 任意一个表未合并完 : \n
+ * &emsp;&emsp; **if** 表a当前元素 <= 表b当前元素 : \n
+ * &emsp;&emsp;&emsp; 表a当前元素(*list_a_cur)插入合并表表尾 \n
+ * &emsp;&emsp;&emsp; list_a_cur指向后面1位 \n
+ * &emsp;&emsp; **else** (表a当前元素 > 表b当前元素) : \n
+ * &emsp;&emsp;&emsp; 表b当前元素(*list_b_cur)插入合并表表尾 \n
+ * &emsp;&emsp;&emsp; list_b_cur指向后面1位 \n
+ * &emsp;&emsp; merged_list_cur指向后面1位(合并表当前元素向后移动) \n
+ * - 未合并完的表补表尾 \n
+ * &emsp; 表a剩余元素加到合并表尾部(如果表a有剩余) \n
+ * &emsp; 表b剩余元素加到合并表尾部(如果表b有剩余) \n
  */
 status_t SeqListMerge(seq_list_t* list_a, seq_list_t* list_b, seq_list_t* merged_list) {
     ELEM_TYPE* list_a_cur = list_a->elements;   // list_a_cur指针 -> 顺序表a的elements数组首地址
@@ -198,7 +225,7 @@ status_t SeqListMerge(seq_list_t* list_a, seq_list_t* list_b, seq_list_t* merged
     ELEM_TYPE* list_a_last = list_a->elements + list_a->length - 1; // last_a_last指针 -> 顺序表a的elements数组尾地址
     ELEM_TYPE* list_b_last = list_b->elements + list_b->length - 1; // last_b_last指针 -> 顺序表b的elements数组尾地址
 
-    // 合并后的表
+    // 合并后的表设置属性分配内存
     merged_list->length = list_a->length + list_b->length;  // 长度
     merged_list->capacity = list_a->capacity + list_b->capacity;        // 容量
     merged_list->elements = (ELEM_TYPE*)malloc(merged_list->capacity * sizeof(ELEM_TYPE));  // elements数组分配内存
@@ -206,9 +233,9 @@ status_t SeqListMerge(seq_list_t* list_a, seq_list_t* list_b, seq_list_t* merged
         return NON_ALLOCATED;   // 分配失败
     }
 
+    // 执行合并
     ELEM_TYPE* merged_list_cur = merged_list->elements; // merged_list_cur指针 -> 合并后的顺序表的elements数组首地址
 
-    // 执行合并
     while (list_a_cur <= list_a_last && list_b_cur <=list_b_last) {
         // list_a_cur和list_b_cur指向的两个元素, 选择较小的进入merged_list, 对应的cur指针向后移一位, merged_list_cur向后移一位
         if (*list_a_cur <= *list_b_cur) {
@@ -240,8 +267,12 @@ status_t SeqListMerge(seq_list_t* list_a, seq_list_t* list_b, seq_list_t* merged
 
 
 /*!
- * 打印顺序表
+ * @brief **顺序表打印**
  * @param seq_list 顺序表(指针)
+ * @note
+ * 顺序表打印
+ * ---------
+ * ---------
  */
 void SeqListPrint(seq_list_t* seq_list) {
     for (int i = 0; i < seq_list->length; i++) {

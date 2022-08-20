@@ -13,6 +13,22 @@
 #include "test.h"
 
 
+/*!
+ * @brief **比较函数**
+ * @param item1 **元素1**
+ * @param item2 **元素2**
+ * @return **结果**
+ * @note
+ * 比较函数
+ * -------
+ * -------
+ * **if** 元素1 > 元素2 : \n
+ * &emsp; 返回1 \n
+ * **else if** 元素1 = 元素2 : \n
+ * &emsp; 返回0 \n
+ * **else if** 元素1 < 元素2 : \n
+ * &emsp; 返回-1 \n
+ */
 int compare(ELEM_TYPE item1, ELEM_TYPE item2) {
     if (item1 > item2) {
         return 1;
@@ -24,6 +40,14 @@ int compare(ELEM_TYPE item1, ELEM_TYPE item2) {
 }
 
 
+/*!
+ * @brief **测试线性表插入**
+ * @note
+ * 测试线性表插入
+ * ------------
+ * ------------
+ *
+ */
 void TestSeqListInsert() {
     printf("\n");
     printf("|------------------------ CyberDash ------------------------|\n");
@@ -52,6 +76,13 @@ void TestSeqListInsert() {
 }
 
 
+/*!
+ * @brief **测试线性表删除**
+ * @note
+ * 测试线性表删除
+ * ------------
+ * ------------
+ */
 void TestSeqListDelete() {
     printf("\n");
     printf("|------------------------ CyberDash ------------------------|\n");
@@ -85,6 +116,13 @@ void TestSeqListDelete() {
 }
 
 
+/*!
+ * @brief **测试线性表查找**
+ * @note
+ * 测试线性表查找
+ * ------------
+ * ------------
+ */
 void TestSeqListLocate() {
     printf("\n");
     printf("|------------------------ CyberDash ------------------------|\n");
@@ -119,6 +157,13 @@ void TestSeqListLocate() {
 }
 
 
+/*!
+ * @brief **测试线性表合并**
+ * @note
+ * 测试线性表合并
+ * ------------
+ * ------------
+ */
 void TestSeqListMerge() {
     printf("\n");
     printf("|------------------------ CyberDash ------------------------|\n");

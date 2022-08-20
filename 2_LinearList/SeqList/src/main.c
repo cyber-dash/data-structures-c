@@ -11,6 +11,14 @@
 #include "test.h"
 
 
+/*!
+ * @brief main函数
+ * @return 0
+ * - 测试线性表插入 \n
+ * - 测试线性表删除 \n
+ * - 测试线性表查找 \n
+ * - 测试线性表合并 \n
+ */
 int main() {
 
     TestSeqListInsert();

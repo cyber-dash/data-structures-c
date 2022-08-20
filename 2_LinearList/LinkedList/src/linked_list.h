@@ -11,8 +11,9 @@
 #ifndef CYBER_DASH_LINKED_LIST_H
 #define CYBER_DASH_LINKED_LIST_H
 
-#define ELEM_TYPE   int
+#define ELEM_TYPE   int //!< 链表元素类型
 
+/*! @brief 返回值类型 */
 typedef enum {
     OK,             //!< 成功/正确
     NON_ALLOCATED,  //!< 内存分配失败
@@ -20,12 +21,13 @@ typedef enum {
     ERROR           //!< 错误
 } status_t;
 
+/*! @brief 链表结点 */
 typedef struct linked_node {
     ELEM_TYPE               data;   //!< 数据项
     struct linked_node*   next;   //!< 下一结点
 } linked_node_t;
 
-typedef linked_node_t* linked_list_t;
+typedef linked_node_t* linked_list_t;   //!< 链表
 
 
 status_t LinkedListCreate(linked_node_t** linked_list_head, ELEM_TYPE* elements, int elem_count);

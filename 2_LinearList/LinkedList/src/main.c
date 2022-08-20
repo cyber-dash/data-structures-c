@@ -11,6 +11,16 @@
 #include "./test.h"
 
 
+/*!
+ * @brief main函数
+ * @return 0
+ * @note
+ * - 测试链表创建
+ * - 测试链表获取结点元素
+ * - 测试链表删除结点
+ * - 测试链表插入结点
+ * - 测试有序链表合并
+ */
 int main() {
 
     TestLinkedListCreate();

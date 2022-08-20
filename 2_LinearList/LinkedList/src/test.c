@@ -65,6 +65,9 @@ void TestLinkedListGetElem() {
 }
 
 
+/*!
+ * @brief 测试链表删除结点
+ */
 void TestLinkedListDelete() {
     printf("\n");
     printf("|------------------------ CyberDash ------------------------|\n");
@@ -94,6 +97,9 @@ void TestLinkedListDelete() {
 }
 
 
+/*!
+ * @brief 链表测试插入结点
+ */
 void TestLinkedListInsert() {
     printf("\n");
     printf("|------------------------ CyberDash ------------------------|\n");
@@ -122,6 +128,9 @@ void TestLinkedListInsert() {
 }
 
 
+/*!
+ * @brief (有序)链表合并
+ */
 void TestLinkedListMerge() {
     printf("\n");
     printf("|------------------------ CyberDash ------------------------|\n");

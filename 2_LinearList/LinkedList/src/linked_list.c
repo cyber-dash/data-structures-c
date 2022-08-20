@@ -14,12 +14,16 @@
 
 
 /*!
- * @brief <h1>链表创建<h1>
+ * @brief **链表创建**
  * @param linked_list_head **链表头结点**(指针)
  * @param elements **数据项数组**
  * @param elem_count **数据项数量**
  * @return **执行结果**
  * @note
+ *
+ * 链表创建
+ * -------
+ * -------
  *
  * - 链表头结点分配内存 \n
  * &emsp; **if** 内存分配失败 : \n
@@ -57,12 +61,15 @@ status_t LinkedListCreate(linked_node_t** linked_list_head, ELEM_TYPE* elements,
 
 
 /*!
- * @brief <h1>链表获取某位置的结点数据</h1>
+ * @brief **链表获取某位置的结点数据**
  * @param linked_list_head **链表头结点**(指针)
  * @param pos **位置**
  * @param elem **保存结点数据项的变量**(指针)
  * @return **执行结果**
  * @note
+ * 链表获取某位置的结点数据
+ * ---------------------
+ * ---------------------
  *
  * - 初始化遍历指针cur和起始位置cur_post(从1开始, 区别于数组的从0开始) \n
  * - 遍历链表至位置pos \n
@@ -95,12 +102,15 @@ status_t LinkedListGetElem(linked_node_t* linked_list_head, int pos, ELEM_TYPE* 
 
 
 /*!
- * @brief <h1>链表插入</h1>
+ * @brief **链表插入**
  * @param linked_list_head **链表头结点**(指针)
  * @param pos **位置**(在这个位置前执行插入)
  * @param elem **待插入的数据项**
  * @return **执行结果**
  * @note
+ * 链表插入
+ * -------
+ * -------
  *
  * - 初始化指针cur和insert_pos_predecessor \n
  * &emsp; cur用来遍历, 找到插入位置的前一节点, insert_pos_predecessor用来找该节点的位置 \n
@@ -151,7 +161,7 @@ status_t LinkedListInsert(linked_node_t* linked_list_head, int pos, ELEM_TYPE el
 
 
 /*!
- * @brief <h1>链表删除结点<h1>
+ * @brief <h1>链表删除结点</h1>
  * @param linked_list_head **链表头结点**(指针)
  * @param pos **删除结点位置**
  * @param elem **被删除结点数据项的保存变量**(指针)
@@ -185,12 +195,15 @@ status_t LinkedListDelete(linked_node_t* linked_list_head, int pos, ELEM_TYPE* e
 
 
 /*!
- * @brief <h1>合并两个有序链表</h1>
+ * @brief <h1>链表合并两个有序链表</h1>
  * @param list_a_head **a链表的头结点**(指针)
  * @param list_b_head **b链表的头结点**(指针)
  * @param merged_list_head **合并链表的头结点**(二级指针)
  * @return **执行结果**
  * @note
+ * **注**: 有序链表a和有序链表b合并, 合并至a链表
+ * - 初始化链表a的遍历指针a_cur和链表b的遍历指针b_cur
+ * - 初始化合并链表的遍历指针
  */
 status_t LinkedListMergeTwoSortedList(linked_node_t* list_a_head,
                                       linked_node_t* list_b_head,

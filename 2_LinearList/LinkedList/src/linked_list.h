@@ -30,15 +30,17 @@ typedef linked_node_t* linked_list_t;
 
 status_t LinkedListCreate(linked_node_t** linked_list_head, ELEM_TYPE* elements, int elem_count);
 
-status_t LinkedListGetElem(linked_list_t linked_list_head, int pos, ELEM_TYPE* elem);
+status_t LinkedListGetElem(linked_node_t* linked_list_head, int pos, ELEM_TYPE* elem);
 
-status_t LinkedListInsert(linked_list_t linked_list_head, int pos, ELEM_TYPE elem);
+status_t LinkedListInsert(linked_node_t* linked_list_head, int pos, ELEM_TYPE elem);
 
-status_t LinkedListDelete(linked_list_t linked_list_head, int pos, ELEM_TYPE* elem);
+status_t LinkedListDelete(linked_node_t* linked_list_head, int pos, ELEM_TYPE* elem);
 
-status_t LinkedListMergeTwoSortedList(linked_list_t list_a_head, linked_list_t list_b_head, linked_list_t* merged_list_head);
+status_t LinkedListMergeTwoSortedList(linked_node_t* list_a_head,
+                                      linked_node_t* list_b_head,
+                                      linked_node_t** merged_list_head);
 
-void LinkedListPrint(linked_list_t linked_list_head);
+void LinkedListPrint(linked_node_t* linked_list_head);
 
 
 #endif // CYBER_DASH_LINKED_LIST_H

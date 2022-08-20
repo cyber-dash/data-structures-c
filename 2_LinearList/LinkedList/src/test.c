@@ -12,6 +12,10 @@
 #include "test.h"
 
 
+/*!
+ * @brief 测试链表创建
+ * @note
+ */
 void TestLinkedListCreate() {
     printf("\n");
     printf("|------------------------ CyberDash ------------------------|\n");
@@ -32,6 +36,9 @@ void TestLinkedListCreate() {
 }
 
 
+/*!
+ * @brief 测试链表获取结点数据
+ */
 void TestLinkedListGetElem() {
     printf("\n");
     printf("|------------------------ CyberDash ------------------------|\n");

@@ -89,19 +89,30 @@ status_t SeqListInsert(seq_list_t* seq_list, int pos, ELEM_TYPE elem) {
 
 
 /*!
- * 顺序表删除元素
- * @param seq_list 顺序表(指针)
- * @param pos 待删除元素所在位置
- * @param elem 保存删除元素值的变量
- * @return 是否删除成功
+ * @brief 顺序表删除元素
+ * @param seq_list **顺序表**(指针)
+ * @param pos **被删除结点所在位置**
+ * @param elem **被删除结点的保存变量**
+ * @return **执行结果**
  * @note
- * 删除位置pos的元素, 将其值赋给elem
+ * 顺序表删除元素
+ * ------------
+ * ------------
+ *
+ * - 删除节点位置正确性检查 \n
+ * &emsp;**if** pos < 1 或者 pos > 线性表长度 : \n
+ * &emsp;&emsp; 返回OVERFLOW \n
+ * - 被删除结点的值赋给保存变量 \n
+ * - 被删除结点后面的所有结点向前移动补位 \n
+ * &emsp; **for loop** 被删除节点后侧所有所有结点 : \n
+ * &emsp;&emsp; 当前结点值赋给前一节点 \n
  */
 status_t SeqListDelete(seq_list_t* seq_list, int pos, ELEM_TYPE* elem) {
     if (pos < 1 || pos > seq_list->length) {
-        return ERROR;
+        return OVERFLOW;
     }
 
+    // 待删除节点值赋给保存变量
     ELEM_TYPE* delete_pos_elem = &(seq_list->elements[pos - 1]);
     *elem = *delete_pos_elem;                                           // 被删除元素的值赋给elem
 

@@ -102,20 +102,34 @@ status_t LinkedListGetElem(linked_list_t linked_list_head, int pos, ELEM_TYPE* e
  * @return **执行结果**
  * @note
  *
- * -
+ * - 初始化指针cur和insert_pos_predecessor \n
+ * &emsp; cur用来遍历, 找到插入位置的前一节点, insert_pos_predecessor用来找该节点的位置 \n
+ * - 找到插入位置 \n
+ * &emsp; **while** cur不为NULL 或者 尚未遍历完整个链表 \n
+ * &emsp;&emsp; cur指向下一个结点 \n
+ * &emsp;&emsp; insert_pos_predecessor加1 \n
+ * - 处理没有插入位置的情况 \n
+ * &emsp; **if** 插入位置不存在 \n
+ * &emsp;&emsp; 返回ERROR \n
+ * - 执行插入 \n
+ * &emsp; 分配结点内存 \n
+ * &emsp; **if** 内存分配失败 : \n
+ * &emsp;&emsp; 返回NON_ALLOCATED \n
+ * &emsp; 插入节点设置data和next \n
+ * &emsp; cur->next指向插入节点 \n
  */
 status_t LinkedListInsert(linked_list_t linked_list_head, int pos, ELEM_TYPE elem) {
-    linked_node_t* insert_node_predecessor = linked_list_head;    // 插入完成后, 插入结点的前一结点(指针), 初始化指向链表头结点
+    linked_node_t* cur = linked_list_head;    // 插入完成后, 插入结点的前一结点(指针), 初始化指向链表头结点
     int insert_pos_predecessor = 0; // 插入位置的前一位置, 初始化为0
 
     // 遍历到插入位置的前一位置
-    while(!insert_node_predecessor || insert_pos_predecessor < pos - 1) {
-        insert_node_predecessor = insert_node_predecessor->next;
+    while(!cur || insert_pos_predecessor < pos - 1) {
+        cur = cur->next;
         insert_pos_predecessor++;
     }
 
     // 如果插入位置不存在, 返回ERROR
-    if (insert_node_predecessor != NULL || insert_pos_predecessor > pos - 1) {
+    if (!cur || insert_pos_predecessor > pos - 1) {
         return ERROR;
     }
 
@@ -125,8 +139,8 @@ status_t LinkedListInsert(linked_list_t linked_list_head, int pos, ELEM_TYPE ele
     }
 
     insert_node->data = elem;
-    insert_node->next = insert_node_predecessor->next;
-    insert_node_predecessor->next = insert_node;
+    insert_node->next = cur->next;
+    cur->next = insert_node;
 
     return OK;
 }

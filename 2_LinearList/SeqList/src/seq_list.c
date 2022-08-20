@@ -40,26 +40,39 @@ status_t SeqListInit(seq_list_t* seq_list) {
 
 
 /*!
- * <h1>顺序表插入</h1>
+ * @brief 顺序表插入
  * @param seq_list **顺序表**(指针)
- * @param pos **插入位置(前)**
+ * @param pos **插入位置(插入到该位置结点的前一位置)**
  * @param elem **待插入元素**
  * @return **执行结果**
  * @note
- * 本顺序表实现, 索引从1开始, 区别于数组的从0开始; \n
- * 插入到参数pos的前一位置 \n
+ * 顺序表插入
+ * ------------
+ * ------------
+ * **注**: 本顺序表实现, 索引从1开始, 区别于数组的从0开始\n
+ * - 插入位置合法性判断 \n
+ * &emsp; **if** 插入位置 < 1 或者 插入位置 > 长度 + 1 : \n
+ * &emsp;&emsp; 返回OVERFLOW \n
+ * - 满容量处理 \n
+ * &emsp; **if** 线性表的容量已满(不扩容无法插入) : \n
+ * &emsp;&emsp; 使用增量LIST_INCREMENT计算新的容量, 并分配新的elements数组内存 \n
+ * &emsp;&emsp; **if** 内存分配失败 : \n
+ * &emsp;&emsp;&emsp; 返回NON_ALLOCATED \n
+ * &emsp;&emsp; 顺序表elements指针指向新数组 \n
+ * &emsp;&emsp; 顺序表capacity增加容量数值 \n
+ * - 插入位置(包含)后面的所有结点向后移动一位 \n
+ * - 插入元素 \n
+ * &emsp; 插入位置赋值 \n
+ * &emsp; 表长+1 \n
  */
 status_t SeqListInsert(seq_list_t* seq_list, int pos, ELEM_TYPE elem) {
 
-    /// - 插入位置合法性判断 \n
-    /// &emsp; **if** 插入位置 < 1 或者 插入位置 > 长度 + 1 : \n
-    /// &emsp;&emsp; 返回OVERFLOW \n
+    // 插入位置合法性判断
     if (pos < 1 || pos > seq_list->length + 1) {
         return OVERFLOW;
     }
 
-    /// - 满容量处理 \n
-    /// &emsp; **if** 线性表的容量已满(不扩容无法插入) : \n
+    // 满容量处理 \n
     if (seq_list->length >= seq_list->capacity) {
         /// &emsp;&emsp; 使用增量LIST_INCREMENT计算新的容量, 并分配新的elements数组内存 \n
         unsigned int new_capacity = (seq_list->capacity + LIST_INCREMENT) * sizeof(ELEM_TYPE);
@@ -76,9 +89,10 @@ status_t SeqListInsert(seq_list_t* seq_list, int pos, ELEM_TYPE elem) {
         seq_list->capacity += LIST_INCREMENT;      // 增加存储容量
     }
 
-    ELEM_TYPE* insert_pos_elem = &(seq_list->elements[pos - 1]);    // q为插入位置
+    // 插入位置(包含)后面的所有结点向后移动一位
+    ELEM_TYPE* insert_pos_elem = &(seq_list->elements[pos - 1]);
     for (ELEM_TYPE* cur = &(seq_list->elements[seq_list->length - 1]); cur >= insert_pos_elem; cur--) {
-        *(cur + 1) = *cur; // 插入位置及之后的元素, 依次右移
+        *(cur + 1) = *cur; // 右移
     }
 
     *insert_pos_elem = elem;  // 插入elem
@@ -98,7 +112,6 @@ status_t SeqListInsert(seq_list_t* seq_list, int pos, ELEM_TYPE elem) {
  * 顺序表删除元素
  * ------------
  * ------------
- *
  * - 删除节点位置正确性检查 \n
  * &emsp;**if** pos < 1 或者 pos > 线性表长度 : \n
  * &emsp;&emsp; 返回OVERFLOW \n
@@ -106,6 +119,7 @@ status_t SeqListInsert(seq_list_t* seq_list, int pos, ELEM_TYPE elem) {
  * - 被删除结点后面的所有结点向前移动补位 \n
  * &emsp; **for loop** 被删除节点后侧所有所有结点 : \n
  * &emsp;&emsp; 当前结点值赋给前一节点 \n
+ * - 表长减1 \n
  */
 status_t SeqListDelete(seq_list_t* seq_list, int pos, ELEM_TYPE* elem) {
     if (pos < 1 || pos > seq_list->length) {
@@ -114,37 +128,55 @@ status_t SeqListDelete(seq_list_t* seq_list, int pos, ELEM_TYPE* elem) {
 
     // 待删除节点值赋给保存变量
     ELEM_TYPE* delete_pos_elem = &(seq_list->elements[pos - 1]);
-    *elem = *delete_pos_elem;                                           // 被删除元素的值赋给elem
+    *elem = *delete_pos_elem;
 
-    ELEM_TYPE* last_elem = seq_list->elements + seq_list->length - 1;   // 表尾元素的位置
+    ELEM_TYPE* last_elem = seq_list->elements + seq_list->length - 1;   // 表尾元素指针
     for (ELEM_TYPE* cur = delete_pos_elem + 1; cur <= last_elem; cur++) {
+        // 当前结点值赋给前一结点
         *(cur - 1) = *cur;
     }
 
-    seq_list->length--;                              // 表长减1
+    // 表长减1
+    seq_list->length--;
 
     return OK;
 }
 
 
 /*!
- * @brief 顺序表查找函数
- * @param seq_list 顺序表(指针)
- * @param elem 元素值
- * @param compare 比较函数
- * @return 元素位置
+ * @brief **顺序表查找**
+ * @param seq_list **顺序表**(指针)
+ * @param elem **元素值**
+ * @param compare **比较函数**
+ * @return **元素位置**
  * @note
- * 如果没有该元素, 则返回0, 否则返回所在位置(首元素从1开始)
+ * 顺序表查找
+ * ------------
+ * ------------
+ * 如果没有该元素, 则返回0, 否则返回所在位置(首元素从1开始) \n
+ * - 初始化pos和遍历指针cur \n
+ * &emsp; pos初始化为1(首结点) \n
+ * &emsp; cur指向elements数组首元素 \n
+ * - 遍历线性表查找
+ * &emsp; **while** 未遍历完线性表and未找到对应结点 : \n
+ * &emsp;&emsp; pos加1 \n
+ * &emsp;&emsp; cur指向后一元素 \n
+ * - 返回位置 \n
+ * &emsp; 如果找到位置, 返回位置 \n
+ * &emsp; 如果没有找到位置, 返回0 \n
  */
 int SeqListLocate(seq_list_t* seq_list, ELEM_TYPE elem, int (*compare)(ELEM_TYPE, ELEM_TYPE)) {
+    // 初始化pos和遍历指针cur
     int pos = 1;                            // pos为第1个元素的位置
     ELEM_TYPE* cur = seq_list->elements;    // cur指向第1个元素的存储位置
 
+    // 遍历线性表查找
     while (pos <= seq_list->length && (*compare)(*cur, elem) != 0) {
         pos++;
         cur++;
     }
 
+    // 返回位置
     if (pos <= seq_list->length) {
         return pos;
     }

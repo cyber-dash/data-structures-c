@@ -17,7 +17,6 @@
 
 
 #define MAX_SIZE    100 //!< 队列最大长度
-#define QUEUE_ELEM  int //!< 队列元素的类型
 
 
 /*! @brief 循环队列结构体 */

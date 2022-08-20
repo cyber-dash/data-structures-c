@@ -12,8 +12,6 @@
 #define CYBER_DASH_GEN_LIST_COMMON_H
 
 
-#define MAX_STRING_SIZE 100
-
 /*! @brief 返回值状态 */
 typedef enum {
     OK = 0,         //!< 正确

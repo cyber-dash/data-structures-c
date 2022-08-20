@@ -9,7 +9,7 @@
  */
 
 #include <stdio.h>
-#include "link_queue.h"
+#include "linked_queue.h"
 #include "stdlib.h"
 
 
@@ -19,7 +19,7 @@
  * @return **执行结果**
  * @note
  */
-status_t LinkQueueInit(linked_queue_t* link_queue) {
+status_t LinkedQueueInit(linked_queue_t* link_queue) {
     /// ###1 链式队列rear分配内存###
     /// &emsp; **if** 如果malloc失败 :\n
     /// &emsp;&emsp; 返回NON_ALLOCATED
@@ -43,7 +43,7 @@ status_t LinkQueueInit(linked_queue_t* link_queue) {
  * @return **执行结果**
  * @note
  */
-status_t LinkQueueDestroy(linked_queue_t* link_queue) {
+status_t LinkedQueueDestroy(linked_queue_t* link_queue) {
     while (link_queue->front) {
         link_queue->rear = link_queue->front->next;
         free(link_queue->front);
@@ -62,7 +62,7 @@ status_t LinkQueueDestroy(linked_queue_t* link_queue) {
  * @return **执行结果**
  * @note
  */
-status_t LinkQueueEnQueue(linked_queue_t* link_queue, QUEUE_ELEM elem) {
+status_t LinkedQueueEnQueue(linked_queue_t* link_queue, QUEUE_ELEM elem) {
     /// ###1 新结点内存分配###
     /// &emsp; **if** 如果malloc失败 :\n
     /// &emsp;&emsp; 返回NON_ALLOCATED
@@ -92,7 +92,7 @@ status_t LinkQueueEnQueue(linked_queue_t* link_queue, QUEUE_ELEM elem) {
  * @return **执行结果**
  * @note
  */
-status_t LinkQueueDeQueue(linked_queue_t* linked_queue, QUEUE_ELEM* elem) {
+status_t LinkedQueueDeQueue(linked_queue_t* linked_queue, QUEUE_ELEM* elem) {
     /// ###1 空队判断###
     /// &emsp; **if** front等于rear : \n
     /// &emsp;&emsp; 空队, 返回NON_EXISTENT\n
@@ -122,7 +122,7 @@ status_t LinkQueueDeQueue(linked_queue_t* linked_queue, QUEUE_ELEM* elem) {
  * @return **长度**
  * @note
  */
-int LinkQueueLength(linked_queue_t linked_queue) {
+int LinkedQueueLength(linked_queue_t linked_queue) {
     linked_queue_node_t* cur = linked_queue.front;
     int length = 0;
 
@@ -139,7 +139,7 @@ int LinkQueueLength(linked_queue_t linked_queue) {
  * 打印队列
  * @param linked_queue
  */
-void LinkQueuePrint(linked_queue_t* linked_queue) {
+void LinkedQueuePrint(linked_queue_t* linked_queue) {
     printf("从队头向队尾打印元素(队头 ... 队尾): \n");
 
     linked_queue_node_t *cur = linked_queue->front->next;

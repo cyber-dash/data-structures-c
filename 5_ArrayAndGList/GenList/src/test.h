@@ -16,9 +16,11 @@
 #include "gen_list.h"
 
 
+// 广义表深度测试
 void TestGenListDepth();
 
-void TestGListCopy();
+// 广义表复制测试
+void TestGenListCopy();
 
 
 #endif // CYBER_DASH_GEN_LIST_TEST_H

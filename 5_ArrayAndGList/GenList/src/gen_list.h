@@ -54,10 +54,10 @@ status_t GenListToString(gen_list_node_t* gen_list, char* gen_list_str, int str_
 void GenListToCharQueueRecursive(gen_list_t gen_list, circular_queue_t* char_queue);
 
 // 广义表深度(递归)
-int GenListDepthRecursive(gen_list_t gen_list_node);
+int GenListDepthRecursive(gen_list_node_t* gen_list_node);
 
 // 广义表复制(递归)
-status_t GenListCopyRecursive(gen_list_t* target_list_node, gen_list_t src_list_node);
+status_t GenListCopyRecursive(gen_list_node_t** target_list_node, gen_list_node_t* src_list_node);
 
 
 #endif // CYBER_DASH_GENERALIZED_LIST_H

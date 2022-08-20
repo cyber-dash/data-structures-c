@@ -12,17 +12,15 @@
 #define CYBER_DASH_QUEUE_TEST_H
 
 
-#include "link_queue.h"
+#include "linked_queue.h"
 #include "circular_queue.h"
 
 
-void TestSeqQueueEnQueueAndDeQueue();
+// 测试循环队列入队/出队
+void TestCircularQueueEnQueueAndDeQueue();
 
-void TestSeqQueueDeQueue();
-
+// 测试链式队列入队/出队
 void TestLinkQueueEnQueueAndDeQueue();
-
-void TestLinkDeQueue();
 
 
 #endif // CYBER_DASH_QUEUE_TEST_H

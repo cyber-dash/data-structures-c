@@ -78,7 +78,7 @@ status_t CircularQueueEnQueue(circular_queue_t* circular_queue, QUEUE_ELEM elem)
 
 
 /*!
- * <h1>循环队列出队</h1>
+ * @brief <h1>循环队列出队</h1>
  * @param circular_queue **循环队列**(指针)
  * @param elem **出队元素保存变量**(指针)
  * @return **执行结果**
@@ -103,7 +103,7 @@ status_t CircularQueueDeQueue(circular_queue_t* circular_queue, QUEUE_ELEM* elem
 
 
 /*!
- * <h1>顺序表转换成字符串</h1>
+ * @brief <h1>顺序表转换成字符串</h1>
  * @param circular_queue **顺序表**(指针)
  * @param str **字符串**
  * @param str_len_limit **字符串长度限制**

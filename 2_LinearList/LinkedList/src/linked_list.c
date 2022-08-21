@@ -29,7 +29,7 @@
  * &emsp; **if** 内存分配失败 : \n
  * &emsp;&emsp; 返回NON_ALLOCATED \n
  * - 链表头节点next设置为NULL \n
- * - 遍历数据项数组并插入链表结点
+ * - 遍历数据项数组并插入链表结点 \n
  * &emsp; **for loop** 遍历数据项数组(从后向前) : \n
  * &emsp;&emsp; 分配当前链表结点内存 \n
  * &emsp;&emsp; **if** 内存分配失败 : \n
@@ -161,12 +161,25 @@ status_t LinkedListInsert(linked_node_t* linked_list_head, int pos, ELEM_TYPE el
 
 
 /*!
- * @brief <h1>链表删除结点</h1>
+ * @brief **链表删除结点**
  * @param linked_list_head **链表头结点**(指针)
  * @param pos **删除结点位置**
  * @param elem **被删除结点数据项的保存变量**(指针)
  * @return **执行结果**
  * @note
+ * 链表删除结点
+ * ----------
+ * ----------
+ * - 初始化变量delete_node_predecessor和delete_pos_predecessor \n
+ * &emsp; delete_node_predecessor(删除节点的前一节点指针)指向表头 \n
+ * &emsp; delete_pos_predecessor(删除节点的前一节点的位置)初始值为0 \n
+ * - 遍历至被删除结点 \n
+ * - 处理不存在删除结点的情况 \n
+ * - 删除结点 \n
+ * &emsp; 指针delete_node指向delete_node_predecessor->next(被删除结点) \n
+ * &emsp; delete_node_predecessor->next指向被删除结点的next \n
+ * &emsp; 被删除结点的数据项赋给item \n
+ * &emsp; 调用free释放被删除结点 \n
  */
 status_t LinkedListDelete(linked_node_t* linked_list_head, int pos, ELEM_TYPE* elem) {
     linked_node_t* delete_node_predecessor = linked_list_head;    // 待删除结点前一结点(指针), 初始化指向链表头结点
@@ -201,15 +214,30 @@ status_t LinkedListDelete(linked_node_t* linked_list_head, int pos, ELEM_TYPE* e
  * @param merged_list_head **合并链表的头结点**(二级指针)
  * @return **执行结果**
  * @note
- * **注**: 有序链表a和有序链表b合并, 合并至a链表
- * - 初始化链表a的遍历指针a_cur和链表b的遍历指针b_cur
- * - 初始化合并链表的遍历指针
+ * **注**: 有序链表a和有序链表b合并, 合并至a链表 \n
+ * - 初始化链表a的遍历指针a_cur和链表b的遍历指针b_cur \n
+ * &emsp; a_cur指向链表a首元素结点 \n
+ * &emsp; b_cur指向链表b首元素结点 \n
+ * - 初始化合并链表的遍历指针 \n
+ * &emsp; cur指向链表a头结点 \n
+ * - 执行合并 \n
+ * &emsp; **while** 链表a和链表b都未合并完 : \n
+ * &emsp;&emsp; **if** 链表a当前元素 <= 链表b当前元素 : \n
+ * &emsp;&emsp;&emsp; 合并链表当前元素(cur)的next指向链表a当前元素 \n
+ * &emsp;&emsp;&emsp; 合并链表当前元素(cur)更新为链表a当前元素 \n
+ * &emsp;&emsp;&emsp; 链表a当前元素向后移动一位(next) \n
+ * &emsp;&emsp; **else** (链表a当前元素 > 链表b当前元素) : \n
+ * &emsp;&emsp;&emsp; 合并链表当前元素(cur)的next指向链表a当前元素 \n
+ * &emsp;&emsp;&emsp; 合并链表当前元素(cur)更新为链表a当前元素 \n
+ * &emsp;&emsp;&emsp; 链表a当前元素向后移动一位(next) \n
+ * - 剩余链表处理 \n
+ * &emsp; 如果链表a有剩余, 将链表a加到合并链表尾部 \n
+ * &emsp; 如果链表b有剩余, 将链表b加到合并链表尾部 \n
  */
 status_t LinkedListMergeTwoSortedList(linked_node_t* list_a_head,
                                       linked_node_t* list_b_head,
                                       linked_node_t** merged_list_head)
 {
-
     linked_node_t* a_cur = list_a_head->next;
     linked_node_t* b_cur = list_b_head->next;
 
@@ -230,6 +258,10 @@ status_t LinkedListMergeTwoSortedList(linked_node_t* list_a_head,
 
     if (a_cur) {
         cur->next = a_cur;
+    }
+
+    if (b_cur) {
+        cur->next = b_cur;
     }
 
     return OK;

@@ -33,6 +33,7 @@ status_t LinkedQueueInit(linked_queue_t* link_queue) {
     /// &emsp; front->next设为NULL \n
     link_queue->front = link_queue->rear;
     link_queue->front->next = NULL;
+
     return OK;
 }
 

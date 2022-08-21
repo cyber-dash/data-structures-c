@@ -15,14 +15,19 @@
 #include "linked_list.h"
 
 
+// 测试链表创建
 void TestLinkedListCreate();
 
+// 测试链表获取结点数据
 void TestLinkedListGetElem();
 
+// 测试链表删除结点
 void TestLinkedListDelete();
 
+// 测试链表插入结点
 void TestLinkedListInsert();
 
+// 测试链表有序链表合并
 void TestLinkedListMerge();
 
 

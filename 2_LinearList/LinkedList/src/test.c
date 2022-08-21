@@ -13,8 +13,14 @@
 
 
 /*!
- * @brief 测试链表创建
+ * @brief **测试链表创建**
  * @note
+ * 测试链表创建
+ * ----------
+ * ----------
+ * - 创建链表 \n
+ * &emsp; 使用数组[1, 4, 2, 8, 5, 7]创建链表 \n
+ * - 打印链表 \n
  */
 void TestLinkedListCreate() {
     printf("\n");
@@ -37,7 +43,15 @@ void TestLinkedListCreate() {
 
 
 /*!
- * @brief 测试链表获取结点数据
+ * @brief **测试链表获取结点数据**
+ * @note
+ * 测试链表获取结点数据
+ * -----------------
+ * -----------------
+ * - 创建链表 \n
+ * &emsp; 使用数组[1, 4, 2, 8, 5, 7]创建链表 \n
+ * - 获取某位置结点数据 \n
+ * &emsp; 获取并打印 \n
  */
 void TestLinkedListGetElem() {
     printf("\n");
@@ -66,7 +80,15 @@ void TestLinkedListGetElem() {
 
 
 /*!
- * @brief 测试链表删除结点
+ * @brief **测试链表删除结点**
+ * @note
+ * 测试链表删除结点
+ * --------------
+ * --------------
+ * - 创建链表 \n
+ * &emsp; 使用数组[1, 4, 2, 8, 5, 7]创建链表 \n
+ * - 删除结点 \n
+ * - 打印链表 \n
  */
 void TestLinkedListDelete() {
     printf("\n");
@@ -98,7 +120,15 @@ void TestLinkedListDelete() {
 
 
 /*!
- * @brief 链表测试插入结点
+ * @brief **测试链表插入结点**
+ * @note
+ * 测试链表插入结点
+ * --------------
+ * --------------
+ * - 创建链表 \n
+ * &emsp; 使用数组[1, 4, 2, 8, 5, 7]创建链表 \n
+ * - 插入结点 \n
+ * - 打印链表 \n
  */
 void TestLinkedListInsert() {
     printf("\n");
@@ -129,7 +159,18 @@ void TestLinkedListInsert() {
 
 
 /*!
- * @brief (有序)链表合并
+ * @brief **测试链表有序链表合并**
+ * @note
+ *
+ * (有序)链表合并
+ * ------------
+ * ------------
+ * - 创建链表1 \n
+ * &emsp; 2 --> 4 --> 6 --> 8 \n
+ * - 创建链表2 \n
+ * &emsp; 1 --> 3 --> 5 --> 7 --> 9 --> 10 \n
+ * - 合并链表 \n
+ * &emsp; 1 --> 2 --> 3 --> 4 --> 5 --> 6 --> 7 --> 8 --> 9 --> 10 \n
  */
 void TestLinkedListMerge() {
     printf("\n");
@@ -137,7 +178,7 @@ void TestLinkedListMerge() {
     printf("|                      测试有序链表的合并                      |\n");
 
     ELEM_TYPE elements1[4] = { 2, 4, 6, 8 };
-    ELEM_TYPE elements2[4] = { 1, 3, 5, 7 };
+    ELEM_TYPE elements2[6] = { 1, 3, 5, 7 , 9, 10};
 
     linked_node_t* linked_list_head1 = NULL;
     linked_node_t* linked_list_head2 = NULL;
@@ -148,7 +189,7 @@ void TestLinkedListMerge() {
     LinkedListPrint(linked_list_head1);
 
     printf("创建链表2:\n");
-    LinkedListCreate(&linked_list_head2, elements2, sizeof(elements1) / sizeof(ELEM_TYPE));
+    LinkedListCreate(&linked_list_head2, elements2, sizeof(elements2) / sizeof(ELEM_TYPE));
     LinkedListPrint(linked_list_head2);
 
     printf("合并链表:\n");

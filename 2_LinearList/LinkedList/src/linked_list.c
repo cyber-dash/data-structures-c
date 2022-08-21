@@ -208,12 +208,15 @@ status_t LinkedListDelete(linked_node_t* linked_list_head, int pos, ELEM_TYPE* e
 
 
 /*!
- * @brief <h1>链表合并两个有序链表</h1>
+ * @brief **链表合并两个有序链表**
  * @param list_a_head **a链表的头结点**(指针)
  * @param list_b_head **b链表的头结点**(指针)
  * @param merged_list_head **合并链表的头结点**(二级指针)
  * @return **执行结果**
  * @note
+ * 链表合并两个有序链表
+ * -----------------
+ * -----------------
  * **注**: 有序链表a和有序链表b合并, 合并至a链表 \n
  * - 初始化链表a的遍历指针a_cur和链表b的遍历指针b_cur \n
  * &emsp; a_cur指向链表a首元素结点 \n
@@ -268,9 +271,13 @@ status_t LinkedListMergeTwoSortedList(linked_node_t* list_a_head,
 }
 
 /*!
- * @brief <h1>打印链表</h1>
+ * @brief **打印链表**
  * @param linked_list_head **链表头结点**
  * @note
+ * 打印链表
+ * -------
+ * -------
+ * 遍历链表, 打印每一结点的数据项data \n
  */
 void LinkedListPrint(linked_node_t* linked_list_head) {
     for (linked_node_t* cur = linked_list_head->next; cur != NULL; cur = cur->next) {

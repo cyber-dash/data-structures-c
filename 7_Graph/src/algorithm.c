@@ -172,6 +172,34 @@ void BFSTraverse(matrix_graph_t graph, status_t (*Visit)(matrix_graph_t*, int)) 
 
 
 /*!
+ * @brief 索引index结点是否在最小生成树中
+ * @param mst_vertex_index_set 最小生成树结点索引集合(数组)
+ * @param index 结点索引
+ * @param mst_vertex_count 最小生成树当前大小(结点数)
+ * @return 结果(在或者不在)
+ * @note
+ * 索引index结点是否在最小生成树中
+ * ----------------------------
+ * ----------------------------
+ * **for loop** 遍历最小生成树结点(用来检查是否已经在最小生成树) : \n
+ * &emsp; **if** 当前最小生成树结点索引 == 当前图结点 : \n
+ * &emsp;&emsp; in_mst为TRUE(在最小生成树) \n
+ * &emsp; 跳出循环 \n
+ * 返回in_mst \n
+ */
+int isInMstVertexIndexSet(const int* mst_vertex_index_set, int index, int mst_vertex_count) {
+    int in_mst = FALSE; // 变量in_mst表示当前结点是否在最小生成树中, 初始化FALSE
+    for (int i = 0; i < mst_vertex_count; i++) {
+        if (index == mst_vertex_index_set[i]) {
+            in_mst = TRUE;
+            break;
+        }
+    }
+
+    return in_mst;
+}
+
+/*!
  * @brief Prim最小生成树算法
  * @param graph **图**(指针)
  * @param min_span_tree **最小生成树**(数组)
@@ -190,7 +218,7 @@ void BFSTraverse(matrix_graph_t graph, status_t (*Visit)(matrix_graph_t*, int)) 
  * &emsp;&emsp;&emsp; continue \n
  * &emsp;&emsp; 边(0 --> i)入队最小优先队列min_priority_queue \n
  * - 贪心法构造最小生成树 \n
- * &emsp; **while** 最小生成树结点数量 != 图结点数量 : \n
+ * &emsp; **while** 最小生成树结点数量 < 图结点数量 : \n
  * &emsp;&emsp; 取最小优先队列队头(以mst_vertex_index_set中某个结点为起点, 不在这些结点集合内的某个结点为终点的, 最短的边)
  * 并出队 \n
  * &emsp;&emsp; 将队头(最短边), 加入到min_span_tree数组 \n
@@ -198,28 +226,23 @@ void BFSTraverse(matrix_graph_t graph, status_t (*Visit)(matrix_graph_t*, int)) 
  * &emsp;&emsp; 当前最短生成树结点数量++ \n
  * &emsp;&emsp; 将队头(最短边)的终点为起点, 终点不在mst_vertex_index_set的边, 全部入队最小优先队列 \n
  * &emsp;&emsp;&emsp; **for loop** 遍历图结点(作为终点) : \n
- * &emsp;&emsp;&emsp;&emsp; 变量in_vertex_set表示当前结点索引i, 是否在最小生成树中, 初始化FALSE \n
- * &emsp;&emsp;&emsp;&emsp; **for loop** 遍历最小生成树结点(用来检查是否已经在最小生成树) : \n
- * &emsp;&emsp;&emsp;&emsp;&emsp; **if** 当前最小生成树结点索引 == 当前图结点 : \n
- * &emsp;&emsp;&emsp;&emsp;&emsp;&emsp; in_vertex_set设为TRUE(在最小生成树) \n
- * &emsp;&emsp;&emsp;&emsp;&emsp;&emsp; 跳出内层循环 \n
+ * &emsp;&emsp;&emsp;&emsp; 检查当前结点是否已在最小生成树 \n
  * &emsp;&emsp;&emsp;&emsp; **if** 当前结点已经在最小生成树 or 边(cur_mst_edge.ending_vertex_index --> i)不存在 : \n
  * &emsp;&emsp;&emsp;&emsp;&emsp; continue \n
  * &emsp;&emsp;&emsp;&emsp; 将边(cur_mst_edge.ending_vertex_index --> i) 入队最小优先队列 \n
  */
 void Prim(matrix_graph_t* graph, edge_t* min_span_tree) {
 
-    // 初始化最小生成树结点索引数组
-
+    // --- 初始化最小生成树结点索引数组 ---
     int mst_vertex_index_set[MAX_VERTEX_CNT];   // 声明最小生成树结点索引数组mst_vertex_index_set
     mst_vertex_index_set[0] = 0;                // 索引0结点进入mst_vertex_index_set(加入最小生成树)
-    int mst_size = 1;                           // 最小生成树大小设置为1(只包含索引0结点)
+    int mst_vertex_count = 1;                           // 最小生成树大小设置为1(只包含索引0结点)
 
-    // 初始化边的最小优先队列
+    // --- 初始化边的最小优先队列 ---
     min_priority_queue_t min_priority_queue;
     MinPriorityQueueInit(&min_priority_queue, graph->edge_count);
 
-    // 索引0图结点的相邻边全部进入最小优先队列 ###
+    // --- 索引0结点的邻接边, 全部进入最小优先队列 ---
     for (int i = 1; i < graph->vertex_count; i++) {
         if (graph->adj_matrix[0][i].weight_type == NO_EDGE) {
             continue;
@@ -228,35 +251,31 @@ void Prim(matrix_graph_t* graph, edge_t* min_span_tree) {
         MinPriorityQueuePush(&min_priority_queue, graph->adj_matrix[0][i]);
     }
 
-    // 贪心法构造最小生成树
-    while (mst_size != graph->vertex_count) { // while 最小生成树结点数量 != 图结点数量
+    // --- 贪心法构造最小生成树 ---
+    while (mst_vertex_count < graph->vertex_count) { // while 最小生成树结点数量 < 图结点数量 (最小生成树未构造完)
 
         // 取最小优先队列队头(以mst_vertex_index_set中某个结点为起点, 不在这些结点的某个结点为终点的, 最短的边), 并出队
         edge_t cur_mst_edge;
         MinPriorityQueuePop(&min_priority_queue, &cur_mst_edge);
 
         // 将当前最短边, 加入到最小生成树
-        min_span_tree[mst_size - 1] = cur_mst_edge;
+        min_span_tree[mst_vertex_count - 1] = cur_mst_edge;
         // 将当前最短生成树边的终点, 加入到mst_vertex_index_set
-        mst_vertex_index_set[mst_size] = cur_mst_edge.ending_vertex_index;
+        mst_vertex_index_set[mst_vertex_count] = cur_mst_edge.ending_vertex_index;
         // 当前最短生成树结点数量++
-        mst_size++;
+        mst_vertex_count++;
 
-        // 将队头(最短边)的终点为起点, 终点不在mst_vertex_index_set的边, 全部入队最小优先队列
+        // --- 将队头(最短边)的终点为起点, 终点不在mst_vertex_index_set的边, 全部入队最小优先队列 ---
 
         // for loop 遍历图结点(作为终点)
         for (int i = 0; i < graph->vertex_count; i++) {
 
-            int in_vertex_set = FALSE; // 变量in_vertex_set表示当前结点是否在最小生成树中, 初始化FALSE
-            for (int j = 0; j < mst_size; j++) {
-                if (i == mst_vertex_index_set[j]) {
-                    in_vertex_set = TRUE;
-                    break;
-                }
-            }
-
-            // if 当前结点已经在mst_vertex_index_set 或者 边(cur_mst_edge.ending_vertex_index, i)不存在
-            if (in_vertex_set || graph->adj_matrix[cur_mst_edge.ending_vertex_index][i].weight_type == NO_EDGE) {
+            // 变量in_vertex_set表示当前结点是否在最小生成树中, 在TRUE, 不在FALSE
+            // if 当前结点已经在mst_vertex_index_set 或者 边(cur_mst_edge.ending_vertex_index, i)不存在: continue
+            int in_mst = isInMstVertexIndexSet(mst_vertex_index_set, i, mst_vertex_count);
+            if (in_mst ||
+                graph->adj_matrix[cur_mst_edge.ending_vertex_index][i].weight_type == NO_EDGE
+            ) {
                 continue;
             }
 

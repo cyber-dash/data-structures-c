@@ -14,6 +14,7 @@
 
 #include "graph.h"
 
+
 /*! @brief 链式队列结点类型 */
 typedef struct linked_queue_node linked_queue_node_t;
 

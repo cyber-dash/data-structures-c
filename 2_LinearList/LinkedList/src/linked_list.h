@@ -11,15 +11,9 @@
 #ifndef CYBER_DASH_LINKED_LIST_H
 #define CYBER_DASH_LINKED_LIST_H
 
-#define ELEM_TYPE   int //!< 链表元素类型
 
-/*! @brief 返回值类型 */
-typedef enum {
-    OK,             //!< 成功/正确
-    NON_ALLOCATED,  //!< 内存分配失败
-    NON_EXISTENT,   //!< 不存在
-    ERROR           //!< 错误
-} status_t;
+#include "common.h"
+
 
 /*! @brief 链表结点 */
 typedef struct linked_node {

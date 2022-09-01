@@ -55,8 +55,8 @@ typedef struct {
 /*! @brief 基数排序的静态链表 */
 typedef struct {
     static_linked_list_node_t elements[MAX_SEQ_LIST_SIZE];    //!< 元素的静态链表, elements[0]为头结点(不保存元素)
-    int number_of_digit;                                //!< 基数关键字个数
-    int length;                                      //!< 静态链表长度
+    int number_of_digit;    //!< 基数关键字个数
+    int length;             //!< 静态链表长度
 } radix_static_linked_list_t;
 
 

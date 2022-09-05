@@ -1,4 +1,4 @@
-/*!
+﻿/*!
  * @file common.h
  * @author CyberDash计算机考研, cyberdash@163.com(抖音id:cyberdash_yuan)
  * @brief common头文件

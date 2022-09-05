@@ -12,8 +12,8 @@
 #define CYBER_DASH_GRAPH_ALGORITHM_H
 
 
-#include "matrix_graph.h"
 #include <stdio.h>
+#include "matrix_graph.h"
 
 
 // 结点访问函数
@@ -41,21 +41,33 @@ void Kruskal(matrix_graph_t* graph, edge_t* min_span_tree);
 void PrintMinSpanTree(MST_t min_span_tree, int size);
 
 // 迪杰斯特拉(Dijkstra)最短路径
-void Dijkstra(matrix_graph_t* graph, int v0, int (*predecessor)[MAX_VERTEX_CNT], edge_t* distance);
+void Dijkstra(matrix_graph_t* graph,
+              int starting_vertex_index,
+              int (*predecessor)[MAX_VERTEX_CNT],
+              edge_t* distance);
 
 // 贝尔曼福特(Bellman-Ford)最短路径
-int BellmanFord(matrix_graph_t* graph, int starting_vertex_index, int (*predecessor)[MAX_VERTEX_CNT], edge_t* distance);
+int BellmanFord(matrix_graph_t* graph,
+                int starting_vertex_index,
+                int (*predecessor)[MAX_VERTEX_CNT],
+                edge_t* distance);
 
 // 弗洛伊德(Floyd)最短路径
 void Floyd(matrix_graph_t* graph, int (*predecessor)[MAX_VERTEX_CNT], edge_t (*distance)[MAX_VERTEX_CNT]);
 
 // 打印单源最短路径
-void PrintSingleSourceShortestPath(matrix_graph_t *graph, int start, int (*predecessor)[MAX_VERTEX_CNT], edge_t* distance);
+void PrintSingleSourceShortestPath(matrix_graph_t *graph,
+                                   int start,
+                                   int (*predecessor)[MAX_VERTEX_CNT],
+                                   edge_t* distance);
 
 // 打印单源最短路径(递归)
-void PrintSingleSourceShortestPathRecursive(matrix_graph_t *graph, int start, int end, int (*predecessor)[MAX_VERTEX_CNT]);
+void PrintSingleSourceShortestPathRecursive(matrix_graph_t *graph,
+                                            int start,
+                                            int end,
+                                            int (*predecessor)[MAX_VERTEX_CNT]);
 
-
+// 打印多源最短路径
 void PrintMultiSourceShortestPath(matrix_graph_t *graph,
                                   edge_t (*distance)[MAX_VERTEX_CNT],
                                   int (*predecessor)[MAX_VERTEX_CNT]);

@@ -1,4 +1,4 @@
-/*!
+﻿/*!
  * @file min_priority_queue.h
  * @author CyberDash计算机考研, cyberdash@163.com(抖音id:cyberdash_yuan)
  * @brief 最小优先队列头文件

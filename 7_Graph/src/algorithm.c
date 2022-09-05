@@ -67,35 +67,45 @@ status_t DFSTraverse(matrix_graph_t graph, status_t (*Visit)(matrix_graph_t*, in
 
 
 /*!
- * @brief <h1>对结点深度优先遍历(递归)</h1>
+ * @brief 对结点深度优先遍历(递归)
  * @param graph **图**
  * @param vertex_index **图结点索引**
  * @param visited_vertex_indexes **已访问结点索引的数组**
  * @param Visit **结点访问函数**
  * @note
+ * 对结点深度优先遍历(递归)
+ * ---------------------
+ * ---------------------
+ * ### 1 访问索引vertex_index的图结点 ###
+ * &emsp; - 调用Visit函数访问参数结点\n
+ * &emsp; - 将已访问的参数结点标记为VISITED\n
+ * ### 2 对索引vertex_index图结点的相邻结点执行递归 ###
+ * &emsp; **for loop** 遍历索引vertex_index图结点的相邻各结点 :\n
+ * &emsp;&emsp; **if** 当前结点已经访问过 :\n
+ * &emsp;&emsp;&emsp; continue\n
+ * &emsp;&emsp; 当前结点递归执行DFSRecursive\n
  */
 void DFSRecursive(matrix_graph_t graph,
                   int vertex_index,
                   int* visited_vertex_indexes,
                   status_t (*Visit)(matrix_graph_t*, int))
 {
-    /// ### 1 访问索引vertex_index的图结点 ###
-    /// &emsp; - 调用Visit函数访问参数结点\n
-    Visit(&graph, vertex_index);
-    /// &emsp; - 将已访问的参数结点标记为VISITED\n
-    visited_vertex_indexes[vertex_index] = VISITED;
+    // ----- 1 访问索引vertex_index的图结点 -----
 
-    /// ### 2 对索引vertex_index图结点的相邻结点执行递归 ###
-    /// &emsp; **for loop** 依次遍历索引vertex_index图结点的相邻各结点 :\n
+    Visit(&graph, vertex_index);                        // 调用Visit函数访问参数结点
+    visited_vertex_indexes[vertex_index] = VISITED;     // 将已访问的参数结点标记为VISITED
+
+    // ----- 2 对索引vertex_index图结点的相邻结点执行递归 -----
+
+    // 遍历索引vertex_index图结点的相邻各结点
     for (int i = FirstAdjVertexIndex(&graph, vertex_index); i >= 0; i = NextAdjVertexIndex(&graph, vertex_index, i)) {
 
-        /// &emsp;&emsp; **if** 当前结点已经访问过 :\n
-        /// &emsp;&emsp;&emsp; continue\n
+        // if 当前结点已经访问过, continue
         if (visited_vertex_indexes[i] == VISITED) {
             continue;
         }
 
-        // &emsp;&emsp; 当前结点递归执行DFSRecursive\n
+        // 当前结点递归执行DFSRecursive
         DFSRecursive(graph, i, visited_vertex_indexes, Visit);
     }
 }
@@ -233,16 +243,16 @@ int isInMstVertexIndexSet(const int* mst_vertex_index_set, int index, int mst_ve
  */
 void Prim(matrix_graph_t* graph, edge_t* min_span_tree) {
 
-    // --- 初始化最小生成树结点索引数组 ---
+    // ----- 初始化最小生成树结点索引数组 -----
     int mst_vertex_index_set[MAX_VERTEX_CNT];   // 声明最小生成树结点索引数组mst_vertex_index_set
     mst_vertex_index_set[0] = 0;                // 索引0结点进入mst_vertex_index_set(加入最小生成树)
     int mst_vertex_count = 1;                           // 最小生成树大小设置为1(只包含索引0结点)
 
-    // --- 初始化边的最小优先队列 ---
+    // ----- 初始化边的最小优先队列 -----
     min_priority_queue_t min_priority_queue;
     MinPriorityQueueInit(&min_priority_queue, graph->edge_count);
 
-    // --- 索引0结点的邻接边, 全部进入最小优先队列 ---
+    // ----- 索引0结点的邻接边, 全部进入最小优先队列 -----
     for (int i = 1; i < graph->vertex_count; i++) {
         if (graph->adj_matrix[0][i].weight_type == NO_EDGE) {
             continue;
@@ -251,8 +261,9 @@ void Prim(matrix_graph_t* graph, edge_t* min_span_tree) {
         MinPriorityQueuePush(&min_priority_queue, graph->adj_matrix[0][i]);
     }
 
-    // --- 贪心法构造最小生成树 ---
-    while (mst_vertex_count < graph->vertex_count) { // while 最小生成树结点数量 < 图结点数量 (最小生成树未构造完)
+    // ----- 贪心法构造最小生成树 -----
+    // while 最小生成树结点数量 < 图结点数量 (最小生成树未构造完)
+    while (mst_vertex_count < graph->vertex_count) {
 
         // 取最小优先队列队头(以mst_vertex_index_set中某个结点为起点, 不在这些结点的某个结点为终点的, 最短的边), 并出队
         edge_t cur_mst_edge;
@@ -665,7 +676,7 @@ void PrintSingleSourceShortestPath(matrix_graph_t* graph,
 
 
 /*!
- * @brief 多源最短路径打印函数
+ * @brief 打印多源最短路径
  * @param graph **图**(指针)
  * @param distance **最短路径数组**
  * @param predecessor **前驱数组**

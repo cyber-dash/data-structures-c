@@ -8,8 +8,8 @@
  *  CyberDash计算机考研
  */
 
-#ifndef CYBER_DASH_COMMON_H
-#define CYBER_DASH_COMMON_H
+#ifndef CYBER_DASH_GRAPH_H
+#define CYBER_DASH_GRAPH_H
 
 
 #include "common.h"
@@ -79,4 +79,4 @@ typedef struct {
 } matrix_graph_t;
 
 
-#endif // CYBER_DASH_COMMON_H
+#endif // CYBER_DASH_GRAPH_H

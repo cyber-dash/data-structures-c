@@ -1,4 +1,4 @@
-/*!
+﻿/*!
  * @file cyberdash_string.h
  * @author CyberDash计算机考研, cyberdash@163.com(抖音id:cyberdash_yuan)
  * @brief 字符串头文件
@@ -11,19 +11,19 @@
 #define CYBER_DASH_STRING_H
 
 
-/*! @brief 函数返回值枚举 */
+ /*! @brief 函数返回值枚举 */
 typedef enum Status {
-    OK = 0,         //!< 正确
-    NON_ALLOCATED,  //!< 内存分配失败
-    NON_EXISTENT,   //!< 不存在
-    OVERFLOW,       //!< 溢出
-    ERROR,          //!< 其他错误
+	OK = 0,         //!< 正确
+	NON_ALLOCATED,  //!< 内存分配失败
+	NON_EXISTENT,   //!< 不存在
+	OVERFLOW,       //!< 溢出
+	ERROR,          //!< 其他错误
 } status_t;
 
 /*! @brief 字符串 */
 typedef struct {
-    char* buffer;   //!< char缓存数组
-    int length;     //!< 长度
+	char* buffer;   //!< char缓存数组
+	int length;     //!< 长度
 } string_t;
 
 
@@ -55,10 +55,10 @@ status_t StringSubStr(string_t* str, string_t* sub_str, int offset, int sub_str_
 status_t StringInsert(string_t* str, int index, string_t* insert_str);
 
 // 字符串暴力匹配(BF)
-int StringBruteForceSearch(string_t* str, string_t *pattern, int offset);
+int StringBruteForceSearch(string_t* str, string_t* pattern, int offset);
 
 // 字符串KMP匹配
-int StringKMPSearch(string_t *str, string_t *pattern, int offset);
+int StringKMPSearch(string_t* str, string_t* pattern, int offset);
 
 
 #endif //CYBER_DASH_STRING_H

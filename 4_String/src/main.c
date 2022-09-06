@@ -1,4 +1,4 @@
-/*!
+﻿/*!
  * @file main.c
  * @author CyberDash计算机考研, cyberdash@163.com(抖音id:cyberdash_yuan)
  * @brief 字符串main文件
@@ -11,30 +11,30 @@
 #include "test.h"
 
 
-/*!
- * main函数
- * @return 0
- * @note
- */
+ /*!
+  * main函数
+  * @return 0
+  * @note
+  */
 int main() {
 
-    /// - 测试字符串复制
-    TestStringCopy();
+	/// - 测试字符串复制
+	TestStringCopy();
 
-    /// - 测试字符串比较
-    TestStringCompare();
+	/// - 测试字符串比较
+	TestStringCompare();
 
-    /// - 测试字符串拼接
-    TestStringConcat();
+	/// - 测试字符串拼接
+	TestStringConcat();
 
-    /// - 测试字符串子串
+	/// - 测试字符串子串
 	TestStringSubStr();
 
-    /// - 测试字符串插入
-    TestStringInsert();
+	/// - 测试字符串插入
+	TestStringInsert();
 
-    /// - 测试字符串匹配(BF和KMP)
-    TestStringSearch();
+	/// - 测试字符串匹配(BF和KMP)
+	TestStringSearch();
 
-    return 0;
+	return 0;
 }

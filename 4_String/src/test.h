@@ -1,4 +1,4 @@
-/*!
+﻿/*!
  * @file test.h
  * @author CyberDash计算机考研, cyberdash@163.com(抖音id:cyberdash_yuan)
  * @brief 字符串测试头文件
@@ -12,7 +12,7 @@
 #define CYBER_DASH_STRING_TEST_H
 
 
-// 测试字符串复制
+ // 测试字符串复制
 void TestStringCopy();
 
 // 测试字符串比较

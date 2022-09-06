@@ -22,14 +22,19 @@
  */
 int main() {
 
+    // 测试链表创建
     TestLinkedListCreate();
 
+    // 测试链表获取结点元素
     TestLinkedListGetElem();
 
+    // 测试链表删除结点
     TestLinkedListDelete();
 
+    // 测试链表插入结点
     TestLinkedListInsert();
 
+    // 测试有序链表合并
     TestLinkedListMerge();
 
     return 0;

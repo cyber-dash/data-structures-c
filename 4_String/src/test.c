@@ -79,10 +79,10 @@ void TestStringCompare() {
     char chars3[50] = "Hello cyberdash and hello Mr. Yuan";
     char chars4[50] = "Hi cyberdash";
 
-    StringAssign(&str1, chars1, strlen(chars1));
-    StringAssign(&str2, chars2, strlen(chars2));
-    StringAssign(&str3, chars3, strlen(chars3));
-    StringAssign(&str4, chars4, strlen(chars4));
+    StringAssign(&str1, chars1, (int)strlen(chars1));
+    StringAssign(&str2, chars2, (int)strlen(chars2));
+    StringAssign(&str3, chars3, (int)strlen(chars3));
+    StringAssign(&str4, chars4, (int)strlen(chars4));
 
     /// ###2 做比较并打印结果###
 	printf("str1 compare to str2: %d\n", StringCompare(&str1, &str2));
@@ -115,8 +115,8 @@ void TestStringConcat() {
 
     char chars1[50] = "hello cyberdash,";
     char chars2[50] = "hello Mr. Yuan.";
-    StringAssign(&str1, chars1, strlen(chars1));
-    StringAssign(&str2, chars2, strlen(chars2));
+    StringAssign(&str1, chars1, (int)strlen(chars1));
+    StringAssign(&str2, chars2, (int)strlen(chars2));
 
     /// ###2 执行拼接###
     StringConcat(&resulting_str, &str1, &str2);
@@ -146,7 +146,7 @@ void TestStringSubStr() {
     /// ###1 初始化字符串###
     /// &emsp; "hello cyberdash,"
     char chars[50] = "hello cyberdash,";
-    StringAssign(&str, chars, strlen(chars));
+    StringAssign(&str, chars, (int)strlen(chars));
 
     int offset = 6;
     int sub_str_len = 9;
@@ -181,8 +181,8 @@ void TestStringInsert() {
     char chars[50] = "Hello Dash";
     char insert_chars[50] = "Cyber";
 
-    StringAssign(&str, chars, strlen(chars));
-    StringAssign(&insert_str, insert_chars, strlen(insert_chars));
+    StringAssign(&str, chars, (int)strlen(chars));
+    StringAssign(&insert_str, insert_chars, (int)strlen(insert_chars));
 
     /// ###2 调用StringInsert执行插入###
     StringInsert(&str, 6, &insert_str);
@@ -215,8 +215,8 @@ void TestStringSearch() {
     char str_chars[50] = "123 cyberdash cyber 456";
     char pattern_chars[50] = "cyberdash cyber";
 
-    StringAssign(&str, str_chars, strlen(str_chars));
-    StringAssign(&pattern, pattern_chars, strlen(pattern_chars));
+    StringAssign(&str, str_chars, (int)strlen(str_chars));
+    StringAssign(&pattern, pattern_chars, (int)strlen(pattern_chars));
 
 	printf("str: ");
     StringPrint(&str);

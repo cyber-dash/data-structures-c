@@ -23,7 +23,7 @@ typedef struct circular_queue {
     QUEUE_ELEM* elements;   //!< 队列元素数组
     int front;              //!< 队头
     int rear;               //!< 队尾
-}circular_queue_t;
+} circular_queue_t;
 
 
 // 循环队列初始化

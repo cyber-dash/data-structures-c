@@ -21,21 +21,20 @@
  * 顺序表初始化
  * ----------
  * ----------
+ * - 分配elements数组内存 \n
+ * &emsp; **if** 内存分配失败 : \n
+ * &emsp;&emsp; 返回NON_ALLOCATED \n
  */
 status_t SeqListInit(seq_list_t* seq_list) {
 
-    /// - 分配elements数组内存 \n
-    /// &emsp; **if** 内存分配失败 : \n
-    /// &emsp;&emsp; 返回NON_ALLOCATED \n
+    // 分配elements数组内存
     seq_list->elements = (ELEM_TYPE*)malloc(LIST_INIT_CAPACITY * sizeof(ELEM_TYPE));
     if (!seq_list->elements) {
         return NON_ALLOCATED;
     }
 
-    /// - 设置length和capacity \n
-    /// &emsp; length初始化为0 \n
-    /// &emsp; capacity初始化为0 \n
-    seq_list->length = 0;               // 空表长度为0
+    // 设置length和capacity
+    seq_list->length = 0;                       // 空表长度为0
     seq_list->capacity = LIST_INIT_CAPACITY;    // 初始存储容量
 
     return OK;
@@ -84,16 +83,14 @@ status_t SeqListInsert(seq_list_t* seq_list, int pos, ELEM_TYPE elem) {
             return NON_ALLOCATED;
         }
 
-        // 顺序表elements指针指向新数组
-        seq_list->elements = new_elements;
-        // 顺序表capacity增加容量数值
-        seq_list->capacity += LIST_INCREMENT;
+        seq_list->elements = new_elements;      // 顺序表elements指针指向新数组
+        seq_list->capacity += LIST_INCREMENT;   // 顺序表capacity增加容量数值
     }
 
     // 插入位置(包含)后面的所有结点向后移动一位
-    ELEM_TYPE* insert_pos_elem = &(seq_list->elements[pos - 1]);
-    for (ELEM_TYPE* cur = &(seq_list->elements[seq_list->length - 1]); cur >= insert_pos_elem; cur--) {
-        *(cur + 1) = *cur; // 右移
+    ELEM_TYPE* insert_pos_elem = seq_list->elements + pos - 1;
+    for (ELEM_TYPE* cur = seq_list->elements + seq_list->length - 1; cur >= insert_pos_elem; cur--) {
+        *(cur + 1) = *cur;
     }
 
     *insert_pos_elem = elem;  // 插入elem
@@ -273,6 +270,7 @@ status_t SeqListMerge(seq_list_t* list_a, seq_list_t* list_b, seq_list_t* merged
  * 顺序表打印
  * ---------
  * ---------
+ * 循环打印顺序表各元素
  */
 void SeqListPrint(seq_list_t* seq_list) {
     for (int i = 0; i < seq_list->length; i++) {

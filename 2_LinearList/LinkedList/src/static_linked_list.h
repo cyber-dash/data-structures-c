@@ -19,7 +19,7 @@ typedef struct {
 typedef component static_linked_list_t[STATIC_LINKED_LIST_MAX_SIZE];
 
 
-// 静态链表查找
+// 静态链表查找, todo
 int StaticLinkedListLocate(static_linked_list_t static_linked_list, ELEM_TYPE elem);
 
 

@@ -15,9 +15,8 @@
 
 
 /*!
- * @brief 线性表
+ * @brief **线性表**
  * @note
- * <h1>线性表</h1>
  */
 typedef struct {
     ELEM_TYPE* elements;    //!< 元素数组

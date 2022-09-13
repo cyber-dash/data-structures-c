@@ -5,7 +5,7 @@
 #include "static_linked_list.h"
 
 
-// 静态链表查找
+// 静态链表查找, todo:
 int StaticLinkedListLocate(static_linked_list_t static_linked_list, ELEM_TYPE elem) {
     return -1;
 }

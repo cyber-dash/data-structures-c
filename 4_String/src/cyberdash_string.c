@@ -14,33 +14,35 @@
 
 
  /*!
-  * <h1>字符串赋值</h1>
+  * 字符串赋值
   * @param str **字符串(指针)**
   * @param chars **char数组**
   * @param str_len **字符串长度**
   * @return **执行结果**
   * @note
+  * 字符串赋值
+  * ---------
+  * ---------
+  * ### 1 释放str->buffer###
   */
 status_t StringAssign(string_t* str, const char* chars, int str_len) {
 
-	/// ### 1 释放str->buffer###
+	// 释放str->buffer
 	if (str->buffer) {
 		free(str->buffer);
 	}
 
-	/// ### 2 处理str_len等于0的情况###
-	/// &emsp; **if** str_len为0 :\n
-	/// &emsp;&emsp; str->buffer设置为NULL\n
-	/// &emsp;&emsp; str->length设置为0\n
-	/// &emsp;&emsp; 返回OK\n
+	// 处理str_len等于0的情况
 	if (str_len == 0) {
-		str->buffer = NULL;
-		str->length = 0;
+		str->buffer = NULL; // str->buffer设置为NULL
+		str->length = 0;    // 字符串长度设置为0
+
 		return OK;
 	}
 
 	/// ### 3 str->buffer分配内存###
-	if (!(str->buffer = (char*)malloc(str_len + 1))) {
+    str->buffer = (char*)malloc(str_len + 1);
+	if (!str->buffer) {
 		return NON_ALLOCATED;
 	}
 
@@ -353,92 +355,184 @@ int StringBruteForceSearch(string_t* str, string_t* pattern, int offset) {
 
 
 /*!
- * <h1>KMP算法求next数组</h1>
+ * @brief **KMP算法求next数组**
  * @param pattern **模式串**
  * @param pattern_len **模式串长度**
  * @param next **next数组**(int二级指针)
  * @return 执行结果
  * @note
+ * KMP算法求next数组
+ * ----------------
+ * ----------------
+ * 求next数组的意义: 发掘模式串的内在信息, 当模式串在某个位置(i)的字符失配时, \n
+ * 不再从模式串首字符重新开始匹配, 而是从位置next[i]开始
+ * ###1 初始化index/starting_index/next[0]###
+ * - **index**\n
+ * &emsp; 模式串进行匹配的索引, 初始化为**0**\n
+ * - **starting_index**\n
+ * &emsp; 模式串在某个索引位置的字符失配后, 重新开始进行匹配的索引, 初始化为**-1**\n
+ * - **next[0]**\n
+ * &emsp; 设置为-1\n
+ * ###2 递归构造next数组 ###
+ * &emsp; **while** 遍历模式串 :\n
+ * &emsp;&emsp; **if** starting_index != -1 (非起始字符匹配过程) :\n
+ * &emsp;&emsp;&emsp; **if** pattern[index]和pattern[starting_index]相同 (此时需要进行两侧区域扩展):\n
+ * &emsp;&emsp;&emsp;&emsp; index加1(向后移动1位)\n
+ * &emsp;&emsp;&emsp;&emsp; starting_index加1(向后移动1位)\n
+ * &emsp;&emsp;&emsp;&emsp; 更新next数组index索引位置的值为starting_index(扩展完成)\n
+ * ```
+ * 示例:
+ * pattern[index]和pattern[starting_index], 左右两侧的相同字符串区域扩展
+ *
+ * a b c d 5 6 a b c d 7
+ * a b   ...
+ *     ^   ... a b
+ *     |           ^
+ *     |           |
+ * starting_index  |
+ *               index
+ *
+ * 此时:
+ *  index == 8 (右侧区域遍历至索引8)
+ *  starting_index == 2 (左侧区域遍历至索引2)
+ *
+ * 执行:
+ *  判断pattern[8]是否等于pattern[2]:
+ *    相同(都为'c') --> 走if( == )分支:
+ *      index++ -> 9,
+ *      starting_index++ -> 3
+ *      更新next[index] => next[9] = 3 (如果在模式串位置9失配, 下一次匹配点直接从3开始)
+ *
+ * 执行结果:
+ *  a b c d 5 6 a b c d 7
+ *  a b c   ...
+ *        ^ ... a b c
+ *        |           ^
+ *        |           |
+ *   starting_index   |
+ *                  index
+ *
+ * ```
+ * &emsp;&emsp;&emsp; **else** (两侧区域收缩)\n
+ * &emsp;&emsp;&emsp;&emsp; 令starting_index = next[starting_index]\n
+ * ```
+ * 示例:
+ * pattern[index]和pattern[starting_index], 左右两侧的相同字符串区域扩展
+ *
+ * a b c d 5 6 a b c d c y b e r d a s h a b c d 5 6 a b c e
+ * a b c d 5 6 a b c   ...
+ *                   ^               ... a b c d 5 6 a b c
+ *                   |                                     ^
+ *                   |                                     |
+ *             starting_index                              |
+ *                                                       index
+ *
+ * 此时:
+ *  index == 28 (右侧区域遍历至索引28)
+ *  starting_index == 9 (左侧区域遍历至索引9)
+ *
+ * 执行:
+ *  判断pattern[28]是否等于pattern[9]:
+ *    不同 --> 走else分支:
+ *      将next[starting_index]赋给starting_index
+ *
+ * 执行结果:
+ * a b c d 5 6 a b c d c y b e r d a s h a b c d 5 6 a b c e
+ * a b c d 5 6 a b c   ...
+ *       ^           ^               ... a b c d 5 6 a b c
+ *       |           |                                     ^
+ *       |           |                                     |
+ *  starting_index                                         |
+ *                                                       index
+ * ```
+ * &emsp;&emsp; **else**(起始字符匹配) \n
+ * &emsp;&emsp;&emsp; index加1(向后移动1位)\n
+ * &emsp;&emsp;&emsp; starting_index加1(向后移动1位)\n
+ * &emsp;&emsp;&emsp; 更新next数组index索引位置的值为starting_index\n
+ * ```
+ * 当模式串字符pattern[1]失配时, 下一趟必然从pattern[0]开始重新进行匹配, 因此可确定next[1] = 0
+ * 令next[0] = X; next[1] = next[0] + 1 => 得next[0] = X = -1
+ * 此处逻辑可以和上面的pattern[index] == pattern[starting_index]分支逻辑做代码合并
+ * ```
  */
 status_t KMPNext(const char* pattern, int pattern_len, int** next) {
 
-	/// 求next数组的意义: 发掘模式串的内在信息, 当模式串在某个位置(i)的字符失配时, \n
-	/// 不再从首字符重新开始匹配, 而是从next[i]开始
-	/// ###1 初始化index/starting_index/next[0]###
-	/// - **index**\n
-	/// &emsp; 为模式串进行匹配的索引, 初始化为**0**\n
-	/// - **starting_index**\n
-	/// &emsp; 为模式串在某个索引位置的字符失配后, 重新开始进行匹配的索引, 初始化为**-1**\n
-	/// - **next[0]**\n
-	/// &emsp; 设置为-1\n
+    // ----- 1 初始化index/starting_index/next[0] -----
 	int index = 0;
 	int starting_index = -1;
 
 	(*next)[0] = starting_index;
 
-	/// ###2 递归构造next数组 ###
-	/// &emsp; **while** 遍历模式串 :\n
-	while (index < pattern_len) {
+	// ----- 2 递归构造next数组 -----
+	while (index < pattern_len) {   // 遍历模式串
 
-		/// &emsp;&emsp; **if** starting_index != -1 (非起始匹配过程) :\n
-		if (starting_index != -1) {
-			/// &emsp;&emsp;&emsp; **if** pattern[index]和pattern[starting_index]相同 (需要进行两侧区域扩展):\n
-			/// &emsp;&emsp;&emsp;&emsp; index加1(向后移动1位)\n
-			/// &emsp;&emsp;&emsp;&emsp; starting_index加1(向后移动1位)\n
-			/// &emsp;&emsp;&emsp;&emsp; 更新next数组index索引位置的值为starting_index(扩展完成)\n
-			/// ```
-			/// 示例:
-			/// pattern[index]和pattern[starting_index], 左右两侧的相同字符串区域扩展
-			///
-			///  a b c d 5 6 a b c d 7
-			///  a b
-			///              a b
-			///                  ^
-			///                  |
-			///                index
-			///
-			/// 此时:
-			///  index == 8, 右侧区域遍历至索引8
-			///  starting_index == 2, 左侧区域遍历至索引2
-			///
-			/// 执行:
-			///  判断pattern[8]是否等于pattern[2]?
-			///    相同, 都为'c' --> 走if( == )分支:
-			///      index++ -> 9,
-			///      starting_index++ -> 3
-			///      更新next[index] => next[9] = 3
-			///
-			/// 执行结果:
-			///  a b c d 5 6 a b c d 7
-			///  a b c
-			///              a b c
-			///                    ^
-			///                    |
-			///                  index
-			///
-			/// ```
-			/// &emsp;&emsp;&emsp; **else** (两侧区域收缩)\n
-			/// &emsp;&emsp;&emsp;&emsp; 令starting_index = next[starting_index]\n
-			/// &emsp;&emsp;&emsp;&emsp; (即starting_index回退)\n
-			if (pattern[index] == pattern[starting_index]) {
+		if (starting_index != -1) {    // 非起始字符匹配过程
+			if (pattern[index] == pattern[starting_index]) {    // 此时需要进行两侧区域扩展
+                // 示例:
+                // pattern[index]和pattern[starting_index], 左右两侧的相同字符串区域扩展
+                //
+                // a b c d 5 6 a b c d 7
+                // a b
+                //     ^        a b
+                //     |           ^
+                //     |           |
+                // starting_index  |
+                //               index
+                //
+                // 此时:
+                //  index == 8 (右侧区域遍历至索引8)
+                //  starting_index == 2 (左侧区域遍历至索引2)
+                //
+                // 执行:
+                //  判断pattern[8]是否等于pattern[2]:
+                //    相同(都为'c') --> 走if( == )分支:
+                //      index++ -> 9,
+                //      starting_index++ -> 3
+                //      更新next[index] => next[9] = 3 (如果在模式串位置9失配, 下一次匹配点直接从3开始)
+                //
+                // 执行结果:
+                //  a b c d 5 6 a b c d 7
+                //  a b c
+                //        ^     a b c
+                //        |           ^
+                //        |           |
+                //   starting_index   |
+                //                  index
 				index++;
 				starting_index++;
 				(*next)[index] = starting_index;
-			}
-			else {
+			} else {
+                // 示例:
+                // pattern[index]和pattern[starting_index], 左右两侧的相同字符串区域扩展
+                //
+                // a b c d 5 6 a b c d c y b e r d a s h a b c d 5 6 a b c e
+                // a b c d 5 6 a b c
+                //                   ^                   a b c d 5 6 a b c
+                //                   |                                     ^
+                //                   |                                     |
+                //             starting_index                              |
+                //                                                       index
+                //
+                // 此时:
+                //  index == 28 (右侧区域遍历至索引28)
+                //  starting_index == 9 (左侧区域遍历至索引9)
+                //
+                // 执行:
+                //  判断pattern[28]是否等于pattern[9]:
+                //    不同 --> 走else分支:
+                //      将next[starting_index]赋给starting_index
+                //
+                // 执行结果:
+                // a b c d 5 6 a b c d c y b e r d a s h a b c d 5 6 a b c e
+                // a b c d 5 6 a b c
+                //       ^           ^                   a b c d 5 6 a b c
+                //       |           |                                     ^
+                //       |           |                                     |
+                //  starting_index                                         |
+                //                                                       index
 				starting_index = (*next)[starting_index];
 			}
-		}
-		else {
-			/// &emsp;&emsp; **else**(起始匹配) \n
-			/// &emsp;&emsp;&emsp; pattern_index加1(向后移动1位)\n
-			/// &emsp;&emsp;&emsp; starting_index加1(向后移动1位)\n
-			/// &emsp;&emsp;&emsp; 更新next数组pattern_index索引位置的值为starting_index\n
-			/// ```
-			/// 当模式串字符pattern[1]失配时, 下一趟必然从pattern[0]开始重新进行匹配, 因此可确定next[1] = 0
-			/// 令next[0] = X; next[1] = 0; next[1] = next[0] + 1 => 得next[0] = X = -1
-			/// 此处逻辑可以和上面的pattern[index] == pattern[starting_index]分支逻辑做代码合并
-			/// ```
+		} else {    // 起始字符匹配
 			index++;
 			starting_index++;
 			(*next)[index] = starting_index;

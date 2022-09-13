@@ -181,6 +181,8 @@ void TestStringInsert() {
     char chars[50] = "Hello Dash";
     char insert_chars[50] = "Cyber";
 
+    printf("插入\"%s\"到\"%s\"中间:\n\n", insert_chars, chars);
+
     StringAssign(&str, chars, (int)strlen(chars));
     StringAssign(&insert_str, insert_chars, (int)strlen(insert_chars));
 
@@ -218,16 +220,16 @@ void TestStringSearch() {
     StringAssign(&str, str_chars, (int)strlen(str_chars));
     StringAssign(&pattern, pattern_chars, (int)strlen(pattern_chars));
 
-	printf("str: ");
+	printf("目标串: ");
     StringPrint(&str);
-	printf("pattern: ");
+	printf("模式串: ");
     StringPrint(&pattern);
 
     /// ###2 使用BF和KMP进行匹配###
     /// - BF匹配, 目标串偏移量2\n
     /// - KMP匹配, 目标串偏移量2\n
-	printf("index: %d\n", StringBruteForceSearch(&str, &pattern, 2));
-	printf("index find by kmp: %d\n", StringKMPSearch(&str, &pattern, 2));
+	printf("BF算法查找匹配索引: %d\n", StringBruteForceSearch(&str, &pattern, 2));
+	printf("KMP算法查找匹配索引: %d\n", StringKMPSearch(&str, &pattern, 2));
 
     printf("|-----------------------------------------------------------|\n\n");
 }

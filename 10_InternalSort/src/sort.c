@@ -618,11 +618,14 @@ void DistributeIntoBuckets(radix_static_linked_list_t* static_linked_list,
 
 
 /*!
- * <h1>基数排序收集桶</h1>
+ * 基数排序收集桶
  * @param elements **静态链表元素数组**
  * @param digit_bucket_heads **基数桶的首元素数组**(队头数组)
  * @param digit_bucket_tails **基数桶的尾元素数组**(队尾数组)
  * @note
+ * 基数排序收集桶
+ * ------------
+ * ------------
  * digit自小至大, 将digit_queue_heads[0 ... 9]所指各桶, 依次连接成一个链表
  */
 void CollectBuckets(static_linked_list_node_t* elements,

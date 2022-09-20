@@ -310,12 +310,16 @@ status_t StringInsert(string_t* str, int index, string_t* insert_str) {
 
 
 /*!
- * <h1>字符串暴力匹配(BF)</h1>
+ * **字符串暴力匹配(BF)**
  * @param str **目标串**
  * @param pattern **模式串**
  * @param offset **目标串偏移量**
  * @return **目标串的匹配索引**
  * @note
+ * 字符串暴力匹配(BF)
+ * ----------------
+ * ----------------
+ * ###1 目标串的匹配索引初始化为-1###
  */
 int StringBruteForceSearch(string_t* str, string_t* pattern, int offset) {
 
@@ -364,6 +368,11 @@ int StringBruteForceSearch(string_t* str, string_t* pattern, int offset) {
  * KMP算法求next数组
  * ----------------
  * ----------------
+ * ```
+ * "这不是后退, 这只是换个合适的位置, 再一次进攻"
+ * ```
+ * ----------------
+ *
  * 求next数组的意义: 发掘模式串的内在信息, 当模式串在某个位置(i)的字符失配时, \n
  * 不再从模式串首字符重新开始匹配, 而是从位置next[i]开始
  * ###1 初始化index/starting_index/next[0]###
@@ -450,7 +459,8 @@ int StringBruteForceSearch(string_t* str, string_t* pattern, int offset) {
  * &emsp;&emsp;&emsp; starting_index加1(向后移动1位)\n
  * &emsp;&emsp;&emsp; 更新next数组index索引位置的值为starting_index\n
  * ```
- * 当模式串字符pattern[1]失配时, 下一趟必然从pattern[0]开始重新进行匹配, 因此可确定next[1] = 0
+ * 当模式串字符pattern[1]失配时, 下一趟必然从pattern[0]开始重新进行匹配,
+ * 因此可确定next[1] = 0
  * 令next[0] = X; next[1] = next[0] + 1 => 得next[0] = X = -1
  * 此处逻辑可以和上面的pattern[index] == pattern[starting_index]分支逻辑做代码合并
  * ```
@@ -544,12 +554,27 @@ status_t KMPNext(const char* pattern, int pattern_len, int** next) {
 
 
 /*!
- * <h1>字符串KMP匹配</h1>
+ * @brief **字符串KMP匹配**
  * @param str **目标串**
  * @param pattern **模式串**
  * @param offset **目标串偏移量**
  * @return **目标串匹配索引**
  * @note
+ * 字符串KMP匹配
+ * ------------
+ * ------------
+ * ```
+ * "
+ * Knuth-Morris-Pratt字符串查找算法（简称为KMP算法）,
+ *
+ * 由高德纳和沃恩·普拉特（英语：Vaughan Pratt）在1974年构思,
+ *
+ * 同年詹姆斯·H·莫里斯（英语：James H. Morris）也独立地设计出该算法,
+ *
+ * 最终三人于1977年联合发表
+ * "
+ * ```
+ * ------------
  */
 int StringKMPSearch(string_t* str, string_t* pattern, int offset) {
 

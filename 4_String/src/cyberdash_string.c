@@ -13,18 +13,35 @@
 #include "cyberdash_string.h"
 
 
- /*!
-  * 字符串赋值
-  * @param str **字符串(指针)**
-  * @param chars **char数组**
-  * @param str_len **字符串长度**
-  * @return **执行结果**
-  * @note
-  * 字符串赋值
-  * ---------
-  * ---------
-  * ### 1 释放str->buffer###
-  */
+/*!
+ * @brief **字符串赋值**
+ * @param str 字符串(指针)
+ * @param chars char数组
+ * @param str_len 字符串长度
+ * @return 执行结果
+ * @note
+ * 字符串赋值
+ * ---------
+ * ---------
+ *
+ * <span style="color:#FF6700">
+ * The most valuable things in life are not measured in monetary terms. \n
+ * The really important things are not houses and lands, stocks and bonds, \n
+ * automobiles and real state, but friendships, trust, confidence, empathy, \n
+ * mercy, love and faith. \n
+ * </span>
+ * <span style="color:#FF6700"> \n
+ * &emsp;&emsp;&emsp;&emsp;&emsp;
+ * &emsp;&emsp;&emsp;&emsp;&emsp;
+ * &emsp;&emsp;&emsp;&emsp;&emsp;
+ * -- Bertrand Arthur William Russell </span>
+ *
+ * ---------
+ * - 释放str->buffer
+ * - 处理str_len等于0的情况
+ * - str->buffer分配内存, 并置0
+ * - 填充buffer内容, 并设置length
+ */
 status_t StringAssign(string_t* str, const char* chars, int str_len) {
 
 	// 释放str->buffer
@@ -40,65 +57,88 @@ status_t StringAssign(string_t* str, const char* chars, int str_len) {
 		return OK;
 	}
 
-	/// ### 3 str->buffer分配内存###
+	// 3 str->buffer分配内存
     str->buffer = (char*)malloc(str_len + 1);
 	if (!str->buffer) {
 		return NON_ALLOCATED;
 	}
 
-	/// &emsp; 字符串buffer调用memset置0\n
+	// 字符串buffer调用memset置0
 	memset(str->buffer, 0, sizeof(char) * (str_len + 1));
 
-	/// ###4 填充buffer内容, 设置length###
+	// 4 填充buffer内容
 	for (int i = 0; i < str_len; i++) {
 		str->buffer[i] = chars[i];
 	}
 
-	str->length = str_len;
+	str->length = str_len;  // 设置length
 
 	return OK;
 }
 
 
 /*!
- * <h1>字符串复制</h1>
- * @param dest_str **目标串(指针)**
- * @param src_str **被复制串(指针)**
+ * @brief **字符串复制**
+ * @param dest_str 目标串(指针)
+ * @param src_str 被复制串(指针)
  * @return 执行结果
  * @note
+ * 字符串复制
+ * -------------
+ * -------------
+ *
+ * <span style="color:#FF6700">
+ * Ctrl+c / Ctrl+v   :-)
+ * </span>
+ *
+ * -------------
+ * ### 1 释放目标串的buffer###
+ * ### 2 目标串的buffer分配内存###
+ * &emsp; **if** 内存分配失败 :\n
+ * &emsp;&emsp; 返回NON_ALLOCATED \n
+ * &emsp; 目标串buffer调用memset置0\n
+ * ###3 填充buffer内容, 并设置length###
  */
 status_t StringCopy(string_t* dest_str, string_t* src_str) {
-	/// ### 1 释放目标串的buffer###
+	// 1 ----- 释放目标串的buffer -----
 	if (dest_str->buffer) {
 		free(dest_str->buffer);
 	}
 
-	/// ### 2 目标串的buffer分配内存###
-	/// &emsp; **if** 内存分配失败 :\n
-	/// &emsp;&emsp; 返回NON_ALLOCATED
-	if (!(dest_str->buffer = (char*)malloc(src_str->length + 1))) {
+	// 2 ----- 目标串的buffer分配内存 -----
+	if (!(dest_str->buffer = (char*)malloc(src_str->length + 1))) { // if 内存分配失败
+        // 返回NON_ALLOCATED
 		return NON_ALLOCATED;
 	}
 
-	/// &emsp; 目标串buffer调用memset置0\n
+	// 目标串buffer调用memset置0
 	memset(dest_str->buffer, 0, sizeof(char) * (src_str->length + 1));
 
-	/// ###3 填充buffer内容, 设置length###
+	// 3 ----- 填充buffer内容, 并设置length -----
 	for (int i = 0; i < src_str->length; i++) {
 		dest_str->buffer[i] = src_str->buffer[i];
 	}
 
 	dest_str->length = src_str->length;
 
-
 	return OK;
 }
 
 
 /*!
- * <h1>是否为空字符串</h1>
+ * @brief **是否为空字符串**
  * @param str 字符串
  * @return 结果
+ * 是否为空字符串
+ * ------------
+ * ------------
+ *
+ * <span style="color:#FF8100">
+ * 可能是寂寞, 空气变得很稀薄
+ * </span>
+ *
+ * ------------
+ * 直接返回 str->length == 0
  */
 int StringEmpty(string_t* str) {
 	return str->length == 0;
@@ -106,29 +146,48 @@ int StringEmpty(string_t* str) {
 
 
 /*!
- * <h1>字符串比较</h1>
- * @param str1 **字符串1(指针)**
- * @param str2 **字符串2(指针)**
- * @return **比较结果**
+ * @brief **字符串比较**
+ * @param str1 字符串1(指针)
+ * @param str2 字符串2(指针)
+ * @return 比较结果
  * @note
+ * 字符串比较
+ * ---------
+ * ---------
+ *
+ * <span style="color:#FF8100">
+ * 一个一个比就完了
+ * </span>
+ *
+ * ---------
+ * ### 1 依次遍历两个字符串, 每趟对两个遍历字符进行比较###
+ * ### 2 如果过程1没有得出结果, 比较长度###
  */
 int StringCompare(string_t* str1, string_t* str2) {
-	/// ### 1 依次遍历两个字符串, 每趟对两个遍历字符进行比较###
+	// 1 依次遍历两个字符串, 每趟对两个遍历字符进行比较
 	for (int i = 0; i < str1->length && i < str2->length; i++) {
 		if (str1->buffer[i] != str2->buffer[i]) {
 			return str1->buffer[i] - str2->buffer[i];
 		}
 	}
 
-	/// ### 2 如果过程1没有得出结果, 比较长度###
+	// 2 如果过程1没有得出结果, 比较长度
 	return str1->length - str2->length;
 }
 
 
 /*!
- * <h1>字符串长度</h1>
+ * 字符串长度
  * @param str 字符串
  * @return 长度
+ * 字符串长度
+ * ---------
+ * ---------
+ *
+ *
+ * 光年是长度单位
+ *
+ * ---------
  */
 int StringLength(string_t* str) {
 	return str->length;
@@ -136,9 +195,22 @@ int StringLength(string_t* str) {
 
 
 /*!
- * <h1>字符串清空</h1>
+ * @brief **字符串清空**
  * @param str **字符串**
  * @return **执行结果**
+ * @note
+ * 字符串清空
+ * ---------
+ * ---------
+ *
+ * <span style="color:#DF5A00">
+ * 离开你其实我不见得过得比你快乐\n
+ * 我不懂怎么割舍(不懂怎么割舍)，只想把你留着\n
+ * 我很认真改变自己努力活着\n
+ * 面对人前人后的苛责，我还要等\n
+ * </span>
+ *
+ * ---------
  */
 status_t StringClear(string_t* str) {
 	/// ###1 释放buffer###
@@ -194,22 +266,26 @@ status_t StringConcat(string_t* resulting_string, string_t* str1, string_t* str2
 
 
 /*!
- * <h1>字符串子串</h1>
- * @param str **字符串**
- * @param sub_str **子串**
- * @param offset **字符串偏移量**
- * @param sub_str_len **子串长度**
- * @return **执行结果**
+ * @brief **字符串子串**
+ * @param str 字符串
+ * @param sub_str 子串
+ * @param offset 字符串偏移量
+ * @param sub_str_len 子串长度
+ * @return 执行结果
  * @note
+ * 字符串子串
+ * ---------
+ * ---------
+ * ###1 边界条件判断###
+ * &emsp; **if** 若干边界条件错误 :\n
+ * &emsp;&emsp; 返回OVERFLOW \n
  */
 status_t StringSubStr(string_t* str, string_t* sub_str, int offset, int sub_str_len) {
 
-	/// ###1 边界条件判断###
-	/// &emsp; **if** 若干边界条件错误 :\n
-	/// &emsp;&emsp; 返回OVERFLOW
-	if (offset < 0 || offset > str->length ||
-		sub_str_len < 0 || sub_str_len > str->length - offset + 1)
-	{
+	// ----- 1 边界条件判断 -----
+	// 返回OVERFLOW
+    // if 若干边界条件错误
+	if (offset < 0 || offset > str->length || sub_str_len < 0 || sub_str_len > str->length - offset + 1) {
 		return OVERFLOW;
 	}
 
@@ -310,7 +386,7 @@ status_t StringInsert(string_t* str, int index, string_t* insert_str) {
 
 
 /*!
- * **字符串暴力匹配(BF)**
+ * @brief **字符串暴力匹配(BF)**
  * @param str **目标串**
  * @param pattern **模式串**
  * @param offset **目标串偏移量**
@@ -319,15 +395,23 @@ status_t StringInsert(string_t* str, int index, string_t* insert_str) {
  * 字符串暴力匹配(BF)
  * ----------------
  * ----------------
+ *
+ * <span style="color:#FF8100">
+ * 虽然这个方法看着不高级, 但是它不需要开辟额外的内存, 很多场景下比KMP更实用 :-)
+ * </span>
+ *
+ * ----------------
  * ###1 目标串的匹配索引初始化为-1###
+ * ###2 执行BF算法###
+ * &emsp; **for loop** 遍历目标串(starting_index为每次失配后, 下一趟匹配目标串的起始索引, 初始化为offset) :\n
  */
 int StringBruteForceSearch(string_t* str, string_t* pattern, int offset) {
 
-	/// ###1 目标串的匹配索引初始化为-1###
+	// 1 ----- 目标串的匹配索引初始化为-1 -----
 	int match_index = -1;
 
-	/// ###2 执行BF算法###
-	/// &emsp; **for loop** 遍历目标串(starting_index为每次失配后, 下一趟匹配目标串的起始索引, 初始化为offset) :\n
+	// 2 执行BF算法
+	// &emsp; **for loop** 遍历目标串(starting_index为每次失配后, 下一趟匹配目标串的起始索引, 初始化为offset) :
 	for (int starting_index = offset; starting_index <= str->length - pattern->length; starting_index++) {
 		/// &emsp;&emsp; 模式串索引0开始\n
 		int pattern_index = 0;
@@ -368,13 +452,16 @@ int StringBruteForceSearch(string_t* str, string_t* pattern, int offset) {
  * KMP算法求next数组
  * ----------------
  * ----------------
- * ```
- * "这不是后退, 这只是换个合适的位置, 再一次进攻"
- * ```
+ *
+ * <span style="color:#FFC921">
+ * 这不是后退, 这只是换个合适的位置, 再一次进攻
+ * </span>
+ *
  * ----------------
  *
- * 求next数组的意义: 发掘模式串的内在信息, 当模式串在某个位置(i)的字符失配时, \n
- * 不再从模式串首字符重新开始匹配, 而是从位置next[i]开始
+ * 求next数组的意义:\n
+ * &emsp;&emsp;发掘模式串的内在信息, 当模式串在某个位置(i)的字符失配时,
+ * **下一趟不再从模式串首字符重新开始匹配, 而是从位置next[i]开始**
  * ###1 初始化index/starting_index/next[0]###
  * - **index**\n
  * &emsp; 模式串进行匹配的索引, 初始化为**0**\n
@@ -563,8 +650,8 @@ status_t KMPNext(const char* pattern, int pattern_len, int** next) {
  * 字符串KMP匹配
  * ------------
  * ------------
- * ```
- * "
+ *
+ * <span style="color:#FFC921">
  * Knuth-Morris-Pratt字符串查找算法（简称为KMP算法）,
  *
  * 由高德纳和沃恩·普拉特（英语：Vaughan Pratt）在1974年构思,
@@ -572,8 +659,8 @@ status_t KMPNext(const char* pattern, int pattern_len, int** next) {
  * 同年詹姆斯·H·莫里斯（英语：James H. Morris）也独立地设计出该算法,
  *
  * 最终三人于1977年联合发表
- * "
- * ```
+ * </span>
+ *
  * ------------
  */
 int StringKMPSearch(string_t* str, string_t* pattern, int offset) {

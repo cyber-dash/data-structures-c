@@ -370,88 +370,100 @@ void PrintMinSpanTree(MST_t min_span_tree, int size) {
 
 
 /*!
- * <h1>迪杰斯特拉(Dijkstra)最短路径</h1>
- * @param graph **图**(指针)
- * @param starting_vertex_index **起点索引**
- * @param predecessor **前驱数组**
- * @param distance **最短路径数组**
+ * @brief **迪杰斯特拉(Dijkstra)最短路径**
+ * @param graph 图
+ * @param starting_vertex_index 起点索引
+ * @param predecessor 前驱数组
+ * @param distance 最短路径数组
  * @note
+ * 迪杰斯特拉(Dijkstra)最短路径
+ * --------------------------
+ * --------------------------
+ *
+ * --------------------------
+ *
  * 参数predecessor本实现使用二维数组, 这普遍用在多源最短路径, 单源(如Dijkstra/BellmanFord)可以替换成一维数组, 有兴趣者自己替换:-)
+ *
+ * --------------------------
+ * ### 1 初始化 ###
+ * - 结点索引数组vertex_index_set初始化\n
+ * &emsp;每个结点都不在集合中 \n
+ * - distance数组初始化 \n
+ * &emsp; distance[起始点之外其他结点]的路径距离值为DBL_MAX(double类型最大值) \n
+ * &emsp; distance[起始点]的路径距离值为0 \n
+ * - 最小优先队列初始化 \n
+ * &emsp; 路径(起始点 --> 起始点)入队 \n
+ * ### 2 贪心 ###
+ * &emsp; **while** 最小优先队列不为空 : \n
+ * &emsp;&emsp; 队头出队, 保存在当前最短路径cur_min_distance \n
+ * &emsp;&emsp; 当前最短路径的终点, 设置为已经处理 \n
+ * &emsp;&emsp; **while** 遍历图结点 : \n
+ * &emsp;&emsp;&emsp; **if** 索引i结点已处理过(不需要再处理) or 当前最短路径终点与索引i结点之间没有边(无法执行松弛) : \n
+ * &emsp;&emsp;&emsp;&emsp; continue \n
+ * &emsp;&emsp;&emsp; **松弛**, RELAX(当前最短路径终点, 结点i) : \n
+ * &emsp;&emsp;&emsp;&emsp; **if** 路径(起点 --> 当前最短路径终点) + 边(当前最短路径终点 --> 结点i) < 路径(起点 --> 结点i) :\n
+ * &emsp;&emsp;&emsp;&emsp;&emsp; 当前最短路径终点, 赋值给结点i在路径(起点 --> 结点i)的前一结点 \n
+ * &emsp;&emsp;&emsp;&emsp;&emsp; 路径(起点 --> 结点i)进入最小优先队列 \n
  */
 void Dijkstra(matrix_graph_t* graph, int starting_vertex_index, int(*predecessor)[MAX_VERTEX_CNT], edge_t* distance) {
 
-    /// ### 1 初始化 ###
-    /// &emsp; 声明结点索引数组vertex_index_set, 初试状态时, 每个结点都不在集合中 \n
-    /// &emsp; distance数组初始化, distance[起始点]的路径距离值为0,
-    /// distance[起始点之外其他结点]的路径距离值为DBL_MAX(double类型最大值) \n
-    /// &emsp; 初始化最小优先队列 \n
-    /// &emsp; 路径(起始点 --> 起始点)入队 \n
-    /// ### 2 贪心 ###
-    /// &emsp; **while** 最小优先队列不为空 : \n
-    /// &emsp;&emsp; 队头出队, 保存在当前最短路径cur_min_distance \n
-    /// &emsp;&emsp; 当前最短路径的终点, 设置为已经处理 \n
-    /// &emsp;&emsp; **while** 遍历图结点(使用当前最短路径的终点进行松弛) : \n
-    /// &emsp;&emsp;&emsp; **if** 当前结点已处理过 或者 起始结点与当前结点之间没有边 : \n
-    /// &emsp;&emsp;&emsp;&emsp; continue \n
-    /// &emsp;&emsp;&emsp; **if** 路径(起点 --> 当前终点) + 边(当前终点 --> 结点i) < 路径(起点 --> 结点i) : \n
-    /// &emsp;&emsp;&emsp;&emsp; 结点i在路径(起点 --> 结点i)的前一结点设为当前终点 \n
-    /// &emsp;&emsp;&emsp;&emsp; 结点i在路径(起点 --> 结点i)的前一结点设为当前终点 \n
-    /// &emsp;&emsp;&emsp;&emsp; 路径(起点 --> 结点i)进入最小优先队列 \n
-
-    // 声明结点索引数组vertex_index_set, 初试状态时, 每个结点都不在集合中
+    // ----- 1 初始化 -----
+    // 结点索引数组vertex_index_set初始化
     int* vertex_index_set = (int*)malloc(graph->vertex_count * sizeof(int));
+    // 每个结点都不在集合中
     memset(vertex_index_set, 0, graph->vertex_count * sizeof(int));
 
-    // distance数组初始化, distance[起始点]的路径距离值为0, distance[起始点之外其他结点]的路径距离值为DBL_MAX(double类型最大值)
+    // distance数组(distance[i]表示路径(起始点 --> 索引i结点)的距离)初始化
+    // distance[起始点之外其他结点索引]的路径距离值为DBL_MAX(double类型最大值)
     for (int i = 0; i < graph->vertex_count; i++) {
         distance[i].weight_type = DOUBLE;
         distance[i].weight.double_value = DBL_MAX;
     }
+    // distance[起始点索引]的路径距离值为0
     distance[starting_vertex_index].weight.double_value = 0;
 
-    // 初始化最小优先队列
+    // 最小优先队列初始化
     min_priority_queue_t min_priority_queue;
     MinPriorityQueueInit(&min_priority_queue, graph->vertex_count);
     // 路径(起始点 --> 起始点)入队
     MinPriorityQueuePush(&min_priority_queue, graph->adj_matrix[starting_vertex_index][starting_vertex_index]);
 
-    // 2 贪心
+    // ----- 2 贪心 -----
 
-    // while 最小优先队列不为空 : \n
-    while (min_priority_queue.size != 0) {
+    while (min_priority_queue.size != 0) {  // while 最小优先队列不为空
 
         // 队头出队, 保存在当前最短路径cur_min_distance
         path_t cur_min_distance;
         MinPriorityQueuePop(&min_priority_queue, &cur_min_distance);
 
         // 当前最短路径的终点, 设置为已经处理 \n
-        int cur_ending_vertex_index = cur_min_distance.ending_vertex_index;
-        vertex_index_set[cur_ending_vertex_index] = TRUE;
+        vertex_index_set[cur_min_distance.ending_vertex_index] = TRUE;
 
-        // --- 松弛 starting_vertex_index --> i(使用cur_ending_vertex_index) ---
+        for (int i = 0; i < graph->vertex_count; i++) { // 遍历图结点
 
-        // **while** 遍历图结点(使用当前最短路径的终点进行松弛) : \n
-        for (int i = 0; i < graph->vertex_count; i++) {
-
-            // if 当前结点已处理过 或者 起始结点与当前结点之间没有边 : \n
-            if (vertex_index_set[i] == TRUE || graph->adj_matrix[cur_ending_vertex_index][i].weight_type == NO_EDGE) {
-                // continue \n
+            // if 索引i结点已处理过(不需要再处理) or 当前最短路径终点与索引i结点之间没有边(无法执行松弛)
+            if (vertex_index_set[i] == TRUE ||
+                graph->adj_matrix[cur_min_distance.ending_vertex_index][i].weight_type == NO_EDGE)
+            {
                 continue;
             }
 
-            // if 路径(起点 --> 当前终点) + 边(当前终点 --> 结点i) < 路径(起点 --> 结点i) : \n
-            if (distance[cur_ending_vertex_index].weight.double_value
+            // 松弛: RELAX(当前最短路径终点, 结点i)
+            // if 路径(起点 --> 当前最短路径终点) + 边(当前最短路径终点 --> 结点i) < 路径(起点 --> 结点i)
+            if (distance[cur_min_distance.ending_vertex_index].weight.double_value
                 +
                 graph->adj_matrix[cur_min_distance.ending_vertex_index][i].weight.double_value
                 <
                 distance[i].weight.double_value)
             {
-                // 路径(起点 --> 结点i) = 路径(起点 --> 当前终点) + 边(当前终点 --> 结点i) \n
-                distance[i].weight.double_value = distance[cur_ending_vertex_index].weight.double_value +
+                // 路径(起点 --> 结点i) = 路径(起点 --> 当前最短路径终点) + 边(当前最短路径终点 --> 结点i)
+                distance[i].weight.double_value =
+                    distance[cur_min_distance.ending_vertex_index].weight.double_value
+                    +
                     graph->adj_matrix[cur_min_distance.ending_vertex_index][i].weight.double_value;
                 distance[i].ending_vertex_index = i;
 
-                // 结点i在路径(起点 --> 结点i)的前一结点设为当前终点 \n
+                // 当前最短路径终点, 赋值给结点i在路径(起点 --> 结点i)的前一结点 \n
                 predecessor[starting_vertex_index][i] = cur_min_distance.ending_vertex_index;
 
                 // 路径(起点 --> 结点i)进入最小优先队列 \n
@@ -464,13 +476,16 @@ void Dijkstra(matrix_graph_t* graph, int starting_vertex_index, int(*predecessor
 
 
 /*!
- * 贝尔曼福特(Bellman-Ford)最短路径
- * @param graph
- * @param starting_vertex_index
- * @param predecessor
- * @param distance
- * @return
+ * @brief **贝尔曼福特(Bellman-Ford)最短路径**
+ * @param graph 图
+ * @param starting_vertex_index 起点索引
+ * @param predecessor 前驱数组
+ * @param distance 最短路径数组
+ * @return 是否含有环
  * @note
+ * 贝尔曼福特(Bellman-Ford)最短路径
+ * ------------------------------
+ * ------------------------------
  * ```
  * BellmanFord算法:
  *
@@ -555,10 +570,10 @@ int BellmanFord(matrix_graph_t* graph,
 
 
 /*!
- * @brief 弗洛伊德(Floyd)算法
- * @param graph **图**(指针)
- * @param predecessor **前驱数组**
- * @param distance **最短路径数组**
+ * @brief **弗洛伊德(Floyd)算法**
+ * @param graph 图
+ * @param predecessor 前驱数组
+ * @param distance 最短路径数组
  * @note
  * 弗洛伊德(Floyd)算法
  * ------------------
@@ -587,50 +602,59 @@ int BellmanFord(matrix_graph_t* graph,
  * &emsp;&emsp;&emsp;&emsp;&emsp; 最短路径(当前起点 --> 当前终点)的值设置为边长 \n
  * &emsp;&emsp;&emsp;&emsp; **else** (当前起点到当前终点不存在边) : \n
  * &emsp;&emsp;&emsp;&emsp;&emsp; 最短路径(当前起点 --> 当前终点)的值设置为极大值(不存在路径) \n
- * &emsp;&emsp;&emsp; 当前终点在最短路径(当前起点 --> 当前终点)的前一结点, 设为当前起点 \n
- * ### 2 动态规划构造最短路径 ###
+ * &emsp;&emsp;&emsp; 当前终点在最短路径(当前起点 --> 当前终点)的前一结点, 被赋值为当前起点 \n
+ * ### 2 动态规划求最短路径 ###
  * &emsp; **for loop** 遍历图结点, 作为中转结点intermediate :\n
  * &emsp;&emsp; **for loop** 遍历图结点, 作为起点start :\n
  * &emsp;&emsp;&emsp; **for loop** 遍历图结点, 作为终点end :\n
- * &emsp;&emsp;&emsp;&emsp; **if** 路径(start --> intermediate) + 路径(intermediate --> end) < 路径(start --> end) :\n
- * &emsp;&emsp;&emsp;&emsp;&emsp; 路径(start --> end) <---- 路径(start --> intermediate) + 路径(intermediate --> end) \n
- * &emsp;&emsp;&emsp;&emsp;&emsp; end结点在最短路径(start --> end)中的前一结点, 设为intermediate \n
+ * &emsp;&emsp;&emsp;&emsp; **松弛**, RELAX(intermediate, end) : \n
+ * &emsp;&emsp;&emsp;&emsp;&emsp; **if** 路径(start --> intermediate) + 路径(intermediate --> end) < 路径(start --> end) :\n
+ * &emsp;&emsp;&emsp;&emsp;&emsp;&emsp; 路径(start --> end) <---- 路径(start --> intermediate) + 路径(intermediate --> end) \n
+ * &emsp;&emsp;&emsp;&emsp;&emsp;&emsp; end结点在最短路径(start --> end)中的前一结点, 被赋值为intermediate \n
  */
 void Floyd(matrix_graph_t* graph, int (*predecessor)[MAX_VERTEX_CNT], edge_t (*distance)[MAX_VERTEX_CNT]) {
 
-    for (int start = 0; start < graph->vertex_count; start++) {
-        for (int end = 0; end < graph->vertex_count; end++) {
+    for (int start = 0; start < graph->vertex_count; start++) { // 遍历图结点, 作为起点
+        for (int end = 0; end < graph->vertex_count; end++) {       // 遍历图结点, 作为终点
 
-            if (start == end) {
+            if (start == end) {                             // if 当前起点 等于 当前终点
                 distance[start][end].weight_type = DOUBLE;
-                distance[start][end].weight.double_value = 0;
-            } else {
+                distance[start][end].weight.double_value = 0;   // 最短路径(当前起点 --> 当前终点)的值设置为0
+            } else {                                        // 当前起点 不等于 当前终点
                 distance[start][end].weight_type = DOUBLE;
-                if (graph->adj_matrix[start][end].weight.double_value != DBL_MAX) {
+                if (graph->adj_matrix[start][end].weight.double_value != DBL_MAX) { // if 当前起点到当前终点存在边
+                    // 最短路径(当前起点 --> 当前终点)的值设置为边长
                     distance[start][end].weight.double_value = graph->adj_matrix[start][end].weight.double_value;
-                } else {
+                } else {    // 当前起点到当前终点不存在边
+                    // 最短路径(当前起点 --> 当前终点)的值设置为极大值(不存在路径)
                     distance[start][end].weight.double_value = DBL_MAX;
                 }
             }
 
-            predecessor[start][end] = start;
+            predecessor[start][end] = start;    // 当前终点在最短路径(当前起点 --> 当前终点)的前一结点, 被赋值为当前起点
         }
     }
 
+    // 遍历图结点, 作为中转结点intermediate
     for (int intermediate = 0; intermediate < graph->vertex_count; intermediate++) {
-        for (int start = 0; start < graph->vertex_count; start++) {
-            for (int end = 0; end < graph->vertex_count; end++) {
+        for (int start = 0; start < graph->vertex_count; start++) {     // 遍历图结点, 作为起点start
+            for (int end = 0; end < graph->vertex_count; end++) {           // 遍历图结点, 作为终点end
 
+                // 松弛: RELAX(intermediate, end)
+                // if 路径(start --> intermediate) + 路径(intermediate --> end) < 路径(start --> end) :
                 if (distance[start][intermediate].weight.double_value
                     +
                     distance[intermediate][end].weight.double_value
                     <
                     distance[start][end].weight.double_value
                 ) {
+                    // 路径(start --> end) = 路径(start --> intermediate) + 路径(intermediate --> end)
                     distance[start][end].weight.double_value =
                         distance[start][intermediate].weight.double_value
                         +
                         distance[intermediate][end].weight.double_value;
+
+                    // end结点在最短路径(start --> end)中的前一结点, 被赋值为intermediate
                     predecessor[start][end] = predecessor[intermediate][end];
                 }
 

@@ -474,7 +474,6 @@ void Dijkstra(matrix_graph_t* graph, int starting_vertex_index, int(*predecessor
 }
 
 
-
 /*!
  * @brief **贝尔曼福特(Bellman-Ford)最短路径**
  * @param graph 图
@@ -665,34 +664,36 @@ void Floyd(matrix_graph_t* graph, int (*predecessor)[MAX_VERTEX_CNT], edge_t (*d
 
 
 /*!
- * @brief 通用单源最短路径打印函数
- * @param graph **图**(指针)
- * @param start **起点索引**
- * @param predecessor **前驱数组**
- * @param distance **最短路径数组**
+ * @brief **通用单源最短路径打印函数**
+ * @param graph 图
+ * @param start 起点索引
+ * @param predecessor 前驱数组
+ * @param distance 最短路径数组
  * @note
  * 通用单源最短路径打印函数
  * ---------------------
  * ---------------------
- * **for loop** 遍历图结点 : \n
- * &emsp; **if** 当前图结点为起点本身 : \n
+ * **for loop** 遍历图结点(作为终点) : \n
+ * &emsp; **if** 当前终点为起点本身 : \n
  * &emsp;&emsp; 不做处理, continue \n
- * &emsp; 调用PrintSingleSourceShortestPathRecursive求起点-->当前结点的单源最短路径 \n
- * &emsp; 显示起点-->当前结点的单源最短路径的长度 \n
+ * &emsp; 调用PrintSingleSourceShortestPathRecursive打印(起点-->当前终点)的单源最短路径 \n
+ * &emsp; 打印(起点-->当前终点)的单源最短路径的长度 \n
  */
 void PrintSingleSourceShortestPath(matrix_graph_t* graph,
                                    int start,
                                    int (*predecessor)[MAX_VERTEX_CNT],
                                    edge_t* distance)
 {
-    for (int end = 0; end < graph->vertex_count; end++) {
-        if (end == start) {
-            continue;
+    for (int end = 0; end < graph->vertex_count; end++) {   // 遍历图结点(作为终点)
+        if (end == start) { // if 当前终点为起点本身
+            continue;           // 不做处理, continue
         }
 
+        // 调用PrintSingleSourceShortestPathRecursive打印(起点-->当前终点)的单源最短路径 \n
         printf("起始点%d到结点%d的最短路径为:\n", start, end);
         PrintSingleSourceShortestPathRecursive(graph, start, end, predecessor);
 
+        // 显示(起点-->当前终点)的单源最短路径的长度
         printf(", ");
         printf("最短路径长度为: %.2lf\n", distance[end].weight.double_value);
     }
@@ -700,10 +701,10 @@ void PrintSingleSourceShortestPath(matrix_graph_t* graph,
 
 
 /*!
- * @brief 打印多源最短路径
- * @param graph **图**(指针)
- * @param distance **最短路径数组**
- * @param predecessor **前驱数组**
+ * @brief **多源最短路径打印函数**
+ * @param graph 图
+ * @param distance 最短路径数组
+ * @param predecessor 前驱数组
  * @note
  * 多源最短路径打印函数
  * ------------------
@@ -712,25 +713,26 @@ void PrintSingleSourceShortestPath(matrix_graph_t* graph,
  * &emsp; **for loop** 遍历图结点(作为终点end) : \n
  * &emsp;&emsp; **if** start和end相同 : \n
  * &emsp;&emsp;&emsp; 不作处理continue \n
- * &emsp;&emsp; 调用PrintSingleSourceShortestPathRecursive执行单源最短路径打印 \n
- * &emsp;&emsp; 打印最短路径长度 \n
+ * &emsp;&emsp; 调用PrintSingleSourceShortestPathRecursive打印单源最短路径 \n
+ * &emsp;&emsp; 打印(start-->end)最短路径长度 \n
  */
 void PrintMultiSourceShortestPath(matrix_graph_t* graph,
                                   edge_t (*distance)[MAX_VERTEX_CNT],
                                   int (*predecessor)[MAX_VERTEX_CNT])
 {
-    for (int start = 0; start < graph->vertex_count; start++) {
+    for (int start = 0; start < graph->vertex_count; start++) { // 遍历图结点(作为起点start)
         printf("--- 从起始点%d到其他各顶点的最短路径 ---\n", start);
-        for (int end = 0; end < graph->vertex_count; end++) {
+        for (int end = 0; end < graph->vertex_count; end++) {       // 遍历图结点(作为终点end)
 
-            if (start == end) {
-                continue;
+            if (start == end) { // if start和end相同
+                continue;           // 不作处理continue
             }
 
+            // 调用PrintSingleSourceShortestPathRecursive打印单源最短路径
             printf("起始点%d到结点%d的最短路径为: ", start, end);
-
             PrintSingleSourceShortestPathRecursive(graph, start, end, predecessor);
 
+            // 打印最短路径长度
             printf(", 最短路径长度: %.2lf\n", distance[start][end].weight.double_value);
         }
         printf("\n");
@@ -739,19 +741,21 @@ void PrintMultiSourceShortestPath(matrix_graph_t* graph,
 
 
 /*!
- * @brief 通用单源最短路径打印函数(递归)
- * @param graph **图**(指针)
- * @param start **起点索引**
- * @param end **终点索引**
- * @param predecessor **前驱数组**
+ * @brief **通用单源最短路径打印函数(递归)**
+ * @param graph 图
+ * @param start 起点索引
+ * @param end 终点索引
+ * @param predecessor 前驱数组
  * @note
- * "多源最短路径和单源最短路径问题, 都可以使用此函数" \n
  * 通用单源最短路径打印函数(递归)
  * ---------------------------
  * ---------------------------
+ *
+ * "多源最短路径和单源最短路径问题, 都可以使用此函数"
+ *
+ * ---------------------------
  * **if** 起点和终点不是同一结点 : \n
- * &emsp; 终点在本条最短路径(参数起点 --> 参数终点)的前一结点索引为
- * predecessor[start][end] \n
+ * &emsp; 终点在本条最短路径(参数起点 --> 参数终点)的前一结点索引为predecessor[start][end] \n
  * &emsp; 递归调用PrintSingleSourceShortestPathRecursive\n
  * 打印终点索引\n
  */
@@ -760,9 +764,13 @@ void PrintSingleSourceShortestPathRecursive(matrix_graph_t* graph,
                                             int end,
                                             int (*predecessor)[MAX_VERTEX_CNT])
 {
-    if (start != end) {
+    if (start != end) { // if 起点和终点不是同一结点0
+        // 终点在本条最短路径(参数起点 --> 参数终点)的前一结点索引为predecessor[start][end]
         int predecessor_of_end = predecessor[start][end];
+
+        // 递归调用PrintSingleSourceShortestPathRecursive
         PrintSingleSourceShortestPathRecursive(graph, start, predecessor_of_end, predecessor);
     }
-    printf("%d ", end);
+
+    printf("%d ", end); // 打印终点索引
 }

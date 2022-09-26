@@ -413,10 +413,10 @@ status_t StringInsert(string_t* str, int index, string_t* insert_str) {
 
 /*!
  * @brief **字符串暴力匹配(BF)**
- * @param str **目标串**
- * @param pattern **模式串**
- * @param offset **目标串偏移量**
- * @return **目标串的匹配索引**
+ * @param str 目标串
+ * @param pattern 模式串
+ * @param offset 目标串偏移量
+ * @return 目标串的匹配索引
  * @note
  * 字符串暴力匹配(BF)
  * ----------------
@@ -470,9 +470,9 @@ int StringBruteForceSearch(string_t* str, string_t* pattern, int offset) {
 
 /*!
  * @brief **KMP算法求next数组**
- * @param pattern **模式串**
- * @param pattern_len **模式串长度**
- * @param next **next数组**(int二级指针)
+ * @param pattern 模式串
+ * @param pattern_len 模式串长度
+ * @param next next数组(int二级指针)
  * @return 执行结果
  * @note
  * KMP算法求next数组
@@ -490,11 +490,11 @@ int StringBruteForceSearch(string_t* str, string_t* pattern, int offset) {
  * **下一趟不再从模式串首字符重新开始匹配, 而是从位置next[i]开始**
  * ###1 初始化index/starting_index/next[0]###
  * - **index**\n
- * &emsp; 模式串进行匹配的索引, 初始化为**0**\n
+ * &emsp; 模式串进行匹配的索引, 初始化为 **0** \n
  * - **starting_index**\n
- * &emsp; 模式串在某个索引位置的字符失配后, 重新开始进行匹配的索引, 初始化为**-1**\n
+ * &emsp; 模式串在某个索引位置的字符失配后, 重新开始进行匹配的索引, 初始化为 **-1**\n
  * - **next[0]**\n
- * &emsp; 设置为-1\n
+ * &emsp; 设置为 **-1**\n
  * ###2 递归构造next数组 ###
  * &emsp; **while** 遍历模式串 :\n
  * &emsp;&emsp; **if** starting_index != -1 (非起始字符匹配过程) :\n
@@ -582,14 +582,15 @@ status_t KMPNext(const char* pattern, int pattern_len, int** next) {
 
     // ----- 1 初始化index/starting_index/next[0] -----
 	int index = 0;
-	int starting_index = -1;
+    int first_char_next_index = -1;
+	int starting_index = first_char_next_index;
 
 	(*next)[0] = starting_index;
 
 	// ----- 2 递归构造next数组 -----
 	while (index < pattern_len) {   // 遍历模式串
 
-		if (starting_index != -1) {    // 非起始字符匹配过程
+		if (starting_index != first_char_next_index) {    // 非起始字符匹配过程
 			if (pattern[index] == pattern[starting_index]) {    // 此时需要进行两侧区域扩展
                 // 示例:
                 // pattern[index]和pattern[starting_index], 左右两侧的相同字符串区域扩展
@@ -668,10 +669,10 @@ status_t KMPNext(const char* pattern, int pattern_len, int** next) {
 
 /*!
  * @brief **字符串KMP匹配**
- * @param str **目标串**
- * @param pattern **模式串**
- * @param offset **目标串偏移量**
- * @return **目标串匹配索引**
+ * @param str 目标串
+ * @param pattern 模式串
+ * @param offset 目标串偏移量
+ * @return 目标串匹配索引
  * @note
  * 字符串KMP匹配
  * ------------

@@ -156,7 +156,7 @@ int StringEmpty(string_t* str) {
  * ---------
  *
  * <span style="color:#FF8100">
- * 一个一个比就完了
+ * one by one
  * </span>
  *
  * ---------
@@ -177,15 +177,16 @@ int StringCompare(string_t* str1, string_t* str2) {
 
 
 /*!
- * 字符串长度
+ * @brief **字符串长度**
  * @param str 字符串
  * @return 长度
  * 字符串长度
  * ---------
  * ---------
  *
- *
+ * <span style="color:#FF6700">
  * 光年是长度单位
+ * </span>
  *
  * ---------
  */
@@ -196,8 +197,8 @@ int StringLength(string_t* str) {
 
 /*!
  * @brief **字符串清空**
- * @param str **字符串**
- * @return **执行结果**
+ * @param str 字符串
+ * @return 执行结果
  * @note
  * 字符串清空
  * ---------
@@ -205,60 +206,74 @@ int StringLength(string_t* str) {
  *
  * <span style="color:#DF5A00">
  * 离开你其实我不见得过得比你快乐\n
- * 我不懂怎么割舍(不懂怎么割舍)，只想把你留着\n
+ * 我不懂怎么割舍，只想把你留着\n
  * 我很认真改变自己努力活着\n
  * 面对人前人后的苛责，我还要等\n
  * </span>
  *
  * ---------
+ * ###1 释放buffer###
+ * ###2 length置0###
  */
 status_t StringClear(string_t* str) {
-	/// ###1 释放buffer###
+	// 释放buffer
 	if (str->buffer) {
 		free(str->buffer);
 		str->buffer = NULL;
 	}
 
-	/// ###2 length置0###
-	str->length = 0;
+	str->length = 0;    // length置0
 
 	return OK;
 }
 
 
 /*!
- * <h1>字符串拼接</h1>
- * @param resulting_string **结果串**
- * @param str1 **字符串1**
- * @param str2 **字符串2**
+ * @brief **字符串拼接**
+ * @param resulting_string 结果串
+ * @param str1 字符串1
+ * @param str2 字符串2
  * @return 执行结果
  * @note
+ * 字符串拼接
+ * ---------
+ * ---------
+ *
+ * ---------
+ * ### 1 释放结果串的buffer###
+ * ### 2 结果串的buffer分配内存###
+ * ###3 对结果串依次填充两个字符串###
+ * - 两个循环遍历, 执行字符填充
+ *  + 字符串str1填充
+ *  + 字符串str2填充
+ * - 设置结果串的length
  */
 status_t StringConcat(string_t* resulting_string, string_t* str1, string_t* str2) {
 
-	/// ### 1 释放结果串的buffer###
+	// ----- 1 释放结果串的buffer -----
 	if (resulting_string->buffer) {
 		free(resulting_string->buffer);
 	}
 
-	/// ### 2 结果串的buffer分配内存###
+	// ----- 2 结果串的buffer分配内存 -----
 	if (!(resulting_string->buffer = (char*)malloc(str1->length + str2->length + 1))) {
 		return NON_ALLOCATED;
 	}
 
 	memset(resulting_string->buffer, 0, sizeof(char) * (str1->length + str2->length + 1));
 
-	/// ###3 对结果串依次填充两个字符串###
-	/// - 两个循环遍历, 执行字符填充
+	// ----- 3 对结果串依次填充两个字符串 -----
+    // 字符串str1填充
 	for (int i = 0; i < str1->length; i++) {
 		resulting_string->buffer[i] = str1->buffer[i];
 	}
 
+    // 字符串str2填充
 	for (int i = 0; i < str2->length; i++) {
 		resulting_string->buffer[str1->length + i] = str2->buffer[i];
 	}
 
-	/// - 设置结果串的length
+	// 设置结果串的length
 	resulting_string->length = str1->length + str2->length;
 
 	return OK;
@@ -276,109 +291,120 @@ status_t StringConcat(string_t* resulting_string, string_t* str1, string_t* str2
  * 字符串子串
  * ---------
  * ---------
+ *
+ * ---------
  * ###1 边界条件判断###
  * &emsp; **if** 若干边界条件错误 :\n
+ * &emsp;&emsp; 返回OVERFLOW \n
+ * ###2 释放子串sub_str->buffer###
+ * ###3 空子串处理###
+ * &emsp; **if** 子串长度为0\n
+ * &emsp;&emsp; buffer为NULL, length为0\n
+ * &emsp;&emsp; 返回OK\n
+ * ###4 构造子串###
+ * - 分配子串buffer内存 \n
+ * &emsp; **if** 内存分配失败 :\n
  * &emsp;&emsp; 返回OVERFLOW \n
  */
 status_t StringSubStr(string_t* str, string_t* sub_str, int offset, int sub_str_len) {
 
 	// ----- 1 边界条件判断 -----
-	// 返回OVERFLOW
     // if 若干边界条件错误
-	if (offset < 0 || offset > str->length || sub_str_len < 0 || sub_str_len > str->length - offset + 1) {
-		return OVERFLOW;
+	if (offset < 0 || offset > str->length ||
+        sub_str_len < 0 || sub_str_len > str->length - offset + 1)
+    {
+		return OVERFLOW;    // 返回OVERFLOW
 	}
 
-	/// ###2 释放子串sub_str->buffer###
-	/// &emsp; 释放sub_str->buffer
+	// ----- 2 释放子串sub_str->buffer -----
 	if (sub_str->buffer) {
 		free(sub_str->buffer);
 	}
 
-	/// ###3 空子串处理###
-	/// &emsp; **if** 子串长度为0\n
-	/// &emsp;&emsp; buffer为NULL, length为0\n
-	/// &emsp;&emsp; 返回OK\n
-	if (sub_str_len == 0) {
-		sub_str->buffer = NULL;
-		sub_str->length = 0;
+	// ----- 3 空子串处理 -----
+	if (sub_str_len == 0) {     // if 子串长度为0
+		sub_str->buffer = NULL; // buffer为NULL
+		sub_str->length = 0;    // length为0
 
 		return OK;
 	}
 
-	/// ###4 构造子串###
-	/// - 分配子串buffer内存
-	/// &emsp; **if** 内存分配失败 :\n
-	/// &emsp;&emsp; 返回OVERFLOW
-	sub_str->buffer = (char*)malloc(sub_str_len);
-	if (sub_str->buffer == NULL) {
+	// ----- 4 构造子串 -----
+	sub_str->buffer = (char*)malloc(sub_str_len);   // - 分配子串buffer内存
+	if (sub_str->buffer == NULL) {  // if 内存分配失败
 		return OVERFLOW;
 	}
 
-	/// - 子串buffer每个字符赋值\n
-	/// &emsp; **for loop** 字符串buffer[offset ... offset + sub_str_len - 1] :\n
-	/// &emsp;&emsp; sub_str->buffer[i] <= str->buffer[offset + i]\n
+	// 子串buffer每个字符赋值
 	for (int i = 0; i < sub_str_len; i++) {
 		sub_str->buffer[i] = str->buffer[offset + i];
 	}
 
-	/// - 更新子串length\n
-	sub_str->length = sub_str_len;
+	sub_str->length = sub_str_len;  // 更新子串length
 
 	return OK;
 }
 
 
 /*!
- * <h1>字符串插入</h1>
- * @param str **被插入的字符串**
- * @param index **插入位置**(该位置前)
- * @param insert_str **待插入字符**
+ * @brief **字符串插入**
+ * @param str 被插入的字符串
+ * @param index 插入位置(插入到该位置前)
+ * @param insert_str 待插入字符
  * @return 执行结果
  * @note
+ * 字符串插入
+ * ---------
+ * ---------
+ *
+ * ---------
+ * ###1 非法插入位置处理###
+ * &emsp; 返回OVERFLOW
+ * ###2 待插入字符串为空串处理###
+ * &emsp; 直接返回OK
+ * ###3 重新分配内存###
+ * &emsp; 新申请的字符串长度: str->length + insert_str->length\n
+ * &emsp; 使用realloc重新对被插入字符串分配内存\n
+ * &emsp; **if** 申请内存失败 :\n
+ * &emsp;&emsp; 返回NON_ALLOCATED\n
+ * ###4 执行插入###
+ * - **移动被插入字符串的插入位置后侧(包含)的所有字符**\n
+ * &emsp; 索引[index ... str->length - 1], 一共str->length - index个字符,\n
+ * &emsp; 向后侧移动insert_str->length个位置 \n
+ * &emsp; 更新被插入字符串的length
  */
 status_t StringInsert(string_t* str, int index, string_t* insert_str) {
 
-	/// ###1 非法插入位置处理###
-	/// &emsp; 返回OVERFLOW
+	// ----- 1 非法插入位置处理 -----
 	if (index < 0 || index > str->length) {
 		return OVERFLOW;
 	}
 
-	/// ###2 待插入字符串为空串处理###
-	/// &emsp; 直接返回OK
+	// ----- 2 待插入字符串为空串处理 -----
 	if (insert_str->length == 0) {
 		return OK;
 	}
 
-	/// ###3 重新分配内存###
-	/// &emsp; 使用realloc重新对被插入字符串分配内存\n
-	/// &emsp;&emsp; 新申请的字符串长度: str->length + insert_str->length\n
-	/// &emsp;&emsp; **if** 申请内存失败 :\n
-	/// &emsp;&emsp;&emsp; 返回NON_ALLOCATED\n
-	int new_length = str->length + insert_str->length;
-	str->buffer = (char*)realloc(str->buffer, sizeof(char) * (new_length + 1));
-	if (str->buffer == NULL) {
-		return NON_ALLOCATED;
+	// ----- 3 重新分配内存 -----
+	int new_length = str->length + insert_str->length;  // 新申请的字符串长度: str->length + insert_str->length
+	str->buffer = (char*)realloc(str->buffer, sizeof(char) * (new_length + 1)); // 使用realloc重新对被插入字符串分配内存
+	if (str->buffer == NULL) {  // if 申请内存失败
+		return NON_ALLOCATED;   // 返回NON_ALLOCATED
 	}
 
-	/// ###4 执行插入###
-	/// - **移动被插入字符串的插入位置后侧(包含)所有字符**\n
-	/// &emsp;索引[index ... str->length - 1], 一共str->length - index个字符,\n
-	/// &emsp;向后侧移动insert_str->length个位置
+	// ----- 4 执行插入 -----
+    // 移动被插入字符串的插入位置后侧(包含)所有字符
 	int i = str->length - 1;
-	for (; i >= index; i--) {
-		str->buffer[i + insert_str->length] = str->buffer[i];
+	for (; i >= index; i--) {   // 索引[index ... str->length - 1], 一共str->length - index个字符
+		str->buffer[i + insert_str->length] = str->buffer[i];   // 向后侧移动insert_str->length个位置
 	}
 
-	/// - **使用待插入字符串赋值**\n
-	/// &emsp; **for loop** 遍历insert_str :\n
-	/// &emsp;&emsp; insert_str向str相应位置赋值\n
-	for (i = 0; i < insert_str->length; i++) {
-		str->buffer[index + i] = insert_str->buffer[i];
+	// 使用待插入字符串赋值
+	for (i = 0; i < insert_str->length; i++) {          // 遍历insert_str
+		str->buffer[index + i] = insert_str->buffer[i]; // insert_str向str相应位置赋值
 	}
 
-	/// ###5 更新被插入字符串的length
+	// 更新被插入字符串的length
 	str->length = new_length;
 
 	return OK;
@@ -404,41 +430,41 @@ status_t StringInsert(string_t* str, int index, string_t* insert_str) {
  * ###1 目标串的匹配索引初始化为-1###
  * ###2 执行BF算法###
  * &emsp; **for loop** 遍历目标串(starting_index为每次失配后, 下一趟匹配目标串的起始索引, 初始化为offset) :\n
+ * &emsp;&emsp; 模式串索引0开始\n
+ * &emsp;&emsp; **while** 模式串遍历未结束 :\n
+ * &emsp;&emsp;&emsp; **if** 目标串遍历字符 不匹配 模式串遍历字符 :\n
+ * &emsp;&emsp;&emsp;&emsp; 跳出循环\n
+ * &emsp;&emsp;&emsp; 模式串索引加1(向后移动1位) \n
+ * &emsp;&emsp; **if** 模式串遍历结束 :\n
+ * &emsp;&emsp;&emsp; 目标串匹配索引为starting_index\n
+ * &emsp;&emsp;&emsp; 跳出循环\n
  */
 int StringBruteForceSearch(string_t* str, string_t* pattern, int offset) {
 
 	// 1 ----- 目标串的匹配索引初始化为-1 -----
 	int match_index = -1;
 
-	// 2 执行BF算法
-	// &emsp; **for loop** 遍历目标串(starting_index为每次失配后, 下一趟匹配目标串的起始索引, 初始化为offset) :
+	// 2 ----- 执行BF算法 -----
+	// 遍历目标串(starting_index为每次失配后, 下一趟匹配的目标串的起始索引, 初始化为offset)
 	for (int starting_index = offset; starting_index <= str->length - pattern->length; starting_index++) {
-		/// &emsp;&emsp; 模式串索引0开始\n
-		int pattern_index = 0;
+		int pattern_index = 0;  // 模式串索引0开始
 
-		/// &emsp;&emsp; **while** 模式串遍历未结束 :\n
-		while (pattern_index < pattern->length) {
-			/// &emsp;&emsp;&emsp; **if** 目标串遍历字符 不匹配 模式串遍历字符 :\n
-			/// &emsp;&emsp;&emsp;&emsp; 跳出循环\n
+		while (pattern_index < pattern->length) {   // while 模式串遍历未结束
+			// if 目标串遍历字符不匹配模式串遍历字符: 跳出循环
 			if (str->buffer[starting_index + pattern_index] != pattern->buffer[pattern_index]) {
 				break;
 			}
 
-			/// &emsp;&emsp;&emsp; 模式串索引加1(向后移动1位)
-			pattern_index++;
+			pattern_index++;    // 模式串索引加1(向后移动1位)
 		}
 
-		/// &emsp;&emsp; **if** 模式串遍历结束 :\n
-		/// &emsp;&emsp;&emsp; 目标串匹配索引为starting_index\n
-		/// &emsp;&emsp;&emsp; 跳出循环\n
-		if (pattern_index == pattern->length) {
-			match_index = starting_index;
-			break;
+		if (pattern_index == pattern->length) { // if 模式串遍历结束
+			match_index = starting_index;       // 目标串匹配索引为starting_index
+			break;                              // 跳出for循环
 		}
 	}
 
-	/// ###3 返回目标串匹配索引###
-	return match_index;
+	return match_index; // 返回match_index
 }
 
 
@@ -662,70 +688,72 @@ status_t KMPNext(const char* pattern, int pattern_len, int** next) {
  * </span>
  *
  * ------------
+ * ###1 分配next数组内存###
+ * &emsp; **if** 分配内存失败 :\n
+ * &emsp;&emsp; 返回NON_ALLOCATED\n
+ * &emsp; memset置0\n
+ * ###2 求模式串next数组###
+ * &emsp; 调用KMPNext函数求next数组\n
+ * &emsp; **if** 调用失败 :\n
+ * &emsp;&emsp; 返回错误码\n
+ * ###3 使用next数组找模式串的匹配位置(的索引)###
+ * &emsp; **while** 目标串和模式串中, 某个串未遍历完 :\n
+ * &emsp;&emsp; **if** 模式串索引字符 == 目标串索引的字符\n
+ * &emsp;&emsp;&emsp; 模式串索引and目标串索引, 则向后移1位\n
+ * &emsp;&emsp; **else**(模式串索引字符 != 目标串索引的字符): \n
+ * &emsp;&emsp;&emsp; **if** 模式串索引0字符失配 :\n
+ * &emsp;&emsp;&emsp;&emsp; 目标串索引向后移1位\n
+ * &emsp;&emsp;&emsp; **else**(模式串索引非0字符失配) :\n
+ * &emsp;&emsp;&emsp;&emsp; 从模式串的next[pattern_index]开始执行下一趟匹配\n
+ * ###4 求目标串匹配索引###
+ * &emsp; **if** 模式串匹配索引 < 模式串长度 :\n
+ * &emsp;&emsp; 目标串匹配索引为-1(没有匹配点)\n
+ * &emsp; **else**\n
+ * &emsp;&emsp; 目标串匹配索引为str_index - pattern_len\n
  */
 int StringKMPSearch(string_t* str, string_t* pattern, int offset) {
 
-	/// ###1 分配next数组内存###
-	/// &emsp; **if** 分配内存失败 :\n
-	/// &emsp;&emsp; 返回NON_ALLOCATED\n
+	// ----- 1 分配next数组内存 -----
 	int* next = (int*)malloc((pattern->length + 1) * sizeof(int));
-	if (next == NULL) {
-		return NON_ALLOCATED;
+	if (next == NULL) {         // if 分配内存失败
+		return NON_ALLOCATED;   // 返回NON_ALLOCATED
 	}
 
-	/// &emsp; memset置0\n
-	memset(next, 0, sizeof(int) * (pattern->length + 1));
+	memset(next, 0, sizeof(int) * (pattern->length + 1));   // memset置0
 
-	/// ###2 求模式串next数组###
-	/// &emsp; 调用KMPNext函数求next数组\n
-	/// &emsp; **if** 调用失败 :\n
-	/// &emsp;&emsp; 返回错误码\n
+	// ----- 2 求模式串next数组 -----
+	// 调用KMPNext函数求next数组
 	status_t status = KMPNext(pattern->buffer, pattern->length, &next);
 	if (status != OK) {
 		return status;
 	}
 
-	/// ###3 使用next数组找模式串的匹配位置(的索引)###
+	// ----- 3 使用next数组找模式串的匹配位置(的索引) -----
 	int pattern_index = 0;  // 模式串索引
 	int str_index = offset; // 目标串索引
 
-	/// &emsp; **while** 目标串和模式串中, 某个串未遍历完 :\n
-	while (pattern_index < pattern->length && str_index < str->length) {
-		/// &emsp;&emsp; **if** 模式串索引字符 == 目标串索引的字符\n
-		/// &emsp;&emsp;&emsp; 模式串索引and目标串索引, 则向后移1位\n
-		if (pattern->buffer[pattern_index] == str->buffer[str_index]) {
-			pattern_index++;
-			str_index++;
-		}
-		else {
-			/// &emsp;&emsp; **else**(模式串索引字符 != 目标串索引的字符): \n
-			/// &emsp;&emsp;&emsp; **if** 模式串索引0字符失配 :\n
-			/// &emsp;&emsp;&emsp;&emsp; 目标串索引向后移1位\n
-			if (pattern_index == 0) {
-				str_index++;
-			}
-			else {
-				/// &emsp;&emsp;&emsp; **else**(模式串索引非0字符失配) :\n
-				/// &emsp;&emsp;&emsp;&emsp; 从模式串的next[pattern_index]开始执行下一趟匹配\n
-				pattern_index = next[pattern_index];
+	while (pattern_index < pattern->length && str_index < str->length) {    // while 目标串和模式串中, 某个串未遍历完
+		if (pattern->buffer[pattern_index] == str->buffer[str_index]) {     // if 模式串索引字符 == 目标串索引的字符
+			pattern_index++;    // 模式串索引向后移1位
+			str_index++;        // 目标串索引向后移1位
+		} else {    // else(模式串索引字符 != 目标串索引的字符)
+			if (pattern_index == 0) {                   // if 模式串索引0字符失配
+				str_index++;                            // 目标串索引向后移1位
+			} else {                                    // else(模式串索引非0字符失配)
+				pattern_index = next[pattern_index];    // 从模式串的next[pattern_index]开始执行下一趟匹配
 			}
 		}
 	}
 
 	free(next);
 
-	int match_pos;
+	// ----- 4 求目标串匹配索引 -----
 
-	///###4 求目标串匹配索引###
-	///&emsp; **if** 模式串匹配索引 < 模式串长度 :\n
-	///&emsp;&emsp; 目标串匹配索引为-1(没有匹配点)\n
-	///&emsp; **else**\n
-	///&emsp;&emsp; 目标串匹配索引为str_index - pattern_len\n
-	if (pattern_index < pattern->length) {
-		match_pos = -1; // 不匹配
-	}
-	else {
-		match_pos = str_index - pattern->length; // 算出目标串中匹配的第一个字符的(在目标串中的)位置
+    int match_pos;
+	if (pattern_index < pattern->length) {  //if 模式串匹配索引 < 模式串长度
+		match_pos = -1; // 目标串匹配索引为-1(不匹配)
+	} else {
+		match_pos = str_index - pattern->length;    // 目标串匹配索引为str_index - pattern_len
 	}
 
 	return match_pos;

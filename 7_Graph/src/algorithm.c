@@ -112,69 +112,79 @@ void DFSRecursive(matrix_graph_t graph,
 
 
 /*!
- * <h1>图广度优先BFS遍历</h1>
- * @param graph **图**
- * @param Visit **结点访问函数**
+ * @brief **图广度优先BFS遍历**
+ * @param graph 图
+ * @param Visit 结点访问函数
  * @note
+ * 图广度优先BFS遍历
+ * ---------------
+ * ---------------
+ *
+ * ---------------
+ * ### 1 构造visited数组 ###
+ * &emsp; 数组visited_vertex_indexes分配内存 \n
+ * &emsp; **for loop** 遍历图结点 :\n
+ * &emsp;&emsp; 每个结点都设置成未访问NOT_VISITED \n
+ * ### 2 初始化空队列 ###
+ * ### 3 执行BFS遍历 ###
+ * &emsp; **for loop** 遍历图结点 : \n
+ * &emsp;&emsp; **if** 当前结点已经访问过 : \n
+ * &emsp;&emsp;&emsp; continue \n
+ * &emsp;&emsp; 访问当前结点 \n
+ * &emsp;&emsp; 将当前结点设置为已访问 \n
+ * &emsp;&emsp; 当前结点索引入队 \n
+ * &emsp;&emsp; **while** 队列不为空 : \n
+ * &emsp;&emsp;&emsp; 取当前队头结点 \n
+ * &emsp;&emsp;&emsp; **for loop** 遍历当前队头结点的相邻结点 : \n
+ * &emsp;&emsp;&emsp;&emsp; **if** 当前相邻结点已被访问 : \n
+ * &emsp;&emsp;&emsp;&emsp;&emsp; continue \n
+ * &emsp;&emsp;&emsp;&emsp; 访问当前相邻结点 \n
+ * &emsp;&emsp;&emsp;&emsp; 当前相邻结点入队 \n
+ * &emsp;&emsp;&emsp;&emsp; 标记当前相邻结点被访问 \n
  */
 void BFSTraverse(matrix_graph_t graph, status_t (*Visit)(matrix_graph_t*, int)) {
 
-    /// ### 1 构造visited数组 ###
-    /// &emsp; 数组visited_vertex_indexes分配内存 \n
-    int* visited_vertex_indexes = (int*)malloc(graph.vertex_count * sizeof(int));
+    // ----- 1 构造visited数组 -----
+    int* visited_vertex_indexes = (int*)malloc(graph.vertex_count * sizeof(int)); // 数组visited_vertex_indexes分配内存
 
-    /// &emsp; **for loop** 遍历图结点 :\n
-    for (int i = 0; i < graph.vertex_count; i++) {
-        /// &emsp;&emsp; 每个结点都设置成未访问NOT_VISITED \n
-        visited_vertex_indexes[i] = NOT_VISITED;
+    for (int i = 0; i < graph.vertex_count; i++) {  // for loop 遍历图结点 :
+        visited_vertex_indexes[i] = NOT_VISITED;        // 每个结点都设置成未访问NOT_VISITED
     }
 
-    /// ### 2 初始化空队列 ###
+    // ----- 2 初始化空队列 -----
     linked_queue_t queue;
     LinkedQueueInit(&queue);
 
-    /// ### 3 执行BFS遍历 ###
-    /// &emsp; **for loop** 遍历图结点 : \n
-    for (int i = 0; i < graph.vertex_count; i++) {
+    // ----- 3 执行BFS遍历 -----
+    for (int i = 0; i < graph.vertex_count; i++) {  // for loop 遍历图结点 :
 
-        /// &emsp;&emsp; **if** 当前结点已经访问过 : \n
-        if (visited_vertex_indexes[i] == VISITED) {
-            /// &emsp;&emsp;&emsp; continue \n
+        if (visited_vertex_indexes[i] == VISITED) {     // if 当前结点已经访问过 :
             continue;
         }
 
-        /// &emsp;&emsp; 访问当前结点 \n
-        Visit(&graph, i);
-        /// &emsp;&emsp; 将当前结点设置为已访问 \n
-        visited_vertex_indexes[i] = VISITED;
-        /// &emsp;&emsp; 当前结点索引入队 \n
-        LinkedQueueEnQueue(&queue, i);
+        Visit(&graph, i);                       // 访问当前结点
+        visited_vertex_indexes[i] = VISITED;    // 将当前结点设置为已访问
+        LinkedQueueEnQueue(&queue, i);          // 当前结点索引入队
 
-        /// &emsp;&emsp; **while** 队列不为空 : \n
-        while (!LinkedQueueIsEmpty(&queue)) {
+        while (!LinkedQueueIsEmpty(&queue)) {   // while 队列不为空 :
 
-            /// &emsp;&emsp;&emsp; 取当前队头结点 \n
             int vertex_index;
-            LinkedQueueDeQueue(&queue, &vertex_index);
+            LinkedQueueDeQueue(&queue, &vertex_index);  // 取当前队头结点
 
-            /// &emsp;&emsp;&emsp; **for loop** 遍历当前队头结点的相邻结点 : \n
+            // for loop 遍历当前队头结点的相邻结点
             for (int neighbor_vertex_index = FirstAdjVertexIndex(&graph, vertex_index);
                  neighbor_vertex_index >= 0;
                  neighbor_vertex_index = NextAdjVertexIndex(&graph, vertex_index, neighbor_vertex_index)
                 )
             {
-                /// &emsp;&emsp;&emsp;&emsp; **if** 当前相邻结点已被访问 : \n
-                if (visited_vertex_indexes[neighbor_vertex_index] == VISITED) {
-                    /// &emsp;&emsp;&emsp;&emsp;&emsp; continue \n
+                if (visited_vertex_indexes[neighbor_vertex_index] == VISITED) { // if 当前相邻结点已被访问
                     continue;
                 }
 
-                /// &emsp;&emsp;&emsp;&emsp; 访问当前相邻结点 \n
-                Visit(&graph, neighbor_vertex_index);
-                /// &emsp;&emsp;&emsp;&emsp; 当前相邻结点入队 \n
-                LinkedQueueEnQueue(&queue, neighbor_vertex_index);
-                /// &emsp;&emsp;&emsp;&emsp; 标记当前相邻结点被访问 \n
-                visited_vertex_indexes[neighbor_vertex_index] = VISITED;
+                Visit(&graph, neighbor_vertex_index);                       // 访问当前相邻结点
+
+                LinkedQueueEnQueue(&queue, neighbor_vertex_index);          // 当前相邻结点入队
+                visited_vertex_indexes[neighbor_vertex_index] = VISITED;    // 标记当前相邻结点被访问
             }
         }
     }
@@ -210,9 +220,9 @@ int isInMstVertexIndexSet(const int* mst_vertex_index_set, int index, int mst_ve
 }
 
 /*!
- * @brief Prim最小生成树算法
- * @param graph **图**(指针)
- * @param min_span_tree **最小生成树**(数组)
+ * @brief **Prim最小生成树算法**
+ * @param graph 图(指针)
+ * @param min_span_tree 最小生成树(数组)
  * @note
  * Prim最小生成树算法
  * ----------------
@@ -262,8 +272,7 @@ void Prim(matrix_graph_t* graph, edge_t* min_span_tree) {
     }
 
     // ----- 贪心法构造最小生成树 -----
-    // while 最小生成树结点数量 < 图结点数量 (最小生成树未构造完)
-    while (mst_vertex_count < graph->vertex_count) {
+    while (mst_vertex_count < graph->vertex_count) {    // while 最小生成树结点数量 < 图结点数量 (最小生成树未构造完)
 
         // 取最小优先队列队头(以mst_vertex_index_set中某个结点为起点, 不在这些结点的某个结点为终点的, 最短的边), 并出队
         edge_t cur_mst_edge;
@@ -299,51 +308,62 @@ void Prim(matrix_graph_t* graph, edge_t* min_span_tree) {
 
 
 /*!
- * <h1>Kruskal最小生成树</h1>
- * @param graph **图**(指针)
- * @param min_span_tree **最小生成树**(数组)
+ * @brief **Kruskal最小生成树**
+ * @param graph 图(指针)
+ * @param min_span_tree 最小生成树(数组)
  * @note
+ * Kruskal最小生成树
+ * ----------------
+ * ----------------
+ *
+ * ----------------
+ * ### 1 初始化 ###
+ * &emsp; 最小优先队列min_priority_queue初始化 \n
+ * &emsp; 并查集disjoint_set初始化 \n
+ * ### 2 所有边插入到最小优先队列 ###
+ * &emsp; **for loop** 遍历图所有的边: \n
+ * &emsp;&emsp; 将当前边Push到最小优先队列min_priority_queue \n
+ * ### 3 贪心 ###
+ * &emsp; **for loop** 遍历 (图结点数 - 1) 次 : \n
+ * &emsp;&emsp; 最小优先队列队头(队中最短边)出队, 赋给当前最短边cur_min_dist_edge \n
+ * &emsp;&emsp; 使用并查集, 查到cur_min_dist_edge的起点和终点对应的并查集根索引 \n
+ * &emsp;&emsp; **if** 起点根索引 不等于 终点根索引 : \n
+ * &emsp;&emsp;&emsp; 并查集合并 \n
+ * &emsp;&emsp;&emsp; 当前最小边加入到最小生成树 \n
  */
 void Kruskal(matrix_graph_t* graph, edge_t* min_span_tree) {
 
-    /// ### 1 初始化最小优先队列 ###
-    /// &emsp; 最小有限队列min_priority_queue \n
+    // ----- 1 初始化 -----
+
+    // 最小优先队列min_priority_queue初始化
     min_priority_queue_t min_priority_queue;
     MinPriorityQueueInit(&min_priority_queue, graph->edge_count);
 
-    /// ### 2 初始化并查集 ###
-    /// &emsp; 并查集disjoint_set \n
+    // 并查集disjoint_set初始化
     disjoint_set_t disjoint_set;
     InitDisjointSet(&disjoint_set, graph->edge_count);
 
-    /// ### 3 将所有边插入到最小优先队列 ###
-    /// &emsp; **for loop** 遍历graph->edges : \n
-    for (int i = 0; i < graph->edge_count; i++) {
-        /// &emsp;&emsp; 将当前边Push到最小优先队列min_priority_queue \n
-        MinPriorityQueuePush(&min_priority_queue, graph->edges[i]);
+    // ----- 2 所有边插入到最小优先队列 -----
+    for (int i = 0; i < graph->edge_count; i++) {   // 遍历图所有的边
+        MinPriorityQueuePush(&min_priority_queue, graph->edges[i]); // 将当前边Push到最小优先队列min_priority_queue
     }
 
-    /// ### 4 执行Kruskal算法核心流程 ###
-    /// &emsp; **for loop** 遍历 (图结点数 - 1) 次 : \n
-    for (int i = 0; i < graph->vertex_count - 1;) {
+    // ----- 3 贪心 -----
+    for (int i = 0; i < graph->vertex_count - 1;) { // 遍历 (图结点数 - 1) 次
 
-        /// &emsp;&emsp; 队头(队中最短边)出队, 赋给cur_edge \n
-        edge_t cur_edge;
-        MinPriorityQueuePop(&min_priority_queue, &cur_edge);
+        // 最小优先队列队头(队中最短边)出队, 赋给当前最短边cur_min_dist_edge
+        edge_t cur_min_dist_edge;
+        MinPriorityQueuePop(&min_priority_queue, &cur_min_dist_edge);
 
-        /// &emsp;&emsp; 使用并查集, 查到最短边的起点和终点对应的并查集根索引
+        // 使用并查集, 查到cur_edge的起点和终点对应的并查集根索引
         int cur_starting_root_index =
-            DisjointSetFind(&disjoint_set, cur_edge.starting_vertex_index);
+            DisjointSetFind(&disjoint_set, cur_min_dist_edge.starting_vertex_index);
         int cur_ending_root_index =
-            DisjointSetFind(&disjoint_set, cur_edge.ending_vertex_index);
+            DisjointSetFind(&disjoint_set, cur_min_dist_edge.ending_vertex_index);
 
-        /// &emsp;&emsp; **if** 起点根索引 不等于 终点根索引 : \n
-        if (cur_starting_root_index != cur_ending_root_index) {
-            /// &emsp;&emsp;&emsp; 并查集合并 \n
-            DisjointSetUnion(&disjoint_set, cur_starting_root_index, cur_ending_root_index);
-
-            /// &emsp;&emsp;&emsp; 当前最小边加入到最小生成树 \n
-            min_span_tree[i] = cur_edge;
+        if (cur_starting_root_index != cur_ending_root_index) { // if 起点根索引 不等于 终点根索引
+            DisjointSetUnion(&disjoint_set, cur_starting_root_index, cur_ending_root_index);    // 并查集合并
+            min_span_tree[i] = cur_min_dist_edge;    // 当前最小边加入到最小生成树
             i++;
         }
     }
@@ -351,13 +371,18 @@ void Kruskal(matrix_graph_t* graph, edge_t* min_span_tree) {
 
 
 /*!
- * @brief <h1>打印最小生成树</h1>
- * @param min_span_tree **最小生成树**(数组)
- * @param size **最小生成树边数量**
+ * @brief **打印最小生成树**
+ * @param min_span_tree 最小生成树(数组)
+ * @param size 最小生成树边数量
  * @note
+ * 打印最小生成树
+ * ------------
+ * ------------
+ *
+ * ------------
+ * 遍历最小生成树min_span_tree, 打印每一条边的信息
  */
 void PrintMinSpanTree(MST_t min_span_tree, int size) {
-    /// 遍历最小生成树min_span_tree, 打印每一条边的信息
     for (int i = 0; i < size; i++) {
         printf("起始点: %d, 终点: %d, 距离: %lf\n",
                min_span_tree[i].starting_vertex_index,
@@ -480,7 +505,7 @@ void Dijkstra(matrix_graph_t* graph, int starting_vertex_index, int(*predecessor
  * @param starting_vertex_index 起点索引
  * @param predecessor 前驱数组
  * @param distance 最短路径数组
- * @return 是否含有环
+ * @return 是否含有负权环
  * @note
  * 贝尔曼福特(Bellman-Ford)最短路径
  * ------------------------------
@@ -518,53 +543,86 @@ void Dijkstra(matrix_graph_t* graph, int starting_vertex_index, int(*predecessor
  *         如果 distance[u] + 边(u, v)权重 < distance[v]:
  *             error "图包含负回路"
  * ```
+ * ### 1 初始化 ###
+ * &emsp;**for loop** 遍历图结点索引 : \n
+ * &emsp;&emsp; **if** 索引i等于起点索引 : \n
+ * &emsp;&emsp;&emsp; distance[i] = 0; \n
+ * &emsp;&emsp; **else** (索引i不等于起点索引) : \n
+ * &emsp;&emsp;&emsp; distance[i] = DBL_MAX;(没有路径) \n
+ * &emsp;路径(起点 --> 起点), 起点的前驱结点索引设为-1
+ * ### 2 动态规划 ###
+ * &emsp;**for loop** 遍历 "图结点数 - 1" 次 : \n
+ * &emsp;&emsp; **for loop** 遍历 "图边数" 次 : \n
+ * &emsp;&emsp;&emsp; u为边graph->edges[j]的起点索引 \n
+ * &emsp;&emsp;&emsp; v为边graph->edges[j]的终点索引 \n
+ * &emsp;&emsp;&emsp; **松弛**, RELAX(u, v) : \n
+ * &emsp;&emsp;&emsp;&emsp; **if** distance[u] + weight(u, v) < distance[v] \n
+ * &emsp;&emsp;&emsp;&emsp;&emsp; distance[v] = distance[u] + weight(u, v); \n
+ * ### 3 判断是否有负权环 ###
+ * &emsp;**for loop** 遍历 "图结点数 - 1" 次 : \n
+ * &emsp;&emsp; **for loop** 遍历 "图边数" 次 : \n
+ * &emsp;&emsp;&emsp; u为边graph->edges[j]的起点索引 \n
+ * &emsp;&emsp;&emsp; v为边graph->edges[j]的终点索引 \n
+ * &emsp;&emsp;&emsp; **if** distance[u] + weight(u, v) < distance[v] : \n
+ * &emsp;&emsp;&emsp;&emsp; 有负权环 \n
+ * &emsp;返回是否有负权环 \n
  */
 int BellmanFord(matrix_graph_t* graph,
                 int starting_vertex_index,
                 int (*predecessor)[MAX_VERTEX_CNT],
                 path_t* distance)
 {
-    for (int i = 0; i < graph->vertex_count; i++) {
-        distance[i].weight.double_value = DBL_MAX;
+    // ----- 1 初始化 -----
+
+    for (int i = 0; i < graph->vertex_count; i++) { // for loop 遍历图结点索引
+        if (i == starting_vertex_index) {   // if 索引i等于起点索引
+            distance[i].weight.double_value = 0;
+        } else {    // else (索引i不等于起点索引)
+            distance[i].weight.double_value = DBL_MAX;  // 没有路径
+        }
     }
-    distance[starting_vertex_index].weight.double_value = 0;
-    predecessor[starting_vertex_index][starting_vertex_index] = -1;
 
-    // 遍历 "图结点数 - 1" 次
-    for (int i = 0; i < graph->vertex_count - 1; i++) {
-        // 遍历 "图边数" 次
-        for (int j = 0; j < graph->edge_count; j++) {
-            int u = graph->edges[j].starting_vertex_index;
-            int v = graph->edges[j].ending_vertex_index;
+    predecessor[starting_vertex_index][starting_vertex_index] = -1; // 路径(起点 --> 起点), 起点的前驱结点索引设为-1
 
-            // 松弛
+    // ----- 2 动态规划 -----
+
+    for (int i = 0; i < graph->vertex_count - 1; i++) { // for loop 遍历 "图结点数 - 1" 次
+        for (int j = 0; j < graph->edge_count; j++) {   // for loop 遍历 "图边数" 次
+            int u = graph->edges[j].starting_vertex_index;  // u为边graph->edges[j]的起点索引
+            int v = graph->edges[j].ending_vertex_index;    // v为边graph->edges[j]的终点索引
+
+            // 松弛, RELAX(u, v) :
+            // if distance[u] + weight(u, v) < distance[v]
             if (distance[u].weight.double_value + graph->adj_matrix[u][v].weight.double_value
                 < distance[v].weight.double_value)
             {
+                // distance[v] = distance[u] + weight(u, v);
                 distance[v].weight.double_value =
                     distance[u].weight.double_value + graph->adj_matrix[u][v].weight.double_value;
-                predecessor[starting_vertex_index][v] = u;
+                predecessor[starting_vertex_index][v] = u;  // 路径(starting_vertex_index, v), v的前驱结点, 被赋值为u
             }
         }
     }
 
+    // ----- 3 判断是否有负权环 -----
     int has_negative_weight_cycle = FALSE; // 默认没有负权环
-    for (int i = 0; i < graph->edge_count; i++) {
-        int cur_starting_vertex_index = graph->edges[i].starting_vertex_index;
-        int cur_ending_vertex_index = graph->edges[i].ending_vertex_index;
+    for (int i = 0; i < graph->edge_count; i++) {   // for loop 遍历图所有边
+        int u = graph->edges[i].starting_vertex_index;  // u为边graph->edges[j]的起点索引
+        int v = graph->edges[i].ending_vertex_index;    // v为边graph->edges[j]的终点索引
 
-        if (distance[cur_starting_vertex_index].weight.double_value
+        // if distance[u] + weight(u, v) < distance[v]
+        if (distance[u].weight.double_value
             +
-            graph->adj_matrix[cur_starting_vertex_index][cur_ending_vertex_index].weight.double_value
+            graph->adj_matrix[u][v].weight.double_value
             <
-            distance[cur_ending_vertex_index].weight.double_value)
+            distance[v].weight.double_value)
         {
             has_negative_weight_cycle = TRUE; // 有负权环
-            break;
+            break;  // 跳出循环
         }
     }
 
-    return has_negative_weight_cycle;
+    return has_negative_weight_cycle;   // 返回是否有负权环
 }
 
 
@@ -580,16 +638,16 @@ int BellmanFord(matrix_graph_t* graph,
  * ```
  * 弗洛伊德算法:
  *      distance[][] is a distance matrix for n vertexes.
- *         distance[i][j] is the distance to move directly from i to j.
- *         if no direct link from i to j
+ *          distance[i][j] is the distance to move directly from i to j.
+ *          if no direct link from i to j
  *              then initialize distance[i][j] = INFINITY
- *         the distance from a node to itself is 0(Initialize distance[i][i] = 0 for all i).
- *     predecessor[][] is a predecessor matrix. it enables you to reconstruct the shortest paths.
- *         predecessor[i][j] should be initialized to i.
+ *          the distance from a node to itself is 0(Initialize distance[i][i] = 0 for all i).
+ *      predecessor[][] is a predecessor matrix. it enables you to reconstruct the shortest paths.
+ *          predecessor[i][j] should be initialized to i.
  *
  * 算法执行结果:
- *     distance[i][j] contains the total cost along the shortest edge_t from i to j.
- *     predecessor[i][j] contains the predecessor of j on the shortest edge_t from i to j.
+ *      distance[i][j] contains the total cost along the shortest edge_t from i to j.
+ *      predecessor[i][j] contains the predecessor of j on the shortest edge_t from i to j.
  * ```
  * ### 1 初始化distance和predecessor ###
  * &emsp; **for loop** 遍历图结点, 作为起点 : \n
@@ -607,8 +665,10 @@ int BellmanFord(matrix_graph_t* graph,
  * &emsp;&emsp; **for loop** 遍历图结点, 作为起点start :\n
  * &emsp;&emsp;&emsp; **for loop** 遍历图结点, 作为终点end :\n
  * &emsp;&emsp;&emsp;&emsp; **松弛**, RELAX(intermediate, end) : \n
- * &emsp;&emsp;&emsp;&emsp;&emsp; **if** 路径(start --> intermediate) + 路径(intermediate --> end) < 路径(start --> end) :\n
- * &emsp;&emsp;&emsp;&emsp;&emsp;&emsp; 路径(start --> end) <---- 路径(start --> intermediate) + 路径(intermediate --> end) \n
+ * &emsp;&emsp;&emsp;&emsp;&emsp; **if** 路径(start --> intermediate) +
+ * 路径(intermediate --> end) < 路径(start --> end) :\n
+ * &emsp;&emsp;&emsp;&emsp;&emsp;&emsp; 路径(start --> end) <----
+ * 路径(start --> intermediate) + 路径(intermediate --> end) \n
  * &emsp;&emsp;&emsp;&emsp;&emsp;&emsp; end结点在最短路径(start --> end)中的前一结点, 被赋值为intermediate \n
  */
 void Floyd(matrix_graph_t* graph, int (*predecessor)[MAX_VERTEX_CNT], edge_t (*distance)[MAX_VERTEX_CNT]) {
@@ -764,7 +824,8 @@ void PrintSingleSourceShortestPathRecursive(matrix_graph_t* graph,
                                             int end,
                                             int (*predecessor)[MAX_VERTEX_CNT])
 {
-    if (start != end) { // if 起点和终点不是同一结点0
+    if (start != end) { // if 起点和终点不是同一结点
+
         // 终点在本条最短路径(参数起点 --> 参数终点)的前一结点索引为predecessor[start][end]
         int predecessor_of_end = predecessor[start][end];
 

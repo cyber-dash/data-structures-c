@@ -13,8 +13,11 @@
 
 
 /*!
- * @brief <h1>测试使用结点数组和边数组创建无向网</h1>
+ * @brief **测试使用结点数组和边数组创建无向网**
  * @note
+ * 测试使用结点数组和边数组创建无向网
+ * -----------------------------
+ * -----------------------------
  * ```
  *           结点0
  *           / \
@@ -76,15 +79,15 @@ void TestCreateUDNByEdgesAndVertices() {
         edges[i].weight.double_value = weights[i];
     }
 
-    /// - 声明邻接矩阵图并设置类型
+    // - 声明邻接矩阵图并设置类型
     matrix_graph_t graph;
     graph.kind = UDN;       // 类型:无向网
 
-    /// - 建图并打印邻接矩阵
+    // - 建图
     status_t status = CreateGraphByEdgesAndVertices(&graph, edges, 5, vertices, 4, UDN);
     if (status == OK) {
         printf("建图成功, 打印:\n\n");
-        status = PrintGraphMatrix(&graph);
+        status = PrintGraphMatrix(&graph);  // 打印邻接矩阵
         if (status == OK) {
             printf("打印结束\n\n");
         }
@@ -97,8 +100,11 @@ void TestCreateUDNByEdgesAndVertices() {
 
 
 /*!
- * @brief <h1>测试深度优先遍历</h1>
+ * @brief **测试深度优先遍历**
  * @note
+ * 测试深度优先遍历
+ * --------------
+ * --------------
  *
  * ```
  *               结点0
@@ -185,8 +191,11 @@ void TestDFSTraverse() {
 
 
 /*!
- * @brief <h1>测试广度优先遍历</h1>
+ * @brief **测试广度优先遍历**
  * @note
+ * 测试广度优先遍历
+ * --------------
+ * --------------
  *
  * ```
  *               结点0
@@ -274,8 +283,11 @@ void TestBFSTraverse() {
 
 
 /*!
- * @brief <h1>测试(Prim)最小生成树</h1>
+ * @brief **测试(Prim)最小生成树**
  * @note
+ * 测试(Prim)最小生成树
+ * ------------------
+ * ------------------
  *
  * ```
  *               结点0
@@ -367,8 +379,11 @@ void TestPrim() {
 
 
 /*!
- * @brief <h1>测试克努斯卡尔(Kruskal)最小生成树</h1>
+ * @brief **测试克努斯卡尔(Kruskal)最小生成树**
  * @note
+ * 测试克努斯卡尔(Kruskal)最小生成树
+ * -----------------------------
+ * -----------------------------
  *
  * ```
  *               结点0
@@ -466,8 +481,11 @@ void TestKruskal() {
 
 
 /*!
- * @brief <h1>测试迪杰斯特拉(Dijkstra)最短路径</h1>
+ * @brief **测试迪杰斯特拉(Dijkstra)最短路径**
  * @note
+ * 测试迪杰斯特拉(Dijkstra)最短路径
+ * -----------------------------
+ * -----------------------------
  *
  * ```
  *               结点0
@@ -568,8 +586,11 @@ void TestDijkstra() {
 
 
 /*!
- * @brief <h1>测试贝尔曼福特(BellmanFord)最短路径</h1>
+ * @brief **测试贝尔曼福特(BellmanFord)最短路径**
  * @note
+ * 测试贝尔曼福特(BellmanFord)最短路径
+ * --------------------------------
+ * --------------------------------
  *
  * ```
  *               结点0
@@ -664,8 +685,11 @@ void TestBellmanFord() {
 
 
 /*!
- * @brief <h1>测试弗洛伊德(Floyd-Warshall)算法</h1>
+ * @brief **测试弗洛伊德(Floyd-Warshall)算法**
  * @note
+ * 测试弗洛伊德(Floyd-Warshall)算法
+ * ------------------------------
+ * ------------------------------
  *
  * ```
  *               结点0

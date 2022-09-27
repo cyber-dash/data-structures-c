@@ -18,11 +18,16 @@
 
 
 /*!
- * @brief <h1>图结点访问函数</h1>
- * @param graph **图**(指针)
- * @param vertex_index **图结点索引**
- * @return **执行结果**
+ * @brief **图结点访问函数**
+ * @param graph 图
+ * @param vertex_index 图结点索引
+ * @return 执行结果
  * @note
+ * 图结点访问函数
+ * ------------
+ * ------------
+ *
+ * ------------
  * 本实现只调用printf, 打印图结点索引
  */
 status_t Visit(matrix_graph_t* graph, int vertex_index) {
@@ -32,10 +37,15 @@ status_t Visit(matrix_graph_t* graph, int vertex_index) {
 
 
 /*!
- * @brief <h1>图DFS遍历</h1>
- * @param graph **图**(指针)
- * @param Visit **图结点访问函数**
+ * @brief **图DFS遍历**
+ * @param graph 图
+ * @param Visit 图结点访问函数
  * @note
+ * 图DFS遍历
+ * --------
+ * --------
+ *
+ * --------
  */
 status_t DFSTraverse(matrix_graph_t graph, status_t (*Visit)(matrix_graph_t*, int)) {
 
@@ -67,11 +77,11 @@ status_t DFSTraverse(matrix_graph_t graph, status_t (*Visit)(matrix_graph_t*, in
 
 
 /*!
- * @brief 对结点深度优先遍历(递归)
- * @param graph **图**
- * @param vertex_index **图结点索引**
- * @param visited_vertex_indexes **已访问结点索引的数组**
- * @param Visit **结点访问函数**
+ * @brief **对结点深度优先遍历(递归)**
+ * @param graph 图
+ * @param vertex_index 图结点索引
+ * @param visited_vertex_indexes 已访问结点索引的数组
+ * @param Visit 结点访问函数
  * @note
  * 对结点深度优先遍历(递归)
  * ---------------------
@@ -192,11 +202,11 @@ void BFSTraverse(matrix_graph_t graph, status_t (*Visit)(matrix_graph_t*, int)) 
 
 
 /*!
- * @brief 索引index结点是否在最小生成树中
- * @param mst_vertex_index_set **最小生成树结点索引集合**(数组)
- * @param index **结点索引**
- * @param mst_vertex_count **最小生成树当前大小**(结点数)
- * @return **结果**(在或者不在)
+ * @brief @brief **索引index结点是否在最小生成树中**
+ * @param mst_vertex_index_set 最小生成树结点索引集合(数组)
+ * @param index 结点索引
+ * @param mst_vertex_count 最小生成树当前大小(结点数)
+ * @return 结果(在或者不在)
  * @note
  * 索引index结点是否在最小生成树中
  * ----------------------------
@@ -287,8 +297,7 @@ void Prim(matrix_graph_t* graph, edge_t* min_span_tree) {
 
         // --- 将队头(最短边)的终点为起点, 终点不在mst_vertex_index_set的边, 全部入队最小优先队列 ---
 
-        // for loop 遍历图结点(作为终点)
-        for (int i = 0; i < graph->vertex_count; i++) {
+        for (int i = 0; i < graph->vertex_count; i++) { // for loop 遍历图结点(作为终点)
 
             // 变量in_vertex_set表示当前结点是否在最小生成树中, 在TRUE, 不在FALSE
             // if 当前结点已经在mst_vertex_index_set 或者 边(cur_mst_edge.ending_vertex_index, i)不存在: continue
@@ -511,37 +520,45 @@ void Dijkstra(matrix_graph_t* graph, int starting_vertex_index, int(*predecessor
  * ------------------------------
  * ------------------------------
  * ```
- * BellmanFord算法:
+ * function BellmanFord(list vertices, list edges, vertex source) is
  *
- *     --- 初始化 ---
+ *      // This implementation takes in a graph, represented as
+ *      // lists of vertices (represented as integers [0..n-1]) and edges,
+ *      // and fills two arrays (distance and predecessor) holding
+ *      // the shortest path from the source to each vertex
  *
- *     for 图中的每个结点v:
- *         如果(starting_vertex, v)没有边:
- *             distance[v] <-- INFINITY(不存在路径)
- *         否则:
- *             如果 v 是starting_vertex(起始点):
- *                 distance[v] = 0
- *                 predecessor[v] <-- -1(没有前一结点)
- *             否则:
- *                 distance[v] = 边(starting_vertex, v)的长度(权值)
- *                 predecessor[v] <-- starting_vertex_index(结点starting_vertex的索引) // v的前一结点是starting_vertex
+ *      distance := list of size n
+ *      predecessor := list of size n
  *
+ *      // Step 1: initialize graph
+ *      for each vertex v in vertices do
+ *          distance[v] := inf             // Initialize the distance to all vertices to infinity
+ *          predecessor[v] := null         // And having a null predecessor
  *
- *     --- 动态规划 ---
+ *      distance[source] := 0              // The distance from the source to itself is, of course, zero
  *
- *     for 循环(图结点总数 - 1)次:
- *         for 图的每一条边edge (u, v):
- *             // 松弛
- *             如果 distance[u] + 边(u, v)权重 < distance[v]:
- *                 distance[v] <-- distance[u] + 边(u, v)权重
- *                 predecessor[v] <-- u
+ *      // Step 2: relax edges repeatedly
+ *      repeat |V|−1 times:
+ *          for each edge (u, v) with weight w in edges do
+ *              if distance[u] + w < distance[v] then
+ *                  distance[v] := distance[u] + w
+ *                  predecessor[v] := u
  *
+ *      // Step 3: check for negative-weight cycles
+ *      for each edge (u, v) with weight w in edges do
+ *          if distance[u] + w < distance[v] then
+ *              // Step 4: find a negative-weight cycle
+ *              negativeloop := [v, u]
+ *              repeat |V|−1 times:
+ *                  u := negativeloop[0]
+ *                  for each edge (u, v) with weight w in edges do
+ *                      if distance[u] + w < distance[v] then
+ *                          negativeloop := concatenate([v], negativeloop)
+ *              find a cycle in negativeloop, let it be ncycle
+ *              // use any cycle detection algorithm here
+ *              error "Graph contains a negative-weight cycle", ncycle
  *
- *     --- 检查是否有负权重的回路 ---
- *
- *     for 每一条边edge (u, v):
- *         如果 distance[u] + 边(u, v)权重 < distance[v]:
- *             error "图包含负回路"
+ *      return distance, predecessor
  * ```
  * ### 1 初始化 ###
  * &emsp;**for loop** 遍历图结点索引 : \n

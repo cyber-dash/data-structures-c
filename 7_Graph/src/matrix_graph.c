@@ -29,24 +29,30 @@ status_t LocateVertex(matrix_graph_t graph, VERTEX_TYPE vertex, int* vertex_inde
 
 
 /*!
- * <h1>获取某结点的第一个邻接节点的索引</h1>
- * @param graph **图**(指针)
- * @param vertex_index **结点索引**
- * @return **第一个邻接节点的索引**
+ * @brief **获取某结点的第一个邻接节点的索引**
+ * @param graph 图(指针)
+ * @param vertex_index 结点索引
+ * @return 第一个邻接节点的索引
  * @note
+ * 获取某结点的第一个邻接节点的索引
+ * ----------------------------
+ * ----------------------------
+ *
+ * ----------------------------
+ * **for loop** 遍历图结点 : \n
+ * &emsp; **if** i不等于vertex_index 并且 边(vertex_index --> i)存在 : \n
+ * &emsp;&emsp; 返回i \n
+ * 返回-1 \n
  */
 int FirstAdjVertexIndex(matrix_graph_t* graph, int vertex_index) {
-    /// **for loop** 遍历图结点 : \n
-    for (int i = 0; i < graph->vertex_count; i++) {
-        /// &emsp; **if** i不等有vertex_index 并且 边(vertex_index --> i)存在 : \n
+    for (int i = 0; i < graph->vertex_count; i++) { // for loop 遍历图结点
+        // if i不等于vertex_index 并且 边(vertex_index --> i)存在
         if (i != vertex_index && graph->adj_matrix[vertex_index][i].weight_type != NO_EDGE) {
-            /// &emsp;&emsp; 返回i \n
-            return i;
+            return i;   // 返回i
         }
     }
 
-    /// 返回-1 \n
-    return -1;
+    return -1;    // 返回-1
 }
 
 

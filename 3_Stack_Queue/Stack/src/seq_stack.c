@@ -8,23 +8,39 @@
  *  CyberDash计算机考研
  */
 
+#include <stdlib.h>
+#include <stdio.h>
 #include "seq_stack.h"
-#include "stdlib.h"
-#include "stdio.h"
 
 
 /*!
  * @brief **顺序栈初始化**
- * @param seq_stack **顺序栈**(指针)
- * @return **执行结果**
+ * @param seq_stack 顺序栈(指针)
+ * @return 执行结果
  * @note
+ * 顺序栈初始化
+ * ----------
+ * ----------
+ *
+ * ----------
+ *
+ * top指向的地址并不存放栈元素, 是为了方便操作
+ *
+ * ----------
+ * - 数组elements分配内存\n
+ * &emsp; **if** 内存分配失败 :\n
+ * &emsp;&emsp; 返回NON_ALLOCATED\n
+ * - 栈属性初始化\n
+ * &emsp; top指向elements数组首地址\n
+ * &emsp; 设置栈容量\n
+ * &emsp; 栈内元素数0个\n
  */
 status_t SeqStackInit(seq_stack_t* seq_stack) {
 
     // 为elements分配内存
     seq_stack->elements = (STACK_ELEM*)malloc(STACK_INIT_CAPACITY * sizeof(STACK_ELEM));
-    if (!seq_stack->elements){
-        return NON_ALLOCATED;   // 存储分配失败
+    if (!seq_stack->elements) {  // if 内存分配失败
+        return NON_ALLOCATED;   // 返回NON_ALLOCATED
     }
 
     seq_stack->top = seq_stack->elements;       // top指向数组首地址
@@ -37,18 +53,34 @@ status_t SeqStackInit(seq_stack_t* seq_stack) {
 
 /*!
  * @brief **顺序栈取栈顶**
- * @param sea_stack **顺序栈**
- * @param top_elem **栈顶元素的保存变量**(指针)
- * @return **执行结果**
+ * @param seq_stack 顺序栈
+ * @param top_elem 栈顶元素的保存变量(指针)
+ * @return 执行结果
  * @note
+ * 顺序栈取栈顶
+ * ----------
+ * ----------
+ *
+ * ----------
+ *
+ * 读操作, 栈顶并不出栈
+ *
+ * ----------
+ * - 判断栈空\n
+ * &emsp; **if** 栈空 :\n
+ * &emsp;&emsp; 返回NON_EXISTENT\n
+ * - 赋值\n
+ * &emsp; 将*(seq_stack.top - 1)赋给*top_elem\n
  */
-status_t SeqStackTop(seq_stack_t sea_stack, STACK_ELEM* top_elem) {
-    // 若栈不空, 则用top_elem保存栈顶元素, 并返回OK; 否则返回NON_EXISTENT
-    if (sea_stack.top == sea_stack.elements) {
-        return NON_EXISTENT;
+status_t SeqStackTop(seq_stack_t seq_stack, STACK_ELEM* top_elem) {
+
+    // ----- 判断栈空 -----
+    if (seq_stack.top == seq_stack.elements) {  // if 栈空
+        return NON_EXISTENT;    // 返回NON_EXISTENT
     }
 
-    *top_elem = *(sea_stack.top - 1);
+    // ----- 赋值 -----
+    *top_elem = *(seq_stack.top - 1);   // 将*(seq_stack.top - 1)赋给*top_elem
 
     return OK;
 }
@@ -56,10 +88,26 @@ status_t SeqStackTop(seq_stack_t sea_stack, STACK_ELEM* top_elem) {
 
 /*!
  * @brief **顺序栈入栈**
- * @param seq_stack **顺序栈**(指针)
- * @param elem **入栈元素**
- * @return **执行结果**
+ * @param seq_stack 顺序栈(指针)
+ * @param elem 入栈元素
+ * @return 执行结果
  * @note
+ * 顺序栈入栈
+ * --------
+ * --------
+ *
+ * --------
+ * - 判断栈满\n
+ * &emsp; **if** top - elements >= capacity :\n
+ * &emsp;&emsp; elements重新分配内存\n
+ * &emsp;&emsp; **if** 内存分配失败 :\n
+ * &emsp;&emsp;&emsp; 返回NON_ALLOCATED\n
+ * &emsp;&emsp; top指针重新指向最新的位置elements + capacity\n
+ * &emsp;&emsp; capacity调整\n
+ * - 栈属性调整\n
+ * &emsp; 入栈元素赋给top指针指向的位置\n
+ * &emsp; top指针向后移动一位\n
+ * &emsp; 当前栈size增加1\n
  */
 status_t SeqStackPush(seq_stack_t* seq_stack, STACK_ELEM elem) {
     // 栈满, 扩充elements数组, todo: 这里的>=包含两种边界条件, 需要增加case处理
@@ -86,16 +134,25 @@ status_t SeqStackPush(seq_stack_t* seq_stack, STACK_ELEM elem) {
 
 /*!
  * @brief **顺序栈出栈**
- * @param seq_stack **顺序栈**(指针)
- * @param elem **栈顶元素**
- * @return **执行结果**
+ * @param seq_stack 顺序栈(指针)
+ * @param elem 栈顶元素
+ * @return 执行结果
  * @note
- *
  * 顺序栈出栈
  * --------
  * --------
+ *
+ * --------
+ * - 判断栈空\n
+ * &emsp; **if** 栈空 :\n
+ * &emsp;&emsp; 返回NON_EXISTENT\n
+ * - 栈顶赋给elem\n
+ * - 栈属性调整\n
+ * &emsp; top指针向前挪1位(减1)\n
+ * &emsp; size减1\n
  */
 status_t SeqStackPop(seq_stack_t* seq_stack, STACK_ELEM* elem) {
+
     if (seq_stack->top == seq_stack->elements) {
         return NON_EXISTENT;
     }
@@ -111,9 +168,16 @@ status_t SeqStackPop(seq_stack_t* seq_stack, STACK_ELEM* elem) {
 
 /*!
  * @brief **顺序栈销毁**
- * @param seq_stack **顺序栈**
- * @return **执行结果**
+ * @param seq_stack 顺序栈
+ * @return 执行结果
  * @note
+ * 顺序栈销毁
+ * ---------
+ * ---------
+ *
+ * ---------
+ * - free栈的elements\n
+ * - free栈\n
  */
 status_t SeqStackDestroy(seq_stack_t* seq_stack) {
     free(seq_stack->elements);
@@ -125,9 +189,16 @@ status_t SeqStackDestroy(seq_stack_t* seq_stack) {
 
 /*!
  * @brief **顺序栈清空**
- * @param seq_stack **顺序栈**
- * @return **执行结果**
+ * @param seq_stack 顺序栈
+ * @return 执行结果
  * @note
+ * 顺序栈清空
+ * ---------
+ * ---------
+ *
+ * ---------
+ * **while loop** 栈不为空 :\n
+ * &emsp; Pop栈顶\n
  */
 status_t SeqStackClear(seq_stack_t* seq_stack) {
     STACK_ELEM elem;
@@ -141,24 +212,39 @@ status_t SeqStackClear(seq_stack_t* seq_stack) {
 
 /*!
  * @brief **顺序栈是否为空**
- * @param seq_stack **顺序栈**
- * @return **执行结果**
+ * @param seq_stack 顺序栈
+ * @return 执行结果
  * @note
+ * 顺序栈是否为空
+ * ------------
+ * ------------
+ *
+ * ------------
+ * **if** top等于elements :\n
+ * &emsp; 返回OK\n
+ * **else**\n
+ * &emsp; 返回ERROR\n
  */
 status_t SeqStackIsEmpty(seq_stack_t seq_stack) {
     if (seq_stack.top == seq_stack.elements) {
         return OK;
     }
 
-    return ERROR;
+    return ERROR;   // todo: ERROR用的不好
 }
 
 
 /*!
  * @brief **顺序栈长度**
- * @param seq_stack **顺序栈**
- * @return **长度**
+ * @param seq_stack 顺序栈
+ * @return 长度
  * @note
+ * 顺序栈长度
+ * ---------
+ * ---------
+ *
+ * ---------
+ * 返回 top - elements
  */
 int SeqStackSize(seq_stack_t seq_stack) {
     return seq_stack.top - seq_stack.elements;
@@ -167,12 +253,21 @@ int SeqStackSize(seq_stack_t seq_stack) {
 
 /*!
  * @brief **顺序栈打印**
- * @param seq_stack **顺序栈**
+ * @param seq_stack 顺序栈
  * @note
+ * 顺序栈打印
+ * ---------
+ * ---------
+ *
+ * ---------
+ * 遍历栈内元素, 打印
  */
 void SeqStackPrint(seq_stack_t* seq_stack) {
+
     STACK_ELEM* cur = seq_stack->top;
+
     printf("打印栈, 从栈顶到栈底\n");
+
     while (cur - seq_stack->elements > 0) {
         printf("%d ", *(cur - 1));
         cur--;

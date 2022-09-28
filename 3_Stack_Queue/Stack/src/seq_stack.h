@@ -48,7 +48,7 @@ status_t SeqStackIsEmpty(seq_stack_t seq_stack); // 若栈S为空栈, 则返回T
 int SeqStackSize(seq_stack_t seq_stack); // 返回S的元素个数, 即栈的长度
 
 // 顺序栈取栈顶
-status_t SeqStackTop(seq_stack_t sea_stack, STACK_ELEM* top_elem); //
+status_t SeqStackTop(seq_stack_t seq_stack, STACK_ELEM* top_elem); //
 
 // 顺序栈入栈
 status_t SeqStackPush(seq_stack_t* seq_stack, STACK_ELEM elem);

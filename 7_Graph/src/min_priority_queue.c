@@ -8,8 +8,8 @@
  *  CyberDash计算机考研
  */
 
+#include <stdlib.h>
 #include "min_priority_queue.h"
-#include "stdlib.h"
 
 
 /*!

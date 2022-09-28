@@ -12,7 +12,6 @@
 #define CYBER_DASH_GRAPH_ALGORITHM_H
 
 
-#include <stdio.h>
 #include "matrix_graph.h"
 
 

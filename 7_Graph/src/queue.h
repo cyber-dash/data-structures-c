@@ -12,7 +12,7 @@
 #define CYBER_DASH_GRAPH_QUEUE_H
 
 
-#include "graph.h"
+#include "common.h"
 
 
 /*! @brief 链式队列结点类型 */

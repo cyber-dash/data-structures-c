@@ -10,6 +10,8 @@
 
 #include <stdio.h>
 #include "test.h"
+#include "matrix_graph.h"
+#include "algorithm.h"
 
 
 /*!

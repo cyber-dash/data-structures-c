@@ -12,10 +12,10 @@
 #define CYBER_DASH_DISJOINT_SET_H
 
 
-#include "graph.h"
+#include "common.h"
 
 
-#define ROOT_PARENT_INDEX   -1  //!< 根节点的父节点索引值
+#define ROOT_PARENT_INDEX   (-1)  //!< 根节点的父节点索引值
 
 /*! @brief 并查集 */
 typedef struct {

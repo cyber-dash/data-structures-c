@@ -15,31 +15,39 @@
 
 
 /*!
- * <h1>静态搜索表初始化</h1>
- * @param static_search_table **静态搜索表**
- * @param elements **元素数组**
- * @param length **元素个数**
- * @return **执行结果**
+ * @brief **静态搜索表初始化**
+ * @param static_search_table 静态搜索表
+ * @param elements 元素数组
+ * @param length 元素个数
+ * @return 执行结果
  * @note
+ * 静态搜索表初始化
+ * --------------
+ * --------------
+ *
+ * --------------
+ * ### 1 空搜索表处理 ###
+ * &emsp; **if** 静态搜索表为NULL : \n
+ * &emsp;&emsp; 返回ERROR \n
+ * ### 2 静态搜索表初始化 ###
+ * ### 3 静态搜索表各元素赋值 ###
+ * &emsp; **for loop* 从后向前遍历静态搜索表: \n
+ * &emsp;&emsp; static_search_table->elements[i] <== elements[i - 1] \n
  */
 status_t StaticSearchTableInit(static_search_table_t* static_search_table, elem_t* elements, int length) {
 
-    /// ###1 空搜索表处理 ###
-    /// &emsp; **if** 静态搜索表为NULL : \n
-    /// &emsp;&emsp; 返回ERROR \n
-    if (static_search_table == NULL) {
-        return ERROR;
+    // ----- 1 空搜索表处理 -----
+    if (static_search_table == NULL) {  // if 静态搜索表为NULL
+        return ERROR;   // 返回ERROR
     }
 
-    /// ### 2 静态搜索表初始化 ###
+    // ----- 2 静态搜索表初始化 -----
     static_search_table->elements = (elem_t*)malloc(sizeof(elem_t) * (length + 1));
     static_search_table->length = length;
 
-    /// ### 3 静态搜索表各元素赋值 ###
-    /// &emsp; **for loop* 静态搜索表长度: \n
-    /// &emsp;&emsp; static_search_table->elements[i] <== elements[i - 1]
-    for (int i = 1; i <= length; i++) {
-        static_search_table->elements[i] = elements[i - 1];
+    // ----- 3 静态搜索表各元素赋值 -----
+    for (int i = 1; i <= length; i++) { // for loop 从后向前遍历静态搜索表
+        static_search_table->elements[i] = elements[i - 1]; // static_search_table->elements[i] <== elements[i - 1]
     }
 
     return OK;
@@ -47,24 +55,32 @@ status_t StaticSearchTableInit(static_search_table_t* static_search_table, elem_
 
 
 /*!
- * @brief <h1>静态搜索表打印</h1>
- * @param static_search_table **静态搜索表**(指针)
+ * @brief **静态搜索表打印**
+ * @param static_search_table 静态搜索表(指针)
  * @note
+ * 静态搜索表打印
+ * ------------
+ * ------------
+ *
+ * ------------
+ * **if** 空表 :\n
+ * &emsp; 打印"空静态表"\n
+ * **else** (非空表): \n
+ * &emsp; **for loop** 遍历静态表各元素 : \n
+ * &emsp;&emsp; 打印遍历元素的信息\n
  */
 void StaticSearchTablePrint(static_search_table_t* static_search_table) {
 
-    /// **if** 空表 :\n
-    /// &emsp; 打印"空静态表"\n
-    if (static_search_table == NULL || static_search_table->length == 0) {
-        printf("空静态表");
-    } else {
-
-        /// **else** (非空表): \n
+    if (static_search_table == NULL || static_search_table->length == 0) {  // if 空表
+        printf("空静态表"); // 打印"空静态表"
+    } else {    // else 非空表
         printf("静态表:\n");
-        /// &emsp; **for loop** 遍历静态表各元素 : \n
-        for (int i = 1; i <= static_search_table->length; i++) {
-            /// &emsp;&emsp; 打印遍历元素的信息\n
-            printf("{ key:%d, value:%.1lf }", static_search_table->elements[i].key, static_search_table->elements[i].value);
+        for (int i = 1; i <= static_search_table->length; i++) {    // for loop 从后向前遍历静态表
+            // 打印遍历元素的信息
+            printf("{ key:%d, value:%.1lf }",
+                   static_search_table->elements[i].key,
+                   static_search_table->elements[i].value);
+
             if (i != static_search_table->length) {
                 printf(", ");
             }
@@ -76,11 +92,16 @@ void StaticSearchTablePrint(static_search_table_t* static_search_table) {
 
 
 /*!
- * @brief <h1>静态搜索表顺序搜索</h1>
- * @param static_search_table **静态搜索表**(指针)
- * @param key **待搜索关键码**
+ * @brief **静态搜索表顺序搜索**
+ * @param static_search_table 静态搜索表(指针)
+ * @param key 待搜索关键码
  * @return 索引(如果没有元素则为0)
  * @note
+ * 静态搜索表顺序搜索
+ * ----------------
+ * ----------------
+ *
+ * ----------------
  */
 int StaticSearchTableSeqSearch(static_search_table_t* static_search_table, KEY key) {
 
@@ -98,9 +119,9 @@ int StaticSearchTableSeqSearch(static_search_table_t* static_search_table, KEY k
 
 
 /*!
- * @brief <h1>静态搜索表二分查找</h1>
- * @param static_search_table **静态搜索表**(指针)
- * @param key **关键码**
+ * @brief **静态搜索表二分查找**
+ * @param static_search_table 静态搜索表(指针)
+ * @param key 关键码
  * @return 索引(如果没有元素则为0)
  */
 int StaticSearchTableBinarySearch(static_search_table_t* static_search_table, KEY key) {

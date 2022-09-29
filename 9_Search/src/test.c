@@ -14,8 +14,13 @@
 
 
 /*!
- * @brief <h1>测试静态搜索表顺序搜索</h1>
+ * @brief **测试静态搜索表顺序搜索**
  * @note
+ * 测试静态搜索表顺序搜索
+ * -------------------
+ * -------------------
+ *
+ * -------------------
  */
 void TestStaticSearchTableSeqSearch() {
     printf("\n");
@@ -64,8 +69,13 @@ void TestStaticSearchTableSeqSearch() {
 
 
 /*!
- * @brief <h1>测试静态搜索表二分搜索</h1>
+ * @brief **测试静态搜索表二分搜索**
  * @note
+ * 测试静态搜索表二分搜索
+ * -------------------
+ * -------------------
+ *
+ * -------------------
  */
 void TestStaticSearchTableBinarySearch() {
     printf("\n");

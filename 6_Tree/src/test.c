@@ -102,8 +102,8 @@ void TestBinaryTreePreOrderTraverse() {
 void TestBinaryTreeInOrderTraverse() {
     printf("\n");
     printf("|------------------------ CyberDash ------------------------|\n");
-    printf("|                     Test In Traverse                      |\n");
-    printf("|                      测试二叉树中序遍历                   |\n");
+    printf("|                      Test In Traverse                     |\n");
+    printf("|                      测试二叉树中序遍历                     |\n");
     printf("|                            A                              |\n");
     printf("|                           /                               |\n");
     printf("|                          B                                |\n");
@@ -143,7 +143,7 @@ void TestBinaryTreeInOrderTraverse2() {
     printf("\n");
     printf("|------------------------ CyberDash ------------------------|\n");
     printf("|                     Test In Traverse2                     |\n");
-    printf("|                      测试二叉树中序遍历2                     |\n");
+    printf("|                     测试二叉树中序遍历2                     |\n");
     printf("|                            A                              |\n");
     printf("|                           /                               |\n");
     printf("|                          B                                |\n");
@@ -179,8 +179,8 @@ void TestBinaryTreeInOrderTraverse2() {
 void TestBinaryTreePostOrderTraverse() {
     printf("\n");
     printf("|------------------------ CyberDash ------------------------|\n");
-    printf("|                    Test Post Traverse                      |\n");
-    printf("|                      测试二叉树后序遍历                   |\n");
+    printf("|                    Test Post Traverse                     |\n");
+    printf("|                      测试二叉树后序遍历                     |\n");
     printf("|                            A                              |\n");
     printf("|                           /                               |\n");
     printf("|                          B                                |\n");
@@ -220,7 +220,7 @@ void TestBinaryTreeLevelOrderTraverse() {
     printf("\n");
     printf("|------------------------ CyberDash ------------------------|\n");
     printf("|                    Test Level Traverse                    |\n");
-    printf("|                      测试二叉树层序遍历                      |\n");
+    printf("|                      测试二叉树层序遍历                     |\n");
     printf("|                            A                              |\n");
     printf("|                           /                               |\n");
     printf("|                          B                                |\n");
@@ -253,8 +253,19 @@ void TestBinaryTreeLevelOrderTraverse() {
 
 
 /*!
- * @brief <h1>测试哈夫曼(Huffman)编码</h1>
+ * @brief **测试哈夫曼(Huffman)编码**
  * @note
+ * 测试哈夫曼(Huffman)编码
+ * ---------------------
+ * ---------------------
+ *
+ * ---------------------
+ * ###1 声明码字###
+ * &emsp; 码字:            { 'a',  'b',  'c',  'd',  'e', 'f', 'g',  'h'  } \n
+ * &emsp; 各码字权重(权值): {  0.01, 0.02, 0.03, 0.04, 0.1, 0.2, 0.25, 0.35 }
+ * ###2 构造哈夫曼编码###
+ * &emsp; 调用HuffmanCoding
+ * ###3 打印哈夫曼编码###
  */
 void TestHuffmanCoding() {
     printf("\n");
@@ -262,21 +273,23 @@ void TestHuffmanCoding() {
     printf("|                     Test HuffmanTree                      |\n");
     printf("|                        测试哈夫曼编码                       |\n\n");
 
-    /// ###1 声明码字###
-    /// &emsp; 码字:            { 'a',  'b',  'c',  'd',  'e', 'f', 'g',  'h'  } \n
-    /// &emsp; 各码字权重(权值): {  0.01, 0.02, 0.03, 0.04, 0.1, 0.2, 0.25, 0.35 }
-    char codewords[8] = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};                // 码字(数组)
-    double probabilities[8] = { 0.01, 0.02, 0.03, 0.04, 0.1, 0.2, 0.25, 0.35 };   // 码字权重(数组)
+    // ----- 1 声明码字 ------
+    // 码字:            { 'a',  'b',  'c',  'd',  'e', 'f', 'g',  'h'  } \n
+    // 各码字权重(权值): {  0.01, 0.02, 0.03, 0.04, 0.1, 0.2, 0.25, 0.35 }
+    char codewords[8] = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
+    double probabilities[8] = { 0.01, 0.02, 0.03, 0.04, 0.1, 0.2, 0.25, 0.35 };
+    int codewords_length = 8;
+
+    // ----- 2 构造哈夫曼编码 -----
 
     huffman_tree_t huffman_tree = NULL; // 哈夫曼树
     huffman_code_t huffman_codes;       // 哈夫曼编码
 
-    /// ###2 构造哈夫曼编码###
-    /// &emsp; 调用HuffmanCoding
+    // 调用HuffmanCoding
     HuffmanCoding(huffman_tree, huffman_codes, probabilities, 8);
 
-    /// ###3 打印哈夫曼编码###
-    for (int i = 1; i <= 8; i++) {
+    // ----- 3 打印哈夫曼编码 -----
+    for (int i = 1; i <= codewords_length; i++) {
         printf("码字:%c|概率:%.2lf, 哈夫曼(Huffman)编码: %s\n", codewords[i - 1], probabilities[i - 1], huffman_codes[i]);
     }
 

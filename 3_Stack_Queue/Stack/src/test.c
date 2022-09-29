@@ -49,7 +49,7 @@ void TestSeqStackInsert() {
 void TestSeqStackClear() {
     printf("\n");
     printf("|------------------------ CyberDash ------------------------|\n");
-    printf("|                      Test SeqStackClear                      |\n");
+    printf("|                     Test SeqStackClear                    |\n");
     printf("|                          测试清除栈                         |\n");
 
     seq_stack_t sqStack;
@@ -110,7 +110,7 @@ void TestSeqStackLength() {
 void TestSeqStackTop() {
     printf("\n");
     printf("|------------------------ CyberDash ------------------------|\n");
-    printf("|                        Test SeqStackTop                        |\n");
+    printf("|                      Test SeqStackTop                     |\n");
     printf("|                         测试获取栈顶                        |\n");
 
     seq_stack_t sqStack;

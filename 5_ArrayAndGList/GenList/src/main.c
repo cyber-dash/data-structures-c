@@ -10,17 +10,18 @@
 
 #include "test.h"
 
+
 /*!
- * @brief main函数
+ * @brief **main函数**
  * @return 0
  * @note
  */
 int main() {
 
-    /// - 测试广义表深度
+    /// - 测试广义表深度\n
     TestGenListDepth();
 
-    /// - 测试广义表复制
+    /// - 测试广义表复制\n
     TestGenListCopy();
 
     return 0;

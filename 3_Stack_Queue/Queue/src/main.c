@@ -18,10 +18,10 @@
  */
 int main() {
 
-    // - 测试循环队列入队/出队
+    /// - 测试循环队列入队/出队
     TestCircularQueueEnQueueAndDeQueue();
 
-    // - 测试链式队列入队/出队
+    /// - 测试链式队列入队/出队
     TestLinkQueueEnQueueAndDeQueue();
 
     return 0;

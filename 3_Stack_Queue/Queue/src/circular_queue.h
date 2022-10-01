@@ -1,5 +1,5 @@
 /*!
- * @file circular_queue.c
+ * @file circular_queue.h
  * @author CyberDash计算机考研, cyberdash@163.com(抖音id:cyberdash_yuan)
  * @brief 循环队列头文件
  * @version 1.0.0
@@ -28,19 +28,19 @@ typedef struct {
 
 
 // 循环队列初始化
-status_t CircularQueueInit(circular_queue_t* seq_queue);
+status_t CircularQueueInit(circular_queue_t* circular_queue);
 
 // 循环队列长度
-int CircularQueueLength(circular_queue_t seq_queue);
+int CircularQueueLength(circular_queue_t circular_queue);
 
 // 循环队列入队
-status_t CircularQueueEnQueue(circular_queue_t* seq_queue, QUEUE_ELEM elem);
+status_t CircularQueueEnQueue(circular_queue_t* circular_queue, QUEUE_ELEM elem);
 
 // 循环队列出队
-status_t CircularQueueDeQueue(circular_queue_t* seq_queue, QUEUE_ELEM* elem);
+status_t CircularQueueDeQueue(circular_queue_t* circular_queue, QUEUE_ELEM* elem);
 
 // 循环队列屏幕打印
-void CircularQueuePrint(circular_queue_t* seq_queue);
+void CircularQueuePrint(circular_queue_t* circular_queue);
 
 
 #endif // CYBER_DASH_CIRCULAR_QUEUE_H

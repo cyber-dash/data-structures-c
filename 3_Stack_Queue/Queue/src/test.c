@@ -13,8 +13,11 @@
 
 
 /*!
- * @brief 测试循环队列入队/出队
+ * @brief **测试循环队列入队/出队**
  * @note
+ * 测试循环队列入队/出队
+ * ------------------
+ * ------------------
  */
 void TestCircularQueueEnQueueAndDeQueue() {
     printf("\n");
@@ -47,7 +50,11 @@ void TestCircularQueueEnQueueAndDeQueue() {
 
 
 /*!
- * @brief 测试链式队列入队/出队
+ * @brief **测试链式队列入队/出队**
+ * @note
+ * 测试链式队列入队/出队
+ * ------------------
+ * ------------------
  */
 void TestLinkQueueEnQueueAndDeQueue() {
     printf("\n");

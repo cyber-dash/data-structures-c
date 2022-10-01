@@ -12,7 +12,7 @@
 #define CYBER_DASH_SEARCH_TEST_H
 
 
-#include "static_search_table_t.h"
+#include "static_search_table.h"
 
 
 // 测试静态搜索表顺序搜索

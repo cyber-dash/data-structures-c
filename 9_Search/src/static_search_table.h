@@ -1,5 +1,5 @@
 /*!
- * @file static_search_table_t.h
+ * @file static_search_table.h
  * @author CyberDash计算机考研, cyberdash@163.com(抖音id:cyberdash_yuan)
  * @brief 静态查找头文件
  * @version 1.0.0
@@ -17,28 +17,25 @@
 
 /*! @brief 静态搜索表元素 */
 typedef struct {
-    KEY     key;
-    VALUE   value;
+    KEY     key;    //!< 关键码
+    VALUE   value;  //!< 值
 } elem_t;
 
-typedef struct binary_search_tree_node binary_search_tree_node_t;
-struct binary_search_tree_node {
-    elem_t data;
-    binary_search_tree_node_t* left_child; // 左孩子指针
-    binary_search_tree_node_t* right_child; // 右孩子指针
-};
+/*
+typedef struct binary_search_tree_node {
+    elem_t data; //!< 数据项
+    struct binary_search_tree_node* left_child; //!< 左孩子指针
+    struct binary_search_tree_node* right_child; //!< 右孩子指针
+} binary_search_tree_node_t;
 
 typedef binary_search_tree_node_t* binary_search_tree_t;
-
+*/
 
 /*! @brief 静态搜索表 */
-typedef struct static_search_table static_search_table_t;
-
-/*! @brief 静态搜索表结构体 */
-struct static_search_table {
+typedef struct {
     elem_t* elements;   //!< 元素数组
     int length;         //!< 数组长度
-};
+} static_search_table_t;
 
 
 // 静态搜索表初始化

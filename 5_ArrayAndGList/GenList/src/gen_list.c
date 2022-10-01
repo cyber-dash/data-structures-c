@@ -15,105 +15,127 @@
 
 
 /*!
- * @brief <h1>广义表子表头结点初始化</h1>
- * @param node **结点**(广义表结点二级指针)
+ * @brief **广义表子表头结点初始化**
+ * @param node 结点(二级指针)
  * @return 执行结果
  * @note
+ * 广义表子表头结点初始化
+ * -------------------
+ * -------------------
+ *
+ * -------------------
+ * ###1 结点分配内存###
+ * &emsp; **if** 如果malloc失败 :\n
+ * &emsp;&emsp; 返回NON_ALLOCATED\n
+ * ###2 字表头结点元素赋值###
+ * - **I**&nbsp;&nbsp; tag为LIST类型\n
+ * - **II**&nbsp; item.head为NULL(初始化时为空表)\n
+ * - **III** next为NULL\n
  */
 status_t GenListInitListHeadNode(gen_list_node_t** node) {
-    /// ###1 结点分配内存###
-    /// &emsp; **if** 如果malloc失败 :\n
-    /// &emsp;&emsp; 返回NON_ALLOCATED\n
+    // ----- 1 结点分配内存 -----
     *node = (gen_list_node_t*)malloc(sizeof(gen_list_node_t));
-    if (!(*node)) {
-        return ERROR;
+    if (!(*node)) { // if 如果malloc失败
+        return ERROR;   // 返回NON_ALLOCATED
     }
 
-    /// ###2 字表头结点元素赋值###
-    /// - **I**&nbsp;&nbsp; tag为LIST类型\n
-    /// - **II**&nbsp; item.head为NULL(初始化时为空表)\n
-    /// - **III** next为NULL\n
-    (*node)->tag = LIST;
-    (*node)->item.head = NULL;
-    (*node)->next = NULL;
+    // ----- 2 字表头结点元素赋值 -----
+    (*node)->tag = LIST_HEAD;   // tag为LIST_HEAD类型
+    (*node)->item.head = NULL;  // item.head为NULL(初始化时为空表)
+    (*node)->next = NULL;       // next为NULL
 
     return OK;
 }
 
 
 /*!
- * @brief <h1>广义表原子结点初始化</h1>
- * @param node **结点**(指针)
- * @param chr **原子结点字符**
+ * @brief **广义表原子结点初始化**
+ * @param node 结点(指针)
+ * @param chr 原子结点字符
  * @return 执行结果
  * @note
+ * 广义表原子结点初始化
+ * -----------------
+ * -----------------
+ *
+ * -----------------
+ * ###1 结点分配内存###
+ * &emsp; **if** 如果malloc失败 : \n
+ * &emsp;&emsp; 返回NON_ALLOCATED \n
+ * ###2 原子结点元素赋值###
+ * - **I**&nbsp;&nbsp; tag为ATOM类型\n
+ * - **II**&nbsp; item.atom为char(原子结点名)\n
+ * - **III** next为NULL\n
  */
 status_t GenListInitAtomNode(gen_list_node_t** node, ATOM_TYPE chr) {
-    /// ###1 结点分配内存###
-    /// &emsp; **if** 如果malloc失败 : \n
-    /// &emsp;&emsp; 返回NON_ALLOCATED \n
+    // ----- 1 结点分配内存 -----
     *node = (gen_list_node_t*)malloc(sizeof(gen_list_node_t));
-    if (!(*node)) {
-        return ERROR;
+    if (!(*node)) { // if 如果malloc失败
+        return ERROR;   // 返回NON_ALLOCATED
     }
 
-    /// ###2 原子结点元素赋值###
-    /// - **I**&nbsp;&nbsp; tag为ATOM类型\n
-    /// - **II**&nbsp; item.atom为char(原子结点名)\n
-    /// - **III** next为NULL\n
-    (*node)->tag = ATOM;
-    (*node)->item.atom = chr;
-    (*node)->next = NULL;
+    // ----- 2 原子结点元素赋值 -----
+    (*node)->tag = ATOM;        // tag为ATOM类型
+    (*node)->item.atom = chr;   // item.atom为char(原子结点名)
+    (*node)->next = NULL;       // next为NULL
 
     return OK;
 }
 
 
 /*!
- * @brief <h1>广义表使用队列建表(递归)</h1>
- * @param char_queue **字符队列**(指针)
- * @param node **结点**(广义表结点二级指针)
+ * @brief **广义表使用队列建表(递归)**
+ * @param char_queue 字符队列(指针)
+ * @param node 结点(广义表结点二级指针)
  * @note
+ * 广义表使用队列建表(递归)
+ * ---------------------
+ * ---------------------
+ *
+ * ---------------------
+ * ###1 空队判断###
+ * &emsp; **if** 队列为空 :\n
+ * &emsp;&emsp; 返回, **递归结束**\n
+ * ###2 出队, 字符值赋给chr###
+ * ###3 各类型chr分别处理###
+ * - **I**&nbsp;&nbsp; chr为'('\n
+ *  + 对node构造子表头结点\n
+ *  + 对&(*node)->item.head执行递归\n
+ *  + 对node执行递归\n
+ * - **II**&nbsp; chr为小写字母(原子结点名称)\n
+ *  + 对node构造原子结点\n
+ *  + 对node执行递归\n
+ * - **III** chr为','\n
+ *  + 对&(*node)->next执行递归\n
+ * - **IV**&nbsp; chr为')'\n
+ * &emsp;&emsp; **if** *node不为NULL\n
+ * &emsp;&emsp;&emsp; (*node)->next设置为NULL,
+ * (如果*node为NULL, 则表示当前子表为空表, 字符串为"()")\n
  */
 void GenListCreateByQueueRecursive(circular_queue_t* char_queue, gen_list_node_t** node) {
 
-    /// ###1 空队判断###
-    /// &emsp; **if** 队列为空 :\n
-    /// &emsp;&emsp; 返回, **递归结束**\n
-    if (CircularQueueGetLength(*char_queue) == 0) {
-        return;
+    // ----- 1 空队判断 -----
+    if (CircularQueueGetLength(*char_queue) == 0) { // if 队列为空
+        return; // 返回(递归结束)
     }
 
-    /// ###2 出队, 字符值赋给chr###
+    // ----- 2 出队, 字符值赋给chr -----
     QUEUE_ELEM chr;
     CircularQueueDeQueue(char_queue, &chr);
 
-    /// ###3 各类型chr分别处理###
-    /// - **I**&nbsp;&nbsp; chr为'('\n
-    ///  + 对node构造子表头结点\n
-    ///  + 对&(*node)->item.head执行递归\n
-    ///  + 对node执行递归\n
-    /// - **II**&nbsp; chr为小写字母(原子结点名称)\n
-    ///  + 对node构造原子结点\n
-    ///  + 对node执行递归\n
-    /// - **III** chr为','\n
-    ///  + 对&(*node)->next执行递归\n
-    /// - **IV**&nbsp; chr为')'\n
-    /// &emsp;&emsp; **if** *node不为NULL\n
-    /// &emsp;&emsp;&emsp; (*node)->next设置为NULL\n
-    /// &emsp;&emsp; (如果*node为NULL, 则表示当前子表为空表, 字符串为"()")\n
-    if (chr == '(') {
-        GenListInitListHeadNode(node);
-        GenListCreateByQueueRecursive(char_queue, &(*node)->item.head);
-        GenListCreateByQueueRecursive(char_queue, node);
-    } else if (isalpha(chr)) {
-        GenListInitAtomNode(node, chr);
-        GenListCreateByQueueRecursive(char_queue, node);
-    } else if (chr == ',') {
-        GenListCreateByQueueRecursive(char_queue, &(*node)->next);
-    } else if (chr == ')') {
-        if (*node) {
-            (*node)->next = NULL;
+    // ----- 3 各类型chr分别处理 -----
+    if (chr == '(') {   // chr为'('
+        GenListInitListHeadNode(node);  // 对node构造子表头结点
+        GenListCreateByQueueRecursive(char_queue, &(*node)->item.head); // 对&(*node)->item.head执行递归
+        GenListCreateByQueueRecursive(char_queue, node);    // 对node执行递归
+    } else if (isalpha(chr)) {  // chr为小写字母(原子结点名称)
+        GenListInitAtomNode(node, chr); // 对node构造原子结点
+        GenListCreateByQueueRecursive(char_queue, node);    // 对node执行递归
+    } else if (chr == ',') {    // chr为','
+        GenListCreateByQueueRecursive(char_queue, &(*node)->next);  // 对&(*node)->next执行递归
+    } else if (chr == ')') {    // chr为')'
+        if (*node) {    // if *node不为NULL
+            (*node)->next = NULL;   // (*node)->next设置为NULL, (如果*node为NULL, 则表示当前子表为空表, 字符串为"()")
         }
     }
 }
@@ -196,7 +218,7 @@ void GenListToCharQueueRecursive(gen_list_t gen_list, circular_queue_t* char_que
     /// &emsp;&emsp; **if** cur->next不为NULL :\n
     /// &emsp;&emsp;&emsp; ','入队\n
     while (cur) {
-        if (cur->tag == LIST) {
+        if (cur->tag == LIST_HEAD) {
             GenListToCharQueueRecursive(cur, char_queue);
         } else if (cur->tag == ATOM) {
             CircularQueueEnQueue(char_queue, cur->item.atom);

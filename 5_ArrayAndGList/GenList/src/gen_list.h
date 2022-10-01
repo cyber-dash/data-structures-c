@@ -19,7 +19,7 @@
 typedef char ATOM_TYPE;
 
 /*! @brief 广义表原子结点类型 */
-typedef enum { ATOM, LIST } ELEM_TAG;
+typedef enum { ATOM, LIST_HEAD } ELEM_TAG;
 
 /*! @brief 广义表结点 */
 typedef struct gen_list_node gen_list_node_t;

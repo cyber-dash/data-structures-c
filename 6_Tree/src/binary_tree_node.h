@@ -12,10 +12,10 @@
 #define CYBER_DASH_TREE_BINARY_TREE_NODE_H
 
 
-/*! @brief <h1>二叉树结点</h1> */
+/*! @brief 二叉树结点结构体 */
 typedef struct binary_tree_node binary_tree_node_t;
 
-/*! @brief <h1>二叉树结点</h1> */
+/*! @brief 二叉树结点 */
 struct binary_tree_node {
     BINARY_TREE_NODE_DATA       data;    //!< 数据项
     binary_tree_node_t*    left_child;     //!< 左孩子指针

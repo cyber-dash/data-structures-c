@@ -11,20 +11,38 @@
 #include "test.h"
 
 
-/*! @brief main函数 */
+/*!
+ * @brief **main函数**
+ * @note
+ * main函数
+ * -------
+ * -------
+ * - 测试二叉树前序遍历\n
+ * - 测试二叉树中序遍历\n
+ * - 测试二叉树中序遍历2\n
+ * - 测试二叉树后序遍历\n
+ * - 测试二叉树层序遍历\n
+ * - 测试哈夫曼(Huffman)编码\n
+ */
 int main() {
 
-    TestBinaryTreePreOrderTraverse();   // 测试二叉树前序遍历
+    // - 测试二叉树前序遍历
+    TestBinaryTreePreOrderTraverse();
 
-    TestBinaryTreeInOrderTraverse();    // 测试二叉树中序遍历
+    // - 测试二叉树中序遍历
+    TestBinaryTreeInOrderTraverse();
 
-    TestBinaryTreeInOrderTraverse2();   // 测试二叉树中序遍历2
+    // - 测试二叉树中序遍历2
+    TestBinaryTreeInOrderTraverse2();
 
-    TestBinaryTreePostOrderTraverse();  // 测试二叉树后序遍历
+    // - 测试二叉树后序遍历
+    TestBinaryTreePostOrderTraverse();
 
-    TestBinaryTreeLevelOrderTraverse(); // 测试二叉树层序遍历
+    // - 测试二叉树层序遍历
+    TestBinaryTreeLevelOrderTraverse();
 
-    TestHuffmanCoding();                // 测试哈夫曼(Huffman)编码
+    // - 测试哈夫曼(Huffman)编码
+    TestHuffmanCoding();
 
     return 0;
 }

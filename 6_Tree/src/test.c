@@ -26,9 +26,14 @@ status_t VisitChar(BINARY_TREE_NODE_DATA chr) {
 
 
 /*!
- * @brief 二叉树结点访问函数
+ * @brief **二叉树结点访问函数**
  * @param node 二叉树结点
  * @return 执行结果
+ * @note
+ * 二叉树结点访问函数
+ * ---------------
+ * ---------------
+ * 打印结点数据项\n
  */
 status_t VisitBinaryTreeNode(binary_tree_node_t node) {
   printf("%c", node.data);
@@ -37,8 +42,11 @@ status_t VisitBinaryTreeNode(binary_tree_node_t node) {
 
 
 /*!
- * @brief <h1>二叉树前序遍历测试函数</h1>
+ * @brief **二叉树前序遍历测试函数**
  * @note
+ * 二叉树前序遍历测试函数
+ * -------------------
+ * -------------------
  */
 void TestBinaryTreePreOrderTraverse() {
     printf("\n");
@@ -96,8 +104,11 @@ void TestBinaryTreePreOrderTraverse() {
 
 
 /*!
- * @brief <h1>测试二叉树中序遍历</h1>
+ * @brief **测试二叉树中序遍历**
  * @note
+ * 测试二叉树中序遍历
+ * ---------------
+ * ---------------
  */
 void TestBinaryTreeInOrderTraverse() {
     printf("\n");
@@ -136,8 +147,11 @@ void TestBinaryTreeInOrderTraverse() {
 
 
 /*!
- * @brief <h1>测试二叉树中序遍历2</h1>
+ * @brief **测试二叉树中序遍历2**
  * @note
+ * 测试二叉树中序遍历2
+ * ----------------
+ * ----------------
  */
 void TestBinaryTreeInOrderTraverse2() {
     printf("\n");
@@ -173,8 +187,11 @@ void TestBinaryTreeInOrderTraverse2() {
 
 
 /*!
- * @brief <h1>测试二叉树后序遍历</h1>
+ * @brief **测试二叉树后序遍历**
  * @note
+ * 测试二叉树后序遍历
+ * ---------------
+ * ---------------
  */
 void TestBinaryTreePostOrderTraverse() {
     printf("\n");
@@ -213,8 +230,11 @@ void TestBinaryTreePostOrderTraverse() {
 
 
 /*!
- * @brief <h1>测试二叉树层序遍历</h1>
+ * @brief **测试二叉树层序遍历**
  * @note
+ * 测试二叉树层序遍历
+ * ---------------
+ * ---------------
  */
 void TestBinaryTreeLevelOrderTraverse() {
     printf("\n");

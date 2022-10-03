@@ -10,10 +10,11 @@
 
 #define ELEM    int //!< 元素类型
 
+/*! @brief 返回值状态 */
 typedef enum {
     OK = 0,         //!< 正确
     NON_ALLOCATED,  //!< 分配内存失败
-    OVERFLOW,
-    UNDERFLOW,
-    ERROR
+    OVERFLOW,       //!< 溢出
+    NON_EXISTENT,   //!< 不存在
+    ERROR,          //!< 其他错误
 } status_t;

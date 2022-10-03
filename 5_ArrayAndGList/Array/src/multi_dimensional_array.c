@@ -8,11 +8,21 @@
  *  CyberDash计算机考研
  */
 
-#include "multi_dimensional_array.h"
 #include <stdlib.h>
 #include <stdarg.h>
+#include "multi_dimensional_array.h"
 
 
+/*!
+ * @brief **多维数组初始化**
+ * @param array 多数数组(指针)
+ * @param dim 维数
+ * @param ... 数组数据
+ * @return 执行结果
+ * 多维数组初始化
+ * ------------
+ * ------------
+ */
 status_t MultiDimensionalArrayInit(MultiDimensionalArray* array, int dim, ...) {
     va_list ap;
 	if (dim < 1 || dim > MAX_ARRAY_DIM) {
@@ -30,7 +40,7 @@ status_t MultiDimensionalArrayInit(MultiDimensionalArray* array, int dim, ...) {
 	for (int i = 0; i < dim; ++i) {
         array->bounds[i] = va_arg(ap, int);
 		if (array->bounds[i] < 0) {
-            return UNDERFLOW;
+            return NON_EXISTENT;
         }
         elem_total *= array->bounds[i];
 	}

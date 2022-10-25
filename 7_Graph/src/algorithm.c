@@ -47,29 +47,32 @@ status_t Visit(matrix_graph_t* graph, int vertex_index) {
  * --------
  *
  * --------
+ * ### 1 分配结点遍历数组 ###
+ * &emsp; **if** 内存分配失败 :\n
+ * &emsp;&emsp; 返回NON_ALLOCATED\n
+ * &emsp; 结点遍历数组每个元素, 赋值为0\n
+ * ### 2 遍历图结点进行DFS ###
+ * &emsp; **for loop** 遍历图结点 :\n
+ * &emsp;&emsp; **if** 当前结点没有被访问(遍历) : \n
+ * &emsp;&emsp;&emsp; 对当前结点执行DFSRecursive\n
  */
 status_t DFSTraverse(matrix_graph_t graph, status_t (*Visit)(matrix_graph_t*, int)) {
 
-    /// ### 1 分配结点遍历数组 ###
-    /// &emsp; **if** 内存分配失败 :\n
-    /// &emsp;&emsp; 返回NON_ALLOCATED\n
+    // ----- 1 分配结点遍历数组 -----
     int* visited_vertex_indexes = (int*)malloc(graph.vertex_count * sizeof(int));
-    if (!visited_vertex_indexes) {
-        return NON_ALLOCATED;
+    if (!visited_vertex_indexes) {  // if 内存分配失败
+        return NON_ALLOCATED;   // 返回NON_ALLOCATED
     }
 
-    /// &emsp; 结点遍历数组每个元素, 赋值为0
+    // 结点遍历数组每个元素, 赋值为0
     for (int i = 0; i < graph.vertex_count; i++) {
         visited_vertex_indexes[i] = NOT_VISITED;
     }
 
-    /// ### 2 遍历图结点进行DFS ###
-    /// &emsp; **for loop** 遍历图结点 :\n
-    /// &emsp;&emsp; **if** 当前结点没有被访问(遍历) : \n
-    /// &emsp;&emsp;&emsp; 对当前结点执行DFSRecursive\n
-    for (int i = 0; i < graph.vertex_count; i++) {
-        if (!visited_vertex_indexes[i]) {
-            DFSRecursive(graph, i, visited_vertex_indexes, Visit);
+    // ----- 2 遍历图结点进行DFS -----
+    for (int i = 0; i < graph.vertex_count; i++) {  // for loop 遍历图结点
+        if (!visited_vertex_indexes[i]) {   // if 当前结点没有被访问(遍历)
+            DFSRecursive(graph, i, visited_vertex_indexes, Visit);  // 对当前结点执行DFSRecursive
         }
     }
 
@@ -167,14 +170,15 @@ void BFSTraverse(matrix_graph_t graph, status_t (*Visit)(matrix_graph_t*, int)) 
     LinkedQueueInit(&queue);
 
     // ----- 3 执行BFS遍历 -----
-    for (int i = 0; i < graph.vertex_count; i++) {  // for loop 遍历图结点 :
+    for (int i = 0; i < graph.vertex_count; i++) {  // for loop 遍历图结点
 
-        if (visited_vertex_indexes[i] == VISITED) {     // if 当前结点已经访问过 :
+        if (visited_vertex_indexes[i] == VISITED) {     // if 当前结点已经访问过, continue
             continue;
         }
 
         Visit(&graph, i);                       // 访问当前结点
         visited_vertex_indexes[i] = VISITED;    // 将当前结点设置为已访问
+
         LinkedQueueEnQueue(&queue, i);          // 当前结点索引入队
 
         while (!LinkedQueueIsEmpty(&queue)) {   // while 队列不为空 :
@@ -188,14 +192,14 @@ void BFSTraverse(matrix_graph_t graph, status_t (*Visit)(matrix_graph_t*, int)) 
                  neighbor_vertex_index = NextAdjVertexIndex(&graph, vertex_index, neighbor_vertex_index)
                 )
             {
-                if (visited_vertex_indexes[neighbor_vertex_index] == VISITED) { // if 当前相邻结点已被访问
+                if (visited_vertex_indexes[neighbor_vertex_index] == VISITED) { // if 当前相邻结点已被访问, continue
                     continue;
                 }
 
                 Visit(&graph, neighbor_vertex_index);                       // 访问当前相邻结点
+                visited_vertex_indexes[neighbor_vertex_index] = VISITED;    // 标记当前相邻结点被访问
 
                 LinkedQueueEnQueue(&queue, neighbor_vertex_index);          // 当前相邻结点入队
-                visited_vertex_indexes[neighbor_vertex_index] = VISITED;    // 标记当前相邻结点被访问
             }
         }
     }
@@ -203,7 +207,7 @@ void BFSTraverse(matrix_graph_t graph, status_t (*Visit)(matrix_graph_t*, int)) 
 
 
 /*!
- * @brief @brief **索引index结点是否在最小生成树中**
+ * @brief **索引index结点是否在最小生成树中**
  * @param mst_vertex_index_set 最小生成树结点索引集合(数组)
  * @param index 结点索引
  * @param mst_vertex_count 最小生成树当前大小(结点数)
@@ -303,9 +307,7 @@ void Prim(matrix_graph_t* graph, edge_t* min_span_tree) {
             // 变量in_vertex_set表示当前结点是否在最小生成树中, 在TRUE, 不在FALSE
             // if 当前结点已经在mst_vertex_index_set 或者 边(cur_mst_edge.ending_vertex_index, i)不存在: continue
             int in_mst = isInMstVertexIndexSet(mst_vertex_index_set, i, mst_vertex_count);
-            if (in_mst ||
-                graph->adj_matrix[cur_mst_edge.ending_vertex_index][i].weight_type == NO_EDGE
-            ) {
+            if (in_mst || graph->adj_matrix[cur_mst_edge.ending_vertex_index][i].weight_type == NO_EDGE) {
                 continue;
             }
 
@@ -366,13 +368,11 @@ void Kruskal(matrix_graph_t* graph, edge_t* min_span_tree) {
         MinPriorityQueuePop(&min_priority_queue, &cur_min_dist_edge);
 
         // 使用并查集, 查到cur_edge的起点和终点对应的并查集根索引
-        int cur_starting_root_index =
-            DisjointSetFind(&disjoint_set, cur_min_dist_edge.starting_vertex_index);
-        int cur_ending_root_index =
-            DisjointSetFind(&disjoint_set, cur_min_dist_edge.ending_vertex_index);
+        int cur_starting_vertex_index_root = DisjointSetFind(&disjoint_set, cur_min_dist_edge.starting_vertex_index);
+        int cur_ending_vertex_index_root = DisjointSetFind(&disjoint_set, cur_min_dist_edge.ending_vertex_index);
 
-        if (cur_starting_root_index != cur_ending_root_index) { // if 起点根索引 不等于 终点根索引
-            DisjointSetUnion(&disjoint_set, cur_starting_root_index, cur_ending_root_index);    // 并查集合并
+        if (cur_starting_vertex_index_root != cur_ending_vertex_index_root) { // if 起点根索引 不等于 终点根索引
+            DisjointSetUnion(&disjoint_set, cur_starting_vertex_index_root, cur_ending_vertex_index_root); // 并查集合并
             min_span_tree[i] = cur_min_dist_edge;    // 当前最小边加入到最小生成树
             i++;
         }

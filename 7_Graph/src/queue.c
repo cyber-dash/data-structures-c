@@ -115,8 +115,8 @@ status_t LinkedQueueEnQueue(linked_queue_t *queue, int vertex_index) {
 status_t LinkedQueueDeQueue(linked_queue_t* linked_queue, int* vertex_index) {
 
     // ----- 空队处理 -----
-    if (linked_queue->front == linked_queue->rear) {    // if front和rear指向相同(空队)
-        return NON_EXISTENT;    // 返回NON_EXISTENT
+    if (linked_queue->front == linked_queue->rear) { // if front和rear指向相同(空队), 返回NON_EXISTENT
+        return NON_EXISTENT;
     }
 
     // ----- 队头出队 -----
@@ -139,7 +139,7 @@ status_t LinkedQueueDeQueue(linked_queue_t* linked_queue, int* vertex_index) {
 
 /*!
  * @brief **链式队列是否为空**
- * @param queue 链式队列
+ * @param linked_queue 链式队列
  * @return 是/否
  * @note
  * 链式队列是否为空
@@ -150,8 +150,8 @@ status_t LinkedQueueDeQueue(linked_queue_t* linked_queue, int* vertex_index) {
  * **if** 头指针和为指针指向地址相同 : \n
  * &emsp; 返回TRUE
  */
-int LinkedQueueIsEmpty(linked_queue_t* queue) {
-    if (queue->front == queue->rear) {  // if 头指针和为指针指向地址相同
+int LinkedQueueIsEmpty(linked_queue_t* linked_queue) {
+    if (linked_queue->front == linked_queue->rear) {  // if 头指针和为指针指向地址相同
         return TRUE;    // 返回TRUE
     }
 

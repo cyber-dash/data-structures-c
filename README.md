@@ -6,20 +6,3 @@
 这个项目，正是为了解决这些问题而写。
 
 它格式规范, 能正确运行，注释丰富，可以作为**学习**、**理解知识**、**做作业**、**课程设计**和**复习**的参考资料。
-
-
-# 🚀从此刻开始
-
-## 💾 下载本项目
-
-如何使用git? 你可以参考这个: [git使用方法](/docs/git.md?plain=1#100)
-
-```bash
-git clone https://gitee.com/cyberdash/data-structure-c.git
-```
-
-## cmake 编译
-
-```bash
-cmake . -G "Unix Makefiles"
-```

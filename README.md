@@ -1,4 +1,8 @@
 # 👨‍👩‍👦‍👦 关于我们
+
+<div style="text-align: center">
+<img src="docs/images/cyberdash_douyin_qr.png" alt="image.png" style="zoom: 33%;" />
+</div>
 CyberDash团队主要成员是3名北邮硕士研究生，我们是拥有多年开发经验的开发工程师, 曾就职于若干外企/互联网大厂/国内知名企业.
 如果想更多了解我们，欢迎关注抖音：cyberdash_yuan
 

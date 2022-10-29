@@ -31,12 +31,16 @@ typedef struct {
 } linked_queue_t;
 
 
-status_t LinkedQueueInit(linked_queue_t* link_queue);
+// 链式队列初始化
+status_t LinkedQueueInit(linked_queue_t* linked_queue);
 
+// 链式队列入队
 status_t LinkedQueueEnQueue(linked_queue_t* linked_queue, int vertex_index);
 
+// 链式队列出队
 status_t LinkedQueueDeQueue(linked_queue_t* linked_queue, int* vertex_index);
 
+// 链式队列是否为空
 int LinkedQueueIsEmpty(linked_queue_t* linked_queue);
 
 

@@ -63,10 +63,10 @@
  * &emsp;&emsp;&emsp; 第二小值元素索引更新为i\n
  * &emsp;&emsp;&emsp; 第二小值更新为当前元素weight\n
  */
-status_t SelectTwoSmallestItems(huffman_tree_node_t* elements,
-                                int last_index,
-                                int* smallest_elem_index,
-                                int* sec_smallest_elem_index)
+status_t SelectTwoSmallestElements(huffman_tree_node_t* elements,
+                                   int last_index,
+                                   int* smallest_elem_index,
+                                   int* sec_smallest_elem_index)
 {
     // ----- 数组范围判断 -----
     if (last_index < 2) {   // if 数组元素数量少于2
@@ -202,10 +202,10 @@ void HuffmanCoding(huffman_tree_node_t* huffman_tree,
     // Loop 遍历huffman_tree[codeword_count, huffman_tree_node_count - 1]
     for (i = codeword_count; i < huffman_tree_node_count; i++) {
         // 在huffman_tree_nodes[1 ... i]选择parent为0(未与其他结点构成子树)且weight最小的两个结点,
-        // 将他们的数组索引分别为min_index和sec_min_index
+        // 将他们的数组索引分别为smallest_elem_index和sec_smallest_elem_index
         int smallest_elem_index;
         int sec_smallest_elem_index;
-        SelectTwoSmallestItems(huffman_tree, i, &smallest_elem_index, &sec_smallest_elem_index);
+        SelectTwoSmallestElements(huffman_tree, i, &smallest_elem_index, &sec_smallest_elem_index);
 
         // 新子树根索引为i + 1, 即min_index和sec_min_index是i + 1的左右孩子
         huffman_tree[smallest_elem_index].parent = i + 1;

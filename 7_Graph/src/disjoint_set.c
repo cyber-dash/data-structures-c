@@ -13,12 +13,12 @@
 
 
 /*!
- * @brief **初始化并查集**
+ * @brief **并查集初始化**
  * @param disjoint_set 并查集(指针)
  * @param size 并查集size
  * @return 执行结果
  * @note
- * 初始化并查集
+ * 并查集初始化
  * ----------
  * ----------
  *
@@ -49,11 +49,11 @@ status_t InitDisjointSet(disjoint_set_t* disjoint_set, int size) {
 
 
 /*!
- * @brief **销毁并查集**
+ * @brief **并查集销毁**
  * @param disjoint_set 并查集(二级指针)
  * @return 执行结果
  * @note
- * 销毁并查集
+ * 并查集销毁
  * ---------
  * ---------
  *
@@ -82,16 +82,19 @@ status_t DisjointSetDestroy(disjoint_set_t** disjoint_set) {
  * ---------
  *
  * ---------
- */
-status_t DisjointSetUnion(disjoint_set_t* disjoint_set, int index1, int index2) {
-    int root1 = DisjointSetFindRecursive(disjoint_set, index1); // 取结点1的根结点索引root1
-    int root2 = DisjointSetFindRecursive(disjoint_set, index2); // 取结点2的根结点索引root1
-
     /// - 边界条件判断 \n
     /// &emsp; **if** 两个根节点中任何一个小于0 : \n
     /// &emsp;&emsp; 返回ERROR \n
     /// &emsp; **if** 两个根节点相同 : \n
     /// &emsp;&emsp; 返回OK(已经在一个集合,不需要合并) \n
+    /// - 将根root2加到另一根root1下面
+ */
+status_t DisjointSetUnion(disjoint_set_t* disjoint_set, int index1, int index2) {
+    int root1 = DisjointSetFindRecursive(disjoint_set, index1);
+    /// 取结点1的根结点索引root1
+    int root2 = DisjointSetFindRecursive(disjoint_set, index2);
+    // 取结点2的根结点索引root1
+
     if (root1 < 0 || root2 < 0) {
         return ERROR;
     }
@@ -100,7 +103,6 @@ status_t DisjointSetUnion(disjoint_set_t* disjoint_set, int index1, int index2) 
         return OK;
     }
 
-    /// - 将根root2加到另一根root1下面
     disjoint_set->parent_indexes[root1] += disjoint_set->parent_indexes[root2];
     disjoint_set->parent_indexes[root2] = root1;
 

@@ -23,26 +23,20 @@ typedef struct {
     int* parent_indexes; //!< 父节点数组
 } disjoint_set_t;
 
-// 构造函数
+// 并查集初始化
 status_t InitDisjointSet(disjoint_set_t* disjoint_set, int size);
 
-// 销毁并查集
+// 并查集销毁
 status_t DisjointSetDestroy(disjoint_set_t** disjoint_set);
 
-// 合并两个集合
+// 并查集合并
 status_t DisjointSetUnion(disjoint_set_t* disjoint_set, int root1, int root2);
 
-// 查找
+// 并查集获取结点的根结点索引(递归)
 int DisjointSetFindRecursive(disjoint_set_t* disjoint_set, int index);
 
+// 并查集获取结点的根结点索引
 int DisjointSetFind(disjoint_set_t* disjoint_set, int index);
 
-/*
-// 合并集合(Weighted)
-void WeightedUnion(int node1, int node2);
-
-// 查找(非递归)
-int FindNonRecursive(int weight);
-*/
 
 #endif // CYBER_DASH_DISJOINT_SET_H

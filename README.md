@@ -41,7 +41,7 @@ _持续更新ing, 敬请关注_
 git clone https://gitee.com/cyberdash/data-structure-c.git
 ```
 
-## cmake 编译
+## cmake 构建
 
 ```bash
 cmake . -G "Unix Makefiles"
